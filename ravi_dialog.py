@@ -454,8 +454,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             None
         """
         df = self.df_aux
-
-        df = df['date','average_index','savitzky_golay_filtered', 'image_id']
+        df = df[['date','average_index','savitzky_golay_filtered', 'image_id']]
         if not self.QCheckBox_sav_filter.isChecked():
             df.drop(columns=['savitzky_golay_filtered'], inplace=True)
         
