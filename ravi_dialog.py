@@ -146,7 +146,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.salvar.clicked.connect(self.salvar_clicked)
         self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
 
-        self.filtro1.stateChanged.connect(self.plot_timeseries)
+        self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
@@ -168,7 +168,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.nasapower.clicked.connect(self.open_nasapower)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
         self.textEdit.anchorClicked.connect(self.open_link)
-        self.moreinfo_day.clicked.connect(self.open_more_info_day)
+
         self.series_indice.currentIndexChanged.connect(self.index_explain)
         
         # Set default dates
@@ -190,191 +190,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.df_nasa = None
         self.resizeEvent('small')
         self.index_explain()
-
-    def open_more_info_day(self):
-        dialog = QDialog(self)
-        dialog.setWindowTitle("More Information")
-        dialog.setGeometry(100, 100, 800, 600)
-
-        layout = QVBoxLayout(dialog)
-
-        # Create a QTextBrowser to display HTML content
-        text_browser = QTextBrowser(dialog)
-        text_browser.setHtml("""
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Load RGB layer</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                        margin: 20px;
-                    }
-                    h1, h2 {
-                        color: #2c3e50;
-                    }
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        margin-top: 20px;
-                    }
-                    th, td {
-                        border: 1px solid #ccc;
-                        padding: 8px;
-                        text-align: left;
-                    }
-                    th {
-                        background-color: #f4f4f4;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>Load RGB layer</h1>
-                <p>
-                    This feature allows users to select a date from a dropdown list and display the corresponding Sentinel-2 RGB image 
-                    (using red, green, and blue bands) in QGIS. It fetches the first available Sentinel-2 image for the selected date, 
-                    clips it to the defined area of interest (AOI), and adds it to the QGIS canvas as an RGB layer.
-                </p>
-
-                <h2>How It Works</h2>
-                <ol>
-                    <li>
-                        The user selects a date from the dropdown list and clicks the button.
-                    </li>
-                    <li>
-                        The function retrieves the first Sentinel-2 image available for that date.
-                    </li>
-                    <li>
-                        The image is clipped to the area of interest (AOI) specified in the project.
-                    </li>
-                    <li>
-                        The image is downloaded in GeoTIFF format and added to QGIS as a raster layer with RGB visualization:
-                        <ul>
-                            <li><strong>Red:</strong> Band 4</li>
-                            <li><strong>Green:</strong> Band 3</li>
-                            <li><strong>Blue:</strong> Band 2</li>
-                        </ul>
-                    </li>
-                    <li>
-                        The layer is automatically styled for contrast enhancement and added to the top of the QGIS layer stack.
-                    </li>
-                </ol>
-
-                <h2>Sentinel-2 Band Mapping</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sentinel-2 Band Name</th>
-                            <th>QGIS Band Number</th>
-                            <th>Wavelength (nm)</th>
-                            <th>Spatial Resolution (m)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Band 1 (Coastal aerosol)</td>
-                            <td>1</td>
-                            <td>443</td>
-                            <td>60</td>
-                        </tr>
-                        <tr>
-                            <td>Band 2 (Blue)</td>
-                            <td>2</td>
-                            <td>490</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>Band 3 (Green)</td>
-                            <td>3</td>
-                            <td>560</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>Band 4 (Red)</td>
-                            <td>4</td>
-                            <td>665</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>Band 5 (Vegetation Red Edge)</td>
-                            <td>5</td>
-                            <td>705</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Band 6 (Vegetation Red Edge)</td>
-                            <td>6</td>
-                            <td>740</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Band 7 (Vegetation Red Edge)</td>
-                            <td>7</td>
-                            <td>783</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Band 8 (NIR)</td>
-                            <td>8</td>
-                            <td>842</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>Band 8A (Vegetation Red Edge)</td>
-                            <td>9</td>
-                            <td>865</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Band 9 (Water Vapour)</td>
-                            <td>10</td>
-                            <td>945</td>
-                            <td>60</td>
-                        </tr>
-                        <tr>
-                            <td>Band 10 (SWIR - Cirrus)</td>
-                            <td>11</td>
-                            <td>1375</td>
-                            <td>60</td>
-                        </tr>
-                        <tr>
-                            <td>Band 11 (SWIR)</td>
-                            <td>12</td>
-                            <td>1610</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Band 12 (SWIR)</td>
-                            <td>13</td>
-                            <td>2190</td>
-                            <td>20</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2>Notes</h2>
-                <ul>
-                    <li>The RGB visualization uses Band 4 (Red), Band 3 (Green), and Band 2 (Blue).</li>
-                    <li>The function automatically adjusts the layer contrast for better visualization.</li>
-                    <li>Downloaded image is available on the selected output folder.</li>
-
-                </ul>
-            </body>
-            </html>
-
-        """)
-
-        layout.addWidget(text_browser)
-
-        # Add OK button to close the dialog
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok, dialog)
-        button_box.accepted.connect(dialog.accept)
-        layout.addWidget(button_box)
-
-        dialog.exec_()
 
     def clear_nasa_clicked(self):
         """
@@ -638,12 +453,19 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         Returns:
             None
         """
+        df = self.df_aux
+
+        df = df['date','average_index','savitzky_golay_filtered', 'image_id']
+        if not self.QCheckBox_sav_filter.isChecked():
+            df.drop(columns=['savitzky_golay_filtered'], inplace=True)
+        
+
         name = f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series.csv"
         caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
         if not caminho:
             return
         with open(caminho, 'w', encoding='latin-1') as arquivo:
-            arquivo.write(self.df_aux.to_csv(decimal='.', sep=',', index=False, encoding="latin-1", lineterminator='\n'))
+            arquivo.write(df.to_csv(decimal='.', sep=',', index=False, encoding="latin-1", lineterminator='\n'))
         
         # Open the file after saving (platform-specific)
         if platform.system() == 'Windows':
@@ -1227,6 +1049,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Clip image to AOI
             first_image = first_image.clip(self.aoi)
 
+            # Available bands: [B1, B2, B3, B4, B5, B6, B7, B8, B8A, B9, B11, B12, AOT, WVP, SCL, TCI_R, TCI_G, TCI_B, MSK_CLDPRB, MSK_SNWPRB, QA10, QA20, QA60, MSK_CLASSI_OPAQUE, MSK_CLASSI_CIRRUS, MSK_CLASSI_SNOW_ICE]
+            bands = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B9', 'B11', 'B12']
+            first_image = first_image.select(bands)
+
             # Get the acquisition date and define download region
             region = self.aoi.geometry().bounds().getInfo()['coordinates']
 
@@ -1711,7 +1537,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.get_dates()
         # self.customfilter.setChecked(False)
         #self.remove_cloudy.setChecked(False)
-        self.filtro1.setChecked(False)
+        self.QCheckBox_sav_filter.setChecked(False)
         self.filtro_grau.setCurrentIndex(0)
         self.window_len.setCurrentIndex(0)
 
@@ -1941,11 +1767,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Retrieve dates and mean index values separately using aggregate_array
         dates = result.aggregate_array('date').getInfo()
         mean_indices = result.aggregate_array('mean_index').getInfo()
-        # print(f"Dates: {dates}")
-        # print(f"Mean indices: {mean_indices}")
+        image_ids = result.aggregate_array('system:index').getInfo()
 
-        # Combine the dates and mean indices into a DataFrame
-        df = pd.DataFrame({'date': dates, 'average_index': mean_indices})
+        # Combine the dates, mean indices, and image IDs into a DataFrame
+        df = pd.DataFrame({'date': dates, 'average_index': mean_indices, 'image_id': image_ids})
 
         print(df)
 
@@ -1991,7 +1816,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.window_len.setCurrentIndex(len(df) - 5)
             print(f'Window length too large. Using maximum value: {window_length}')
 
-        df['smoothed_index'] = savgol_filter(df['average_index'], window_length=window_length, polyorder=polyorder)
+        df['savitzky_golay_filtered'] = savgol_filter(df['average_index'], window_length=window_length, polyorder=polyorder)
         print(df)
 
         self.df_aux = df.copy()
@@ -2003,10 +1828,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # Prepare to plot
         myFile = io.StringIO()
-        if self.filtro1.isChecked():
+        if self.QCheckBox_sav_filter.isChecked():
             self.fig = go.Figure()
             self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
-            self.fig.add_trace(go.Scatter(x=df['date'], y=df['smoothed_index'], mode='lines', name=f"{self.series_indice.currentText()} filtered", line=dict(color='purple')))
+            self.fig.add_trace(go.Scatter(x=df['date'], y=df['savitzky_golay_filtered'], mode='lines', name=f"{self.series_indice.currentText()} filtered", line=dict(color='purple')))
         else:
             self.fig = go.Figure()
             self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))

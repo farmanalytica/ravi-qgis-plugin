@@ -1,6 +1,6 @@
 # RAVI - Remote Analysis of Vegetation Indices
 
-RAVI is an QGIS plugin designed to seamlessly integrate with Google Earth Engine (GEE), enabling efficient processing and visualization of geospatial data. With its focus on Sentinel-2 imagery, the plugin supports vegetation index calculations, time series analysis, and interactive visualizations. These features make it an useful tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
+RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine (GEE), enabling efficient processing and visualization of geospatial data. Based on Sentinel-2 [harmonized surface reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED), the plugin supports vegetation index calculations, time series analysis, and interactive visualizations. These features make it a useful tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
 
 ## Key Features
 
@@ -59,6 +59,9 @@ To install the RAVI QGIS Plugin:
 ![Step 3](media/step3.png)
 - Select an AOI by loading a shapefile or GeoJSON file.
 - Ensure the geometry is valid (Polygon or MultiPolygon).
+- Add a Google Maps layer to the QGIS canvas for better visualization and context.
+- Create a new AOI based on the current canvas extent.
+- Use the **Build AOI from Canvas Extent** button to automatically generate an AOI polygon.
 
 ### Step 4: Define time range for imagery search
 ![Step 4](media/step4.png)
@@ -88,7 +91,24 @@ The results page includes the following features:
 
 ### 2. Load RGB Layer (Focus on a Day)
 ![2](/media/results2.png)
-- Load and display an RGB layer for a specific date to analyze the visual appearance of the area.
+- Load and display an RGB layer for a specific date to analyze the visual appearance of the area. All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed in the table below:
+
+| Sentinel-2 Band Name         | QGIS Band Number | Wavelength (nm) | Spatial Resolution (m) |
+|------------------------------|------------------|-----------------|------------------------|
+| Band 1 (Coastal aerosol)     | 1                | 443             | 60                     |
+| Band 2 (Blue)                | 2                | 490             | 10                     |
+| Band 3 (Green)               | 3                | 560             | 10                     |
+| Band 4 (Red)                 | 4                | 665             | 10                     |
+| Band 5 (Vegetation Red Edge) | 5                | 705             | 20                     |
+| Band 6 (Vegetation Red Edge) | 6                | 740             | 20                     |
+| Band 7 (Vegetation Red Edge) | 7                | 783             | 20                     |
+| Band 8 (NIR)                 | 8                | 842             | 10                     |
+| Band 8A (Vegetation Red Edge)| 9                | 865             | 20                     |
+| Band 9 (Water Vapour)        | 10               | 945             | 60                     |
+| Band 10 (SWIR - Cirrus)      | 11               | 1375            | 60                     |
+| Band 11 (SWIR)               | 12               | 1610            | 20                     |
+| Band 12 (SWIR)               | 13               | 2190            | 20                     |
+
 
 ### 3. Load Index Layer (Focus on a Day)
 ![3](/media/results3.png)

@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>7</number>
+    <number>6</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -685,7 +685,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>AOI Coverage Filter Percentage: (Higher value, stricter filtering): </string>
+      <string>AOI Percentage of Overlap: (Higher value, stricter filtering): </string>
      </property>
      <widget class="QSlider" name="horizontalSlider_aio_cover">
       <property name="enabled">
@@ -760,7 +760,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high coverage threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
+       <string>This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high overlap threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
       </property>
      </widget>
     </widget>
@@ -959,7 +959,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>Sentinel-2 imagery is captured in tiles, each covering an area of 100 km² (10 km x 10 km). The cloud cover percentage for these tiles represents the proportion of the entire 100 km² area obscured by clouds. For smaller Areas of Interest (AOI), this overall tile-level cloud cover metric may not directly reflect the conditions within the AOI itself. In such cases, focusing on cloud cover specifically within the AOI can provide a more precise assessment, ensuring relevant data is used for analysis.</string>
+       <string>Sentinel-2 imagery is captured in tiles, each covering an area of 100 km² (10 km x 10 km). The cloud cover percentage for these tiles represents the proportion of the entire 100 km² area obscured by clouds. For smaller Areas of Interest (AOI), this overall tile-level cloud cover metric may not directly reflect the conditions inside the AOI itself. In such cases, other filters can provide a more precise assessment.</string>
       </property>
      </widget>
     </widget>
@@ -973,7 +973,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Valid Pixel Percentage Threshold in the AOI: (Higher value applies stricter filtering)</string>
+      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering)</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_local_pixel_limit">
       <property name="enabled">
@@ -1035,7 +1035,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>Using the Scene Classification Layer (SCL), it calculates the percentage of valid pixels and filters out images below a specified threshold, retaining only high-quality ones. The original images remain unchanged. Removing those unwanted is optional (Check Apply SCL mask).
+       <string>Using the Scene Classification Layer (SCL), this feature calculates the percentage of valid pixels and filters out images below the specified threshold. The original images remain unchanged. Removing those unwanted is optional (Check Apply SCL mask).
 The SCL classes included are:
 3: Cloud shadows
 8: Cloud medium probability
@@ -1337,7 +1337,7 @@ The SCL classes included are:
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QCheckBox" name="filtro1">
+     <widget class="QCheckBox" name="QCheckBox_sav_filter">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1661,29 +1661,6 @@ The SCL classes included are:
        <string>Clear</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QCommandLinkButton" name="moreinfo_day">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>560</y>
-       <width>111</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Segoe UI</family>
-       <pointsize>7</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>more info</string>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>media/icons8-question-50.png</normaloff>media/icons8-question-50.png</iconset>
-     </property>
     </widget>
    </widget>
   </widget>
