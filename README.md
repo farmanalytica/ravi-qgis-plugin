@@ -62,7 +62,7 @@ To install the RAVI QGIS Plugin:
 
 ### Step 4: Define time range for imagery search
 ![Step 4](media/step4.png)
-- Set the desired vegetation index, metric, date range, and cloud coverage thresholds.
+- Set a custom time range or select a suggested one.
 
 ### Step 5: Select vegetation index for time series analysis
 ![Step 5](media/step5.png)
@@ -75,12 +75,11 @@ To install the RAVI QGIS Plugin:
 
 ### Step 7: Cloud pixel percentage limit and valid pixel percentage threshold in the AOI
 ![Step 7](media/step7.png)
-- Set the maximum allowable cloud pixel percentage within the AOI.
-- Define the minimum valid pixel percentage threshold to ensure data quality.
+- Set the specified filters according to your analysis requirements.
 
 ### Results Page
 
-The results includes the following main features:
+The results page includes the following features:
 
 ### 1. Time Series Plot
 ![1](/media/results1.png)
@@ -113,8 +112,11 @@ The results includes the following main features:
 
 ### 7. Save Options
 ![7](/media/results7.png)
-![71](/media/results71.png)
+
 - Save the time series data in spreasheet format (CSV).
+
+![71](/media/results71.png)
+
 - To save the time series plot image, open it in the browser to enable the download option.
 
 ### 8. NASA POWER Precipitation
@@ -127,12 +129,8 @@ The results includes the following main features:
 
 ## Troubleshooting
 
-- **Earth Engine Authentication Failed**: Ensure you have logged in with your Google Earth Engine account and have the necessary project permissions as explained in the authentication steps.
+- **Earth Engine Authentication Failed**: Ensure you have the necessary requirements as explained in the authentication tab.
 - **AOI Errors**: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
-
-## Contributing
-
-Contributions are welcome! Fork the [repository](https://github.com/caioarantes) to submit bug fixes, new features, or documentation improvements.
 
 ## License
 
