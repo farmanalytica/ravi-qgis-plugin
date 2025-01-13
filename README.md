@@ -36,13 +36,15 @@ RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine 
 
 ## Installation
 
-To install the RAVI QGIS Plugin:
+To install RAVI:
 
 1. Open QGIS and navigate to the **Plugins** menu.
 2. Select **Manage and Install Plugins**.
-3. Enable **Show also experimental plugins** in the plugin repository settings.
-4. Search for "RAVI QGIS Plugin" and click **Install**.
-5. Restart QGIS to activate the plugin.
+3. In the plugin repository settings, enable **Show also experimental plugins**.
+  ![Show also experimental plugins](media/experimental.png)
+4. In the "All" tab, search for "RAVI", select it, and click **Install**.
+5. Ensure that RAVI is checked in the installed plugins list.
+6. Restart QGIS.
 
 ## Usage
 
