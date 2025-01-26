@@ -77,7 +77,7 @@ def install_earthengine_api():
         import pip
         pip_args = ['install', 'earthengine-api==1.3.1']
         pip.main(pip_args)
-        print("Earth Engine API installed successfully.")
+        #print("Earth Engine API installed successfully.")
     except AttributeError:
         from pip._internal.cli.main import main as pip_main
         pip_main(['install', 'earthengine-api==1.3.1'])
@@ -116,13 +116,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)  
 
-        self.resizeEvent('small')
-        self.tabWidget.setCurrentIndex(0)
-
         # Connect signals and slots
         self.autenticacao.clicked.connect(self.auth)
         self.desautenticacao.clicked.connect(self.auth_clear)
         self.update_vector.clicked.connect(self.load_vector_layers)
+        self.update_vector_2.clicked.connect(self.load_vector_layers)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
         self.load_1index.clicked.connect(self.first_index)
         self.load_1rgb.clicked.connect(self.first_rgb)
@@ -134,16 +132,22 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QPushButton_next_3.clicked.connect(self.next_clicked)
         self.QPushButton_next_4.clicked.connect(self.next_clicked)
         self.QPushButton_next_5.clicked.connect(self.next_clicked)
+        self.QPushButton_next_6.clicked.connect(self.next_clicked)
+        self.QPushButton_next_7.clicked.connect(self.next_clicked)
         self.QPushButton_back.clicked.connect(self.back_clicked)
         self.QPushButton_back_2.clicked.connect(self.back_clicked)
         self.QPushButton_back_3.clicked.connect(self.back_clicked)
         self.QPushButton_back_4.clicked.connect(self.back_clicked)
         self.QPushButton_back_5.clicked.connect(self.back_clicked)
+        self.QPushButton_back_6.clicked.connect(self.back_clicked)
         self.QPushButton_back_7.clicked.connect(self.back_clicked)
+        self.QPushButton_back_8.clicked.connect(self.back_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
+        self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked)
         self.navegador.clicked.connect(self.open_browser)
         self.datasrecorte.clicked.connect(self.datasrecorte_clicked)
         self.salvar.clicked.connect(self.salvar_clicked)
+        self.salvar_nasa.clicked.connect(self.salvar_nasa_clicked)
         self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
 
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
@@ -153,6 +157,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)  
 
         self.radioButton_3months.clicked.connect(self.last_3m_clicked)
+        self.radioButton_all.clicked.connect(self.all_clicked)
         self.radioButton_6months.clicked.connect(self.last_6m_clicked)
         self.radioButton_year.clicked.connect(self.last_year_clicked)
         self.radioButton_3years.clicked.connect(self.last_3_years_clicked)
@@ -163,17 +168,27 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
         self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
         self.horizontalSlider_total_pixel_limit.valueChanged.connect(self.update_labels)
-        self.textEdit.setReadOnly(True)  # Prevent editing
-        self.textEdit.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
+        self.series_indice.currentIndexChanged.connect(self.reload_update)
+        self.incioedit_2.dateChanged.connect(self.reload_update2)
+        self.finaledit_2.dateChanged.connect(self.reload_update2)
+        self.incioedit.dateChanged.connect(self.reload_update)
+        self.finaledit.dateChanged.connect(self.reload_update)
+        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update) 
+
+
         self.nasapower.clicked.connect(self.open_nasapower)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
+        self.textEdit.setReadOnly(True)  # Prevent editing
+        self.textEdit.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.textEdit.anchorClicked.connect(self.open_link)
+        self.textBrowser_valid_pixels.setReadOnly(True)
+        self.textBrowser_valid_pixels.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
 
         self.series_indice.currentIndexChanged.connect(self.index_explain)
         
         # Set default dates
-        self.last_year_clicked()
-
         self.autentication = False
         self.folder_set = False
         self.inicio = None
@@ -188,8 +203,28 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.selected_dates = []
         self.output_folder = None
         self.df_nasa = None
-        self.resizeEvent('small')
+        self.daily_precipitation = None
+
+        self.all_clicked()
+        
         self.index_explain()
+
+        self.tabWidget.setCurrentIndex(0)
+        self.resizeEvent('small')
+
+    def combobox_2_update(self):
+        self.vector_layer_combobox.setCurrentIndex(self.vector_layer_combobox_2.currentIndex())
+
+    def reload_update2(self):
+        self.finaledit.setDate(self.finaledit_2.date())
+        self.incioedit.setDate(self.incioedit_2.date())
+        self.series_indice.setCurrentIndex(self.series_indice_2.currentIndex())
+
+    def reload_update(self):
+        self.finaledit_2.setDate(self.finaledit.date())
+        self.incioedit_2.setDate(self.incioedit.date())
+        self.series_indice_2.setCurrentIndex(self.series_indice.currentIndex())
+        
 
     def clear_nasa_clicked(self):
         """
@@ -309,6 +344,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         one_month_ago = (datetime.today() - relativedelta(months=3)).strftime('%Y-%m-%d')
         self.finaledit.setDate(QDate.fromString(today, 'yyyy-MM-dd'))
         self.incioedit.setDate(QDate.fromString(one_month_ago, 'yyyy-MM-dd'))
+
+    def all_clicked(self):
+        today = datetime.today().strftime('%Y-%m-%d')
+        since = '2017-03-28'
+        self.finaledit.setDate(QDate.fromString(today, 'yyyy-MM-dd'))
+        self.incioedit.setDate(QDate.fromString(since, 'yyyy-MM-dd'))
 
     def last_year_clicked(self):
         today = datetime.today().strftime('%Y-%m-%d')
@@ -454,12 +495,35 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             None
         """
         df = self.df_aux
-        df = df[['date','average_index','savitzky_golay_filtered', 'image_id']]
-        if not self.QCheckBox_sav_filter.isChecked():
-            df.drop(columns=['savitzky_golay_filtered'], inplace=True)
-        
+        try:
+            df = df[['date','average_index','savitzky_golay_filtered', 'image_id']]
+        except:
+            df = df[['date','average_index','image_id']]      
 
         name = f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series.csv"
+        caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
+        if not caminho:
+            return
+        with open(caminho, 'w', encoding='latin-1') as arquivo:
+            arquivo.write(df.to_csv(decimal='.', sep=',', index=False, encoding="latin-1", lineterminator='\n'))
+        
+        # Open the file after saving (platform-specific)
+        if platform.system() == 'Windows':
+            os.startfile(caminho)
+        elif platform.system() == 'Darwin':  # macOS
+            subprocess.call(['open', caminho])
+        else:  # Linux and other Unix-like systems
+            subprocess.call(['xdg-open', caminho])
+
+    def salvar_nasa_clicked(self):
+
+        if self.df_nasa is None:
+            self.pop_aviso("No NASA data to save.")
+            return
+        
+        df = self.daily_precipitation
+        name = f"nasa_power_precipitation_{self.vector_layer_combobox.currentText()}.csv"
+
         caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
         if not caminho:
             return
@@ -667,14 +731,15 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def centralizar(self):
         """
-        Centers the window on the screen.
+        Centers the window on the screen without changing the screen the dialog is on.
 
-        This method calculates the geometry of the window frame and moves it to the center of the available screen space.
+        This method calculates the geometry of the window frame and moves it to the center of the available screen space on the current screen.
         """
         # 1. Get the current geometry of the window frame.
         qtRectangle = self.frameGeometry()
-        # 2. Determine the center point of the available screen space.
-        centerPoint = QDesktopWidget().availableGeometry().center()
+        # 2. Determine the center point of the available screen space on the current screen.
+        screen = QDesktopWidget().screenNumber(self)
+        centerPoint = QDesktopWidget().availableGeometry(screen).center()
         # 3. Move the center of the window frame to the center point of the screen.
         qtRectangle.moveCenter(centerPoint)
         # 4. Move the window to the new top-left position.
@@ -686,10 +751,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setMaximumSize(16777215, 16777215)  # Rem
 
         if size == 'small':
-            self.resize(485, 320)
+            self.resize(663, 373)
             self.setFixedSize(self.width(), self.height())  # Lock to small size
         elif size == 'big':
-            self.resize(1145, 575)
+            self.resize(1145, 582)
             self.centralizar()
             self.setFixedSize(self.width(), self.height())  # Lock to big size
 
@@ -698,12 +763,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if not self.autentication:
             self.tabWidget.setCurrentIndex(0)
             return
-        if index in [0, 1, 2, 3, 4, 5, 6]:
+        if index in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
             self.resizeEvent('small')
-        elif index == 7:
+        elif index == 9:
             self.resizeEvent('big')
             self.centralizar()
-        elif index == 7 and self.df is not None:
+        elif index == 9 and self.df is not None:
             self.resizeEvent('big')
             self.centralizar()
             self.plot_timeseries()
@@ -914,6 +979,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             last_added_layer = new_layers[-1]
             index = self.vector_layer_combobox.findText(last_added_layer.name())
             self.vector_layer_combobox.setCurrentIndex(index)
+
+        self.vector_layer_combobox_2.clear()
+        self.vector_layer_combobox_2.addItems(self.vector_layer_combobox.itemText(i) for i in range(self.vector_layer_combobox.count()))
+        self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
 
         # Call the method to handle the selected layer path
         self.get_selected_layer_path()
@@ -1337,51 +1406,140 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def index_explain(self):
         vegetation_indices = {
             "NDVI": """
-            <h3>Normalized Difference Vegetation Index (NDVI)</h3>
-            <p>The Normalized Difference Vegetation Index (NDVI) is a widely used remote sensing index that quantifies vegetation greenness and health. It is calculated using the formula:</p>
-            <pre>(NIR - RED) / (NIR + RED)</pre>
-            <p>where NIR and RED represent the reflectance in the near-infrared and red bands, respectively. NDVI values range from -1 to +1, with higher values indicating healthier and denser vegetation. NDVI is commonly used for:</p>
-            <ul>
-            <li>Monitoring crop health and vigor</li>
-            <li>Estimating biomass and productivity</li>
-            <li>Assessing drought impacts and vegetation stress</li>
-            <li>Mapping land cover and vegetation types</li>
-            </ul>
+                <h3>Normalized Difference Vegetation Index (NDVI)</h3>
+                <p>
+                    The Normalized Difference Vegetation Index (NDVI) is a widely used and well-established 
+                    indicator of vegetation health and vigor. It exploits the contrasting spectral 
+                    reflectance properties of plant pigments, particularly chlorophyll. 
+                    Healthy vegetation strongly absorbs visible red light for photosynthesis while 
+                    reflecting a significant portion of near-infrared (NIR) radiation. 
+                    Conversely, non-vegetated areas like soil and water tend to reflect both red and 
+                    NIR light more equally. 
+                </p>
+                <p>
+                    The NDVI formula is calculated as follows:
+                </p>
+                <pre>
+        NDVI = (NIR - RED) / (NIR + RED)
+                </pre>
+                <p>
+                    where:
+                    <ul>
+                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                        <li><b>RED</b>: Reflectance in the red band</li>
+                    </ul>
+                    By calculating the difference between NIR and red reflectance and normalizing it 
+                    by their sum, NDVI effectively enhances the vegetation signal while minimizing 
+                    the influence of factors like variations in illumination and atmospheric conditions. 
+                    NDVI values typically range from -1 to 1. 
+                    Higher values (closer to 1) generally indicate denser, healthier vegetation with 
+                    higher leaf area and chlorophyll content. 
+                    Lower values (closer to -1) often correspond to bare soil, water, or senescent 
+                    (dying) vegetation.
+                </p>
             """,
             "GNDVI": """
-            <h3>Green Normalized Difference Vegetation Index (GNDVI)</h3>
-            <p>The Green Normalized Difference Vegetation Index (GNDVI) is a variation of NDVI that uses the green band instead of the red band. It is calculated as:</p>
-            <pre>(NIR - GREEN) / (NIR + GREEN)</pre>
-            <p>where NIR and GREEN represent the reflectance in the near-infrared and green bands, respectively. GNDVI is more sensitive to chlorophyll concentration and is particularly useful for detecting:</p>
-            <ul>
-            <li>Variations in canopy chlorophyll content</li>
-            <li>Plant stress and nutrient deficiencies</li>
-            <li>Crop health and vigor</li>
-            </ul>
+                <h3>Green Normalized Difference Vegetation Index (GNDVI)</h3>
+                <p>
+                    The Green Normalized Difference Vegetation Index (GNDVI) is a modification of NDVI 
+                    that utilizes the green band of the electromagnetic spectrum instead of the red band. 
+                    Chlorophyll, the primary pigment involved in photosynthesis, strongly absorbs 
+                    blue and red light while reflecting green light. 
+                    Therefore, GNDVI is particularly sensitive to variations in chlorophyll content 
+                    within plant canopies.
+                </p>
+                <p>
+                    The GNDVI formula is calculated as:
+                </p>
+                <pre>
+        GNDVI = (NIR - GREEN) / (NIR + GREEN)
+                </pre>
+                <p>
+                    where:
+                    <ul>
+                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                        <li><b>GREEN</b>: Reflectance in the green band</li>
+                    </ul>
+                    This sensitivity makes GNDVI a valuable tool for:
+                    <ul>
+                        <li>Monitoring plant stress and nutrient deficiencies</li>
+                        <li>Detecting early signs of disease or pest infestations</li>
+                        <li>Assessing crop vigor and yield potential</li>
+                        <li>Studying the impact of environmental factors on plant growth</li>
+                    </ul>
+                </p>
             """,
             "EVI": """
-            <h3>Enhanced Vegetation Index (EVI)</h3>
-            <p>The Enhanced Vegetation Index (EVI) is designed to optimize the vegetation signal while minimizing atmospheric and soil background influences. It is calculated using the formula:</p>
-            <pre>2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))</pre>
-            <p>where NIR, RED, and BLUE represent the reflectance in the near-infrared, red, and blue bands, respectively. EVI is particularly effective in areas with dense vegetation and is used for:</p>
-            <ul>
-            <li>Analyzing canopy structure and leaf area index (LAI)</li>
-            <li>Estimating vegetation productivity and growth</li>
-            <li>Monitoring seasonal and interannual vegetation dynamics</li>
-            </ul>
+                <h3>Enhanced Vegetation Index (EVI)</h3>
+                <p>
+                    The Enhanced Vegetation Index (EVI) was developed to address some of the limitations 
+                    of NDVI, particularly in areas of high biomass or atmospheric interference. 
+                    EVI incorporates a blue band in its calculation, which helps to minimize the 
+                    influence of atmospheric aerosols and soil background noise. 
+                    Additionally, EVI uses a canopy background adjustment term to improve sensitivity 
+                    in areas of high biomass and to better discriminate vegetation from non-vegetated 
+                    surfaces.
+                </p>
+                <p>
+                    The EVI formula is calculated as:
+                </p>
+                <pre>
+        EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
+                </pre>
+                <p>
+                    where:
+                    <ul>
+                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                        <li><b>RED</b>: Reflectance in the red band</li>
+                        <li><b>BLUE</b>: Reflectance in the blue band</li>
+                    </ul>
+                    EVI has proven to be highly effective in:
+                    <ul>
+                        <li>Monitoring vegetation dynamics in diverse ecosystems</li>
+                        <li>Estimating biomass and productivity</li>
+                        <li>Assessing the impact of climate change on vegetation</li>
+                        <li>Mapping vegetation cover and land use/land cover change</li>
+                    </ul>
+                </p>
             """,
             "SAVI": """
-            <h3>Soil-Adjusted Vegetation Index (SAVI)</h3>
-            <p>The Soil-Adjusted Vegetation Index (SAVI) is an index that adjusts for soil brightness in areas with sparse vegetation. It is calculated using the formula:</p>
-            <pre>(1 + L) * ((NIR - RED) / (NIR + RED + L))</pre>
-            <p>where NIR and RED represent the reflectance in the near-infrared and red bands, respectively, and L is a soil brightness correction factor, typically set to 0.5 (L=0.5 for this plugin porposes). SAVI is useful for:</p>
-            <ul>
-            <li>Analyzing vegetation in arid and semi-arid regions</li>
-            <li>Monitoring vegetation in areas with significant soil exposure</li>
-            <li>Improving vegetation signal in heterogeneous landscapes</li>
-            </ul>
+                <h3>Soil-Adjusted Vegetation Index (SAVI)</h3>
+                <p>
+                    The Soil-Adjusted Vegetation Index (SAVI) is specifically designed to minimize 
+                    the influence of soil background reflectance, particularly in areas with sparse 
+                    vegetation cover. 
+                    In such areas, soil reflectance can significantly impact the accuracy of 
+                    vegetation indices like NDVI.
+                </p>
+                <p>
+                    SAVI incorporates a soil brightness correction factor (L) into its calculation. 
+                    This factor adjusts the sensitivity of the index to soil background, 
+                    allowing for more accurate assessment of vegetation in areas with varying 
+                    soil conditions. SAVI is particularly useful in:
+                    <ul>
+                        <li>Arid and semi-arid regions</li>
+                        <li>Agricultural areas with low plant cover</li>
+                        <li>Disturbed or degraded ecosystems</li>
+                    </ul>
+                </p>
+                <p>
+                    The SAVI formula is calculated as:
+                </p>
+                <pre>
+        SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
+                </pre>
+                <p>
+                    where:
+                    <ul>
+                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                        <li><b>RED</b>: Reflectance in the red band</li>
+                        <li><b>L</b>: Soil brightness correction factor (typically set to 0.5)</li>
+                    </ul>
+                </p>
+                <p><b>Note:</b> For this plugin, the soil brightness correction factor (L) is set to 0.5.</p>
             """
         }
+
 
         explanation = vegetation_indices.get(self.series_indice.currentText())
         self.textBrowser_index_explain.setHtml(explanation)
@@ -1458,7 +1616,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 self.aoi = ee.FeatureCollection([feature])
 
                 print("AOI defined successfully.")
+                self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
                 self.find_area()
+                self.find_centroid()
                 
                 self.aoi_ckecked  = True
                 self.aoi_ckecked_function()
@@ -1475,7 +1635,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         centroid = self.aoi.geometry().centroid()
         self.lat = centroid.getInfo().get('coordinates')[1]
         self.lon = centroid.getInfo().get('coordinates')[0]
-        print(f"Latitude: {self.lat}, Longitude: {self.lon}")
+        print(f"{round(self.lat,4)},{round(self.lon,4)}")
         area = self.aoi.geometry().area().getInfo() / 1e6  # Convert from square meters to square kilometers
         print(f"Area: {area:.2f} km²")
         if area >= 100:
@@ -1493,12 +1653,19 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print(f"Start date: {start}, End date: {end}")
         print("Opening NASA POWER data for the selected location...")
 
-        start_date = datetime.strptime(str(start), "%Y-%m-%d")
-        end_date = datetime.strptime(str(end), "%Y-%m-%d")
+        start_date = datetime.strptime(str(start).split()[0], "%Y-%m-%d")
+        end_date = datetime.strptime(str(end).split()[0], "%Y-%m-%d")
+        # start_date = datetime.strptime(str(start), "%Y-%m-%d")
+        # end_date = datetime.strptime(str(end), "%Y-%m-%d")
 
+        # Adjust the start date to the first day of the month
         new_start = start_date.replace(day=1).strftime("%Y%m%d")
+        
+        # Adjust the end date to the last day of the month
         new_end = (end_date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
         new_end = new_end.strftime("%Y%m%d")
+        
+        # Print the adjusted start and end dates for debugging
         print(new_start, new_end)
 
 
@@ -1508,8 +1675,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         content = json.loads(response.content.decode('utf-8'))
         df = pd.DataFrame.from_dict(content['properties']['parameter'])
         df[df < 0] = 0
+        
         # Convert the index to datetime
         df.index = pd.to_datetime(df.index, format='%Y%m%d')
+        self.daily_precipitation = df.reset_index().rename(columns={'index': 'Date'}).copy()
+        
 
         # Resample the data to monthly frequency and sum the values
         monthly_sum = df.resample('M').sum()
@@ -1539,6 +1709,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QCheckBox_sav_filter.setChecked(False)
         self.filtro_grau.setCurrentIndex(0)
         self.window_len.setCurrentIndex(0)
+        self.df_nasa = None
 
     def loadtimeseries_clicked(self):
         # Find the centroid of the AOI and check if the area is within the limit
@@ -1566,15 +1737,36 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             .filterBounds(aoi) \
             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', nuvem)) \
             .map(lambda image: image.set('date', image.date().format('YYYY-MM-dd')))
+        
+        # Check if the collection is empty
+        if sentinel2.size().getInfo() == 0:
+            self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
+            QApplication.restoreOverrideCursor()
+            return
               
         # Apply AOI coverage filter to the image collection
-        sentinel2 = self.AOI_coverage_filter(sentinel2, aoi, coverage_threshold)
+        if coverage_threshold > 0:
+            sentinel2 = self.AOI_coverage_filter(sentinel2, aoi, coverage_threshold)
+            if sentinel2.size().getInfo() == 0:
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
+                QApplication.restoreOverrideCursor()
+                return            
 
-        sentinel2 = self.filter_within_AOI(sentinel2, aoi, local_pixel_limit)
+        if local_pixel_limit > 0:
+            # Apply local pixel limit filter to the image collection
+            sentinel2 = self.filter_within_AOI(sentinel2, aoi, local_pixel_limit)
+            if sentinel2.size().getInfo() == 0:
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
+                QApplication.restoreOverrideCursor()
+                return
 
         # Apply cloud and shadow mask if the checkbox is checked
         if self.mask.isChecked():
             sentinel2 = self.SCL_filter(sentinel2, aoi)
+            if sentinel2.size().getInfo() == 0:
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
+                QApplication.restoreOverrideCursor()
+                return
 
         sentinel2 = self.uniqueday_collection(sentinel2)
 
@@ -1657,11 +1849,29 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         return covering_colection
 
     def filter_within_AOI(self, sentinel2, aoi, valid_pixel_threshold):
+        scl_classes_behavior = {
+            0: self.mask_class0.isChecked(),  # No data
+            1: self.mask_class1.isChecked(),  # Saturated/defective
+            2: self.mask_class2.isChecked(),  # Dark features
+            3: self.mask_class3.isChecked(),  # Cloud shadows
+            4: self.mask_class4.isChecked(),  # Vegetation
+            5: self.mask_class5.isChecked(),  # Bare soils
+            6: self.mask_class6.isChecked(),  # Water
+            7: self.mask_class7.isChecked(),  # Cloud low probability
+            8: self.mask_class8.isChecked(),  # Cloud medium probability
+            9: self.mask_class9.isChecked(),  # Cloud high probability
+            10: self.mask_class10.isChecked(), # Thin cirrus
+            11: self.mask_class11.isChecked()  # Snow or ice
+        }
         def mask_cloud_and_shadows(image):
-            # Scene classification layer
             scl = image.select('SCL')
-            # Combine masks for cloud, snow, shadow
-            mask = scl.neq(3).And(scl.neq(8)).And(scl.neq(9))
+            # Start with an all-inclusive mask
+            mask = ee.Image.constant(1)
+            # Apply exclusions
+            for class_value, include in scl_classes_behavior.items():
+                if include:
+                    mask = mask.And(scl.neq(class_value))
+            
             masked_image = image.updateMask(mask)
             
             # Calculate the percentage of valid pixels
@@ -1698,13 +1908,30 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
 
     def SCL_filter(self, sentinel2, aoi):
+        scl_classes_behavior = {
+            0: self.mask_class0.isChecked(),  # No data
+            1: self.mask_class1.isChecked(),  # Saturated/defective
+            2: self.mask_class2.isChecked(),  # Dark features
+            3: self.mask_class3.isChecked(),  # Cloud shadows
+            4: self.mask_class4.isChecked(),  # Vegetation
+            5: self.mask_class5.isChecked(),  # Bare soils
+            6: self.mask_class6.isChecked(),  # Water
+            7: self.mask_class7.isChecked(),  # Cloud low probability
+            8: self.mask_class8.isChecked(),  # Cloud medium probability
+            9: self.mask_class9.isChecked(),  # Cloud high probability
+            10: self.mask_class10.isChecked(), # Thin cirrus
+            11: self.mask_class11.isChecked()  # Snow or ice
+        }
         def mask_cloud_and_shadows(image):
-            # Scene classification layer
             scl = image.select('SCL')
-            # Combine masks for cloud, snow, shadow, and cirrus
-            mask = scl.neq(3).And(scl.neq(8)).And(scl.neq(9).And(scl.neq(10)))
-            return image.updateMask(mask)
-
+            # Start with an all-inclusive mask
+            mask = ee.Image.constant(1)
+            # Apply exclusions
+            for class_value, include in scl_classes_behavior.items():
+                if include:
+                    mask = mask.And(scl.neq(class_value))
+            
+            return image.updateMask(mask)      
             # Apply the cloud and shadow mask function to the image collection
         return sentinel2.map(mask_cloud_and_shadows)
  
@@ -1800,38 +2027,55 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             df = df[df['date'].isin(self.recorte_datas)]
             self.df_aux = df.copy()
 
+    def df_run_filter(self):
+        df = self.df_aux.copy()
+        try:
 
-        if self.window_len.count() == 0:
-                    self.window_len.clear()
-                    self.window_len.addItems(list(map(str, list(range(7, len(df)+1)))))
-                    self.window_len.setCurrentIndex(0)
+            if self.window_len.count() == 0:
+                        self.window_len.clear()
+                        self.window_len.addItems(list(map(str, list(range(7, len(df)+1)))))
+                        self.window_len.setCurrentIndex(0)
 
-        window_length = int(self.window_len.currentText())
-        polyorder = int(self.filtro_grau.currentText().split('%')[0])
-        print(f'Window length: {window_length}, Polyorder: {polyorder}')
+            window_length = int(self.window_len.currentText())
+            polyorder = int(self.filtro_grau.currentText().split('%')[0])
+            print(f'Window length: {window_length}, Polyorder: {polyorder}')
 
-        if window_length > len(df):
-            window_length = len(df)
-            self.window_len.setCurrentIndex(len(df) - 5)
-            print(f'Window length too large. Using maximum value: {window_length}')
+            if window_length > len(df):
+                window_length = len(df)
+                self.window_len.setCurrentIndex(len(df) - 5)
+                print(f'Window length too large. Using maximum value: {window_length}')
 
-        df['savitzky_golay_filtered'] = savgol_filter(df['average_index'], window_length=window_length, polyorder=polyorder)
-        print(df)
+            # Apply Savitzky-Golay filter to smooth the time series
 
-        self.df_aux = df.copy()
+            
+            df['savitzky_golay_filtered'] = savgol_filter(df['average_index'], window_length=window_length, polyorder=polyorder)
+            self.df_aux = df.copy()
+            return True
+        except Exception as e:
+            self.pop_aviso(f"Not enough images to apply the Savitzky-Golay filter. Please select a larger date range or less strick filtering.")
+            self.QCheckBox_sav_filter.setChecked(False)
+            self.plot_timeseries()
+            return False
+
+        
 
     def plot_timeseries(self):
         print('plot1 started')
         self.df_ajust()
-        df = self.df_aux
-
+        
         # Prepare to plot
         myFile = io.StringIO()
-        if self.QCheckBox_sav_filter.isChecked():
-            self.fig = go.Figure()
-            self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
-            self.fig.add_trace(go.Scatter(x=df['date'], y=df['savitzky_golay_filtered'], mode='lines', name=f"{self.series_indice.currentText()} filtered", line=dict(color='purple')))
+        if self.QCheckBox_sav_filter.isChecked() and self.df_run_filter():
+            df = self.df_aux
+            try:
+                self.fig = go.Figure()
+                self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
+                self.fig.add_trace(go.Scatter(x=df['date'], y=df['savitzky_golay_filtered'], mode='lines', name=f"{self.series_indice.currentText()} filtered", line=dict(color='purple')))
+            except Exception as e:
+                self.pop_aviso(f"An error occurred while plotting: {e}")
+                self.QCheckBox_sav_filter.setChecked(False)
         else:
+            df = self.df_aux
             self.fig = go.Figure()
             self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
        
@@ -1889,8 +2133,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print('ok plot1')
 
     
-        self.tabWidget.setCurrentIndex(7)
-        self.showNormal()
+        self.tabWidget.setCurrentIndex(9)
+        # self.showNormal()
         QApplication.restoreOverrideCursor()
 
     def open_browser(self):

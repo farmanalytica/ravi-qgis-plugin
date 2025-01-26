@@ -5,12 +5,12 @@ RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine 
 ## Key Features
 
 ### 1. Earth Engine Integration
-- **Easy Authentication**: Authenticate with GEE directly from the plugin interface.
+- **Easy Authentication**: Authenticate with Google Earth Engine to enable plugin functionality.
 - **Direct Processing**: Access, process, and analyze Sentinel-2 imagery without leaving QGIS.
 - **On-the-Fly Visualization**: Visualize processed data as raster layers or interactive plots.
 
 ### 2. Vegetation Index Calculations
-- **Supported Indices**: Compute indices such as NDVI, EVI, SAVI, GNDVI, and GCI.
+- **Supported Indices**: Compute indices such as NDVI, EVI, SAVI and GNDVI.
 - **Customizable Metrics**: Aggregate data using mean, max, min, median, amplitude, or standard deviation.
 
 ### 3. Advanced Time Series Analysis
@@ -18,11 +18,8 @@ RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine 
 - Integrate precipitation data from NASA POWER for cross-variable comparisons.
 - Smooth data with Savitzky-Golay filters for enhanced trend analysis.
 
-### 4. AOI and Filtering Tools
+### 4. AOI Selection
 - **AOI Management**: Load areas of interest from shapefiles or GeoJSON files.
-- **Flexible Filtering**:
-  - Set date ranges and cloud coverage thresholds.
-  - Apply custom cloud, snow, and shadow masking.
 
 ### 5. Interactive Visualization
 - **Charts**: Create interactive time series plots using Plotly.
@@ -60,10 +57,9 @@ To install RAVI:
 ### Step 3: Load and select the area of interest (AOI)
 ![Step 3](media/step3.png)
 - Select an AOI by loading a shapefile or GeoJSON file.
-- Ensure the geometry is valid (Polygon or MultiPolygon).
+- Ensure the geometry is valid (Polygon or MultiPolygon only).
 - Add a Google Maps layer to the QGIS canvas for better visualization and context.
-- Create a new AOI based on the current canvas extent.
-- Use the **Build AOI from Canvas Extent** button to automatically generate an AOI polygon.
+- Use the **Build AOI from Canvas Extent** button to automatically generate a new AOI based on the current canvas extent.
 
 ### Step 4: Define time range for imagery search
 ![Step 4](media/step4.png)
@@ -73,14 +69,21 @@ To install RAVI:
 ![Step 5](media/step5.png)
 - Choose the vegetation index you want to analyze from the dropdown menu.
 
-### Step 6: AOI coverage filter and AOI Buffer filter options
+### Step 6: Imagegery Overlap filter and AOI Buffer filter options
 ![Step 6](media/step6.png)
-- Apply AOI coverage filter to include only images covering a specified percentage of the AOI.
+- Set the specified filter according to your analysis requirements.
+
+### Step 7: AOI Buffer
+![Step 7](media/step7.png)
 - Use AOI Buffer filter to reduce the AOI boundary for analysis.
 
-### Step 7: Cloud pixel percentage limit and valid pixel percentage threshold in the AOI
-![Step 7](media/step7.png)
-- Set the specified filters according to your analysis requirements.
+### Step 8: Cloud pixel percentage filter
+![Step 8](media/step8.png)
+- Set the specified filter according to your analysis requirements.
+
+### Step 9: Valid pixel percentage filter
+![Step 9](media/step9.png)
+- Set the specified filter according to your analysis requirements.
 
 ### Results Page
 
@@ -134,16 +137,14 @@ The results page includes the following features:
 
 ### 7. Save Options
 ![7](/media/results7.png)
-
-- Save the time series data in spreasheet format (CSV).
-
 ![71](/media/results71.png)
-
-- To save the time series plot image, open it in the browser to enable the download option.
+- Save the time series data in spreasheet format (CSV).
+- To save the time series as image, open it in the browser to enable the download option.
 
 ### 8. NASA POWER Precipitation
 ![8](/media/results8.png)
 - Add monthly precipitation data from NASA POWER for cross-variable comparisons.
+- Save the precipitation data in spreasheet format (CSV).
 
 ### 9. Clear All Loaded Layers
 ![9](/media/results9.png)
@@ -154,10 +155,10 @@ The results page includes the following features:
 - **Earth Engine Authentication Failed**: Ensure you have the necessary requirements as explained in the authentication tab.
 - **AOI Errors**: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
 
+### Reporting Issues
+
+If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section.
+
 ## License
 
 RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the LICENSE file for details.
-
-## Contact
-
-For questions or support, email [Caio Arantes](mailto:caiosimplicioarantes@gmail.com).

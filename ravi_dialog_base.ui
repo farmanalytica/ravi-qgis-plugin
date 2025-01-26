@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1342</width>
+    <width>1418</width>
     <height>767</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1231</width>
+     <width>1331</width>
      <height>761</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <pointsize>11</pointsize>
     </font>
    </property>
    <property name="contextMenuPolicy">
@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -46,8 +46,8 @@
     <widget class="QPushButton" name="autenticacao">
      <property name="geometry">
       <rect>
-       <x>170</x>
-       <y>250</y>
+       <x>350</x>
+       <y>300</y>
        <width>301</width>
        <height>31</height>
       </rect>
@@ -60,7 +60,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>151</width>
        <height>31</height>
       </rect>
@@ -74,21 +74,21 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>461</width>
-       <height>231</height>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="html">
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;To use this plugin, you need the following:&lt;/span&gt;&lt;/p&gt;
-&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;An Active Google Earth Engine Account:&lt;/span&gt;&lt;/a&gt; A registered and approved GEE account (provides access to datasets, APIs, and tools).&lt;/li&gt;
-&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://developers.google.com/earth-engine/guides/access&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;A Google Cloud Project:&lt;/span&gt;&lt;/a&gt; A Google Cloud project linked to your GEE account (handles authentication, API enablement, and quota management for Earth Engine services).&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;If you are able to acesss the &lt;/span&gt;&lt;a href=&quot;https://code.earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; text-decoration: underline; color:#0000ff;&quot;&gt;Google Earth Engine Code Editor&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt; you are likely good to go!&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/caioarantes/ravi-qgis-plugin&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to go to acess the step-by-step guide.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The authentication token will be stored locally, allowing you to skip browser login during future authentications. To switch accounts, click 'Reset Authentication'.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;To use this plugin, you need the following:&lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;An Active Google Earth Engine Account:&lt;/span&gt;&lt;/a&gt; A registered and approved GEE account (provides access to datasets, APIs, and tools).&lt;/li&gt;
+&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://developers.google.com/earth-engine/guides/access&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;A Google Cloud Project:&lt;/span&gt;&lt;/a&gt; A Google Cloud project linked to your GEE account (handles authentication, API enablement, and quota management for Earth Engine services).&lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;If you are able to acesss the &lt;/span&gt;&lt;a href=&quot;https://code.earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; text-decoration: underline; color:#0000ff;&quot;&gt;Google Earth Engine Code Editor&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; you are likely good to go!&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; to go to acess the step-by-step guide.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The authentication token will be stored locally, allowing you to skip browser login during future authentications. To switch accounts, click 'Reset Authentication'.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="overwriteMode">
       <bool>true</bool>
@@ -109,8 +109,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
-       <width>461</width>
+       <y>110</y>
+       <width>641</width>
        <height>81</height>
       </rect>
      </property>
@@ -122,7 +122,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>441</width>
+        <width>621</width>
         <height>51</height>
        </rect>
       </property>
@@ -138,7 +138,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -153,8 +153,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>250</y>
+       <x>580</x>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -174,8 +174,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>250</y>
+       <x>580</x>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -188,8 +188,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
-       <width>461</width>
+       <y>40</y>
+       <width>641</width>
        <height>81</height>
       </rect>
      </property>
@@ -199,9 +199,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector">
       <property name="geometry">
        <rect>
-        <x>370</x>
+        <x>560</x>
         <y>30</y>
-        <width>81</width>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -214,7 +214,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>351</width>
+        <width>541</width>
         <height>31</height>
        </rect>
       </property>
@@ -227,7 +227,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -243,8 +243,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>200</y>
-       <width>171</width>
+       <y>240</y>
+       <width>181</width>
        <height>31</height>
       </rect>
      </property>
@@ -258,9 +258,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>200</y>
-       <width>281</width>
+       <x>200</x>
+       <y>240</y>
+       <width>451</width>
        <height>31</height>
       </rect>
      </property>
@@ -272,8 +272,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
-       <width>461</width>
+       <y>150</y>
+       <width>641</width>
        <height>80</height>
       </rect>
      </property>
@@ -295,7 +295,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>AOI total area:</string>
+       <string>Total area:</string>
       </property>
      </widget>
     </widget>
@@ -333,9 +333,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
-       <width>461</width>
-       <height>231</height>
+       <y>30</y>
+       <width>641</width>
+       <height>261</height>
       </rect>
      </property>
      <property name="title">
@@ -344,10 +344,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QDateEdit" name="finaledit">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>110</y>
-        <width>101</width>
-        <height>22</height>
+        <x>160</x>
+        <y>120</y>
+        <width>111</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="dateTime">
@@ -383,10 +383,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QDateEdit" name="incioedit">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>101</width>
-        <height>21</height>
+        <x>30</x>
+        <y>120</y>
+        <width>111</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="dateTime">
@@ -416,8 +416,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>80</y>
+        <x>30</x>
+        <y>90</y>
         <width>91</width>
         <height>16</height>
        </rect>
@@ -438,8 +438,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_20">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>80</y>
+        <x>160</x>
+        <y>90</y>
         <width>81</width>
         <height>20</height>
        </rect>
@@ -460,13 +460,61 @@ p, li { white-space: pre-wrap; }
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>50</y>
-        <width>171</width>
-        <height>142</height>
+        <x>350</x>
+        <y>40</y>
+        <width>191</width>
+        <height>194</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="8" column="0">
+        <widget class="QRadioButton" name="radioButton_select_year">
+         <property name="text">
+          <string>Selected year:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QRadioButton" name="radioButton_5years">
+         <property name="text">
+          <string>Last 5 years</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QRadioButton" name="radioButton_6months">
+         <property name="text">
+          <string>Last 6 months</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QRadioButton" name="radioButton_year">
+         <property name="text">
+          <string>Last 12 months</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QRadioButton" name="radioButton_3months">
+         <property name="text">
+          <string>Last 3 months</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QRadioButton" name="radioButton_3years">
+         <property name="text">
+          <string>Last 3 years</string>
+         </property>
+        </widget>
+       </item>
        <item row="8" column="1">
         <widget class="QComboBox" name="combo_year">
          <item>
@@ -506,48 +554,13 @@ p, li { white-space: pre-wrap; }
          </item>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QRadioButton" name="radioButton_6months">
+       <item row="9" column="0">
+        <widget class="QRadioButton" name="radioButton_all">
          <property name="text">
-          <string>Last 6 months</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QRadioButton" name="radioButton_select_year">
-         <property name="text">
-          <string>Selected year:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QRadioButton" name="radioButton_year">
-         <property name="text">
-          <string>Last 12 months</string>
+          <string>All available</string>
          </property>
          <property name="checked">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QRadioButton" name="radioButton_5years">
-         <property name="text">
-          <string>Last 5 years</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QRadioButton" name="radioButton_3years">
-         <property name="text">
-          <string>Last 3 years</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QRadioButton" name="radioButton_3months">
-         <property name="text">
-          <string>Last 3 months</string>
          </property>
         </widget>
        </item>
@@ -561,7 +574,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -573,8 +586,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_2">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>250</y>
+       <x>580</x>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -593,8 +606,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>461</width>
-       <height>231</height>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="title">
@@ -605,18 +618,18 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>71</width>
+        <width>81</width>
         <height>31</height>
        </rect>
       </property>
       <item>
        <property name="text">
-        <string>NDVI</string>
+        <string>GNDVI</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>GNDVI</string>
+        <string>NDVI</string>
        </property>
       </item>
       <item>
@@ -633,9 +646,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QTextBrowser" name="textBrowser_index_explain">
       <property name="geometry">
        <rect>
-        <x>95</x>
-        <y>30</y>
-        <width>351</width>
+        <x>10</x>
+        <y>80</y>
+        <width>621</width>
         <height>181</height>
        </rect>
       </property>
@@ -644,8 +657,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_5">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>250</y>
+       <x>580</x>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -661,7 +674,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -680,12 +693,12 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>461</width>
-       <height>111</height>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="title">
-      <string>AOI Percentage of Overlap: (Higher value, stricter filtering): </string>
+      <string>Imagery Overlap with AOI : (Higher value, stricter filtering): </string>
      </property>
      <widget class="QSlider" name="horizontalSlider_aio_cover">
       <property name="enabled">
@@ -694,8 +707,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>121</width>
+        <y>40</y>
+        <width>561</width>
         <height>21</height>
        </rect>
       </property>
@@ -727,9 +740,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_coverage">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>50</y>
-        <width>31</width>
+        <x>590</x>
+        <y>40</y>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -753,10 +766,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QPlainTextEdit" name="plainTextEdit_2">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>30</y>
-        <width>271</width>
-        <height>71</height>
+        <x>10</x>
+        <y>80</y>
+        <width>621</width>
+        <height>181</height>
        </rect>
       </property>
       <property name="plainText">
@@ -767,8 +780,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_3">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>250</y>
+       <x>580</x>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -784,7 +797,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -806,13 +819,47 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
     </widget>
+   </widget>
+   <widget class="QWidget" name="tab_9">
+    <attribute name="title">
+     <string>Step 7</string>
+    </attribute>
+    <widget class="QPushButton" name="QPushButton_back_6">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_next_6">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>300</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Next</string>
+     </property>
+    </widget>
     <widget class="QGroupBox" name="groupBox_28">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
-       <width>461</width>
-       <height>111</height>
+       <y>10</y>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="title">
@@ -821,10 +868,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QPlainTextEdit" name="plainTextEdit_11">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>30</y>
-        <width>271</width>
-        <height>71</height>
+        <x>10</x>
+        <y>80</y>
+        <width>621</width>
+        <height>181</height>
        </rect>
       </property>
       <property name="plainText">
@@ -834,14 +881,14 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_buffer">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>50</y>
-        <width>31</width>
+        <x>590</x>
+        <y>40</y>
+        <width>51</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>10 m</string>
+       <string>50 m</string>
       </property>
      </widget>
      <widget class="QSlider" name="horizontalSlider_buffer">
@@ -851,8 +898,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>121</width>
+        <y>40</y>
+        <width>561</width>
         <height>21</height>
        </rect>
       </property>
@@ -869,10 +916,10 @@ p, li { white-space: pre-wrap; }
        <number>5</number>
       </property>
       <property name="value">
-       <number>10</number>
+       <number>50</number>
       </property>
       <property name="sliderPosition">
-       <number>10</number>
+       <number>50</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -885,19 +932,19 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_5">
     <attribute name="title">
-     <string>Step 7</string>
+     <string>Step 8</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_6">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>461</width>
-       <height>111</height>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="title">
-      <string>Cloudy Pixel Percentage limit: (Lower value applies stricter filtering): </string>
+      <string>Cloudy Pixel Percentage Limit: (Lower value applies stricter filtering): </string>
      </property>
      <widget class="QSlider" name="horizontalSlider_total_pixel_limit">
       <property name="enabled">
@@ -906,8 +953,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>121</width>
+        <y>40</y>
+        <width>561</width>
         <height>21</height>
        </rect>
       </property>
@@ -939,8 +986,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>50</y>
+        <x>590</x>
+        <y>40</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -952,10 +999,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QPlainTextEdit" name="plainTextEdit">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>30</y>
-        <width>271</width>
-        <height>71</height>
+        <x>10</x>
+        <y>80</y>
+        <width>621</width>
+        <height>181</height>
        </rect>
       </property>
       <property name="plainText">
@@ -963,13 +1010,47 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="QPushButton_back_7">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_next_7">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>300</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Next</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_10">
+    <attribute name="title">
+     <string>Step 9</string>
+    </attribute>
     <widget class="QGroupBox" name="groupBox_15">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
-       <width>461</width>
-       <height>111</height>
+       <y>10</y>
+       <width>641</width>
+       <height>281</height>
       </rect>
      </property>
      <property name="title">
@@ -982,8 +1063,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>121</width>
+        <y>30</y>
+        <width>561</width>
         <height>21</height>
        </rect>
       </property>
@@ -1000,10 +1081,10 @@ p, li { white-space: pre-wrap; }
        <number>5</number>
       </property>
       <property name="value">
-       <number>90</number>
+       <number>80</number>
       </property>
       <property name="sliderPosition">
-       <number>90</number>
+       <number>80</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -1015,58 +1096,239 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud_aoi">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>40</y>
+        <x>590</x>
+        <y>30</y>
         <width>47</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>90 %</string>
+       <string>80 %</string>
       </property>
      </widget>
-     <widget class="QPlainTextEdit" name="plainTextEdit_3">
+     <widget class="QGroupBox" name="groupBox_9">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>30</y>
-        <width>271</width>
-        <height>71</height>
+        <x>10</x>
+        <y>150</y>
+        <width>621</width>
+        <height>121</height>
        </rect>
       </property>
-      <property name="plainText">
-       <string>Using the Scene Classification Layer (SCL), this feature calculates the percentage of valid pixels and filters out images below the specified threshold. The original images remain unchanged. Removing those unwanted is optional (Check Apply SCL mask).
-The SCL classes included are:
-3: Cloud shadows
-8: Cloud medium probability
-9: Cloud high probability</string>
+      <property name="title">
+       <string> SCL classes to include: (Classes to count as invalid inside the AOI)</string>
+      </property>
+      <widget class="QCheckBox" name="mask_class9">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>30</y>
+         <width>181</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Cloud high probability</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>121</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Cloud shadows</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class6">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>60</y>
+         <width>121</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Water</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class8">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>30</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Cloud medium probability</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class10">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>30</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Thin cirrus</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class11">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>111</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Snow or ice</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class1">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>59</y>
+         <width>211</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Saturated or defective pixel</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class0">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>60</y>
+         <width>171</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>No Data (Missing data)</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Vegetation</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class5">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>90</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Not-vegetated</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class7">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>90</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Unclassified</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mask_class2">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>90</y>
+         <width>211</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Topographic casted shadows</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_valid_pixels">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>621</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This feature uses the &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Scene Classification Layer (SCL)&lt;/span&gt;&lt;/a&gt; to calculate the percentage of valid pixels within the specified Area of Interest (AOI). It excludes images with a percentage of valid pixels falling below a user-defined threshold. Valid pixels are determined based on selected SCL classes.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The original images remain intact unless the option &amp;quot;Apply SCL mask to remove pixels&amp;quot; is selected. This option is independent of the filtering threshold and, when enabled, directly modifies the image data by removing pixels classified as invalid. This alteration impacts the computation of time series data as well as daily and composite images, as only valid pixels are considered in these calculations.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="overwriteMode">
+       <bool>true</bool>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
+      <property name="openLinks">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="loadtimeseries">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>400</x>
-       <y>250</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Run</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="QPushButton_back_7">
+    <widget class="QPushButton" name="QPushButton_back_8">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>300</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -1075,17 +1337,33 @@ The SCL classes included are:
       <string>Back</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="mask">
+    <widget class="QPushButton" name="loadtimeseries">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>200</y>
-       <width>111</width>
-       <height>17</height>
+       <x>580</x>
+       <y>300</y>
+       <width>71</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Apply SCL mask</string>
+      <string>Run</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="mask">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>300</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Apply SCL mask to remove pixels</string>
      </property>
     </widget>
    </widget>
@@ -1096,10 +1374,10 @@ The SCL classes included are:
     <widget class="QWebView" name="webView" native="true">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>-20</y>
-       <width>1141</width>
-       <height>461</height>
+       <x>10</x>
+       <y>60</y>
+       <width>1131</width>
+       <height>381</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -1128,8 +1406,8 @@ The SCL classes included are:
       <rect>
        <x>10</x>
        <y>410</y>
-       <width>241</width>
-       <height>121</height>
+       <width>291</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
@@ -1184,17 +1462,17 @@ The SCL classes included are:
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>111</width>
-        <height>22</height>
+        <width>131</width>
+        <height>31</height>
        </rect>
       </property>
      </widget>
      <widget class="QLabel" name="label_22">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>160</x>
         <y>20</y>
-        <width>111</width>
+        <width>121</width>
         <height>29</height>
        </rect>
       </property>
@@ -1214,10 +1492,10 @@ The SCL classes included are:
      <widget class="QComboBox" name="imagem_unica_indice">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>160</x>
         <y>50</y>
-        <width>101</width>
-        <height>22</height>
+        <width>121</width>
+        <height>31</height>
        </rect>
       </property>
       <item>
@@ -1245,8 +1523,8 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
-        <width>111</width>
+        <y>90</y>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
@@ -1257,9 +1535,9 @@ The SCL classes included are:
      <widget class="QPushButton" name="load_1index">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>80</y>
-        <width>101</width>
+        <x>160</x>
+        <y>90</y>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -1271,10 +1549,10 @@ The SCL classes included are:
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
-       <x>620</x>
+       <x>710</x>
        <y>410</y>
-       <width>221</width>
-       <height>121</height>
+       <width>241</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
@@ -1283,9 +1561,9 @@ The SCL classes included are:
      <widget class="QComboBox" name="filtro_grau">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>50</y>
-        <width>41</width>
+        <x>180</x>
+        <y>60</y>
+        <width>51</width>
         <height>22</height>
        </rect>
       </property>
@@ -1319,8 +1597,8 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>141</width>
+        <y>60</y>
+        <width>161</width>
         <height>21</height>
        </rect>
       </property>
@@ -1341,8 +1619,8 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>171</width>
+        <y>30</y>
+        <width>201</width>
         <height>20</height>
        </rect>
       </property>
@@ -1354,13 +1632,13 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
-        <width>161</width>
+        <y>90</y>
+        <width>181</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Length of the filter window:</string>
+       <string>Filter window's lenght:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1375,9 +1653,9 @@ The SCL classes included are:
      <widget class="QComboBox" name="window_len">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>80</y>
-        <width>41</width>
+        <x>180</x>
+        <y>90</y>
+        <width>51</width>
         <height>22</height>
        </rect>
       </property>
@@ -1386,21 +1664,21 @@ The SCL classes included are:
     <widget class="QGroupBox" name="groupBox_7">
      <property name="geometry">
       <rect>
-       <x>850</x>
-       <y>410</y>
-       <width>141</width>
-       <height>121</height>
+       <x>800</x>
+       <y>90</y>
+       <width>331</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="title">
-      <string>Save options</string>
+      <string/>
      </property>
      <widget class="QPushButton" name="salvar">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>121</width>
+        <x>170</x>
+        <y>10</y>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -1412,8 +1690,8 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
-        <width>121</width>
+        <y>10</y>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -1425,10 +1703,10 @@ The SCL classes included are:
     <widget class="QGroupBox" name="groupBox_8">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>310</x>
        <y>410</y>
-       <width>201</width>
-       <height>121</height>
+       <width>221</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
@@ -1484,7 +1762,7 @@ The SCL classes included are:
         <x>10</x>
         <y>50</y>
         <width>71</width>
-        <height>22</height>
+        <height>31</height>
        </rect>
       </property>
       <item>
@@ -1523,7 +1801,7 @@ The SCL classes included are:
        <rect>
         <x>90</x>
         <y>20</y>
-        <width>101</width>
+        <width>121</width>
         <height>29</height>
        </rect>
       </property>
@@ -1545,8 +1823,8 @@ The SCL classes included are:
        <rect>
         <x>90</x>
         <y>50</y>
-        <width>101</width>
-        <height>22</height>
+        <width>121</width>
+        <height>31</height>
        </rect>
       </property>
       <item>
@@ -1574,8 +1852,8 @@ The SCL classes included are:
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>80</y>
-        <width>101</width>
+        <y>90</y>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -1587,10 +1865,10 @@ The SCL classes included are:
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>540</x>
        <y>410</y>
-       <width>141</width>
-       <height>81</height>
+       <width>161</width>
+       <height>91</height>
       </rect>
      </property>
      <property name="title">
@@ -1601,7 +1879,7 @@ The SCL classes included are:
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>121</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -1613,9 +1891,9 @@ The SCL classes included are:
     <widget class="QPushButton" name="clear_raster">
      <property name="geometry">
       <rect>
-       <x>470</x>
-       <y>500</y>
-       <width>141</width>
+       <x>540</x>
+       <y>510</y>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -1626,39 +1904,278 @@ The SCL classes included are:
     <widget class="QGroupBox" name="groupBox_29">
      <property name="geometry">
       <rect>
-       <x>1000</x>
+       <x>960</x>
        <y>410</y>
-       <width>131</width>
-       <height>121</height>
+       <width>171</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="title">
-      <string>NasaPower</string>
+      <string>NasaPower Precipitation</string>
      </property>
      <widget class="QPushButton" name="nasapower">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>111</width>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Load precipitation</string>
+       <string>Load</string>
       </property>
      </widget>
      <widget class="QPushButton" name="clear_nasa">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
-        <width>111</width>
+        <y>90</y>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>Clear</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_nasa">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Reload time series</string>
+     </property>
+     <widget class="QPushButton" name="loadtimeseries_2">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>1040</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Run</string>
+      </property>
+     </widget>
+     <widget class="QDateEdit" name="incioedit_2">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>30</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="dateTime">
+       <datetime>
+        <hour>0</hour>
+        <minute>0</minute>
+        <second>0</second>
+        <year>2022</year>
+        <month>1</month>
+        <day>1</day>
+       </datetime>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy/M/d</string>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="date">
+       <date>
+        <year>2022</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
+     <widget class="QDateEdit" name="finaledit_2">
+      <property name="geometry">
+       <rect>
+        <x>920</x>
+        <y>30</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="dateTime">
+       <datetime>
+        <hour>0</hour>
+        <minute>0</minute>
+        <second>0</second>
+        <year>2022</year>
+        <month>3</month>
+        <day>1</day>
+       </datetime>
+      </property>
+      <property name="currentSection">
+       <enum>QDateTimeEdit::YearSection</enum>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy/M/d</string>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="timeSpec">
+       <enum>Qt::LocalTime</enum>
+      </property>
+      <property name="date">
+       <date>
+        <year>2022</year>
+        <month>3</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="series_indice_2">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>30</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>GNDVI</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>NDVI</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>EVI</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SAVI</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>35</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>to:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="vector_layer_combobox_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>30</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="update_vector_2">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Update</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>35</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>AOI:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>29</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>From:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Vegetation Index:</string>
       </property>
      </widget>
     </widget>
