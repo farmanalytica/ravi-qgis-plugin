@@ -156,10 +156,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)  
 
-        self.radioButton_3months.clicked.connect(self.last_3m_clicked)
+        
         self.radioButton_all.clicked.connect(self.all_clicked)
+        self.radioButton_3months.clicked.connect(self.last_3m_clicked)
         self.radioButton_6months.clicked.connect(self.last_6m_clicked)
-        self.radioButton_year.clicked.connect(self.last_year_clicked)
+        self.radioButton_12months.clicked.connect(self.last_12m_clicked)
         self.radioButton_3years.clicked.connect(self.last_3_years_clicked)
         self.radioButton_5years.clicked.connect(self.last_5_years_clicked)  
         self.radioButton_select_year.clicked.connect(self.selected_year_clicked)
@@ -205,7 +206,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.df_nasa = None
         self.daily_precipitation = None
 
-        self.all_clicked()
+        self.last_12m_clicked()
         
         self.index_explain()
 
@@ -351,7 +352,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.finaledit.setDate(QDate.fromString(today, 'yyyy-MM-dd'))
         self.incioedit.setDate(QDate.fromString(since, 'yyyy-MM-dd'))
 
-    def last_year_clicked(self):
+    def last_12m_clicked(self):
         today = datetime.today().strftime('%Y-%m-%d')
         one_month_ago = (datetime.today() - relativedelta(months=12)).strftime('%Y-%m-%d')
         self.finaledit.setDate(QDate.fromString(today, 'yyyy-MM-dd'))

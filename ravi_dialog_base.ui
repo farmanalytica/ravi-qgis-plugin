@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -492,12 +492,12 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QRadioButton" name="radioButton_year">
+        <widget class="QRadioButton" name="radioButton_12months">
          <property name="text">
           <string>Last 12 months</string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -560,7 +560,7 @@ p, li { white-space: pre-wrap; }
           <string>All available</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -624,12 +624,12 @@ p, li { white-space: pre-wrap; }
       </property>
       <item>
        <property name="text">
-        <string>GNDVI</string>
+        <string>NDVI</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>NDVI</string>
+        <string>GNDVI</string>
        </property>
       </item>
       <item>
@@ -2064,12 +2064,12 @@ p, li { white-space: pre-wrap; }
       </property>
       <item>
        <property name="text">
-        <string>GNDVI</string>
+        <string>NDVI</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>NDVI</string>
+        <string>GNDVI</string>
        </property>
       </item>
       <item>

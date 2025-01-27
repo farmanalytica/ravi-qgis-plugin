@@ -146,8 +146,12 @@ The results page includes the following features:
 - Add monthly precipitation data from NASA POWER for cross-variable comparisons.
 - Save the precipitation data in spreasheet format (CSV).
 
-### 9. Clear All Loaded Layers
+### 9. Quickly Reload Time Series
 ![9](/media/results9.png)
+- Quickly reload a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+
+### 10. Clear All Loaded Layers
+![10](/media/results10.png)
 - Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
 
 ## Troubleshooting
