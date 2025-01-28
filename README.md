@@ -155,18 +155,14 @@ The results page includes the following features:
 - Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
 
 ## Troubleshooting
-
 - **Earth Engine Authentication Failed**: Ensure you have the necessary requirements as explained in the authentication tab.
 - **AOI Errors**: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
 
-### Contribute to the Project
-
-Contributions are welcome! Please visit the [GitHub repository](https://github.com/caioarantes/ravi-qgis-plugin) to get started.
-
-### Reporting Issues
-
+## Reporting Issues
 If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section.
 
-## License
+## Contribute to the Project
+Contributions are welcome! Please visit the [GitHub repository](https://github.com/caioarantes/ravi-qgis-plugin) to get started.
 
+## License
 RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the LICENSE file for details.
