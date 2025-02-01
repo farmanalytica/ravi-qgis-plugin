@@ -69,7 +69,7 @@ To install RAVI:
 ![Step 5](media/step5.png)
 - Choose the vegetation index you want to analyze from the dropdown menu.
 
-### Step 6: Imagegery Overlap filter and AOI Buffer filter options
+### Step 6: Imagery Overlap filter and AOI Buffer filter options
 ![Step 6](media/step6.png)
 - Set the specified filter according to your analysis requirements.
 
@@ -146,9 +146,9 @@ The results page includes the following features:
 - Add monthly precipitation data from NASA POWER for cross-variable comparisons.
 - Save the precipitation data in spreasheet format (CSV).
 
-### 9. Quickly Reload Time Series
+### 9. Quickly Run New Time Series
 ![9](/media/results9.png)
-- Quickly reload a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+- Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
 
 ### 10. Clear All Loaded Layers
 ![10](/media/results10.png)
@@ -165,4 +165,4 @@ If you encounter any issues or have suggestions for improvements, please open an
 Contributions are welcome! Please visit the [GitHub repository](https://github.com/caioarantes/ravi-qgis-plugin) to get started.
 
 ## License
-RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the LICENSE file for details.
+RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the [LICENSE](https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE) file for details.
