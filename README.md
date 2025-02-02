@@ -6,7 +6,7 @@ This repository contains the source code for the **RAVI** plugin for QGIS, which
 
 An interactive version of the documentation is available via GitHub Pages here:  
 [https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
-*(Be sure to update the URL with your GitHub Pages address.)*
+
 
 You can also view the complete documentation in both languages below:
 
@@ -88,33 +88,83 @@ Configure filters such as imagery overlap, AOI buffer, cloud pixel percentage, a
 
 The results page includes the following features:
 
-- **Time Series Plot**  
-- **Load RGB Layer (Focus on a Day)**  
-- **Load Index Layer (Focus on a Day)**  
-- **Load Index Layer (Composite Image)**  
-- **Date Selection Tool**  
-- **Savitzky-Golay Filter**  
-- **Save Options**  
-- **NASA POWER Precipitation**  
-- **Quickly Run New Time Series**  
-- **Clear All Loaded Layers**
+### 1. Time Series Plot
+![1](/media/results1.png)
+- Visualize the time series of the selected vegetation index over the defined AOI.
+- Hover over the plot to see specific values and dates for detailed analysis.
 
-### Troubleshooting
+### 2. Load RGB Layer (Focus on a Day)
+![2](/media/results2.png)
+- Load and display an RGB layer for a specific date to analyze the visual appearance of the area. All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed in the table below:
 
-- **Earth Engine Authentication Failed:** Ensure you meet the necessary requirements.
-- **AOI Errors:** Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
+| Sentinel-2 Band Name         | QGIS Band Number | Wavelength (nm) | Spatial Resolution (m) |
+|------------------------------|------------------|-----------------|------------------------|
+| Band 1 (Coastal aerosol)     | 1                | 443             | 60                     |
+| Band 2 (Blue)                | 2                | 490             | 10                     |
+| Band 3 (Green)               | 3                | 560             | 10                     |
+| Band 4 (Red)                 | 4                | 665             | 10                     |
+| Band 5 (Vegetation Red Edge) | 5                | 705             | 20                     |
+| Band 6 (Vegetation Red Edge) | 6                | 740             | 20                     |
+| Band 7 (Vegetation Red Edge) | 7                | 783             | 20                     |
+| Band 8 (NIR)                 | 8                | 842             | 10                     |
+| Band 8A (Vegetation Red Edge)| 9                | 865             | 20                     |
+| Band 9 (Water Vapour)        | 10               | 945             | 60                     |
+| Band 10 (SWIR - Cirrus)      | 11               | 1375            | 60                     |
+| Band 11 (SWIR)               | 12               | 1610            | 20                     |
+| Band 12 (SWIR)               | 13               | 2190            | 20                     |
 
-### Reporting Issues
 
-If you encounter any issues or have suggestions for improvements, please open an issue on our [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) page.
+### 3. Load Index Layer (Focus on a Day)
+![3](/media/results3.png)
+- Load and display a vegetation index layer for a specific date.
 
-### Contribute to the Project
+### 4. Load Index Layer (Composite Image)
+![4](/media/results4.png)
+- Generate and display a composite image based on the selected vegetation index and the user-defined metric.
+- The composite image will include all images within the current date selection. Use the date selection tool to filter out specific dates.
 
-Contributions are welcome! Visit our [GitHub repository](https://github.com/caioarantes/ravi-qgis-plugin) for more details.
+### 5. Date Selection Tool
+![5](/media/results5.png)
+- Use the date selection tool to filter and select specific dates for analysis.
+- The date selection tool updates the time series plot
+- Composite images are based on all selected dates.
 
-### License
+### 6. Savitzky-Golay Filter
+![6](/media/results6.png)
+- Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.
+- The parameters for the Savitzky-Golay algorithm, such as the order of the polynomial and the window length, can be adjusted as needed to fine-tune the smoothing process.
 
-RAVI is licensed under the [GNU General Public License v2.0 or later](LICENSE).
+### 7. Save Options
+![7](/media/results7.png)
+![71](/media/results71.png)
+- Save the time series data in spreasheet format (CSV).
+- To save the time series as image, open it in the browser to enable the download option.
+
+### 8. NASA POWER Precipitation
+![8](/media/results8.png)
+- Add monthly precipitation data from NASA POWER for cross-variable comparisons.
+- Save the precipitation data in spreasheet format (CSV).
+
+### 9. Quickly Run New Time Series
+![9](/media/results9.png)
+- Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+
+### 10. Clear All Loaded Layers
+![10](/media/results10.png)
+- Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
+
+## Troubleshooting
+- **Earth Engine Authentication Failed**: Ensure you have the necessary requirements as explained in the authentication tab.
+- **AOI Errors**: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
+
+## Reporting Issues
+If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section.
+
+## Contribute to the Project
+Contributions are welcome! Please visit the [GitHub repository](https://github.com/caioarantes/ravi-qgis-plugin) to get started.
+
+## License
+RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the [LICENSE](https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE) file for details.
 
 </details>
 

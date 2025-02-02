@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -88,7 +88,7 @@ p, li { white-space: pre-wrap; }
 &lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://developers.google.com/earth-engine/guides/access&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Um Projeto do Google Cloud:&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cota para os serviços do Earth Engine).      &lt;span style=&quot; font-size:11pt;&quot;&gt;        &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Se você conseguir acessar o &lt;/span&gt;&lt;a href=&quot;https://code.earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; text-decoration: underline; color:#0000ff;&quot;&gt;Editor de Código do Google Earth Engine&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;, provavelmente está tudo pronto!      &lt;/span&gt;        &lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; para acessar o guia passo a passo.      &lt;/span&gt;        &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;O token de autenticação será armazenado localmente, permitindo que você evite o login no navegador em futuras autenticações. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;O token de autenticação será armazenado localmente, evitando o login no navegador em futuras autenticações. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="overwriteMode">
       <bool>true</bool>
