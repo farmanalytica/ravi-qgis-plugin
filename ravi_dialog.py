@@ -100,10 +100,23 @@ except ImportError:
     except ImportError:
         print("Earth Engine API could not be imported after installation.")
 
+import os
+from PyQt5 import uic
+from PyQt5.QtCore import QSettings
 
-# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'ravi_dialog_base.ui'))
+# Obtém a configuração de idioma do QGIS
+settings = QSettings()
+user_locale = settings.value('locale/userLocale', 'en')  # Exemplo: 'en_US' ou 'pt_BR'
+language = user_locale[0:2]  # Pega os 2 primeiros caracteres: 'en' ou 'pt'
+
+# Seleciona o arquivo .ui com base no idioma
+if language == 'pt':
+    ui_file = 'ravi_dialog_base_pt.ui'
+else:
+    ui_file = 'ravi_dialog_base.ui'
+
+# Carrega o arquivo .ui selecionado para que o PyQt possa criar a interface
+FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
 
 class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
