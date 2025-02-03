@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RAVI - Remote Analysis of Vegetation Indices</string>
+   <string>RAVI - Análise Remota de Índices de Vegetação</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -115,7 +115,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Select output folder (generated files will be saved in this folder):</string>
+      <string>Selecionar pasta de saída (os arquivos gerados serão salvos nesta pasta):</string>
      </property>
      <widget class="QgsFileWidget" name="mQgsFileWidget">
       <property name="geometry">
@@ -144,7 +144,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_4">
@@ -160,7 +160,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
    </widget>
@@ -181,7 +181,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_11">
@@ -194,7 +194,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Select area of interest (AOI):  Load or criate a vector layer then update to list it.</string>
+      <string>Selecione a área de interesse (AOI): Carregue ou crie uma camada vetorial e, em seguida, atualize para listá-la.</string>
      </property>
      <widget class="QPushButton" name="update_vector">
       <property name="geometry">
@@ -206,7 +206,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Update</string>
+       <string>Atualizar</string>
       </property>
      </widget>
      <widget class="QComboBox" name="vector_layer_combobox">
@@ -233,7 +233,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="hybrid">
@@ -249,7 +249,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Load Google Maps Layer</string>
+      <string>Carregar camada do Google Maps</string>
      </property>
     </widget>
     <widget class="QPushButton" name="build_vector_layer">
@@ -265,7 +265,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Build area of interest from canvas extent</string>
+      <string>Construir área de interesse a partir da extensão do mapa</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_5">
@@ -278,7 +278,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Keep total area smaller than 100 km² (10,000 hectares)</string>
+      <string>Mantenha a área total menor que 100 km² (10.000 hectares)</string>
      </property>
      <widget class="QLabel" name="aoi_area">
       <property name="geometry">
@@ -295,7 +295,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Total area:</string>
+       <string>Área total:</string>
       </property>
      </widget>
     </widget>
@@ -339,7 +339,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Time range (yyyy/mm/dd):</string>
+      <string>Intervalo de tempo (aaaa/mm/dd):</string>
      </property>
      <widget class="QDateEdit" name="finaledit">
       <property name="geometry">
@@ -423,7 +423,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Start:</string>
+       <string>Início:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -445,7 +445,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>End:</string>
+       <string>Fim:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -470,14 +470,14 @@ p, li { white-space: pre-wrap; }
        <item row="8" column="0">
         <widget class="QRadioButton" name="radioButton_select_year">
          <property name="text">
-          <string>Selected year:</string>
+          <string>Ano selecionado:</string>
          </property>
         </widget>
        </item>
        <item row="7" column="0">
         <widget class="QRadioButton" name="radioButton_5years">
          <property name="text">
-          <string>Last 5 years</string>
+          <string>Últimos 5 anos</string>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -487,14 +487,14 @@ p, li { white-space: pre-wrap; }
        <item row="1" column="0">
         <widget class="QRadioButton" name="radioButton_6months">
          <property name="text">
-          <string>Last 6 months</string>
+          <string>Últimos 6 meses</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
         <widget class="QRadioButton" name="radioButton_12months">
          <property name="text">
-          <string>Last 12 months</string>
+          <string>Últimos 12 meses</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -504,14 +504,14 @@ p, li { white-space: pre-wrap; }
        <item row="0" column="0">
         <widget class="QRadioButton" name="radioButton_3months">
          <property name="text">
-          <string>Last 3 months</string>
+          <string>Últimos 3 meses</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
         <widget class="QRadioButton" name="radioButton_3years">
          <property name="text">
-          <string>Last 3 years</string>
+          <string>Últimos 3 anos</string>
          </property>
         </widget>
        </item>
@@ -557,7 +557,7 @@ p, li { white-space: pre-wrap; }
        <item row="9" column="0">
         <widget class="QRadioButton" name="radioButton_all">
          <property name="text">
-          <string>All available</string>
+          <string>Todos disponíveis</string>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -580,7 +580,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_2">
@@ -593,7 +593,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
    </widget>
@@ -611,7 +611,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Select the Vegetation Index for the time series plot:</string>
+      <string>Selecione o Índice de Vegetação para o gráfico de série temporal:</string>
      </property>
      <widget class="QComboBox" name="series_indice">
       <property name="geometry">
@@ -664,7 +664,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_5">
@@ -680,7 +680,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
    </widget>
@@ -698,7 +698,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Imagery Overlap with AOI : (Higher value, stricter filtering): </string>
+      <string>Sobreposição de imagens com a AOI: (Valor mais alto, filtragem mais rigorosa):</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_aio_cover">
       <property name="enabled">
@@ -773,7 +773,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high overlap threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
+       <string>Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
       </property>
      </widget>
     </widget>
@@ -787,7 +787,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_3">
@@ -803,7 +803,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -837,7 +837,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_6">
@@ -850,7 +850,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_28">
@@ -863,7 +863,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>AOI Buffer (meters):</string>
+      <string>Buffer da AOI (metros):</string>
      </property>
      <widget class="QPlainTextEdit" name="plainTextEdit_11">
       <property name="geometry">
@@ -875,7 +875,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>This feature allows you to specify a buffer distance in meters to shrink the Area of Interest (AOI). The buffer excludes the outer edges of the AOI, focusing the analysis on its core region and minimizing potential edge effects. The buffer size can be adjusted based on your analysis requirements, providing flexibility to refine the time series data for more accurate insights.</string>
+       <string>Este recurso permite que você especifique uma distância de buffer em metros para reduzir a Área de Interesse (AOI). O buffer exclui as bordas externas da AOI, concentrando a análise em sua região central e minimizando os efeitos de borda. O tamanho do buffer pode ser ajustado com base nos requisitos da sua análise, proporcionando flexibilidade para refinar os dados da série temporal para obter insights mais precisos.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_buffer">
@@ -944,7 +944,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Cloudy Pixel Percentage Limit: (Lower value applies stricter filtering): </string>
+      <string>Limite de Percentual de Pixels Nublados: (Valor mais baixo aplica filtragem mais rigorosa):</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_total_pixel_limit">
       <property name="enabled">
@@ -1006,7 +1006,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="plainText">
-       <string>Sentinel-2 imagery is captured in tiles, each covering an area of 100 km² (10 km x 10 km). The cloud cover percentage for these tiles represents the proportion of the entire 100 km² area obscured by clouds. For smaller Areas of Interest (AOI), this overall tile-level cloud cover metric may not directly reflect the conditions inside the AOI itself. In such cases, other filters can provide a more precise assessment.</string>
+       <string>As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 100 km² (10 km x 10 km). A porcentagem de cobertura de nuvens nesses blocos representa a proporção da área total de 100 km² que está obscurecida por nuvens. Para Áreas de Interesse (AOI) menores, essa métrica geral de cobertura de nuvens no bloco pode não refletir diretamente as condições dentro da própria AOI. Em tais casos, outros filtros podem fornecer uma avaliação mais precisa.</string>
       </property>
      </widget>
     </widget>
@@ -1023,7 +1023,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_7">
@@ -1036,7 +1036,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Next</string>
+      <string>Próximo</string>
      </property>
     </widget>
    </widget>
@@ -1054,7 +1054,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering)</string>
+      <string>Percentual de Pixels Válidos dentro da AOI: (Valor mais alto aplica filtragem mais rigorosa)</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_local_pixel_limit">
       <property name="enabled">
@@ -1116,7 +1116,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="title">
-       <string> SCL classes to include: (Classes to count as invalid inside the AOI)</string>
+       <string>Classes SCL a incluir: (Classes a serem consideradas como inválidas dentro da AOI)</string>
       </property>
       <widget class="QCheckBox" name="mask_class9">
        <property name="geometry">
@@ -1128,7 +1128,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Cloud high probability</string>
+        <string>Alta probabilidade de nuvens</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1144,7 +1144,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Cloud shadows</string>
+        <string>Sombras de nuvens</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1160,7 +1160,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Water</string>
+        <string>Água</string>
        </property>
       </widget>
       <widget class="QCheckBox" name="mask_class8">
@@ -1173,7 +1173,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Cloud medium probability</string>
+        <string>Média probabilidade de nuvens</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1189,7 +1189,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Thin cirrus</string>
+        <string>Cirrus fino</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1205,7 +1205,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Snow or ice</string>
+        <string>Neve ou gelo</string>
        </property>
       </widget>
       <widget class="QCheckBox" name="mask_class1">
@@ -1218,7 +1218,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Saturated or defective pixel</string>
+        <string>Pixel saturado ou defeituoso</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1234,7 +1234,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>No Data (Missing data)</string>
+        <string>Sem dados (dados ausentes)</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -1250,7 +1250,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Vegetation</string>
+        <string>Vegetação</string>
        </property>
       </widget>
       <widget class="QCheckBox" name="mask_class5">
@@ -1263,7 +1263,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Not-vegetated</string>
+        <string>Não vegetado</string>
        </property>
       </widget>
       <widget class="QCheckBox" name="mask_class7">
@@ -1276,7 +1276,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Unclassified</string>
+        <string>Não classificado</string>
        </property>
       </widget>
       <widget class="QCheckBox" name="mask_class2">
@@ -1289,7 +1289,7 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>Topographic casted shadows</string>
+        <string>Sombras topográficas projetadas</string>
        </property>
       </widget>
      </widget>
@@ -1307,8 +1307,8 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This feature uses the &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Scene Classification Layer (SCL)&lt;/span&gt;&lt;/a&gt; to calculate the percentage of valid pixels within the specified Area of Interest (AOI). It excludes images with a percentage of valid pixels falling below a user-defined threshold. Valid pixels are determined based on selected SCL classes.&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The original images remain intact unless the option &amp;quot;Apply SCL mask to remove pixels&amp;quot; is selected. This option is independent of the filtering threshold and, when enabled, directly modifies the image data by removing pixels classified as invalid. This alteration impacts the computation of time series data as well as daily and composite images, as only valid pixels are considered in these calculations.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso utiliza a &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e compostas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>
@@ -1334,7 +1334,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Voltar</string>
      </property>
     </widget>
     <widget class="QPushButton" name="loadtimeseries">
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Run</string>
+      <string>Executar</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="mask">
@@ -1363,13 +1363,13 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Apply SCL mask to remove pixels</string>
+      <string>Aplicar máscara SCL para remover pixels</string>
      </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
-     <string>Results</string>
+     <string>Resultados</string>
     </attribute>
     <widget class="QWebView" name="webView" native="true">
      <property name="geometry">
@@ -1411,7 +1411,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Focus on a Day</string>
+      <string>Focar em um dia</string>
      </property>
      <widget class="QLabel" name="label_23">
       <property name="geometry">
@@ -1445,7 +1445,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Date (yyyy-mm-dd):</string>
+       <string>Data (aaaa-mm-dd):</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1477,7 +1477,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Vegetation Index:</string>
+       <string>Índice de Vegetação:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1529,7 +1529,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Load RGB layer</string>
+       <string>Carregar camada RGB</string>
       </property>
      </widget>
      <widget class="QPushButton" name="load_1index">
@@ -1542,7 +1542,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Load index layer</string>
+       <string>Carregar camada de índice</string>
       </property>
      </widget>
     </widget>
@@ -1556,7 +1556,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Savitzky-Golay filter</string>
+      <string>Filtro Savitzky-Golay</string>
      </property>
      <widget class="QComboBox" name="filtro_grau">
       <property name="geometry">
@@ -1603,7 +1603,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Order of the polynomial:</string>
+       <string>Ordem do polinômio:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1625,7 +1625,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Display filtered time series</string>
+       <string>Exibir série temporal filtrada</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_24">
@@ -1638,7 +1638,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Filter window's lenght:</string>
+       <string>Comprimento da janela do filtro:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1683,7 +1683,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Save as spredsheet</string>
+       <string>Salvar como planilha</string>
       </property>
      </widget>
      <widget class="QPushButton" name="navegador">
@@ -1696,7 +1696,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Open in the browser</string>
+       <string>Abrir no navegador</string>
       </property>
      </widget>
     </widget>
@@ -1710,7 +1710,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Composite image (all dates)</string>
+      <string>Imagem composta (todas as datas)</string>
      </property>
      <widget class="QLabel" name="label_27">
       <property name="geometry">
@@ -1744,7 +1744,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Metric:</string>
+       <string>Métrica:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1767,22 +1767,22 @@ p, li { white-space: pre-wrap; }
       </property>
       <item>
        <property name="text">
-        <string>Mean</string>
+        <string>Média</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Median</string>
+        <string>Mediana</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Max</string>
+        <string>Máximo</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Min</string>
+        <string>Mínimo</string>
        </property>
       </item>
       <item>
@@ -1792,7 +1792,7 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <property name="text">
-        <string>Standard Deviation</string>
+        <string>Desvio Padrão</string>
        </property>
       </item>
      </widget>
@@ -1806,7 +1806,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Vegetation Index:</string>
+       <string>Índice de Vegetação:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1858,7 +1858,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Load index layer</string>
+       <string>Carregar camada de índice</string>
       </property>
      </widget>
     </widget>
@@ -1872,7 +1872,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Date seletion tool</string>
+      <string>Ferramenta de seleção de data</string>
      </property>
      <widget class="QPushButton" name="datasrecorte">
       <property name="geometry">
@@ -1884,7 +1884,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Open date selection</string>
+       <string>Abrir seleção de data</string>
       </property>
      </widget>
     </widget>
@@ -1898,7 +1898,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Clear all loaded layers</string>
+      <string>Limpar todas as camadas carregadas</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_29">
@@ -1911,7 +1911,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>NasaPower Precipitation</string>
+      <string>Precipitação NasaPower</string>
      </property>
      <widget class="QPushButton" name="nasapower">
       <property name="geometry">
@@ -1923,7 +1923,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Load</string>
+       <string>Carregar</string>
       </property>
      </widget>
      <widget class="QPushButton" name="clear_nasa">
@@ -1936,7 +1936,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Clear</string>
+       <string>Limpar</string>
       </property>
      </widget>
      <widget class="QPushButton" name="salvar_nasa">
@@ -1949,7 +1949,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Save</string>
+       <string>Salvar</string>
       </property>
      </widget>
     </widget>
@@ -1963,7 +1963,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string>Reload time series</string>
+      <string>Recarregar série temporal</string>
      </property>
      <widget class="QPushButton" name="loadtimeseries_2">
       <property name="enabled">
@@ -1978,7 +1978,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Run</string>
+       <string>Executar</string>
       </property>
      </widget>
      <widget class="QDateEdit" name="incioedit_2">
@@ -2098,7 +2098,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>to:</string>
+       <string>até:</string>
       </property>
      </widget>
      <widget class="QComboBox" name="vector_layer_combobox_2">
@@ -2121,7 +2121,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Update</string>
+       <string>Atualizar</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_6">
@@ -2157,7 +2157,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>From:</string>
+       <string>De:</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_7">
@@ -2175,7 +2175,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Vegetation Index:</string>
+       <string>Índice de Vegetação:</string>
       </property>
      </widget>
     </widget>
