@@ -1333,17 +1333,17 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         index_collection = sentinel2_selected_dates.map(calculate_index)
 
         # Apply the specified metric to the vegetation index collection
-        if metrica == 'Mean':
+        if metrica in ['Mean', 'Média']:
             final_image = index_collection.mean()
-        elif metrica == 'Max':
+        elif metrica in ['Max', 'Máximo']:
             final_image = index_collection.max()
-        elif metrica == 'Min':  
+        elif metrica in ['Min', 'Mínimo']:  
             final_image = index_collection.min()
-        elif metrica == 'Median':
+        elif metrica in ['Median', 'Mediana']:
             final_image = index_collection.median()
-        elif metrica == 'Amplitude':
+        elif metrica in ['Amplitude']:
             final_image = index_collection.max().subtract(index_collection.min())
-        elif metrica == 'Standard Deviation':
+        elif metrica in ['Standard Deviation', 'Desvio Padrão']:
             final_image = index_collection.reduce(ee.Reducer.stdDev())
 
         
