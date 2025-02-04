@@ -128,6 +128,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)  
+        settings = QSettings()
+        user_locale = settings.value('locale/userLocale', 'en')  # Exemplo: 'en_US' ou 'pt_BR'
+        language = user_locale[0:2]  # Pega os 2 primeiros caracteres: 'en' ou 'pt'
+
+        # Seleciona o arquivo .ui com base no idioma
+        if language == 'pt':
+            self.language = True
 
         # Connect signals and slots
         self.autenticacao.clicked.connect(self.auth)
@@ -168,7 +175,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)  
-
         
         self.radioButton_all.clicked.connect(self.all_clicked)
         self.radioButton_3months.clicked.connect(self.last_3m_clicked)
@@ -765,7 +771,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setMaximumSize(16777215, 16777215)  # Rem
 
         if size == 'small':
-            self.resize(663, 373)
+            self.resize(743, 373)
             self.setFixedSize(self.width(), self.height())  # Lock to small size
         elif size == 'big':
             self.resize(1145, 582)
@@ -1554,8 +1560,115 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             """
         }
 
+        vegetation_indices_pt = {
+            "NDVI": """
+                <h3>Índice de Vegetação por Diferença Normalizada (NDVI)</h3>
+                <p>
+                    O Índice de Vegetação por Diferença Normalizada (NDVI) é um indicador amplamente utilizado e bem estabelecido da saúde e vigor da vegetação. Ele explora as propriedades de reflectância espectral contrastantes dos pigmentos das plantas, particularmente a clorofila. A vegetação saudável absorve fortemente a luz vermelha visível para a fotossíntese enquanto reflete uma parte significativa da radiação do infravermelho próximo (NIR). Por outro lado, áreas não vegetadas, como solo e água, tendem a refletir a luz vermelha e NIR de forma mais equilibrada.
+                </p>
+                <p>
+                    A fórmula do NDVI é calculada da seguinte forma:
+                </p>
+                <pre>
+        NDVI = (NIR - RED) / (NIR + RED)
+                </pre>
+                <p>
+                    onde:
+                    <ul>
+                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                        <li><b>RED</b>: Reflectância na banda vermelha</li>
+                    </ul>
+                    Ao calcular a diferença entre a reflectância do NIR e da luz vermelha e normalizando-a pela soma dos dois, o NDVI realça efetivamente o sinal da vegetação enquanto minimiza a influência de fatores como variações na iluminação e condições atmosféricas. Os valores do NDVI geralmente variam de -1 a 1. Valores mais altos (próximos de 1) indicam, em geral, vegetação mais densa e saudável, com maior área foliar e teor de clorofila. Valores mais baixos (próximos de -1) frequentemente correspondem a solo exposto, água ou vegetação senescente (em declínio).
+                </p>
+            """,
+            "GNDVI": """
+                <h3>Índice de Vegetação por Diferença Normalizada Verde (GNDVI)</h3>
+                <p>
+                    O Índice de Vegetação por Diferença Normalizada Verde (GNDVI) é uma modificação do NDVI que utiliza a banda verde do espectro eletromagnético em vez da banda vermelha. A clorofila, o pigmento primário envolvido na fotossíntese, absorve fortemente a luz azul e vermelha, enquanto reflete a luz verde. Portanto, o GNDVI é particularmente sensível às variações no conteúdo de clorofila dentro dos dosséis das plantas.
+                </p>
+                <p>
+                    A fórmula do GNDVI é calculada como:
+                </p>
+                <pre>
+        GNDVI = (NIR - GREEN) / (NIR + GREEN)
+                </pre>
+                <p>
+                    onde:
+                    <ul>
+                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                        <li><b>GREEN</b>: Reflectância na banda verde</li>
+                    </ul>
+                    Essa sensibilidade torna o GNDVI uma ferramenta valiosa para:
+                    <ul>
+                        <li>Monitorar o estresse das plantas e deficiências nutricionais</li>
+                        <li>Detectar sinais precoces de doenças ou infestações por pragas</li>
+                        <li>Avaliar o vigor das culturas e o potencial de rendimento</li>
+                        <li>Estudar o impacto de fatores ambientais no crescimento das plantas</li>
+                    </ul>
+                </p>
+            """,
+            "EVI": """
+                <h3>Índice de Vegetação Aprimorado (EVI)</h3>
+                <p>
+                    O Índice de Vegetação Aprimorado (EVI) foi desenvolvido para superar algumas das limitações do NDVI, particularmente em áreas com alta biomassa ou interferência atmosférica. O EVI incorpora uma banda azul em seu cálculo, o que ajuda a minimizar a influência de aerossóis atmosféricos e o ruído do fundo do solo. Além disso, o EVI utiliza um termo de ajuste do fundo do dossel para melhorar a sensibilidade em áreas de alta biomassa e para discriminar melhor a vegetação de superfícies não vegetadas.
+                </p>
+                <p>
+                    A fórmula do EVI é calculada como:
+                </p>
+                <pre>
+        EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
+                </pre>
+                <p>
+                    onde:
+                    <ul>
+                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                        <li><b>RED</b>: Reflectância na banda vermelha</li>
+                        <li><b>BLUE</b>: Reflectância na banda azul</li>
+                    </ul>
+                    O EVI tem se mostrado altamente eficaz em:
+                    <ul>
+                        <li>Monitorar a dinâmica da vegetação em diversos ecossistemas</li>
+                        <li>Estimar a biomassa e a produtividade</li>
+                        <li>Avaliar o impacto das mudanças climáticas na vegetação</li>
+                        <li>Mapear a cobertura vegetal e as mudanças no uso/ocupação do solo</li>
+                    </ul>
+                </p>
+            """,
+            "SAVI": """
+                <h3>Índice de Vegetação Ajustado ao Solo (SAVI)</h3>
+                <p>
+                    O Índice de Vegetação Ajustado ao Solo (SAVI) foi desenvolvido especificamente para minimizar a influência da reflectância do solo, especialmente em áreas com cobertura vegetal esparsa. Em tais áreas, a reflectância do solo pode impactar significativamente a precisão de índices de vegetação como o NDVI.
+                </p>
+                <p>
+                    O SAVI incorpora um fator de correção do brilho do solo (L) em seu cálculo. Esse fator ajusta a sensibilidade do índice ao fundo do solo, permitindo uma avaliação mais precisa da vegetação em áreas com condições de solo variadas. O SAVI é particularmente útil em:
+                    <ul>
+                        <li>Regiões áridas e semiáridas</li>
+                        <li>Áreas agrícolas com baixa cobertura de vegetação</li>
+                        <li>Ecossistemas perturbados ou degradados</li>
+                    </ul>
+                </p>
+                <p>
+                    A fórmula do SAVI é calculada como:
+                </p>
+                <pre>
+        SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
+                </pre>
+                <p>
+                    onde:
+                    <ul>
+                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                        <li><b>RED</b>: Reflectância na banda vermelha</li>
+                        <li><b>L</b>: Fator de correção do brilho do solo (geralmente definido como 0.5)</li>
+                    </ul>
+                </p>
+                <p><b>Nota:</b> Para este plugin, o fator de correção do brilho do solo (L) está definido como 0.5.</p>
+            """
+        }
 
-        explanation = vegetation_indices.get(self.series_indice.currentText())
+        if self.language:
+            explanation = vegetation_indices_pt.get(self.series_indice.currentText())
+        else:
+            explanation = vegetation_indices.get(self.series_indice.currentText())
         self.textBrowser_index_explain.setHtml(explanation)
 
 

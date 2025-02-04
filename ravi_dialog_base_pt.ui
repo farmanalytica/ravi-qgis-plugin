@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1418</width>
-    <height>767</height>
+    <width>1392</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,23 +34,28 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
-     <string>Etapa1</string>
+     <string>Passo 1</string>
     </attribute>
     <widget class="QPushButton" name="autenticacao">
      <property name="geometry">
       <rect>
-       <x>330</x>
-       <y>300</y>
+       <x>410</x>
+       <y>290</y>
        <width>321</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Configurar Autenticação</string>
@@ -60,10 +65,15 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
+       <y>290</y>
        <width>311</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Redefinir Autenticação</string>
@@ -74,8 +84,8 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
-       <height>281</height>
+       <width>721</width>
+       <height>271</height>
       </rect>
      </property>
      <property name="html">
@@ -103,16 +113,21 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
-     <string>Etapa2</string>
+     <string>Passo 2</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_10">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>110</y>
-       <width>641</width>
+       <width>721</width>
        <height>81</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Selecionar pasta de saída (os arquivos gerados serão salvos nesta pasta):</string>
@@ -122,7 +137,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>621</width>
+        <width>701</width>
         <height>51</height>
        </rect>
       </property>
@@ -138,13 +153,22 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_4">
@@ -153,20 +177,29 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Próximo</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_4">
     <attribute name="title">
-     <string>Etapa3</string>
+     <string>Passo 3</string>
     </attribute>
     <widget class="QPushButton" name="QPushButton_next">
      <property name="enabled">
@@ -174,11 +207,16 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>650</x>
+       <y>290</y>
+       <width>81</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Próximo</string>
@@ -189,9 +227,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>641</width>
-       <height>81</height>
+       <width>721</width>
+       <height>91</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Selecione a área de interesse (AOI): Carregue ou crie uma camada vetorial. Atualize para listá-la.</string>
@@ -199,10 +242,10 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>630</x>
         <y>30</y>
-        <width>71</width>
-        <height>31</height>
+        <width>81</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -214,8 +257,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>541</width>
-        <height>31</height>
+        <width>611</width>
+        <height>41</height>
        </rect>
       </property>
      </widget>
@@ -227,10 +270,15 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Voltar</string>
@@ -244,9 +292,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>240</y>
-       <width>241</width>
-       <height>31</height>
+       <width>291</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Carregar camada do Google Maps</string>
@@ -258,11 +311,16 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>310</x>
        <y>240</y>
-       <width>391</width>
-       <height>31</height>
+       <width>421</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Construir área de interesse a partir da extensão do mapa</string>
@@ -273,9 +331,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>150</y>
-       <width>641</width>
+       <width>721</width>
        <height>80</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Mantenha a área total menor que 100 km² (10.000 hectares)</string>
@@ -302,7 +365,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
-     <string>Etapa4</string>
+     <string>Passo 4</string>
     </attribute>
     <widget class="QLabel" name="label_18">
      <property name="geometry">
@@ -333,10 +396,15 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
-       <width>641</width>
-       <height>261</height>
+       <y>10</y>
+       <width>721</width>
+       <height>271</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Intervalo de tempo (aaaa/mm/dd):</string>
@@ -349,6 +417,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -389,6 +462,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="dateTime">
        <datetime>
         <hour>0</hour>
@@ -422,6 +500,11 @@ p, li { white-space: pre-wrap; }
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Início:</string>
       </property>
@@ -444,6 +527,11 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Fim:</string>
       </property>
@@ -463,12 +551,17 @@ p, li { white-space: pre-wrap; }
         <x>320</x>
         <y>40</y>
         <width>311</width>
-        <height>194</height>
+        <height>201</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="8" column="0">
         <widget class="QRadioButton" name="radioButton_select_year">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Ano selecionado:</string>
          </property>
@@ -476,6 +569,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="7" column="0">
         <widget class="QRadioButton" name="radioButton_5years">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Últimos 5 anos</string>
          </property>
@@ -484,15 +582,13 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QRadioButton" name="radioButton_6months">
-         <property name="text">
-          <string>Últimos 6 meses</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QRadioButton" name="radioButton_12months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Últimos 12 meses</string>
          </property>
@@ -501,15 +597,52 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="9" column="0">
+        <widget class="QRadioButton" name="radioButton_all">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Todos disponíveis</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QRadioButton" name="radioButton_3months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Últimos 3 meses</string>
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QRadioButton" name="radioButton_6months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Últimos 6 meses</string>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
         <widget class="QRadioButton" name="radioButton_3years">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Últimos 3 anos</string>
          </property>
@@ -554,16 +687,6 @@ p, li { white-space: pre-wrap; }
          </item>
         </widget>
        </item>
-       <item row="9" column="0">
-        <widget class="QRadioButton" name="radioButton_all">
-         <property name="text">
-          <string>Todos disponíveis</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </widget>
@@ -574,10 +697,15 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Voltar</string>
@@ -586,11 +714,16 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_2">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Próximo</string>
@@ -599,16 +732,21 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_8">
     <attribute name="title">
-     <string>Etapa5</string>
+     <string>Passo 5</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_27">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
+       <width>721</width>
        <height>281</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Selecione o Índice de Vegetação para o gráfico de série temporal:</string>
@@ -621,6 +759,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -648,7 +791,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>621</width>
+        <width>701</width>
         <height>181</height>
        </rect>
       </property>
@@ -657,11 +800,16 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_5">
      <property name="geometry">
       <rect>
-       <x>580</x>
+       <x>630</x>
        <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Próximo</string>
@@ -675,9 +823,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Voltar</string>
@@ -686,19 +839,24 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_6">
     <attribute name="title">
-     <string>Etapa6</string>
+     <string>Passo 6</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_14">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
-       <height>281</height>
+       <width>721</width>
+       <height>271</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
-      <string>Sobreposição de imagens com a AOI: (Valor mais alto, filtragem mais rigorosa):</string>
+      <string>Sobreposição de imagens com a área de interesse: (Valor mais alto aplica filtragem mais rigorosa)</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_aio_cover">
       <property name="enabled">
@@ -708,7 +866,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>561</width>
+        <width>651</width>
         <height>21</height>
        </rect>
       </property>
@@ -740,7 +898,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_coverage">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>670</x>
         <y>40</y>
         <width>41</width>
         <height>21</height>
@@ -768,7 +926,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>621</width>
+        <width>701</width>
         <height>181</height>
        </rect>
       </property>
@@ -780,10 +938,10 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_3">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -797,9 +955,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -822,7 +980,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_9">
     <attribute name="title">
-     <string>Etapa7</string>
+     <string>Passo 7</string>
     </attribute>
     <widget class="QPushButton" name="QPushButton_back_6">
      <property name="enabled">
@@ -843,10 +1001,10 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_6">
      <property name="geometry">
       <rect>
-       <x>580</x>
+       <x>650</x>
        <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <width>81</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -858,9 +1016,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
+       <width>721</width>
        <height>281</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Buffer da AOI (metros):</string>
@@ -870,9 +1033,14 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>621</width>
+        <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="plainText">
        <string>Este recurso permite que você especifique uma distância de buffer em metros para reduzir a Área de Interesse (AOI). O buffer exclui as bordas externas da AOI, concentrando a análise em sua região central e minimizando os efeitos de borda. O tamanho do buffer pode ser ajustado com base nos requisitos da sua análise, proporcionando flexibilidade para refinar os dados da série temporal para obter insights mais precisos.</string>
@@ -881,11 +1049,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_buffer">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>660</x>
         <y>40</y>
         <width>51</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>50 m</string>
@@ -899,7 +1072,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>561</width>
+        <width>641</width>
         <height>21</height>
        </rect>
       </property>
@@ -932,16 +1105,21 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_5">
     <attribute name="title">
-     <string>Etapa8</string>
+     <string>Passo 8</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_6">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
-       <height>281</height>
+       <width>721</width>
+       <height>271</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Limite Percentual de Pixels Nublados: (Valor mais baixo aplica filtragem mais rigorosa):</string>
@@ -954,7 +1132,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>561</width>
+        <width>651</width>
         <height>21</height>
        </rect>
       </property>
@@ -986,9 +1164,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>670</x>
         <y>40</y>
-        <width>31</width>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -1001,7 +1179,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>621</width>
+        <width>701</width>
         <height>181</height>
        </rect>
       </property>
@@ -1017,9 +1195,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -1029,10 +1207,10 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_7">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -1042,16 +1220,21 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_10">
     <attribute name="title">
-     <string>Etapa9</string>
+     <string>Passo 9</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_15">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>641</width>
-       <height>281</height>
+       <width>721</width>
+       <height>271</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Percentual de Pixels Válidos dentro da AOI: (Valor mais alto aplica filtragem mais rigorosa)</string>
@@ -1064,7 +1247,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>561</width>
+        <width>641</width>
         <height>21</height>
        </rect>
       </property>
@@ -1096,7 +1279,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud_aoi">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>660</x>
         <y>30</y>
         <width>47</width>
         <height>21</height>
@@ -1111,9 +1294,14 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>150</y>
-        <width>621</width>
+        <width>701</width>
         <height>121</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="title">
        <string>Classes SCL a incluir: (Classes a serem consideradas como inválidas dentro da AOI)</string>
@@ -1150,9 +1338,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class8">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>190</x>
          <y>30</y>
-         <width>231</width>
+         <width>241</width>
          <height>21</height>
         </rect>
        </property>
@@ -1166,7 +1354,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class1">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>190</x>
          <y>50</y>
          <width>241</width>
          <height>21</height>
@@ -1182,9 +1370,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class0">
        <property name="geometry">
         <rect>
-         <x>400</x>
+         <x>460</x>
          <y>50</y>
-         <width>211</width>
+         <width>241</width>
          <height>21</height>
         </rect>
        </property>
@@ -1211,9 +1399,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class5">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>190</x>
          <y>70</y>
-         <width>121</width>
+         <width>141</width>
          <height>21</height>
         </rect>
        </property>
@@ -1224,7 +1412,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class7">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>190</x>
          <y>90</y>
          <width>131</width>
          <height>21</height>
@@ -1237,7 +1425,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class2">
        <property name="geometry">
         <rect>
-         <x>400</x>
+         <x>460</x>
          <y>70</y>
          <width>241</width>
          <height>21</height>
@@ -1250,9 +1438,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class9">
        <property name="geometry">
         <rect>
-         <x>400</x>
+         <x>460</x>
          <y>30</y>
-         <width>211</width>
+         <width>231</width>
          <height>20</height>
         </rect>
        </property>
@@ -1282,7 +1470,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="mask_class11">
        <property name="geometry">
         <rect>
-         <x>400</x>
+         <x>460</x>
          <y>90</y>
          <width>111</width>
          <height>20</height>
@@ -1298,17 +1486,22 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>621</width>
+        <width>701</width>
         <height>81</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso utiliza a &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Este filtra utiliza a &lt;/span&gt;&lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>
@@ -1328,9 +1521,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -1343,10 +1536,10 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -1358,9 +1551,14 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>210</x>
        <y>300</y>
-       <width>301</width>
+       <width>321</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Aplicar máscara SCL para remover pixels</string>
@@ -1410,8 +1608,13 @@ p, li { white-space: pre-wrap; }
        <height>131</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
-      <string>Focar em um dia</string>
+      <string>Focar em uma data</string>
      </property>
      <widget class="QLabel" name="label_23">
       <property name="geometry">
@@ -1440,12 +1643,12 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>131</width>
+        <width>141</width>
         <height>29</height>
        </rect>
       </property>
       <property name="text">
-       <string>Data (aaaa-mm-dd):</string>
+       <string>Data: (aaaa-mm-dd):</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1462,7 +1665,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>131</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -1477,7 +1680,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Índice</string>
+       <string>Índice:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1524,7 +1727,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>90</y>
-        <width>131</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -1554,6 +1757,11 @@ p, li { white-space: pre-wrap; }
        <width>241</width>
        <height>131</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Filtro Savitzky-Golay</string>
@@ -1620,7 +1828,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>201</width>
+        <width>221</width>
         <height>20</height>
        </rect>
       </property>
@@ -1664,9 +1872,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_7">
      <property name="geometry">
       <rect>
-       <x>800</x>
+       <x>770</x>
        <y>90</y>
-       <width>331</width>
+       <width>361</width>
        <height>51</height>
       </rect>
      </property>
@@ -1676,11 +1884,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar">
       <property name="geometry">
        <rect>
-        <x>170</x>
+        <x>180</x>
         <y>10</y>
-        <width>151</width>
+        <width>171</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Salvar como planilha</string>
@@ -1691,9 +1904,14 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>151</width>
+        <width>161</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Abrir no navegador</string>
@@ -1708,6 +1926,11 @@ p, li { white-space: pre-wrap; }
        <width>221</width>
        <height>131</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Imagem sintética</string>
@@ -1851,14 +2074,14 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>10</x>
         <y>90</y>
-        <width>121</width>
+        <width>201</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Carregar Índice</string>
+       <string>Carregar Imagem Sintética</string>
       </property>
      </widget>
     </widget>
@@ -1871,8 +2094,13 @@ p, li { white-space: pre-wrap; }
        <height>91</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
-      <string>Ferramenta de seleção de data</string>
+      <string>Seleção de data</string>
      </property>
      <widget class="QPushButton" name="datasrecorte">
       <property name="geometry">
@@ -1884,7 +2112,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Seleção de data</string>
+       <string>Abrir seleção</string>
       </property>
      </widget>
     </widget>
@@ -1896,6 +2124,11 @@ p, li { white-space: pre-wrap; }
        <width>161</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Limpar camadas</string>
@@ -1909,6 +2142,11 @@ p, li { white-space: pre-wrap; }
        <width>171</width>
        <height>131</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Precipitação NasaPower</string>
@@ -1962,8 +2200,13 @@ p, li { white-space: pre-wrap; }
        <height>71</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
-      <string>Recarregar série temporal</string>
+      <string>Nova série temporal</string>
      </property>
      <widget class="QPushButton" name="loadtimeseries_2">
       <property name="enabled">
@@ -1977,6 +2220,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Executar</string>
       </property>
@@ -1989,6 +2237,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -2022,6 +2275,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -2061,6 +2319,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -2110,6 +2373,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QPushButton" name="update_vector_2">
       <property name="geometry">
@@ -2119,6 +2387,11 @@ p, li { white-space: pre-wrap; }
         <width>91</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Atualizar</string>
@@ -2165,7 +2438,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>460</x>
         <y>30</y>
-        <width>161</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
