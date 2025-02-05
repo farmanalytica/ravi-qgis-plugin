@@ -135,6 +135,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Seleciona o arquivo .ui com base no idioma
         if language == 'pt':
             self.language = True
+        else:
+            self.language = False
 
         # Connect signals and slots
         self.autenticacao.clicked.connect(self.auth)

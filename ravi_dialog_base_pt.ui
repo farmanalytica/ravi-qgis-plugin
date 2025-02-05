@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>1</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -46,9 +46,9 @@
     <widget class="QPushButton" name="autenticacao">
      <property name="geometry">
       <rect>
-       <x>410</x>
+       <x>360</x>
        <y>290</y>
-       <width>321</width>
+       <width>371</width>
        <height>41</height>
       </rect>
      </property>
@@ -66,7 +66,7 @@
       <rect>
        <x>10</x>
        <y>290</y>
-       <width>311</width>
+       <width>341</width>
        <height>41</height>
       </rect>
      </property>
@@ -207,9 +207,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>630</x>
        <y>290</y>
-       <width>81</width>
+       <width>101</width>
        <height>41</height>
       </rect>
      </property>
@@ -220,6 +220,10 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Próximo</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_11">
@@ -282,6 +286,10 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="hybrid">
@@ -710,6 +718,10 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>Voltar</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
+     </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_2">
      <property name="geometry">
@@ -728,6 +740,10 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>Próximo</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_8">
@@ -740,7 +756,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>10</y>
        <width>721</width>
-       <height>281</height>
+       <height>271</height>
       </rect>
      </property>
      <property name="font">
@@ -801,7 +817,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>300</y>
+       <y>290</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -814,6 +830,10 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>Próximo</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
+     </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_5">
      <property name="enabled">
@@ -822,7 +842,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
+       <y>290</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -834,6 +854,10 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -944,8 +968,17 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Próximo</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_3">
@@ -960,8 +993,17 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -989,26 +1031,44 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>71</width>
-       <height>31</height>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_6">
      <property name="geometry">
       <rect>
-       <x>650</x>
-       <y>300</y>
-       <width>81</width>
+       <x>630</x>
+       <y>290</y>
+       <width>101</width>
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Próximo</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_28">
@@ -1017,7 +1077,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>10</y>
        <width>721</width>
-       <height>281</height>
+       <height>271</height>
       </rect>
      </property>
      <property name="font">
@@ -1200,8 +1260,17 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_7">
@@ -1213,8 +1282,17 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Próximo</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1472,7 +1550,7 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>460</x>
          <y>90</y>
-         <width>111</width>
+         <width>121</width>
          <height>20</height>
         </rect>
        </property>
@@ -1526,8 +1604,17 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="loadtimeseries">
@@ -1541,6 +1628,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Executar</string>
@@ -1604,7 +1696,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>410</y>
-       <width>291</width>
+       <width>301</width>
        <height>131</height>
       </rect>
      </property>
@@ -1643,7 +1735,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>141</width>
+        <width>151</width>
         <height>29</height>
        </rect>
       </property>
@@ -1673,9 +1765,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_22">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>170</x>
         <y>20</y>
-        <width>121</width>
+        <width>111</width>
         <height>29</height>
        </rect>
       </property>
@@ -1695,7 +1787,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="imagem_unica_indice">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>170</x>
         <y>50</y>
         <width>121</width>
         <height>31</height>
@@ -1738,7 +1830,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="load_1index">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>170</x>
         <y>90</y>
         <width>121</width>
         <height>31</height>
@@ -1752,7 +1844,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
-       <x>710</x>
+       <x>700</x>
        <y>410</y>
        <width>241</width>
        <height>131</height>
@@ -1921,7 +2013,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_8">
      <property name="geometry">
       <rect>
-       <x>310</x>
+       <x>320</x>
        <y>410</y>
        <width>221</width>
        <height>131</height>
@@ -2088,9 +2180,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>550</x>
        <y>410</y>
-       <width>161</width>
+       <width>141</width>
        <height>91</height>
       </rect>
      </property>
@@ -2107,7 +2199,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>141</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -2119,9 +2211,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="clear_raster">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>550</x>
        <y>510</y>
-       <width>161</width>
+       <width>141</width>
        <height>31</height>
       </rect>
      </property>
@@ -2131,15 +2223,15 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Limpar camadas</string>
+      <string>Remover camadas</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_29">
      <property name="geometry">
       <rect>
-       <x>960</x>
+       <x>950</x>
        <y>410</y>
-       <width>171</width>
+       <width>181</width>
        <height>131</height>
       </rect>
      </property>
@@ -2156,7 +2248,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>71</width>
+        <width>81</width>
         <height>31</height>
        </rect>
       </property>
@@ -2169,7 +2261,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>90</y>
-        <width>151</width>
+        <width>161</width>
         <height>31</height>
        </rect>
       </property>
@@ -2180,7 +2272,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar_nasa">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>100</x>
         <y>30</y>
         <width>71</width>
         <height>31</height>
