@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -44,6 +44,9 @@
      <string>Passo 1</string>
     </attribute>
     <widget class="QPushButton" name="autenticacao">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -85,7 +88,7 @@
        <x>10</x>
        <y>10</y>
        <width>721</width>
-       <height>271</height>
+       <height>221</height>
       </rect>
      </property>
      <property name="html">
@@ -95,8 +98,7 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Para usar este plugin, você precisa dos seguintes itens:      &lt;/span&gt;        &lt;/p&gt;
 &lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Uma Conta Ativa do Google Earth Engine:&lt;/span&gt;&lt;/a&gt; Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas).      &lt;span style=&quot; font-size:11pt;&quot;&gt;      &lt;/span&gt;&lt;/li&gt;
-&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://developers.google.com/earth-engine/guides/access&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Um Projeto do Google Cloud:&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cota para os serviços do Earth Engine).      &lt;span style=&quot; font-size:11pt;&quot;&gt;        &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Se você conseguir acessar o &lt;/span&gt;&lt;a href=&quot;https://code.earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; text-decoration: underline; color:#0000ff;&quot;&gt;Editor de Código do Google Earth Engine&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;, provavelmente está tudo pronto!      &lt;/span&gt;        &lt;/p&gt;
+&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Um Projeto do Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cota para os serviços do Earth Engine).  &lt;span style=&quot; font-size:11pt;&quot;&gt;      &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; para acessar o guia passo a passo.      &lt;/span&gt;        &lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;O token de autenticação será armazenado localmente, evitando o login no navegador em futuras autenticações. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -108,6 +110,45 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="openLinks">
       <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QgsPasswordLineEdit" name="project_QgsPasswordLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>236</y>
+       <width>501</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+     </property>
+     <property name="placeholderText">
+      <string>digite-ID-do-projeto-para-configurar-autenticaçao</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>241</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>ID do projeto (Google Cloud):</string>
      </property>
     </widget>
    </widget>
@@ -230,9 +271,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>10</y>
        <width>721</width>
-       <height>91</height>
+       <height>101</height>
       </rect>
      </property>
      <property name="font">
@@ -247,7 +288,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>630</x>
-        <y>30</y>
+        <y>40</y>
         <width>81</width>
         <height>41</height>
        </rect>
@@ -260,7 +301,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>40</y>
         <width>611</width>
         <height>41</height>
        </rect>
@@ -300,7 +341,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>240</y>
-       <width>291</width>
+       <width>271</width>
        <height>41</height>
       </rect>
      </property>
@@ -319,9 +360,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>310</x>
+       <x>290</x>
        <y>240</y>
-       <width>421</width>
+       <width>441</width>
        <height>41</height>
       </rect>
      </property>
@@ -338,9 +379,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>120</y>
        <width>721</width>
-       <height>80</height>
+       <height>111</height>
       </rect>
      </property>
      <property name="font">
@@ -356,13 +397,13 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>20</x>
         <y>40</y>
-        <width>431</width>
-        <height>16</height>
+        <width>501</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -1109,7 +1150,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_buffer">
       <property name="geometry">
        <rect>
-        <x>660</x>
+        <x>670</x>
         <y>40</y>
         <width>51</width>
         <height>21</height>
@@ -1132,7 +1173,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>641</width>
+        <width>651</width>
         <height>21</height>
        </rect>
       </property>
@@ -1226,7 +1267,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>670</x>
         <y>40</y>
-        <width>41</width>
+        <width>51</width>
         <height>21</height>
        </rect>
       </property>
@@ -1325,7 +1366,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>641</width>
+        <width>651</width>
         <height>21</height>
        </rect>
       </property>
@@ -1357,7 +1398,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud_aoi">
       <property name="geometry">
        <rect>
-        <x>660</x>
+        <x>670</x>
         <y>30</y>
         <width>47</width>
         <height>21</height>
@@ -2552,6 +2593,11 @@ p, li { white-space: pre-wrap; }
    <class>QgsFileWidget</class>
    <extends>QWidget</extends>
    <header>qgsfilewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsPasswordLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qgspasswordlineedit.h</header>
   </customwidget>
   <customwidget>
    <class>QWebView</class>

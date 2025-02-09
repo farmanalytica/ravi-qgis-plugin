@@ -19,11 +19,10 @@
       color: #333;
     }
 
+    /* Language buttons container (centered, not fixed) */
     .lang-buttons {
       text-align: center;
       margin: 20px 0 40px;
-      position: sticky;
-      top: 0;
       background: rgba(255, 255, 255, 0.95);
       padding: 15px;
       z-index: 1000;
@@ -123,6 +122,7 @@
   </style>
 </head>
 <body>
+  <!-- Language Toggle (centered, in normal flow) -->
   <div class="lang-buttons">
     <button class="lang-btn active" onclick="showLanguage('pt')">Português</button>
     <button class="lang-btn" onclick="showLanguage('en')">English</button>
@@ -484,7 +484,7 @@
       <li>Selecione uma AOI carregando um arquivo shapefile ou GeoJSON.</li>
       <li>Certifique-se de que a geometria é válida (apenas Polygon ou MultiPolygon).</li>
       <li>Adicione uma camada do Google Maps ao canvas do QGIS para melhor visualização e contexto.</li>
-      <li>Use o botão <strong>Build AOI from Canvas Extent</strong> para gerar automaticamente uma nova AOI com base na extensão atual do canvas.</li>
+      <li>Use o botão <strong>Construir área de interesse a partir da extensão do mapa</strong> para gerar automaticamente uma nova AOI com base na extensão atual da tela.</li>
     </ul>
 
     <h3>Passo 4: Definir o intervalo de tempo para busca de imagens</h3>
@@ -493,7 +493,7 @@
 
     <h3>Passo 5: Selecionar o índice de vegetação para análise de séries temporais</h3>
     <img src="media_pt/step5.png" alt="Passo 5">
-    <p>Escolha o índice de vegetação que deseja analisar a partir do menu dropdown.</p>
+    <p>Escolha o índice de vegetação que deseja analisar a partir do menu.</p>
 
     <h3>Passo 6: Filtro de sobreposição de imagens</h3>
     <img src="media_pt/step6.png" alt="Passo 6">
@@ -615,103 +615,101 @@
       </tbody>
     </table>
 
-    <h3>3. Carregar Camada de Índice (Foco em um Dia)</h3>
-    <img src="media_pt/results3.png" alt="Carregar Camada de Índice">
-    <p>Carregue e exiba uma camada de índice de vegetação para uma data específica.</p>
+    <h3>3. Load Index Layer (Focus on a Day)</h3>
+    <img src="media/results3.png" alt="Load Index Layer">
+    <p>Load and display a vegetation index layer for a specific date.</p>
 
-    <h3>4. Carregar Camada de Índice (Imagem Sintética)</h3>
-    <img src="media_pt/results4.png" alt="Carregar Camada de Índice (Imagem Sintética)">
+    <h3>4. Load Index Layer (Composite Image)</h3>
+    <img src="media/results4.png" alt="Load Index Composite">
     <p>
-      Gere e exiba uma imagem sintética com base no índice de vegetação selecionado e na métrica definida pelo usuário.<br>
-      A imagem sintética incluirá todas as imagens dentro da seleção de datas atual. Utilize a ferramenta de seleção de datas para filtrar periodos específicos.
+      Generate and display a composite image based on the selected vegetation index and the user-defined metric.<br>
+      The composite image will include all images within the current date selection. Use the date selection tool to filter out specific dates.
     </p>
 
-    <h3>5. Ferramenta de Seleção de Datas</h3>
-    <img src="media_pt/results5.png" alt="Ferramenta de Seleção de Datas">
+    <h3>5. Date Selection Tool</h3>
+    <img src="media/results5.png" alt="Date Selection Tool">
     <ul>
-      <li>Utilize a ferramenta de seleção de datas para filtrar e selecionar datas específicas para análise.</li>
-      <li>A ferramenta de seleção de datas atualiza o gráfico de séries temporais.</li>
-      <li>Imagens sintéticas são geradas com base em todas as datas selecionadas.</li>
+      <li>Use the date selection tool to filter and select specific dates for analysis.</li>
+      <li>The date selection tool updates the time series plot.</li>
+      <li>Composite images are based on all selected dates.</li>
     </ul>
 
-    <h3>6. Filtro Savitzky-Golay</h3>
-    <img src="media_pt/results6.png" alt="Filtro Savitzky-Golay">
+    <h3>6. Savitzky-Golay Filter</h3>
+    <img src="media/results6.png" alt="Savitzky-Golay Filter">
     <p>
-      Aplique o filtro Savitzky-Golay para suavizar os dados da série temporal e melhorar a análise de tendências.<br>
-      Os parâmetros do algoritmo, como a ordem do polinômio e o tamanho da janela, podem ser ajustados conforme necessário para refinar o processo de suavização.
+      Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.<br>
+      The parameters for the Savitzky-Golay algorithm, such as the order of the polynomial and the window length, can be adjusted as needed to fine-tune the smoothing process.
     </p>
 
-    <h3>7. Opções de Salvamento</h3>
-    <img src="media_pt/results7.png" alt="Opções de Salvamento">
-    <img src="media_pt/results71.png" alt="Opções de Salvamento - Imagem">
+    <h3>7. Save Options</h3>
+    <img src="media/results7.png" alt="Save Options">
+    <img src="media/results71.png" alt="Save Options - Image">
     <p>
-      Salve os dados da série temporal em formato de planilha (CSV).<br>
-      Para salvar a série temporal como imagem, abra-a no navegador para habilitar a opção de download.
+      Save the time series data in spreadsheet format (CSV).<br>
+      To save the time series as an image, open it in the browser to enable the download option.
     </p>
 
-    <h3>8. Precipitação NASA POWER</h3>
-    <img src="media_pt/results8.png" alt="Precipitação NASA POWER">
+    <h3>8. NASA POWER Precipitation</h3>
+    <img src="media/results8.png" alt="NASA POWER Precipitation">
     <p>
-      Adicione dados mensais de precipitação da NASA POWER para comparações entre variáveis.<br>
-      Salve os dados de precipitação em formato de planilha (CSV).
+      Add monthly precipitation data from NASA POWER for cross-variable comparisons.<br>
+      Save the precipitation data in spreadsheet format (CSV).
     </p>
 
-    <h3>9. Executar Nova Série Temporal Rapidamente</h3>
-    <img src="media_pt/results9.png" alt="Executar Nova Série Temporal Rapidamente">
+    <h3>9. Quickly Run New Time Series</h3>
+    <img src="media/results9.png" alt="Quickly Run New Time Series">
     <p>
-      Execute rapidamente uma nova análise de série temporal alterando a Área de Interesse (AOI), o Índice de Vegetação ou o intervalo de tempo.
+      Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
     </p>
 
-    <h3>10. Limpar Todas as Camadas Carregadas</h3>
-    <img src="media_pt/results10.png" alt="Limpar Todas as Camadas Carregadas">
+    <h3>10. Clear All Loaded Layers</h3>
+    <img src="media/results10.png" alt="Clear All Loaded Layers">
     <p>
-      Limpe todas as camadas carregadas no painel de camadas para iniciar uma nova análise ou para organizar o espaço de trabalho.
+      Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
     </p>
 
-    <h2>Solução de Problemas</h2>
+    <h2>Troubleshooting</h2>
     <ul>
-      <li><strong>Falha na Autenticação do Earth Engine</strong>: Certifique-se de que você atende aos requisitos necessários conforme explicado na aba de autenticação.</li>
-      <li><strong>Erros na AOI</strong>: Verifique se o arquivo da AOI é válido e possui um CRS válido (preferencialmente EPSG:4326).</li>
+      <li><strong>Earth Engine Authentication Failed</strong>: Ensure you have the necessary requirements as explained in the authentication tab.</li>
+      <li><strong>AOI Errors</strong>: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).</li>
     </ul>
 
-    <h2>Reportando Problemas</h2>
+    <h2>Reporting Issues</h2>
     <p>
-      Se você encontrar algum problema ou tiver sugestões de melhorias, por favor, abra uma issue na seção de <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank">GitHub Issues</a>.
+      If you encounter any issues or have suggestions for improvements, please open an issue in the <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank">GitHub Issues</a> section.
     </p>
 
-    <h2>Contribua para o Projeto</h2>
+    <h2>Contribute to the Project</h2>
     <p>
-      Contribuições são bem-vindas! Por favor, visite o <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank">repositório no GitHub</a> para começar.
+      Contributions are welcome! Please visit the <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank">GitHub repository</a> to get started.
     </p>
 
-    <h2>Licença</h2>
+    <h2>License</h2>
     <p>
-      O RAVI é licenciado sob a GNU General Public License v2.0 ou posterior. Consulte o arquivo <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank">LICENSE</a> para mais detalhes.
+      RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank">LICENSE</a> file for details.
     </p>
   </div>
 
   <script>
     function showLanguage(lang) {
-      // Alterna a exibição do conteúdo de acordo com o idioma
+      // Toggle the active class for language content
       document.querySelectorAll('.lang-content').forEach(content => {
         content.classList.toggle('active', content.id === `${lang}-content`);
       });
       
-      // Atualiza os botões
+      // Update the active state of the language buttons
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
       });
       
-      // Rolagem suave para o topo
+      // Smooth scroll to the top of the page
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
       
-      // Atualiza o título da página
-      document.title = lang === 'en' 
-        ? 'RAVI Documentation' 
-        : 'Documentação do RAVI';
+      // Update the document title based on the selected language
+      document.title = lang === 'en' ? 'RAVI Documentation' : 'Documentação do RAVI';
     }
   </script>
 </body>

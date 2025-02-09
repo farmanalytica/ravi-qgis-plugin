@@ -62,43 +62,93 @@ import numpy as np
 from scipy.signal import savgol_filter
 import geopandas as gpd
 import requests
+import os
+import platform
+import shutil
+import processing
+
 
 # Plotly imports for visualization
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# Processing module for QGIS
-import processing
+import importlib
+import urllib.request
+import json
+import sys
 
-# Earth Engine installation and import
-def install_earthengine_api():
+def get_installed_version():
+    """Return the installed Earth Engine API version, or None if not installed."""
     try:
-        import pip
-        pip_args = ['install', 'earthengine-api==1.3.1']
-        pip.main(pip_args)
-        #print("Earth Engine API installed successfully.")
-    except AttributeError:
-        from pip._internal.cli.main import main as pip_main
-        pip_main(['install', 'earthengine-api==1.3.1'])
-        print("Earth Engine API installed successfully.")
-    except Exception as e:
-        print(f"An error occurred during installation: {e}")
+        import ee
+        return ee.__version__
+    except ImportError:
+        return None
 
-# Check if the Earth Engine API is already installed
+def get_latest_version():
+    """Query PyPI for the latest Earth Engine API version."""
+    try:
+        url = "https://pypi.org/pypi/earthengine-api/json"
+        with urllib.request.urlopen(url) as response:
+            data = json.load(response)
+        return data["info"]["version"]
+    except Exception as e:
+        print("Error fetching latest version from PyPI:", e)
+        return None
+
+def install_earthengine_api():
+    """Install or upgrade the Earth Engine API to the latest version using pip's internal API."""
+    try:
+        # Attempt to use pip.main (for older pip versions)
+        import pip
+        print("Using pip version:", pip.__version__)
+        pip_args = ['install', '--upgrade', 'earthengine-api']
+        pip.main(pip_args)
+        print("Earth Engine API installed/upgraded successfully (using pip.main).")
+    except AttributeError:
+        # Fallback for newer pip versions that do not expose pip.main
+        try:
+            from pip._internal.cli.main import main as pip_main
+            pip_main(['install', '--upgrade', 'earthengine-api'])
+            print("Earth Engine API installed/upgraded successfully (using pip._internal).")
+        except Exception as e:
+            print("An error occurred during installation:", e)
+    except Exception as e:
+        print("An error occurred during installation:", e)
+
+# Determine installed and latest versions.
+installed_version = get_installed_version()
+latest_version = get_latest_version()
+
+if installed_version:
+    print("Installed Earth Engine API version:", installed_version)
+else:
+    print("Earth Engine API is not installed.")
+
+if latest_version:
+    print("Latest Earth Engine API version available on PyPI:", latest_version)
+else:
+    print("Could not determine the latest Earth Engine API version from PyPI.")
+
+# If there's no installation or the installed version differs from the latest, install/upgrade.
+if (installed_version is None) or (latest_version is not None and installed_version != latest_version):
+    print("Upgrading/Installing Earth Engine API to the latest version...")
+    install_earthengine_api()
+    # Invalidate caches so that the newly installed package is found.
+    importlib.invalidate_caches()
+else:
+    print("Latest version is already installed. Importing Earth Engine API...")
+
+# Import the Earth Engine API and print its version.
 try:
     importlib.import_module('ee')
-    print("Earth Engine API is already installed.")
     import ee
+    print("Final Earth Engine API version:", ee.__version__)
 except ImportError:
-    print("Earth Engine API not found. Installing...")
-    install_earthengine_api()
-    try:
-        importlib.import_module('ee')
-        print("Earth Engine API imported successfully.")
-        import ee
-    except ImportError:
-        print("Earth Engine API could not be imported after installation.")
+    print("Earth Engine API could not be imported after installation.")
+
+
 
 import os
 from PyQt5 import uic
@@ -106,6 +156,7 @@ from PyQt5.QtCore import QSettings
 
 # Obtém a configuração de idioma do QGIS
 settings = QSettings()
+
 user_locale = settings.value('locale/userLocale', 'en')  # Exemplo: 'en_US' ou 'pt_BR'
 language = user_locale[0:2]  # Pega os 2 primeiros caracteres: 'en' ou 'pt'
 
@@ -209,6 +260,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
 
         self.series_indice.currentIndexChanged.connect(self.index_explain)
+
         
         # Set default dates
         self.autentication = False
@@ -234,6 +286,36 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.tabWidget.setCurrentIndex(0)
         self.resizeEvent('small')
 
+        self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+
+        # Ensure this sets up self.project_QgsPasswordLineEdit (or rename to something like self.projectIdLineEdit)
+        self.loadProjectId()
+        # Connect the textChanged signal to automatically save changes.
+        self.project_QgsPasswordLineEdit.textChanged.connect(self.autoSaveProjectId)
+
+    def loadProjectId(self):
+        """
+        Loads the saved project ID from QSettings and sets it in the widget.
+        This will run every time the plugin is opened.
+        """
+        settings = QSettings()
+        # Retrieve the project ID from QSettings. The key "MyPlugin/projectID" is arbitrary.
+        saved_project_id = settings.value("MyPlugin/projectID", "", type=str)
+        self.project_QgsPasswordLineEdit.setText(saved_project_id)
+        print("Loaded project ID:", saved_project_id)
+        self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
+
+    def autoSaveProjectId(self, new_text):
+        """
+        Automatically saves the project ID to QSettings whenever the text changes.
+        This ensures that the project ID remains available even after QGIS is closed and reopened.
+        """
+        settings = QSettings()
+        settings.setValue("MyPlugin/projectID", new_text)
+        print("Project ID auto-saved:", new_text)
+        self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
+
+
     def combobox_2_update(self):
         self.vector_layer_combobox.setCurrentIndex(self.vector_layer_combobox_2.currentIndex())
 
@@ -245,8 +327,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def reload_update(self):
         self.finaledit_2.setDate(self.finaledit.date())
         self.incioedit_2.setDate(self.incioedit.date())
-        self.series_indice_2.setCurrentIndex(self.series_indice.currentIndex())
-        
+        self.series_indice_2.setCurrentIndex(self.series_indice.currentIndex())    
 
     def clear_nasa_clicked(self):
         """
@@ -810,12 +891,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Step 1: Authenticate and initialize Earth Engine
             print("Authenticating Earth Engine...")
             ee.Authenticate()
-            ee.Initialize()
+            ee.Initialize(project=self.project_QgsPasswordLineEdit.text())
             print("Authentication successful!")
 
             # Step 2: Test default project
             print("Testing default project...")
-            default_project_path = "projects/earthengine-legacy/assets/"  # Replace with your default project's path if known
+            default_project_path = f"projects/{self.project_QgsPasswordLineEdit.text()}/assets/"  # Replace with your default project's path if known
 
             # Attempt to list assets in the default project
             try:
@@ -859,31 +940,42 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.pop_aviso_auth(message)
 
     def auth_clear(self, silent=False):
-        #print('Desautenticando...')
-        """Clears the Earth Engine authentication by deleting the credentials file."""
-        
+        """
+        Completely clears Earth Engine authentication by deleting the entire
+        Earth Engine configuration directory, including credentials and cached data.
+        """
+        self.project_QgsPasswordLineEdit.clear()
+        self.autenticacao.setEnabled(False)
+        self.autentication = False
+
+
         system = platform.system()
         
-        # Set the path for Earth Engine credentials based on the operating system
+        # Determine the Earth Engine configuration directory based on OS.
         if system == 'Windows':
-            credentials_path = os.path.join(os.environ['USERPROFILE'], '.config', 'earthengine', 'credentials')
-        elif system == 'Linux':
-            credentials_path = os.path.join(os.environ['HOME'], '.config', 'earthengine', 'credentials')
-        elif system == 'Darwin':  # MacOS
-            credentials_path = os.path.join(os.environ['HOME'], 'Library', 'Application Support', 'earthengine', 'credentials')
+            config_dir = os.path.join(os.environ['USERPROFILE'], '.config', 'earthengine')
+        elif system in ['Linux', 'Darwin']:  # Linux or MacOS (Darwin)
+            config_dir = os.path.join(os.environ['HOME'], '.config', 'earthengine')
         else:
             raise Exception(f"Unsupported operating system: {system}")
-
-        # Check if the credentials file exists and delete it
-        if os.path.exists(credentials_path):
-            os.remove(credentials_path)
-            if not silent:
-                message = "Earth Engine authentication cleared successfully."
+        
+        # Check if the configuration directory exists and delete it.
+        if os.path.exists(config_dir):
+            try:
+                shutil.rmtree(config_dir)
+                if not silent:
+                    message = "Earth Engine configuration cleared successfully (all files deleted)."
+                    print(message)
+                    self.pop_aviso_auth(message)
+            except Exception as e:
+                message = f"Error clearing Earth Engine configuration: {e}"
+                print(message)
                 self.pop_aviso_auth(message)
-
         else:
-            message = "No Earth Engine credentials found to clear."
+            message = "No Earth Engine configuration found to clear."
+            print(message)
             self.pop_aviso_auth(message)
+
 
     def get_dates(self):
         # Get the date from the QDateEdit widget
@@ -1820,7 +1912,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         area_km2 = self.aoi.geometry().area().getInfo() / 1e6  # Convert from square meters to square kilometers
         area_ha = area_km2 * 100  # Convert from square kilometers to hectares
         print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
-        self.aoi_area.setText(f"AOI Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
+        self.aoi_area.setText(f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
         return area_km2
 
     def aoi_ckecked_function(self):
