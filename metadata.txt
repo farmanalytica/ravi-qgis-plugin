@@ -6,7 +6,7 @@
 name=RAVI
 qgisMinimumVersion=3.0
 description=Remote Analysis of Vegetation Indices and download of multispectral imagery
-version=1.0
+version=1.1
 author=Caio Arantes
 email=caiosimplicioarantes@gmail.com
 
