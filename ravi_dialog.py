@@ -235,7 +235,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.radioButton_12months.clicked.connect(self.last_12m_clicked)
         self.radioButton_3years.clicked.connect(self.last_3_years_clicked)
         self.radioButton_5years.clicked.connect(self.last_5_years_clicked)  
-        self.radioButton_select_year.clicked.connect(self.selected_year_clicked)
+        # self.radioButton_select_year.clicked.connect(self.selected_year_clicked)
         self.combo_year.currentIndexChanged.connect(self.selected_year_clicked)
         self.horizontalSlider_local_pixel_limit.valueChanged.connect(self.update_labels)
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
@@ -607,8 +607,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
         if not caminho:
             return
-        with open(caminho, 'w', encoding='latin-1') as arquivo:
-            arquivo.write(df.to_csv(decimal='.', sep=',', index=False, encoding="latin-1", lineterminator='\n'))
+        with open(caminho, 'w',newline='') as arquivo:
+            arquivo.write(df.to_csv(index=False))
         
         # Open the file after saving (platform-specific)
         if platform.system() == 'Windows':
@@ -630,8 +630,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
         if not caminho:
             return
-        with open(caminho, 'w', encoding='latin-1') as arquivo:
-            arquivo.write(df.to_csv(decimal='.', sep=',', index=False, encoding="latin-1", lineterminator='\n'))
+        with open(caminho, 'w', newline='') as arquivo:
+            arquivo.write(df.to_csv(index=False))
         
         # Open the file after saving (platform-specific)
         if platform.system() == 'Windows':

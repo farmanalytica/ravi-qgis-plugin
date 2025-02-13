@@ -598,21 +598,21 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>40</y>
+        <y>30</y>
         <width>311</width>
-        <height>201</height>
+        <height>191</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="8" column="0">
-        <widget class="QRadioButton" name="radioButton_select_year">
+       <item row="1" column="0">
+        <widget class="QRadioButton" name="radioButton_6months">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Ano selecionado:</string>
+          <string>Últimos 6 meses</string>
          </property>
         </widget>
        </item>
@@ -631,6 +631,18 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="3" column="0">
+        <widget class="QRadioButton" name="radioButton_3years">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Últimos 3 anos</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0">
         <widget class="QRadioButton" name="radioButton_12months">
          <property name="font">
@@ -646,7 +658,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="8" column="0">
         <widget class="QRadioButton" name="radioButton_all">
          <property name="font">
           <font>
@@ -673,70 +685,65 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QRadioButton" name="radioButton_6months">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Últimos 6 meses</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QRadioButton" name="radioButton_3years">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Últimos 3 anos</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="combo_year">
-         <item>
-          <property name="text">
-           <string>2024</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2023</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2022</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2021</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2020</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2019</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2018</string>
-          </property>
-         </item>
-        </widget>
-       </item>
       </layout>
+     </widget>
+     <widget class="QComboBox" name="combo_year">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>230</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>2024</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2023</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2022</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2021</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2020</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2019</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2018</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>230</y>
+        <width>201</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ano Selecinado Completo:</string>
+      </property>
      </widget>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_2">
@@ -1619,8 +1626,8 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Este filtra utiliza a &lt;/span&gt;&lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este filtro utiliza a &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>

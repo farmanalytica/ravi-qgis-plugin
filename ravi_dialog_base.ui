@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -521,16 +521,29 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>350</x>
-        <y>40</y>
+        <y>30</y>
         <width>261</width>
-        <height>201</height>
+        <height>191</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QRadioButton" name="radioButton_3months">
+       <item row="7" column="0">
+        <widget class="QRadioButton" name="radioButton_5years">
          <property name="text">
-          <string>Last 3 months</string>
+          <string>Last 5 years</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QRadioButton" name="radioButton_all">
+         <property name="text">
+          <string>All available</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -541,17 +554,17 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QRadioButton" name="radioButton_3months">
+         <property name="text">
+          <string>Last 3 months</string>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
         <widget class="QRadioButton" name="radioButton_3years">
          <property name="text">
           <string>Last 3 years</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QRadioButton" name="radioButton_select_year">
-         <property name="text">
-          <string>Selected year:</string>
          </property>
         </widget>
        </item>
@@ -565,66 +578,65 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
-        <widget class="QRadioButton" name="radioButton_all">
-         <property name="text">
-          <string>All available</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QRadioButton" name="radioButton_5years">
-         <property name="text">
-          <string>Last 5 years</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QComboBox" name="combo_year">
-         <item>
-          <property name="text">
-           <string>2024</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2023</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2022</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2021</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2020</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2019</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2018</string>
-          </property>
-         </item>
-        </widget>
-       </item>
       </layout>
+     </widget>
+     <widget class="QComboBox" name="combo_year">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>230</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>2024</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2023</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2022</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2021</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2020</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2019</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2018</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>230</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Entire Selected Year:</string>
+      </property>
      </widget>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_2">
