@@ -293,6 +293,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Connect the textChanged signal to automatically save changes.
         self.project_QgsPasswordLineEdit.textChanged.connect(self.autoSaveProjectId)
 
+        self.combo_year.addItems([str(year) for year in range(2017, datetime.now().year + 1)])
+
     def loadProjectId(self):
         """
         Loads the saved project ID from QSettings and sets it in the widget.

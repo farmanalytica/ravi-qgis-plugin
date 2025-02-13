@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1392</width>
-    <height>658</height>
+    <height>344</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,7 @@
     <number>-4</number>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -93,14 +93,21 @@
      </property>
      <property name="html">
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Informações do Plugin RAVI para QGIS&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Para usar este plugin, você precisa dos seguintes itens:      &lt;/span&gt;        &lt;/p&gt;
-&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Uma Conta Ativa do Google Earth Engine:&lt;/span&gt;&lt;/a&gt; Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas).      &lt;span style=&quot; font-size:11pt;&quot;&gt;      &lt;/span&gt;&lt;/li&gt;
-&lt;li style=&quot; font-size:12pt;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Um Projeto do Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cota para os serviços do Earth Engine).  &lt;span style=&quot; font-size:11pt;&quot;&gt;      &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; para acessar o guia passo a passo.      &lt;/span&gt;        &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;O token de autenticação será armazenado localmente, evitando o login no navegador em futuras autenticações. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Para usar este plugin, você precisa do seguinte:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Uma Conta Ativa no Google Earth Engine:&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt; &lt;/span&gt;&lt;/a&gt;Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas). &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Um Projeto no Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt; &lt;/span&gt;&lt;/a&gt;Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cotas para serviços do Earth Engine). &lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; para acessar o guia passo a passo. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;O token de autenticação será armazenado localmente, permitindo que você ignore o login do navegador durante autenticações futuras. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Sobre o Autor&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;O plugin RAVI foi desenvolvido por &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Caio Arantes&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;, um estudante de Engenharia Agrícola entusiata de agricultura de precisão e geotecnologia. Com experiência em desenvolvimento de plugins QGIS e aplicações de sensoriamento remoto, ele criou o RAVI como parte de seu trabalho de conclusão de curso. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;📧 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Email:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;mailto:caiosimplicioarantes@gmail.com&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;caiosimplicioarantes@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;🔗 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;LinkedIn:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://www.linkedin.com/in/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;linkedin.com/in/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;💻 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;GitHub:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://github.com/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;github.com/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Orientadores&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;Este projeto foi orientado por: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prof. Dr. Lucas Rios do Amaral&lt;/span&gt; - &lt;a href=&quot;https://example.com/supervisor&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;Mais sobre o orientador&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;M.Sc. Isabella Alves da Cunha&lt;/span&gt; - &lt;a href=&quot;https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;Mais sobre a co-orientadora&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="overwriteMode">
       <bool>true</bool>
@@ -696,41 +703,6 @@ p, li { white-space: pre-wrap; }
         <height>25</height>
        </rect>
       </property>
-      <item>
-       <property name="text">
-        <string>2024</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2023</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2022</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2021</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2020</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2019</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2018</string>
-       </property>
-      </item>
      </widget>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
@@ -972,7 +944,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>670</x>
         <y>40</y>
-        <width>41</width>
+        <width>51</width>
         <height>21</height>
        </rect>
       </property>
