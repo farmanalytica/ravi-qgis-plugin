@@ -878,6 +878,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.centralizar()
             self.plot_timeseries()
 
+        if index == 1:
+                    self.load_path_sugestion()
+
+        if index == 2:
+                    self.load_vector_layers()
+
     def next_clicked(self):
         self.tabWidget.setCurrentIndex((self.tabWidget.currentIndex() + 1) % self.tabWidget.count())
 
@@ -909,8 +915,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     print("Default project is valid.")
                     self.pop_aviso_auth("Authentication successful!")
                     self.autentication = True
-                    self.load_vector_layers()
-                    self.load_path_sugestion()
+                    #self.load_vector_layers()
+                    #self.load_path_sugestion()
                     self.next_clicked()
                 else:
                     print("Default project is valid but contains no assets.")  # No warning needed for this case
@@ -1769,90 +1775,79 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
 
 
+
     def load_vector_function(self):
+        """
+        Loads the vector layer from the selected file path, reprojects it to EPSG:4326,
+        dissolves multiple features if necessary, and converts it into an Earth Engine
+        FeatureCollection representing the AOI.
+        """
         shapefile_path = self.selected_aio_layer_path
-        
-        # Check if the path is a .zip file
-        if shapefile_path.endswith('.zip'):
-            # Try to read shapefile from a zip archive
-            try:
-                # Check if the .zip file exists and open it
+        self.aoi = None  # Ensure the attribute exists to avoid AttributeError
+
+        try:
+            # Load the shapefile, handling both .zip archives and regular files.
+            if shapefile_path.endswith('.zip'):
                 with zipfile.ZipFile(shapefile_path, 'r') as zip_ref:
-                    zip_ref.printdir()  # Optional: Print contents of the zip to debug
-                    # Try to find the .shp file inside the zip
                     shapefile_found = False
                     for file in zip_ref.namelist():
                         if file.endswith('.shp'):
                             shapefile_found = True
                             shapefile_within_zip = file
                             break
-                    
-                    if shapefile_found:
-                        # Read shapefile directly from the zip file
-                        self.aoi = gpd.read_file(f'zip://{shapefile_path}/{shapefile_within_zip}')
-                        print(f"Successfully loaded shapefile from {shapefile_path}.")
-                    else:
+                    if not shapefile_found:
                         print("No .shp file found inside the zip archive.")
                         return
-            except Exception as e:
-                print(f"Error reading shapefile from zip archive: {e}")
+
+                    # Read shapefile directly from the zip archive.
+                    self.aoi = gpd.read_file(f"zip://{shapefile_path}/{shapefile_within_zip}")
+            else:
+                self.aoi = gpd.read_file(shapefile_path)
+
+            # Reproject the GeoDataFrame to EPSG:4326 to ensure correct coordinates for Earth Engine.
+            self.aoi = self.aoi.to_crs(epsg=4326)
+
+            if self.aoi.empty:
+                print("The shapefile does not contain any geometries.")
                 return
 
-        else:
-            # If not a .zip, assume it is a regular shapefile
-            try:
-                # Read the shapefile normally
-                # Use the project's CRS to read the shapefile
-                self.aoi = gpd.read_file(shapefile_path).to_crs("EPSG:4326")
-                print(f"Successfully loaded shapefile from {shapefile_path}.")
-            except Exception as e:
-                print(f"Error reading shapefile: {e}")
-                return
-        
-        # After loading, check if the GeoDataFrame is not empty
-        if not self.aoi.empty:
-            # If the GeoDataFrame contains multiple geometries, dissolve them into one
+            # Dissolve multiple features into a single geometry if necessary.
             if len(self.aoi) > 1:
                 self.aoi = self.aoi.dissolve()
 
-            # Extract the first geometry from the dissolved GeoDataFrame
+            # Extract the first geometry.
             geometry = self.aoi.geometry.iloc[0]
 
-            # Check if the geometry is a Polygon or MultiPolygon
-            if geometry.geom_type in ['Polygon', 'MultiPolygon']:
-                # Convert the geometry to GeoJSON format
-                geojson = geometry.__geo_interface__
-
-                # Remove the third dimension from the coordinates if it exists
-                if geojson['type'] == 'Polygon':
-                    geojson['coordinates'] = [list(map(lambda coord: coord[:2], ring)) for ring in geojson['coordinates']]
-                elif geojson['type'] == 'MultiPolygon':
-                    geojson['coordinates'] = [[list(map(lambda coord: coord[:2], ring)) for ring in polygon] for polygon in geojson['coordinates']]
-
-                # Create an Earth Engine geometry object from the GeoJSON coordinates
-                ee_geometry = ee.Geometry(geojson)
-
-                # Convert the Earth Engine geometry to a Feature
-                feature = ee.Feature(ee_geometry)
-
-                # Create a FeatureCollection with the feature
-                self.aoi = ee.FeatureCollection([feature])
-
-                print("AOI defined successfully.")
-                self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
-                self.find_area()
-                self.find_centroid()
-                
-                self.aoi_ckecked  = True
-                self.aoi_ckecked_function()
-
-            else:
-                
+            # Validate the geometry type.
+            if geometry.geom_type not in ['Polygon', 'MultiPolygon']:
                 print("The geometry is not a valid type (Polygon or MultiPolygon).")
                 self.pop_aviso("The geometry is not a valid type (Polygon or MultiPolygon).")
-        else:
-            print("The shapefile does not contain any geometries.")
-            self.pop_aviso("The shapefile does not contain any geometries.")
+                return
+
+            # Convert the geometry to GeoJSON format.
+            geojson = geometry.__geo_interface__
+
+            # Remove any third dimension from the coordinates.
+            if geojson['type'] == 'Polygon':
+                geojson['coordinates'] = [list(map(lambda coord: coord[:2], ring)) for ring in geojson['coordinates']]
+            elif geojson['type'] == 'MultiPolygon':
+                geojson['coordinates'] = [
+                    [list(map(lambda coord: coord[:2], ring)) for ring in polygon]
+                    for polygon in geojson['coordinates']
+                ]
+
+            # Create an Earth Engine geometry object.
+            ee_geometry = ee.Geometry(geojson)
+            feature = ee.Feature(ee_geometry)
+            self.aoi = ee.FeatureCollection([feature])
+
+            print("AOI defined successfully.")
+            self.aio_set = True
+            # self.check_next_button()
+
+        except Exception as e:
+            print(f"Error in load_vector_function: {e}")
+            return
 
     def find_centroid(self):
         centroid = self.aoi.geometry().centroid()
