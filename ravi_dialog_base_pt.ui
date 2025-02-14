@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>RAVIDialogBase</class>
  <widget class="QDialog" name="RAVIDialogBase">
@@ -37,7 +37,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>3</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -95,23 +95,23 @@
       </rect>
      </property>
      <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;title&gt;Informações do Plugin RAVI para QGIS&lt;/title&gt;&lt;style type="text/css"&gt;
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Informações do Plugin RAVI para QGIS&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;"&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;Para usar este plugin, você precisa do seguinte:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style=" font-family:'sans-serif'; font-size:12pt; color:#333333;" style=" margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://earthengine.google.com/"&gt;&lt;span style=" font-weight:600; text-decoration: underline; color:#007bff;"&gt;Uma Conta Ativa no Google Earth Engine:&lt;/span&gt;&lt;/a&gt; Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas). &lt;/li&gt;
-&lt;li style=" font-family:'sans-serif'; font-size:12pt; color:#333333;" style=" margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://console.cloud.google.com"&gt;&lt;span style=" font-weight:600; text-decoration: underline; color:#007bff;"&gt;Um Projeto no Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cotas para serviços do Earth Engine). &lt;/li&gt;&lt;/ul&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://caioarantes.github.io/ravi-qgis-plugin/"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;"&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; para acessar o guia passo a passo. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;O token de autenticação será armazenado localmente, permitindo que você ignore o login do navegador durante autenticações futuras. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;Sobre o Autor&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;O plugin RAVI foi desenvolvido por &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt;Caio Arantes&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;, estudante de Engenharia Agrícola entusiata de agricultura de precisão e geotecnologia, como parte de seu trabalho de conclusão de curso. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;Sinta-se à vontade para entrar em contato:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;📧 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt;Email:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;/span&gt;&lt;a href="mailto:caiosimplicioarantes@gmail.com"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;"&gt;caiosimplicioarantes@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;br /&gt;🔗 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt;LinkedIn:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;/span&gt;&lt;a href="https://www.linkedin.com/in/caioarantes"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;"&gt;linkedin.com/in/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;br /&gt;💻 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt;GitHub:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;/span&gt;&lt;a href="https://github.com/caioarantes"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;"&gt;github.com/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;Orientadores&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:12pt; color:#333333;"&gt;Este projeto foi orientado por: &lt;/span&gt;&lt;/p&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style=" font-family:'sans-serif'; font-size:12pt; color:#333333;" style=" margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-weight:600;"&gt;Prof. Dr. Lucas Rios do Amaral&lt;/span&gt; - &lt;a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/"&gt;&lt;span style=" text-decoration: underline; color:#007bff;"&gt;Mais sobre o orientador&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;
-&lt;li style=" font-family:'sans-serif'; font-size:12pt; color:#333333;" style=" margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-weight:600;"&gt;M.Sc. Isabella Alves da Cunha&lt;/span&gt; - &lt;a href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/"&gt;&lt;span style=" text-decoration: underline; color:#007bff;"&gt;Mais sobre a co-orientadora&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Para usar este plugin, você precisa do seguinte:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Uma Conta Ativa no Google Earth Engine:&lt;/span&gt;&lt;/a&gt; Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas). &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Um Projeto no Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cotas para serviços do Earth Engine). &lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/ravi-qgis-plugin/&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;Clique aqui&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; para acessar o guia passo a passo. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;O token de autenticação será armazenado localmente, permitindo que você ignore o login do navegador durante autenticações futuras. Para trocar de conta, clique em 'Redefinir Autenticação'. &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Sobre o Autor&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;O plugin RAVI foi desenvolvido por &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Caio Arantes&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;, estudante de Engenharia Agrícola entusiata de agricultura de precisão e geotecnologia, como parte de seu trabalho de conclusão de curso. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;Sinta-se à vontade para entrar em contato:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;📧 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Email:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;mailto:caiosimplicioarantes@gmail.com&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;caiosimplicioarantes@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;🔗 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;LinkedIn:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://www.linkedin.com/in/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;linkedin.com/in/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;💻 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;GitHub:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://github.com/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;github.com/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Orientadores&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;Este projeto foi orientado por: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prof. Dr. Lucas Rios do Amaral&lt;/span&gt; - &lt;a href=&quot;https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;Mais sobre o orientador&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;M.Sc. Isabella Alves da Cunha&lt;/span&gt; - &lt;a href=&quot;https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;Mais sobre a co-orientadora&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="overwriteMode">
       <bool>true</bool>
@@ -440,7 +440,7 @@ p, li { white-space: pre-wrap; }
       <number>1</number>
      </property>
      <property name="text">
-      <string />
+      <string/>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
@@ -1040,7 +1040,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string />
+      <string/>
      </property>
     </widget>
    </widget>
@@ -1127,14 +1127,14 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;"&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Esse recurso permite especificar uma distância de buffer em metros para ajustar a Área de Interesse (AOI) de forma flexível, podendo ser aplicada tanto uma expansão quanto uma contração da área:&lt;/p&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style="" style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-weight:600;"&gt;Buffer negativo:&lt;/span&gt; Quando aplicado um buffer negativo, as bordas externas da AOI são eliminadas, concentrando a análise na região central. Essa abordagem reduz possíveis efeitos de borda, como ruídos ou distorções, resultando em dados mais precisos e representativos da área interna.&lt;/li&gt;
-&lt;li style="" style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-weight:600;"&gt;Buffer positivo:&lt;/span&gt; Ao utilizar um buffer positivo, a AOI é expandida para incluir não só a região central, mas também as bordas e uma área adicional ao redor. Essa expansão pode ser útil para capturar informações contextuais ou para garantir que pequenas imprecisões na delimitação não excluam partes relevantes dos dados.&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Com a possibilidade de aplicar ambos os tipos de buffer, o usuário pode ajustar a extração dos dados conforme os objetivos da análise. Dependendo do estudo, pode ser vantajoso focar na região central com um buffer negativo ou incluir áreas adjacentes com um buffer positivo, ou até combinar ambas as abordagens para análises comparativas.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Esse recurso permite especificar uma distância de buffer em metros para ajustar a Área de Interesse (AOI) de forma flexível, podendo ser aplicada tanto uma expansão quanto uma contração da área:&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Buffer negativo:&lt;/span&gt; Quando aplicado um buffer negativo, as bordas externas da AOI são eliminadas, concentrando a análise na região central. Essa abordagem reduz possíveis efeitos de borda, como ruídos ou distorções, resultando em dados mais precisos e representativos da área interna.&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Buffer positivo:&lt;/span&gt; Ao utilizar um buffer positivo, a AOI é expandida para incluir não só a região central, mas também as bordas e uma área adicional ao redor. Essa expansão pode ser útil para capturar informações contextuais ou para garantir que pequenas imprecisões na delimitação não excluam partes relevantes dos dados.&lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Com a possibilidade de aplicar ambos os tipos de buffer, o usuário pode ajustar a extração dos dados conforme os objetivos da análise. Dependendo do estudo, pode ser vantajoso focar na região central com um buffer negativo ou incluir áreas adjacentes com um buffer positivo, ou até combinar ambas as abordagens para análises comparativas.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_buffer">
@@ -1605,12 +1605,12 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;"&gt;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Este filtro utiliza a &lt;a href="https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/"&gt;&lt;span style=" text-decoration: underline; color:#0000ff;"&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/p&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este filtro utiliza a &lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Camada de Classificação de Cena (SCL)&lt;/span&gt;&lt;/a&gt; para calcular a porcentagem de pixels válidos dentro da Área de Interesse (AOI) especificada. Ele exclui imagens cuja porcentagem de pixels válidos esteja abaixo de um limiar definido pelo usuário. Pixels válidos são determinados com base nas classes SCL selecionadas.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;As imagens originais permanecem intactas, a menos que a opção &amp;quot;Aplicar máscara SCL para remover pixels&amp;quot; seja selecionada. Esta opção é independente do limiar de filtragem e, quando ativada, modifica diretamente os dados da imagem removendo pixels classificados como inválidos. Essa alteração impacta o cálculo dos dados da série temporal, bem como imagens diárias e sintéticas, pois apenas pixels válidos são considerados nesses cálculos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>
@@ -1714,11 +1714,11 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
      <property name="locale">
-      <locale language="Portuguese" country="Brazil" />
+      <locale language="Portuguese" country="Brazil"/>
      </property>
      <property name="url" stdset="0">
       <url>
-       <string />
+       <string/>
       </url>
      </property>
     </widget>
@@ -1749,7 +1749,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string />
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1771,7 +1771,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string />
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -2037,7 +2037,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string />
+      <string/>
      </property>
      <widget class="QPushButton" name="salvar">
       <property name="geometry">
@@ -2103,7 +2103,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string />
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -2632,33 +2632,7 @@ p, li { white-space: pre-wrap; }
     </widget>
    </widget>
   </widget>
- <property name="styleSheet"><string>QPushButton {
-        background-color: #d1e7ff; /* Soft Blue */
-        color: black;
-        border-radius: 6px;
-        padding: 5px;
-    }
-    QPushButton:hover {
-        background-color: #b6d4fe; /* Slightly Darker Blue */
-    }
-    QPushButton#QPushButton_back {
-        background-color: #e2e3e5; /* Soft Gray */
-    }
-    QPushButton#QPushButton_back:hover {
-        background-color: #d6d8db; /* Slightly Darker Gray */
-    }
-    QPushButton#QPushButton_next {
-        background-color: #d1e7ff;
-    }
-    QPushButton#QPushButton_next:hover {
-        background-color: #b6d4fe;
-    }
-    QPushButton#clear_raster, QPushButton#clear_nasa {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
-    }</string></property></widget>
+ </widget>
  <customwidgets>
   <customwidget>
    <class>QgsFileWidget</class>
@@ -2676,6 +2650,6 @@ p, li { white-space: pre-wrap; }
    <header location="global">QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources />
- <connections />
+ <resources/>
+ <connections/>
 </ui>

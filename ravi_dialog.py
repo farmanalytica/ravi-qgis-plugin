@@ -1193,6 +1193,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             )  # Debug: Show selected layer path
 
             # Trigger the processing function
+            self.load_vector_function()
             area = self.find_area()
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
@@ -2040,93 +2041,17 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.plot_timeseries()
 
     def find_area(self):
-        """
-        Loads a shapefile from a .zip archive or a regular file, calculates the area,
-        and updates the UI.  Uses explicit extraction to a temporary directory for
-        robustness.
-        """
-        shapefile_path = self.selected_aio_layer_path
-        area_km2 = 0  # Initialize area_km2
-
         try:
-            if shapefile_path.endswith(".zip"):
-                # --- ZIP Archive Handling ---
-                with zipfile.ZipFile(shapefile_path, "r") as zip_ref:
-                    shapefile_found = False
-                    shapefile_within_zip = None  # Initialize to None
-                    for file in zip_ref.namelist():
-                        if file.lower().endswith(".shp"):  # Case-insensitive check
-                            shapefile_found = True
-                            shapefile_within_zip = file
-                            break
-
-                    if not shapefile_found:
-                        print("Error: No .shp file found inside the zip archive.")
-                        self.aoi_area.setText("Error: No .shp file found in zip")
-                        return None
-
-                    if shapefile_within_zip is None:  # Double check
-                        print("Error: shapefile_within_zip is None after loop.")
-                        self.aoi_area.setText("Error: No .shp file found in zip")
-                        return None
-
-                    # Create a temporary directory
-                    with tempfile.TemporaryDirectory() as tmpdir:
-                        # Extract all files from the zip archive to the temporary directory
-                        zip_ref.extractall(tmpdir)
-
-                        # Construct the full path to the .shp file in the temp dir
-                        extracted_shp_path = os.path.join(tmpdir, shapefile_within_zip)
-
-                        # --- DEBUGGING ---
-                        print(f"Extracted shapefile path: {extracted_shp_path}")
-                        if not os.path.exists(extracted_shp_path):
-                            print(f"Error: Extracted shapefile not found at: {extracted_shp_path}")
-                            self.aoi_area.setText("Error: Extracted shapefile not found.")
-                            return None
-                        # --- END DEBUGGING ---
-
-                        # Read the shapefile using geopandas
-                        aoi = gpd.read_file(extracted_shp_path)
-
-            else:
-                # --- Regular Shapefile Handling ---
-                aoi = gpd.read_file(shapefile_path)
-
-            # --- CRS Handling ---
-            if aoi.crs is None:
-                print("Warning: CRS is not defined. Assuming EPSG:4326.")
-                aoi.crs = "EPSG:4326"  # Or the correct CRS if known
-
-            # Project to a suitable projected CRS (e.g., UTM)
-            aoi = aoi.to_crs(epsg=32615)  # Example: UTM zone 15N.  **CHANGE THIS!**
-            # --- Geometry Validation ---
-            aoi['geometry'] = aoi['geometry'].apply(lambda geom: make_valid(geom) if not geom.is_valid else geom)
-
-            # --- Area Calculation ---
-            area_m2 = aoi.geometry.area.sum()
-            area_km2 = area_m2 / 1e6
-            area_ha = area_km2 * 100
-
+            area_km2 = self.aoi.geometry().area().getInfo() / 1e6  # Convert from square meters to square kilometers
+            area_ha = area_km2 * 100  # Convert from square kilometers to hectares
             print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
-            self.aoi_area.setText(
-                f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)"
-            )
+            self.aoi_area.setText(f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
             return area_km2
-
-        except FileNotFoundError:
-            print(f"Error: File not found at {shapefile_path}")
-            self.aoi_area.setText("Error: File not found.")
-            return None
-        except zipfile.BadZipFile:
-            print(f"Error: Invalid zip file: {shapefile_path}")
-            self.aoi_area.setText("Error: Invalid zip file.")
-            return None
         except Exception as e:
             print(f"Error in find_area: {e}")
-            self.aoi_area.setText(f"Error: {str(e)}")
-            return None
-
+            self.aoi_area.setText(f"Total Area:")
+            return 0
+    
 
     def aoi_ckecked_function(self):
         if self.aoi_ckecked and self.folder_set:
@@ -2225,6 +2150,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
     
     def AOI_coverage_filter(self, sentinel2, aoi, coverage_threshold):
+        if coverage_threshold == 1:
+            coverage_threshold = 0.9999  # Avoid floating-point comparison issues
+
+
         #Coverage Ratio Function
         aoi_geometry = aoi.first().geometry()
         aoi_area = aoi_geometry.area()
