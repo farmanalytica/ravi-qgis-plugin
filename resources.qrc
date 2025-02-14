@@ -1,4 +1,4 @@
-<RCC>
+ <RCC>
     <qresource prefix="/plugins/ravi-qgis-plugin" >
         <file>icon.png</file>
     </qresource>

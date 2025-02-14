@@ -2,239 +2,715 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EasyDEM QGIS Plugin</title>
-  <meta name="description" content="EasyDEM is a QGIS Plugin that lets you access and download multiple Digital Elevation Models (DEMs) via the Google Earth Engine API.">
-  <link rel="icon" href="./index_files/icon.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAVI Documentation</title>
   <style>
-    /* Base resets and typography */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --primary-color: #2c7a5a;
+      --hover-color: #1f5a41;
     }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
       line-height: 1.6;
-      background-color: #f9f9f9;
       color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
+
+    /* Language buttons container (centered, not fixed) */
+    .lang-buttons {
+      text-align: center;
+      margin: 20px 0 40px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    .lang-btn {
+      padding: 12px 30px;
+      margin: 0 10px;
+      border: 2px solid var(--primary-color);
+      border-radius: 25px;
+      cursor: pointer;
+      background: white;
+      color: var(--primary-color);
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .lang-btn.active,
+    .lang-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .lang-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+
+    h1, h2, h3 {
+      color: var(--primary-color);
+      margin-top: 30px;
+    }
+
+    h1 {
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    img {
+      display: block;
+      max-width: 800px;
+      margin: 25px auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    table {
+      width: 100%;
+      margin: 25px 0;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
     a {
-      color: #007bff;
+      color: var(--primary-color);
       text-decoration: none;
+      font-weight: 500;
     }
+
     a:hover {
       text-decoration: underline;
     }
-    /* Header styling */
-    header {
-      background: #007bff;
-      color: #fff;
-      padding: 20px 0;
-      text-align: center;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    header .title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    header .title img {
-      width: 60px;
-      height: auto;
-    }
-    header h1 {
-      font-size: 2rem;
-    }
-    /* Navigation (optional) */
-    nav {
-      background: #0056b3;
-      padding: 10px 0;
-      text-align: center;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-    /* Main content styling */
-    main {
-      flex: 1;
-      padding: 20px;
-      max-width: 900px;
-      width: 90%;
-      margin: 20px auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    section {
-      margin-bottom: 2rem;
-    }
-    h2 {
-      margin-bottom: 15px;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 5px;
-    }
-    ul, ol {
-      margin-left: 20px;
-      margin-bottom: 15px;
-    }
-    li {
-      margin-bottom: 8px;
-    }
-    pre {
-      background: #f4f4f4;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin-bottom: 15px;
-    }
-    /* Download Button */
-    .download-button {
-      display: inline-block;
-      background-color: #007bff;
-      color: #fff;
-      padding: 12px 25px;
-      border-radius: 5px;
-      text-align: center;
-      margin: 20px 0;
-      transition: background-color 0.3s ease;
-    }
-    .download-button:hover {
-      background-color: #0056b3;
-    }
-    /* Image responsiveness */
-    img.screenshot {
-      max-width: 100%;
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      margin: 10px 0;
-    }
-    /* Footer styling */
-    footer {
-      background: #333;
-      color: #fff;
-      text-align: center;
-      padding: 15px 10px;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.5rem;
-      }
-      nav a {
-        margin: 0 10px;
-      }
+
+    hr {
+      border: 0;
+      border-top: 1px solid #ddd;
+      margin: 30px 0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="title">
-      <img src="./index_files/icon.png" alt="EasyDEM Logo">
-      <h1>EasyDEM QGIS Plugin</h1>
-    </div>
-    <p>Your gateway to multiple DEM datasets via Google Earth Engine</p>
-  </header>
+  <!-- Language Toggle (centered, in normal flow) -->
+  <div class="lang-buttons">
+    <button class="lang-btn active" onclick="showLanguage('pt')">Português</button>
+    <button class="lang-btn" onclick="showLanguage('en')">English</button>
+  </div>
 
-  <!-- Optional Navigation Menu -->
-  <nav>
-    <a href="#features">Features</a>
-    <a href="#installation">Installation</a>
-    <a href="#guide">Guide</a>
-    <a href="#download">Download</a>
-  </nav>
+  <!-- English Documentation -->
+  <div id="en-content" class="lang-content">
+    <h1>RAVI - Remote Analysis of Vegetation Indices</h1>
+    <p>
+      RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine (GEE), enabling efficient processing and visualization of geospatial data. Utilizing the Sentinel-2 <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank">harmonized surface reflectance catalog</a>, the plugin supports vegetation index calculations and easy download of multispectral imagery. These features make it a viable tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
+    </p>
 
-  <main>
-    <section id="about">
-      <h2>About EasyDEM</h2>
-      <p>
-        <strong>EasyDEM</strong> is a powerful QGIS plugin that enables you to easily access and download multiple Digital Elevation Models (DEMs) from Google Earth Engine. With a seamless integration into QGIS, you can quickly visualize and analyze topography from datasets such as NASADEM, ASTER GED, COPERNICUS DEM, JAXA ALOS, and USGS GMTED2010.
-      </p>
-    </section>
+    <h2>Key Features</h2>
+    <h3>1. Earth Engine Integration</h3>
+    <ul>
+      <li><strong>Easy Authentication</strong>: Authenticate with Google Earth Engine to enable plugin functionality.</li>
+      <li><strong>Direct Processing</strong>: Access, process, and analyze Sentinel-2 imagery without leaving QGIS.</li>
+      <li><strong>On-the-Fly Visualization</strong>: Visualize processed data as raster layers or interactive plots.</li>
+    </ul>
 
-    <section id="features">
-      <h2>Features</h2>
-      <ul>
-        <li>
-          <strong>Access Multiple DEM Datasets</strong>: Quickly access and visualize various DEM datasets from GEE catalogs including:
-          <ol>
-            <li><a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_NASADEM_HGT_001" target="_blank">NASA/NASADEM_HGT/001</a></li>
-            <li><a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_ASTER_GED_AG100_003" target="_blank">NASA/ASTER_GED/AG100_003</a></li>
-            <li><a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_DEM_GLO30" target="_blank">COPERNICUS/DEM/GLO30</a></li>
-            <li><a href="https://developers.google.com/earth-engine/datasets/catalog/JAXA_ALOS_AW3D30_V3_2" target="_blank">JAXA/ALOS/AW3D30/V3_2</a></li>
-            <li><a href="https://developers.google.com/earth-engine/datasets/catalog/USGS_GMTED2010_FULL" target="_blank">USGS/GMTED2010_FULL</a></li>
-          </ol>
-        </li>
-        <li><strong>Seamless Integration:</strong> Load DEM data directly into QGIS with a few clicks.</li>
-        <li><strong>User-Friendly Interface:</strong> Easy-to-follow setup and step-by-step guide to get started.</li>
-      </ul>
-    </section>
+    <h3>2. Vegetation Index Calculations</h3>
+    <ul>
+      <li><strong>Supported Indices</strong>: Compute indices such as NDVI, EVI, SAVI and GNDVI.</li>
+      <li><strong>Customizable Metrics</strong>: Aggregate data using mean, max, min, median, amplitude, or standard deviation.</li>
+    </ul>
 
-    <section id="installation">
-      <h2>Installation</h2>
-      <h3>Via QGIS Plugin Manager</h3>
-      <ol>
-        <li>Open QGIS.</li>
-        <li>Navigate to <code>Plugins &gt; Manage and Install Plugins</code>.</li>
-        <li>Search for <strong>EasyDEM</strong>.</li>
-        <li>Click <strong>Install</strong>.</li>
-        <li><strong>Restart QGIS</strong> to activate the plugin.</li>
-      </ol>
-      <p>
-        Once installed, access DEM data by opening the plugin toolbar or icon, authenticating your Google Earth Engine (GEE) account, choosing your Area of Interest (vector layer) and output folder, and selecting your desired DEM dataset.
-      </p>
-    </section>
+    <h3>3. Advanced Time Series Analysis</h3>
+    <ul>
+      <li>Generate time series for vegetation indices over a defined Area of Interest (AOI).</li>
+      <li>Integrate precipitation data from NASA POWER for cross-variable comparisons.</li>
+      <li>Smooth data with Savitzky-Golay filters for enhanced trend analysis.</li>
+    </ul>
 
-    <section id="guide">
-      <h2>Step-by-Step Guide</h2>
-      <ol>
-        <li>
-          <strong>Initial Setup:</strong>
-          <img src="./index_files/1.png" alt="Initial Setup Screenshot" class="screenshot">
-        </li>
-        <li>
-          <strong>Area of Interest Selection:</strong>
-          <img src="./index_files/2.png" alt="Area of Interest Selection Screenshot" class="screenshot">
-        </li>
-        <li>
-          <strong>DEM Dataset Selection:</strong>
-          <img src="./index_files/3.png" alt="DEM Dataset Selection Screenshot" class="screenshot">
-        </li>
-      </ol>
-    </section>
+    <h3>4. AOI Selection</h3>
+    <ul>
+      <li><strong>AOI Management</strong>: Load areas of interest from shapefiles or GeoJSON files.</li>
+    </ul>
 
-    <section id="download">
-      <h2>Download EasyDEM</h2>
-      <p>
-        Get the latest version of EasyDEM directly from the QGIS Plugin Manager or download the packaged version below.
-      </p>
-      <a class="download-button" href="https://your-download-link.com" target="_blank">Download EasyDEM</a>
-    </section>
+    <h3>5. Interactive Visualization</h3>
+    <ul>
+      <li><strong>Charts</strong>: Create interactive time series plots using Plotly.</li>
+      <li><strong>Raster Styling</strong>: Apply predefined color ramps (e.g., RdYlGn) for visual clarity.</li>
+      <li><strong>Export Options</strong>: Export processed data as GeoTIFFs, CSVs, or styled rasters.</li>
+    </ul>
 
-    <section id="code">
-      <h2>Sample Code Snippet</h2>
-      <pre><code>
-# Example: Authenticate and load DEM data using EasyDEM
-import ee
-ee.Authenticate()
-ee.Initialize()
+    <h3>6. Comprehensive Imagery Management</h3>
+    <ul>
+      <li><strong>Date Filtering</strong>: Filter individual images by acquisition date.</li>
+      <li><strong>Cloud Filtering</strong>: Exclude or mask cloudy pixels while preserving usable data.</li>
+      <li><strong>Composite Creation</strong>: Generate composite images based on user-defined metrics.</li>
+    </ul>
 
-# Access a DEM dataset
-dem = ee.Image("COPERNICUS/DEM/GLO30")
-print("DEM loaded successfully!")
-      </code></pre>
-    </section>
-  </main>
+    <h2>Installation</h2>
+    <p>To install RAVI:</p>
+    <ol>
+      <li>Open QGIS and navigate to the <strong>Plugins</strong> menu.</li>
+      <li>Select <strong>Manage and Install Plugins</strong>.</li>
+      <li>In the "All" tab, search for "RAVI", select it, and click <strong>Install</strong>.</li>
+      <li>Ensure that RAVI is checked in the installed plugins list.</li>
+      <li>Restart QGIS.</li>
+    </ol>
 
-  <footer>
-    <p>&copy; 2024 EasyDEM. All rights reserved. | Developed for QGIS users by Caio Arantes.</p>
-  </footer>
+    <h2>Usage</h2>
+    <h3>Step 1: Authentication</h3>
+    <img src="media/step1.png" alt="Step 1">
+    <ul>
+      <li>Open the plugin dialog.</li>
+      <li>Authenticate with Google Earth Engine using your credentials.</li>
+    </ul>
+
+    <h3>Step 2: Select output folder</h3>
+    <img src="media/step2.png" alt="Step 2">
+    <p>Choose the folder where you want to save the output files.</p>
+
+    <h3>Step 3: Load and select the area of interest (AOI)</h3>
+    <img src="media/step3.png" alt="Step 3">
+    <ul>
+      <li>Select an AOI by loading a shapefile or GeoJSON file.</li>
+      <li>Ensure the geometry is valid (Polygon or MultiPolygon only).</li>
+      <li>Add a Google Maps layer to the QGIS canvas for better visualization and context.</li>
+      <li>Use the <strong>Build AOI from Canvas Extent</strong> button to automatically generate a new AOI based on the current canvas extent.</li>
+    </ul>
+
+    <h3>Step 4: Define time range for imagery search</h3>
+    <img src="media/step4.png" alt="Step 4">
+    <p>Set a custom time range or select a suggested one.</p>
+
+    <h3>Step 5: Select vegetation index for time series analysis</h3>
+    <img src="media/step5.png" alt="Step 5">
+    <p>Choose the vegetation index you want to analyze from the dropdown menu.</p>
+
+    <h3>Step 6: Imagery Overlap filter</h3>
+    <img src="media/step6.png" alt="Step 6">
+    <p>Set the specified filter according to your analysis requirements.</p>
+
+    <h3>Step 7: AOI Buffer</h3>
+    <img src="media/step7.png" alt="Step 7">
+    <p>Use AOI Buffer filter to reduce the AOI boundary for analysis.</p>
+
+    <h3>Step 8: Cloud pixel percentage filter</h3>
+    <img src="media/step8.png" alt="Step 8">
+    <p>Set the specified filter according to your analysis requirements.</p>
+
+    <h3>Step 9: Valid pixel percentage filter</h3>
+    <img src="media/step9.png" alt="Step 9">
+    <p>Set the specified filter according to your analysis requirements.</p>
+
+    <h2>Results Page</h2>
+    <h3>1. Time Series Plot</h3>
+    <img src="media/results1.png" alt="Time Series Plot">
+    <ul>
+      <li>Visualize the time series of the selected vegetation index over the defined AOI.</li>
+      <li>Hover over the plot to see specific values and dates for detailed analysis.</li>
+    </ul>
+
+    <h3>2. Load RGB Layer (Focus on a Day)</h3>
+    <img src="media/results2.png" alt="Load RGB Layer">
+    <p>
+      Load and display an RGB layer for a specific date to analyze the visual appearance of the area. All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed in the table below:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Sentinel-2 Band Name</th>
+          <th>QGIS Band Number</th>
+          <th>Wavelength (nm)</th>
+          <th>Spatial Resolution (m)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Band 1 (Coastal aerosol)</td>
+          <td>1</td>
+          <td>443</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Band 2 (Blue)</td>
+          <td>2</td>
+          <td>490</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Band 3 (Green)</td>
+          <td>3</td>
+          <td>560</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Band 4 (Red)</td>
+          <td>4</td>
+          <td>665</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Band 5 (Vegetation Red Edge)</td>
+          <td>5</td>
+          <td>705</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Band 6 (Vegetation Red Edge)</td>
+          <td>6</td>
+          <td>740</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Band 7 (Vegetation Red Edge)</td>
+          <td>7</td>
+          <td>783</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Band 8 (NIR)</td>
+          <td>8</td>
+          <td>842</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Band 8A (Vegetation Red Edge)</td>
+          <td>9</td>
+          <td>865</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Band 9 (Water Vapour)</td>
+          <td>10</td>
+          <td>945</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Band 10 (SWIR - Cirrus)</td>
+          <td>11</td>
+          <td>1375</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Band 11 (SWIR)</td>
+          <td>12</td>
+          <td>1610</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Band 12 (SWIR)</td>
+          <td>13</td>
+          <td>2190</td>
+          <td>20</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3. Load Index Layer (Focus on a Day)</h3>
+    <img src="media/results3.png" alt="Load Index Layer">
+    <p>Load and display a vegetation index layer for a specific date.</p>
+
+    <h3>4. Load Index Layer (Composite Image)</h3>
+    <img src="media/results4.png" alt="Load Index Composite">
+    <p>
+      Generate and display a composite image based on the selected vegetation index and the user-defined metric.<br>
+      The composite image will include all images within the current date selection. Use the date selection tool to filter out specific dates.
+    </p>
+
+    <h3>5. Date Selection Tool</h3>
+    <img src="media/results5.png" alt="Date Selection Tool">
+    <ul>
+      <li>Use the date selection tool to filter and select specific dates for analysis.</li>
+      <li>The date selection tool updates the time series plot.</li>
+      <li>Composite images are based on all selected dates.</li>
+    </ul>
+
+    <h3>6. Savitzky-Golay Filter</h3>
+    <img src="media/results6.png" alt="Savitzky-Golay Filter">
+    <p>
+      Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.<br>
+      The parameters for the Savitzky-Golay algorithm, such as the order of the polynomial and the window length, can be adjusted as needed to fine-tune the smoothing process.
+    </p>
+
+    <h3>7. Save Options</h3>
+    <img src="media/results7.png" alt="Save Options">
+    <img src="media/results71.png" alt="Save Options - Image">
+    <p>
+      Save the time series data in spreadsheet format (CSV).<br>
+      To save the time series as an image, open it in the browser to enable the download option.
+    </p>
+
+    <h3>8. NASA POWER Precipitation</h3>
+    <img src="media/results8.png" alt="NASA POWER Precipitation">
+    <p>
+      Add monthly precipitation data from NASA POWER for cross-variable comparisons.<br>
+      Save the precipitation data in spreadsheet format (CSV).
+    </p>
+
+    <h3>9. Quickly Run New Time Series</h3>
+    <img src="media/results9.png" alt="Quickly Run New Time Series">
+    <p>
+      Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+    </p>
+
+    <h3>10. Clear All Loaded Layers</h3>
+    <img src="media/results10.png" alt="Clear All Loaded Layers">
+    <p>
+      Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
+    </p>
+
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><strong>Earth Engine Authentication Failed</strong>: Ensure you have the necessary requirements as explained in the authentication tab.</li>
+      <li><strong>AOI Errors</strong>: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).</li>
+    </ul>
+
+    <h2>Reporting Issues</h2>
+    <p>
+      If you encounter any issues or have suggestions for improvements, please open an issue in the <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank">GitHub Issues</a> section.
+    </p>
+
+    <h2>Contribute to the Project</h2>
+    <p>
+      Contributions are welcome! Please visit the <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank">GitHub repository</a> to get started.
+    </p>
+
+    <h2>License</h2>
+    <p>
+      RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank">LICENSE</a> file for details.
+    </p>
+  </div>
+
+  <!-- Portuguese Documentation -->
+  <div id="pt-content" class="lang-content active">
+    <h1>RAVI - Análise Remota de Índices de Vegetação</h1>
+    <p>
+      RAVI é um plugin para QGIS projetado para se integrar ao Google Earth Engine (GEE), permitindo o processamento e a visualização eficientes de dados geoespaciais. Utilizando o <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank">catálogo de reflectância de superfície harmonizada</a> do Sentinel-2, o plugin suporta cálculos de índices de vegetação e o download fácil de imagens multiespectrais. Esses recursos tornam a ferramenta viável para estudantes, pesquisadores, agricultores e profissionais de GIS que atuam na agricultura, monitoramento de terras ou gestão ambiental.
+    </p>
+
+    <h2>Principais Funcionalidades</h2>
+    <h3>1. Integração com o Earth Engine</h3>
+    <ul>
+      <li><strong>Autenticação Fácil</strong>: Autentique-se no Google Earth Engine para habilitar a funcionalidade do plugin.</li>
+      <li><strong>Processamento Direto</strong>: Acesse, processe e analise imagens do Sentinel-2 sem sair do QGIS.</li>
+      <li><strong>Visualização Imediata</strong>: Visualize os dados processados como camadas raster ou gráficos interativos.</li>
+    </ul>
+
+    <h3>2. Cálculos de Índices de Vegetação</h3>
+    <ul>
+      <li><strong>Índices Suportados</strong>: Calcule índices como NDVI, EVI, SAVI e GNDVI.</li>
+      <li><strong>Métricas Personalizáveis</strong>: Agregue os dados utilizando média, máximo, mínimo, mediana, amplitude ou desvio padrão.</li>
+    </ul>
+
+    <h3>3. Análise Avançada de Séries Temporais</h3>
+    <ul>
+      <li>Gere séries temporais para os índices de vegetação sobre uma Área de Interesse (AOI) definida.</li>
+      <li>Integre dados de precipitação da NASA POWER para comparações entre variáveis.</li>
+      <li>Suavize os dados com filtros de Savitzky-Golay para uma análise de tendências aprimorada.</li>
+    </ul>
+
+    <h3>4. Seleção de área de interesse (AOI)</h3>
+    <ul>
+      <li><strong>Gerenciamento de AOI</strong>: Carregue áreas de interesse a partir de arquivos shapefile ou GeoJSON.</li>
+    </ul>
+
+    <h3>5. Visualização Interativa</h3>
+    <ul>
+      <li><strong>Gráficos</strong>: Crie gráficos interativos de séries temporais usando o Plotly.</li>
+      <li><strong>Estilização de Raster</strong>: Aplique rampas de cores predefinidas (por exemplo, RdYlGn) para melhor clareza visual.</li>
+      <li><strong>Opções de Exportação</strong>: Exporte os dados processados como GeoTIFFs, CSVs ou rasters estilizados.</li>
+    </ul>
+
+    <h3>6. Gerenciamento Abrangente de Imagens</h3>
+    <ul>
+      <li><strong>Filtragem por Data</strong>: Filtre imagens individuais por data de aquisição.</li>
+      <li><strong>Filtragem por Nuvens</strong>: Exclua ou masque pixels nublados, preservando os dados utilizáveis.</li>
+      <li><strong>Criação de Imagens Sintéticas</strong>: Gere imagens sintéticas com base em métricas definidas pelo usuário.</li>
+    </ul>
+
+    <h2>Instalação</h2>
+    <p>Para instalar o RAVI:</p>
+    <ol>
+      <li>Abra o QGIS e navegue até o menu <strong>Plugins</strong>.</li>
+      <li>Selecione <strong>Gerenciar e Instalar Plugins</strong>.</li>
+      <li>Na aba "Todos", pesquise por "RAVI", selecione-o e clique em <strong>Instalar</strong>.</li>
+      <li>Certifique-se de que o RAVI está marcado na lista de plugins instalados.</li>
+      <li>Reinicie o QGIS.</li>
+    </ol>
+
+    <h2>Uso</h2>
+    <h3>Passo 1: Autenticação</h3>
+    <img src="media_pt/step1.png" alt="Passo 1">
+    <ul>
+      <li>Abra a janela do plugin.</li>
+      <li>Autentique-se no Google Earth Engine utilizando suas credenciais.</li>
+    </ul>
+
+    <h3>Passo 2: Selecionar a pasta de saída</h3>
+    <img src="media_pt/step2.png" alt="Passo 2">
+    <p>Escolha a pasta onde deseja salvar os arquivos de saída.</p>
+
+    <h3>Passo 3: Carregar e selecionar a área de interesse (AOI)</h3>
+    <img src="media_pt/step3.png" alt="Passo 3">
+    <ul>
+      <li>Selecione uma AOI carregando um arquivo shapefile ou GeoJSON.</li>
+      <li>Certifique-se de que a geometria é válida (apenas Polygon ou MultiPolygon).</li>
+      <li>Adicione uma camada do Google Maps ao canvas do QGIS para melhor visualização e contexto.</li>
+      <li>Use o botão <strong>Construir área de interesse a partir da extensão do mapa</strong> para gerar automaticamente uma nova AOI com base na extensão atual da tela.</li>
+    </ul>
+
+    <h3>Passo 4: Definir o intervalo de tempo para busca de imagens</h3>
+    <img src="media_pt/step4.png" alt="Passo 4">
+    <p>Defina um intervalo de tempo personalizado ou selecione um sugerido.</p>
+
+    <h3>Passo 5: Selecionar o índice de vegetação para análise de séries temporais</h3>
+    <img src="media_pt/step5.png" alt="Passo 5">
+    <p>Escolha o índice de vegetação que deseja analisar a partir do menu.</p>
+
+    <h3>Passo 6: Filtro de sobreposição de imagens</h3>
+    <img src="media_pt/step6.png" alt="Passo 6">
+    <p>Utilize o filtro de Buffer de AOI para reduzir o limite da AOI para análise.</p>
+
+    <h3>Passo 7: Buffer de AOI</h3>
+    <img src="media_pt/step7.png" alt="Passo 7">
+    <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+
+    <h3>Passo 8: Filtro de porcentagem de pixels nublados</h3>
+    <img src="media_pt/step8.png" alt="Passo 8">
+    <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+
+    <h3>Passo 9: Filtro de porcentagem de pixels válidos</h3>
+    <img src="media_pt/step9.png" alt="Passo 9">
+    <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+
+    <h2>Página de Resultados</h2>
+    <h3>1. Gráfico de Séries Temporais</h3>
+    <img src="media_pt/results1.png" alt="Gráfico de Séries Temporais">
+    <ul>
+      <li>Visualize a série temporal do índice de vegetação selecionado sobre a AOI definida.</li>
+      <li>Coloque o cursor sobre o gráfico para ver valores e datas específicos para uma análise detalhada.</li>
+    </ul>
+
+    <h3>2. Carregar Camada RGB (Foco em um Dia)</h3>
+    <img src="media_pt/results2.png" alt="Carregar Camada RGB">
+    <p>
+      Carregue e exiba uma camada RGB para uma data específica para analisar a aparência visual da área. Todas as bandas espectrais são baixadas, e os números das bandas correspondem às bandas do Sentinel-2 conforme listado na tabela abaixo:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome da Banda Sentinel-2</th>
+          <th>Número da Banda no QGIS</th>
+          <th>Comprimento de Onda (nm)</th>
+          <th>Resolução Espacial (m)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Banda 1 (Aerossol Costeiro)</td>
+          <td>1</td>
+          <td>443</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Banda 2 (Azul)</td>
+          <td>2</td>
+          <td>490</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Banda 3 (Verde)</td>
+          <td>3</td>
+          <td>560</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Banda 4 (Vermelho)</td>
+          <td>4</td>
+          <td>665</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Banda 5 (Borda Vermelha da Vegetação)</td>
+          <td>5</td>
+          <td>705</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Banda 6 (Borda Vermelha da Vegetação)</td>
+          <td>6</td>
+          <td>740</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Banda 7 (Borda Vermelha da Vegetação)</td>
+          <td>7</td>
+          <td>783</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Banda 8 (NIR)</td>
+          <td>8</td>
+          <td>842</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>Banda 8A (Borda Vermelha da Vegetação)</td>
+          <td>9</td>
+          <td>865</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Banda 9 (Vapor d'água)</td>
+          <td>10</td>
+          <td>945</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Banda 10 (SWIR - Cirrus)</td>
+          <td>11</td>
+          <td>1375</td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>Banda 11 (SWIR)</td>
+          <td>12</td>
+          <td>1610</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>Banda 12 (SWIR)</td>
+          <td>13</td>
+          <td>2190</td>
+          <td>20</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3. Load Index Layer (Focus on a Day)</h3>
+    <img src="media/results3.png" alt="Load Index Layer">
+    <p>Load and display a vegetation index layer for a specific date.</p>
+
+    <h3>4. Load Index Layer (Composite Image)</h3>
+    <img src="media/results4.png" alt="Load Index Composite">
+    <p>
+      Generate and display a composite image based on the selected vegetation index and the user-defined metric.<br>
+      The composite image will include all images within the current date selection. Use the date selection tool to filter out specific dates.
+    </p>
+
+    <h3>5. Date Selection Tool</h3>
+    <img src="media/results5.png" alt="Date Selection Tool">
+    <ul>
+      <li>Use the date selection tool to filter and select specific dates for analysis.</li>
+      <li>The date selection tool updates the time series plot.</li>
+      <li>Composite images are based on all selected dates.</li>
+    </ul>
+
+    <h3>6. Savitzky-Golay Filter</h3>
+    <img src="media/results6.png" alt="Savitzky-Golay Filter">
+    <p>
+      Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.<br>
+      The parameters for the Savitzky-Golay algorithm, such as the order of the polynomial and the window length, can be adjusted as needed to fine-tune the smoothing process.
+    </p>
+
+    <h3>7. Save Options</h3>
+    <img src="media/results7.png" alt="Save Options">
+    <img src="media/results71.png" alt="Save Options - Image">
+    <p>
+      Save the time series data in spreadsheet format (CSV).<br>
+      To save the time series as an image, open it in the browser to enable the download option.
+    </p>
+
+    <h3>8. NASA POWER Precipitation</h3>
+    <img src="media/results8.png" alt="NASA POWER Precipitation">
+    <p>
+      Add monthly precipitation data from NASA POWER for cross-variable comparisons.<br>
+      Save the precipitation data in spreadsheet format (CSV).
+    </p>
+
+    <h3>9. Quickly Run New Time Series</h3>
+    <img src="media/results9.png" alt="Quickly Run New Time Series">
+    <p>
+      Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+    </p>
+
+    <h3>10. Clear All Loaded Layers</h3>
+    <img src="media/results10.png" alt="Clear All Loaded Layers">
+    <p>
+      Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
+    </p>
+
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><strong>Earth Engine Authentication Failed</strong>: Ensure you have the necessary requirements as explained in the authentication tab.</li>
+      <li><strong>AOI Errors</strong>: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).</li>
+    </ul>
+
+    <h2>Reporting Issues</h2>
+    <p>
+      If you encounter any issues or have suggestions for improvements, please open an issue in the <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank">GitHub Issues</a> section.
+    </p>
+
+    <h2>Contribute to the Project</h2>
+    <p>
+      Contributions are welcome! Please visit the <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank">GitHub repository</a> to get started.
+    </p>
+
+    <h2>License</h2>
+    <p>
+      RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank">LICENSE</a> file for details.
+    </p>
+  </div>
+
+  <script>
+    function showLanguage(lang) {
+      // Toggle the active class for language content
+      document.querySelectorAll('.lang-content').forEach(content => {
+        content.classList.toggle('active', content.id === `${lang}-content`);
+      });
+      
+      // Update the active state of the language buttons
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
+      });
+      
+      // Smooth scroll to the top of the page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      
+      // Update the document title based on the selected language
+      document.title = lang === 'en' ? 'RAVI Documentation' : 'Documentação do RAVI';
+    }
+  </script>
 </body>
 </html>
