@@ -2372,9 +2372,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         vegetation_index = self.series_indice.currentText()
 
         # Buffer the AOI geometry inward by 10 meters (adjust distance as needed)
-        buffer_distance = -self.horizontalSlider_buffer.value()
-        print(f"Buffer distance: {buffer_distance} meters")
-        aoi = self.aoi.map(lambda feature: feature.buffer(buffer_distance))
+        buffer_distance = self.horizontalSlider_buffer.value()
+        if buffer_distance != 0:
+            print(f"Buffer distance: {buffer_distance} meters")
+            aoi = self.aoi.map(lambda feature: feature.buffer(buffer_distance))
+        else:
+            print("No buffer applied")
+            aoi = self.aoi
 
         # Define the vegetation index calculation in a function
         def calculate_index(image):
