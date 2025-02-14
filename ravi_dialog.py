@@ -20,7 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
-
+import re
 import os
 import sys
 import importlib
@@ -34,6 +34,12 @@ import array
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from qgis.core import QgsWkbTypes
+
+import zipfile
+import geopandas as gpd
+from shapely.geometry import shape
+import tempfile
+import os
 
 # PyQt5 and QGIS imports
 from PyQt5.QtCore import QDate, Qt, QVariant
@@ -318,7 +324,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print("Project ID auto-saved:", new_text)
         self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
 
-
     def combobox_2_update(self):
         self.vector_layer_combobox.setCurrentIndex(self.vector_layer_combobox_2.currentIndex())
 
@@ -580,7 +585,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             #self.zoom_to_layer(shp_name)
-            self.load_vector_layers()
+            #self.load_vector_layers()
             # iface.mapCanvas().setExtent(loaded_layer.extent())  # Optional: Set the canvas extent to the layer extent
         else:
             print("Failed to load the shapefile.")
@@ -900,12 +905,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Step 1: Authenticate and initialize Earth Engine
             print("Authenticating Earth Engine...")
             ee.Authenticate()
-            ee.Initialize(project=self.project_QgsPasswordLineEdit.text())
+            project_id = re.sub(r'[^a-zA-Z0-9_-]', '', self.project_QgsPasswordLineEdit.text()) 
+            ee.Initialize(project=project_id)
             print("Authentication successful!")
 
             # Step 2: Test default project
             print("Testing default project...")
-            default_project_path = f"projects/{self.project_QgsPasswordLineEdit.text()}/assets/"  # Replace with your default project's path if known
+            default_project_path = f"projects/{project_id}/assets/"  # Replace with your default project's path if known
 
             # Attempt to list assets in the default project
             try:
@@ -926,7 +932,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 print(f"Default project validation failed: {e}")
                 self.pop_aviso_auth(f"Default project validation failed: {e}\nFollow the instructions to have a valid Google Cloud project.")
                 self.auth_clear(True)
-
 
         except ee.EEException as e:
             # Handle Earth Engine-specific errors
@@ -1073,27 +1078,27 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print("Cancel button clicked")
             return False
 
+
     def load_vector_layers(self):
+
         # Get all layers in the current QGIS project
         layers = list(QgsProject.instance().mapLayers().values())
+        
+        # Filter vector layers
+        vector_layers = [layer for layer in layers if layer.type() == QgsMapLayer.VectorLayer]
 
         # Extract the names of vector layers
-        current_layer_names = [
-            self.vector_layer_combobox.itemText(i)
-            for i in range(self.vector_layer_combobox.count())
-        ]
+        current_layer_names = [self.vector_layer_combobox.itemText(i) for i in range(self.vector_layer_combobox.count())]
 
         # Identify newly added layers
-        new_layers = [
-            layer for layer in layers if layer.name() not in current_layer_names
-        ]
+        new_layers = [layer for layer in vector_layers if layer.name() not in current_layer_names]
 
         # Clear the combobox and the dictionary
         self.vector_layer_combobox.clear()
         self.vector_layer_ids = {}
 
         # Populate the combobox and update the dictionary
-        for layer in layers:
+        for layer in vector_layers:
             layer_name = layer.name()
             self.vector_layer_combobox.addItem(layer_name)
             self.vector_layer_ids[layer_name] = layer.id()
@@ -1105,17 +1110,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.vector_layer_combobox.setCurrentIndex(index)
 
         self.vector_layer_combobox_2.clear()
-        self.vector_layer_combobox_2.addItems(
-            self.vector_layer_combobox.itemText(i)
-            for i in range(self.vector_layer_combobox.count())
-        )
-        self.vector_layer_combobox_2.setCurrentIndex(
-            self.vector_layer_combobox.currentIndex()
-        )
+        self.vector_layer_combobox_2.addItems(self.vector_layer_combobox.itemText(i) for i in range(self.vector_layer_combobox.count()))
+        self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
 
         # Call the method to handle the selected layer path
-        self.get_selected_layer_path()
-
+        # self.get_selected_layer_path()
 
     def get_selected_layer_path(self):
         """
@@ -1137,13 +1136,24 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print(f"Selected layer path: {self.selected_aio_layer_path}")  # Debug: Show selected layer path
             
             # Trigger the processing function
-            self.load_vector_function()
+            area = self.find_area()
+            if area > 100:
+                self.QPushButton_next.setEnabled(False)
+                self.pop_aviso(f"Area too large ({area:.2f} km²). The limit is 100 km².")
+                return None
+            if area == 0:
+                self.pop_aviso("Selected layer is not valid")
+                self.QPushButton_next.setEnabled(False)
+                return None
 
-            # Enable next steps if necessary
+            self.QPushButton_next.setEnabled(True)
+            self.load_vector_function()
             return None
         else:
             print(f"Layer '{layer_name}' with ID '{layer_id}' not found in the project.")
             return None
+        
+        
 
     def first_index(self):
         """
@@ -1829,7 +1839,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Validate the geometry type.
             if geometry.geom_type not in ['Polygon', 'MultiPolygon']:
                 print("The geometry is not a valid type (Polygon or MultiPolygon).")
+                self.aio_set = False
+                self.aoi_ckecked_function()
                 self.pop_aviso("The geometry is not a valid type (Polygon or MultiPolygon).")
+                
                 return
 
             # Convert the geometry to GeoJSON format.
@@ -1850,8 +1863,14 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.aoi = ee.FeatureCollection([feature])
 
             print("AOI defined successfully.")
+            self.QPushButton_next.setEnabled(True)
             self.aio_set = True
-            # self.check_next_button()
+            self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
+            #self.next_clicked()
+
+            
+            self.aoi_ckecked  = True
+            self.aoi_ckecked_function()
 
         except Exception as e:
             print(f"Error in load_vector_function: {e}")
@@ -1871,6 +1890,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         return area
 
     def open_nasapower(self):
+        self.find_centroid()
         longitude = str(self.lon)
         latitude = str(self.lat)
         start = self.df_aux.date.tolist()[0]
@@ -1914,11 +1934,93 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.plot_timeseries()
 
     def find_area(self):
-        area_km2 = self.aoi.geometry().area().getInfo() / 1e6  # Convert from square meters to square kilometers
-        area_ha = area_km2 * 100  # Convert from square kilometers to hectares
-        print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
-        self.aoi_area.setText(f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
-        return area_km2
+        """
+        Loads a shapefile from a .zip archive or a regular file, calculates the area,
+        and updates the UI.  Uses explicit extraction to a temporary directory for
+        robustness.
+        """
+        shapefile_path = self.selected_aio_layer_path
+        area_km2 = 0  # Initialize area_km2
+
+        try:
+            if shapefile_path.endswith(".zip"):
+                # --- ZIP Archive Handling ---
+                with zipfile.ZipFile(shapefile_path, "r") as zip_ref:
+                    shapefile_found = False
+                    shapefile_within_zip = None  # Initialize to None
+                    for file in zip_ref.namelist():
+                        if file.lower().endswith(".shp"):  # Case-insensitive check
+                            shapefile_found = True
+                            shapefile_within_zip = file
+                            break
+
+                    if not shapefile_found:
+                        print("Error: No .shp file found inside the zip archive.")
+                        self.aoi_area.setText("Error: No .shp file found in zip")
+                        return None
+
+                    if shapefile_within_zip is None:  # Double check
+                        print("Error: shapefile_within_zip is None after loop.")
+                        self.aoi_area.setText("Error: No .shp file found in zip")
+                        return None
+
+                    # Create a temporary directory
+                    with tempfile.TemporaryDirectory() as tmpdir:
+                        # Extract all files from the zip archive to the temporary directory
+                        zip_ref.extractall(tmpdir)
+
+                        # Construct the full path to the .shp file in the temp dir
+                        extracted_shp_path = os.path.join(tmpdir, shapefile_within_zip)
+
+                        # --- DEBUGGING ---
+                        print(f"Extracted shapefile path: {extracted_shp_path}")
+                        if not os.path.exists(extracted_shp_path):
+                            print(f"Error: Extracted shapefile not found at: {extracted_shp_path}")
+                            self.aoi_area.setText("Error: Extracted shapefile not found.")
+                            return None
+                        # --- END DEBUGGING ---
+
+                        # Read the shapefile using geopandas
+                        aoi = gpd.read_file(extracted_shp_path)
+
+            else:
+                # --- Regular Shapefile Handling ---
+                aoi = gpd.read_file(shapefile_path)
+
+            # --- CRS Handling ---
+            if aoi.crs is None:
+                print("Warning: CRS is not defined. Assuming EPSG:4326.")
+                aoi.crs = "EPSG:4326"  # Or the correct CRS if known
+
+            # Project to a suitable projected CRS (e.g., UTM)
+            aoi = aoi.to_crs(epsg=32615)  # Example: UTM zone 15N.  **CHANGE THIS!**
+            # --- Geometry Validation ---
+            aoi['geometry'] = aoi['geometry'].apply(lambda geom: make_valid(geom) if not geom.is_valid else geom)
+
+            # --- Area Calculation ---
+            area_m2 = aoi.geometry.area.sum()
+            area_km2 = area_m2 / 1e6
+            area_ha = area_km2 * 100
+
+            print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
+            self.aoi_area.setText(
+                f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)"
+            )
+            return area_km2
+
+        except FileNotFoundError:
+            print(f"Error: File not found at {shapefile_path}")
+            self.aoi_area.setText("Error: File not found.")
+            return None
+        except zipfile.BadZipFile:
+            print(f"Error: Invalid zip file: {shapefile_path}")
+            self.aoi_area.setText("Error: Invalid zip file.")
+            return None
+        except Exception as e:
+            print(f"Error in find_area: {e}")
+            self.aoi_area.setText(f"Error: {str(e)}")
+            return None
+
 
     def aoi_ckecked_function(self):
         if self.aoi_ckecked and self.folder_set:
@@ -1939,10 +2041,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def loadtimeseries_clicked(self):
         # Find the centroid of the AOI and check if the area is within the limit
-        area = self.find_centroid()
-        if area >= 100:
-            self.pop_aviso(f"Area too large ({area:.2f} km²). The limit is 100 km².")
-            return
+
         
         # Reset settings and set the cursor to indicate processing
         self.resetting()
