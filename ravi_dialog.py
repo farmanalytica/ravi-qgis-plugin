@@ -240,8 +240,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.connect_signals()
         self.loadProjectId()
 
+        self.combo_year.addItems(
+            [str(year) for year in range(2017, datetime.now().year + 1)]
+        )
+
         # Set default values
         self.last_12m_clicked()
+        
         self.index_explain()
         self.tabWidget.setCurrentIndex(0)
         self.resizeEvent("small")
@@ -250,9 +255,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Connect the textChanged signal to automatically save changes.
         self.project_QgsPasswordLineEdit.textChanged.connect(self.autoSaveProjectId)
 
-        self.combo_year.addItems(
-            [str(year) for year in range(2017, datetime.now().year + 1)]
-        )
 
     def setup_ui(self):
         """Initial UI setup."""
@@ -266,7 +268,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         """Connect UI signals to their respective slots."""
         self.autenticacao.clicked.connect(self.auth)
         self.desautenticacao.clicked.connect(self.auth_clear)
-        self.update_vector.clicked.connect(self.load_vector_layers)
+        self.update_vector.clicked.connect(self.load_vector_layers_2)
         self.update_vector_2.clicked.connect(self.load_vector_layers)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
         self.load_1index.clicked.connect(self.first_index)
@@ -300,9 +302,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
-        self.vector_layer_combobox.currentIndexChanged.connect(
-            self.get_selected_layer_path
-        )
+        self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
 
         self.radioButton_all.clicked.connect(self.all_clicked)
@@ -341,6 +341,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     # =========================================================================
     # Project ID Management
     # =========================================================================
+
+    def load_vector_layers_2(self):
+        self.load_vector_layers()
+        self.load_vector_layers()
 
     def loadProjectId(self):
         """Loads the saved project ID from QSettings and sets it in the widget."""
@@ -571,7 +575,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             # self.zoom_to_layer(shp_name)
-            # self.load_vector_layers()
+            self.get_selected_layer_path
+            self.load_vector_layers()
+            self.find_area()
             # iface.mapCanvas().setExtent(loaded_layer.extent())  # Optional: Set the canvas extent to the layer extent
         else:
             print("Failed to load the shapefile.")
@@ -891,6 +897,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if index == 2 and not hasattr(self, 'vector_layers_loaded'):
             self.load_vector_layers()
             self.vector_layers_loaded = True
+            try:
+                self.get_selected_layer_path()
+                self.find_area()
+            except:
+                pass
 
         if index > 2 and not self.QPushButton_next.isEnabled():
             self.tabWidget.setCurrentIndex(2)
@@ -1146,15 +1157,27 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def get_selected_layer_path(self):
         """
-        Retrieves the path of the currently selected layer in the combobox and triggers further processing.
+        Retrieves the path of the currently selected layer in the combobox and
+        triggers further processing.
         """
         # Get the currently selected layer name from the combobox
-        layer_name = self.vector_layer_combobox.currentText()
+        layer_name = self.vector_layer_combobox.currentText().strip()  # Remove whitespace
+        if layer_name == "":
+            print("No layer selected.")
+            self.aoi_area.setText("Total Area:")
+            self.QPushButton_next.setEnabled(False)
+            return None
+        print(f"Layer name from combobox: '{layer_name}'")  # Debug
         self.zoom_to_layer(layer_name)
-        print(f"Selected layer name: {layer_name}")  # Debug: Show selected layer name
 
         # Get the corresponding layer ID
         layer_id = self.vector_layer_ids.get(layer_name)
+        print(f"Layer ID from vector_layer_ids: {layer_id}")  # Debug
+
+        if layer_id is None:
+            print(f"Error: Layer ID is None for layer name '{layer_name}'.  Check vector_layer_ids.")
+            print(f"Contents of vector_layer_ids: {self.vector_layer_ids}") # Debug
+            return None
 
         # Get the layer using its ID
         layer = QgsProject.instance().mapLayer(layer_id)
