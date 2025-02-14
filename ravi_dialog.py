@@ -33,6 +33,7 @@ import io
 import array
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from qgis.core import QgsWkbTypes
 
 # PyQt5 and QGIS imports
 from PyQt5.QtCore import QDate, Qt, QVariant
@@ -1073,25 +1074,26 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             return False
 
     def load_vector_layers(self):
-
         # Get all layers in the current QGIS project
         layers = list(QgsProject.instance().mapLayers().values())
-        
-        # Filter vector layers
-        vector_layers = [layer for layer in layers if layer.type() == QgsMapLayer.VectorLayer]
 
         # Extract the names of vector layers
-        current_layer_names = [self.vector_layer_combobox.itemText(i) for i in range(self.vector_layer_combobox.count())]
+        current_layer_names = [
+            self.vector_layer_combobox.itemText(i)
+            for i in range(self.vector_layer_combobox.count())
+        ]
 
         # Identify newly added layers
-        new_layers = [layer for layer in vector_layers if layer.name() not in current_layer_names]
+        new_layers = [
+            layer for layer in layers if layer.name() not in current_layer_names
+        ]
 
         # Clear the combobox and the dictionary
         self.vector_layer_combobox.clear()
         self.vector_layer_ids = {}
 
         # Populate the combobox and update the dictionary
-        for layer in vector_layers:
+        for layer in layers:
             layer_name = layer.name()
             self.vector_layer_combobox.addItem(layer_name)
             self.vector_layer_ids[layer_name] = layer.id()
@@ -1103,11 +1105,17 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.vector_layer_combobox.setCurrentIndex(index)
 
         self.vector_layer_combobox_2.clear()
-        self.vector_layer_combobox_2.addItems(self.vector_layer_combobox.itemText(i) for i in range(self.vector_layer_combobox.count()))
-        self.vector_layer_combobox_2.setCurrentIndex(self.vector_layer_combobox.currentIndex())
+        self.vector_layer_combobox_2.addItems(
+            self.vector_layer_combobox.itemText(i)
+            for i in range(self.vector_layer_combobox.count())
+        )
+        self.vector_layer_combobox_2.setCurrentIndex(
+            self.vector_layer_combobox.currentIndex()
+        )
 
         # Call the method to handle the selected layer path
         self.get_selected_layer_path()
+
 
     def get_selected_layer_path(self):
         """
