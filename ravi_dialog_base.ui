@@ -66,7 +66,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -749,41 +749,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>2024</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2023</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2022</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2021</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2020</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2019</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2018</string>
-       </property>
-      </item>
      </widget>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
@@ -2078,9 +2043,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>700</x>
-       <y>410</y>
+       <y>390</y>
        <width>241</width>
-       <height>131</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="font">
@@ -2095,7 +2060,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>60</y>
+        <y>70</y>
         <width>41</width>
         <height>22</height>
        </rect>
@@ -2135,7 +2100,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>70</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -2180,7 +2145,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
+        <y>110</y>
         <width>181</width>
         <height>21</height>
        </rect>
@@ -2207,7 +2172,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>90</y>
+        <y>110</y>
         <width>41</width>
         <height>22</height>
        </rect>
@@ -2477,7 +2442,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Date seletion tool</string>
+      <string>Remove dates</string>
      </property>
      <widget class="QPushButton" name="datasrecorte">
       <property name="geometry">
@@ -2850,7 +2815,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>60</y>
        <width>1131</width>
-       <height>401</height>
+       <height>371</height>
       </rect>
      </property>
      <property name="mouseTracking">

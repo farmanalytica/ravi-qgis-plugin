@@ -1156,8 +1156,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.vector_layer_combobox.currentIndex()
         )
 
-        # Call the method to handle the selected layer path
-        # self.get_selected_layer_path()
 
     def get_selected_layer_path(self):
         """

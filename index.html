@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta
-    name="description"
-    content="Documentação do RAVI - Análise Remota de Índices de Vegetação via QGIS e Google Earth Engine."
-  />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documentação do RAVI</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
+  <meta name="description" content="Documentação do RAVI - Análise Remota de Índices de Vegetação via QGIS e Google Earth Engine.">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
     /* CSS Variables */
     :root {
@@ -18,29 +14,26 @@
       --bg-color: #f0f0f0;
       --text-color: #333;
       --sidebar-bg: #ffffff;
+      --font-family: 'Segoe UI', Arial, sans-serif;
     }
-
     /* Global Styles */
     * {
       box-sizing: border-box;
     }
-
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: var(--font-family);
       margin: 0;
       padding: 0;
-      background-color: var(--bg-color);
+      background: var(--bg-color);
       color: var(--text-color);
     }
-
-    /* Container to center main content, leaving room for sidebar */
+    /* Container for main content */
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-      margin-left: 250px; /* Extra space to avoid overlap with sidebar */
+      margin-left: 250px; /* Space for sidebar */
     }
-
     /* Sidebar */
     .sidebar {
       position: fixed;
@@ -48,49 +41,42 @@
       left: 0;
       width: 220px;
       height: 100%;
-      background-color: var(--sidebar-bg);
+      background: var(--sidebar-bg);
       border-right: 1px solid #ccc;
       padding: 20px;
       overflow-y: auto;
     }
-
     .sidebar h2 {
       font-size: 18px;
       margin-top: 0;
       color: var(--primary-color);
     }
-
     .sidebar ul {
-      list-style-type: none;
+      list-style: none;
       padding-left: 0;
       margin: 10px 0;
     }
-
     .sidebar li {
       margin: 8px 0;
     }
-
     .sidebar a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
     }
-
     .sidebar a:hover {
       text-decoration: underline;
     }
-
-    /* Language Buttons inside sidebar */
+    /* Language Toggle Buttons */
     .lang-buttons {
       text-align: center;
       margin: 20px auto;
-      background: rgba(255, 255, 255, 0.95);
       padding: 15px;
       border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(5px);
     }
-
     .lang-btn {
       padding: 12px 30px;
       margin: 0 10px;
@@ -100,39 +86,35 @@
       color: var(--primary-color);
       font-size: 16px;
       cursor: pointer;
-      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
     }
-
     .lang-btn:hover,
     .lang-btn.active {
       background: var(--primary-color);
       color: #fff;
       transform: translateY(-2px);
     }
-
-    /* Language-based Content */
+    /* Language Content Sections */
     .lang-content {
       display: none;
       animation: fadeIn 0.5s ease;
     }
-
     .lang-content.active {
       display: block;
     }
-
-    /* Headings */
-    h1,
-    h2,
-    h3 {
+    /* Headings and Paragraphs */
+    h1, h2, h3 {
       color: var(--primary-color);
       margin-top: 30px;
     }
-
     h1 {
       border-bottom: 3px solid var(--primary-color);
       padding-bottom: 10px;
     }
-
+    p {
+      line-height: 1.6;
+      margin: 15px 0;
+    }
     /* Images */
     img {
       display: block;
@@ -142,13 +124,11 @@
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-
     @media (max-width: 600px) {
       img {
         margin: 15px auto;
       }
     }
-
     /* Tables */
     table {
       width: 100%;
@@ -157,63 +137,60 @@
       background: #fff;
       box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
     }
-
-    th,
-    td {
+    th, td {
       padding: 12px 15px;
       border: 1px solid #ddd;
       text-align: left;
     }
-
     th {
-      background-color: #f8f9fa;
+      background: #f8f9fa;
       font-weight: 600;
     }
-
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background: #f9f9f9;
     }
-
-    /* Links */
     a {
-      color: var(--primary-color);
       text-decoration: none;
+      color: var(--primary-color);
       font-weight: 500;
     }
-
     a:hover {
       text-decoration: underline;
     }
-
     /* Animation */
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Horizontal Rule */
     hr {
-      border: 0;
+      border: none;
       border-top: 1px solid #ddd;
       margin: 30px 0;
+    }
+    /* Additional Sections for Author and Supervisors */
+    .author-section, .supervisor-section {
+      margin: 20px 0;
+    }
+    .author-section h3, .supervisor-section h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .author-section p, .supervisor-section p,
+    .author-section ul, .supervisor-section ul {
+      margin-left: 15px;
+    }
+    .author-section ul, .supervisor-section ul {
+      list-style: disc;
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar with Language Buttons -->
+  <!-- Sidebar with Language Toggle -->
   <aside class="sidebar" aria-label="Sidebar de Navegação">
-    <!-- Language Toggle Navigation Inside the Sidebar -->
     <nav class="lang-buttons" aria-label="Seleção de idioma">
       <button class="lang-btn active" data-lang="pt" aria-pressed="true">Português</button>
       <button class="lang-btn" data-lang="en" aria-pressed="false">English</button>
     </nav>
-
     <!-- English Sidebar Links -->
     <div id="sidebar-en" style="display: none;">
       <h2>Sections</h2>
@@ -221,22 +198,20 @@
         <li><a href="#en-intro">Introduction</a></li>
         <li><a href="#en-key-features">Key Features</a></li>
         <li><a href="#en-installation">Installation</a></li>
-        <!-- Usage with steps -->
         <li>
           <a href="#en-usage">Usage</a>
           <ul>
             <li><a href="#en-step1">Step 1: Authentication</a></li>
             <li><a href="#en-step2">Step 2: Select output folder</a></li>
-            <li><a href="#en-step3">Step 3: Load and select the area of interest (AOI)</a></li>
+            <li><a href="#en-step3">Step 3: Load AOI</a></li>
             <li><a href="#en-step4">Step 4: Define time range</a></li>
             <li><a href="#en-step5">Step 5: Select vegetation index</a></li>
             <li><a href="#en-step6">Step 6: Imagery Overlap filter</a></li>
             <li><a href="#en-step7">Step 7: AOI Buffer</a></li>
-            <li><a href="#en-step8">Step 8: Cloud pixel % filter</a></li>
-            <li><a href="#en-step9">Step 9: Valid pixel % filter</a></li>
+            <li><a href="#en-step8">Step 8: Cloud pixel filter</a></li>
+            <li><a href="#en-step9">Step 9: Valid pixel filter</a></li>
           </ul>
         </li>
-        <!-- Results -->
         <li>
           <a href="#en-results">Results</a>
           <ul>
@@ -249,7 +224,7 @@
             <li><a href="#en-save-options">Save Options</a></li>
             <li><a href="#en-nasa-power">NASA POWER Precipitation</a></li>
             <li><a href="#en-quickly-run-new">Quickly Run New TS</a></li>
-            <li><a href="#en-clear-layers">Clear All Loaded Layers</a></li>
+            <li><a href="#en-clear-layers">Clear All Layers</a></li>
           </ul>
         </li>
         <li><a href="#en-troubleshooting">Troubleshooting</a></li>
@@ -258,7 +233,6 @@
         <li><a href="#en-license">License</a></li>
       </ul>
     </div>
-
     <!-- Portuguese Sidebar Links -->
     <div id="sidebar-pt" style="display: block;">
       <h2>Seções</h2>
@@ -266,22 +240,20 @@
         <li><a href="#pt-intro">Introdução</a></li>
         <li><a href="#pt-funcionalidades">Funcionalidades</a></li>
         <li><a href="#pt-instalacao">Instalação</a></li>
-        <!-- Uso with passos -->
         <li>
           <a href="#pt-uso">Uso</a>
           <ul>
             <li><a href="#pt-passo1">Passo 1: Autenticação</a></li>
             <li><a href="#pt-passo2">Passo 2: Selecionar a pasta de saída</a></li>
-            <li><a href="#pt-passo3">Passo 3: Carregar e selecionar a área de interesse</a></li>
-            <li><a href="#pt-passo4">Passo 4: Definir o intervalo de tempo</a></li>
-            <li><a href="#pt-passo5">Passo 5: Selecionar o índice de vegetação</a></li>
-            <li><a href="#pt-passo6">Passo 6: Filtro de sobreposição de imagens</a></li>
+            <li><a href="#pt-passo3">Passo 3: Carregar AOI</a></li>
+            <li><a href="#pt-passo4">Passo 4: Definir intervalo de tempo</a></li>
+            <li><a href="#pt-passo5">Passo 5: Selecionar índice de vegetação</a></li>
+            <li><a href="#pt-passo6">Passo 6: Filtro de sobreposição</a></li>
             <li><a href="#pt-passo7">Passo 7: Buffer de AOI</a></li>
             <li><a href="#pt-passo8">Passo 8: Filtro de pixels nublados</a></li>
             <li><a href="#pt-passo9">Passo 9: Filtro de pixels válidos</a></li>
           </ul>
         </li>
-        <!-- Resultados -->
         <li>
           <a href="#pt-resultados">Resultados</a>
           <ul>
@@ -294,7 +266,7 @@
             <li><a href="#pt-save-options">Opções de Salvamento</a></li>
             <li><a href="#pt-nasa-power">Precipitação NASA POWER</a></li>
             <li><a href="#pt-quickly-run-new">Executar Nova Série</a></li>
-            <li><a href="#pt-clear-layers">Limpar Todas as Camadas</a></li>
+            <li><a href="#pt-clear-layers">Limpar Camadas</a></li>
           </ul>
         </li>
         <li><a href="#pt-troubleshooting">Solução de Problemas</a></li>
@@ -307,26 +279,14 @@
 
   <div class="container">
     <main>
-      <!-- English Documentation -->
+      <!-- English Documentation Section -->
       <section id="en-content" class="lang-content" lang="en" aria-hidden="true">
-        <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 20px;">
-          <h1 id="en-intro" style="margin: 0;">
-            RAVI - Remote Analysis of Vegetation Indices
-          </h1>
-        </div>
-
+        <h1 id="en-intro">RAVI - Remote Analysis of Vegetation Indices</h1>
         <p>
-          RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine (GEE), enabling efficient processing
-          and visualization of geospatial data. Utilizing the Sentinel-2
-          <a
-            href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED"
-            target="_blank"
-            rel="noopener"
-            >harmonized surface reflectance catalog</a
-          >,
-          the plugin supports vegetation index calculations and easy download of multispectral imagery. These features make it
-          a viable tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or
-          environmental management.
+          RAVI is a QGIS plugin designed to seamlessly integrate with Google Earth Engine (GEE), enabling efficient processing and visualization of geospatial data.
+          Utilizing the Sentinel-2 <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank" rel="noopener">harmonized surface reflectance catalog</a>,
+          the plugin supports vegetation index calculations and easy download of multispectral imagery.
+          These features make it a viable tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
         </p>
 
         <h2 id="en-key-features">Key Features</h2>
@@ -339,7 +299,7 @@
 
         <h3>2. Vegetation Index Calculations</h3>
         <ul>
-          <li><strong>Supported Indices</strong>: Compute indices such as NDVI, EVI, SAVI and GNDVI.</li>
+          <li><strong>Supported Indices</strong>: Compute indices such as NDVI, EVI, SAVI, and GNDVI.</li>
           <li><strong>Customizable Metrics</strong>: Aggregate data using mean, max, min, median, amplitude, or standard deviation.</li>
         </ul>
 
@@ -381,57 +341,53 @@
 
         <h2 id="en-usage">Usage</h2>
         <h3 id="en-step1">Step 1: Authentication</h3>
-        <img src="media/step1.png" alt="Step 1 - Authentication" />
+        <img src="media/step1.png" alt="Step 1 - Authentication">
         <ul>
           <li>Open the plugin dialog.</li>
           <li>Authenticate with Google Earth Engine using your credentials.</li>
         </ul>
 
         <h3 id="en-step2">Step 2: Select output folder</h3>
-        <img src="media/step2.png" alt="Step 2 - Select Output Folder" />
+        <img src="media/step2.png" alt="Step 2 - Select Output Folder">
         <p>Choose the folder where you want to save the output files.</p>
 
         <h3 id="en-step3">Step 3: Load and select the area of interest (AOI)</h3>
-        <img src="media/step3.png" alt="Step 3 - Load AOI" />
+        <img src="media/step3.png" alt="Step 3 - Load AOI">
         <ul>
           <li>Select an AOI by loading a shapefile or GeoJSON file.</li>
           <li>Ensure the geometry is valid (Polygon or MultiPolygon only).</li>
           <li>Add a Google Maps layer to the QGIS canvas for better visualization and context.</li>
-          <li>
-            Use the <strong>Build AOI from Canvas Extent</strong> button to automatically generate a new AOI based on the current
-            canvas extent.
-          </li>
+          <li>Use the <strong>Build AOI from Canvas Extent</strong> button to generate a new AOI based on the current canvas extent.</li>
         </ul>
 
         <h3 id="en-step4">Step 4: Define time range for imagery search</h3>
-        <img src="media/step4.png" alt="Step 4 - Define Time Range" />
+        <img src="media/step4.png" alt="Step 4 - Define Time Range">
         <p>Set a custom time range or select a suggested one.</p>
 
         <h3 id="en-step5">Step 5: Select vegetation index for time series analysis</h3>
-        <img src="media/step5.png" alt="Step 5 - Select Vegetation Index" />
+        <img src="media/step5.png" alt="Step 5 - Select Vegetation Index">
         <p>Choose the vegetation index you want to analyze from the dropdown menu.</p>
 
         <h3 id="en-step6">Step 6: Imagery Overlap filter</h3>
-        <img src="media/step6.png" alt="Step 6 - Imagery Overlap Filter" />
+        <img src="media/step6.png" alt="Step 6 - Imagery Overlap Filter">
         <p>Set the specified filter according to your analysis requirements.</p>
 
         <h3 id="en-step7">Step 7: AOI Buffer</h3>
-        <img src="media/step7.png" alt="Step 7 - AOI Buffer" />
+        <img src="media/step7.png" alt="Step 7 - AOI Buffer">
         <p>Use AOI Buffer filter to reduce the AOI boundary for analysis.</p>
 
         <h3 id="en-step8">Step 8: Cloud pixel percentage filter</h3>
-        <img src="media/step8.png" alt="Step 8 - Cloud Pixel Filter" />
+        <img src="media/step8.png" alt="Step 8 - Cloud Pixel Filter">
         <p>Set the specified filter according to your analysis requirements.</p>
 
         <h3 id="en-step9">Step 9: Valid pixel percentage filter</h3>
-        <img src="media/step9.png" alt="Step 9 - Valid Pixel Filter" />
+        <img src="media/step9.png" alt="Step 9 - Valid Pixel Filter">
         <p>Set the specified filter according to your analysis requirements.</p>
 
-        <!-- Results Page -->
         <h2 id="en-results">Results</h2>
         <section id="en-time-series-plot">
           <h3>1. Time Series Plot</h3>
-          <img src="media/results1.png" alt="Time Series Plot" />
+          <img src="media/results1.png" alt="Time Series Plot">
           <ul>
             <li>Visualize the time series of the selected vegetation index over the defined AOI.</li>
             <li>Hover over the plot to see specific values and dates for detailed analysis.</li>
@@ -440,11 +396,10 @@
 
         <section id="en-load-rgb-layer">
           <h3>2. Load RGB Layer (Focus on a Day)</h3>
-          <img src="media/results2.png" alt="Load RGB Layer" />
+          <img src="media/results2.png" alt="Load RGB Layer">
           <p>
             Load and display an RGB layer for a specific date to analyze the visual appearance of the area.
-            All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as
-            listed in the table below:
+            All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed below:
           </p>
           <table>
             <thead>
@@ -540,152 +495,134 @@
 
         <section id="en-load-index-layer">
           <h3>3. Load Index Layer (Focus on a Day)</h3>
-          <img src="media/results3.png" alt="Load Index Layer" />
+          <img src="media/results3.png" alt="Load Index Layer">
           <p>Load and display a vegetation index layer for a specific date.</p>
         </section>
 
         <section id="en-load-index-composite">
           <h3>4. Load Index Layer (Composite)</h3>
-          <img src="media/results4.png" alt="Load Index Composite" />
+          <img src="media/results4.png" alt="Load Index Composite">
           <p>
-            Generate and display a composite image based on the selected vegetation index and the user-defined metric.<br />
-            The composite image will include all images within the current date selection. Use the date selection tool to
-            filter out specific dates.
+            Generate and display a composite image based on the selected vegetation index and the user-defined metric.
+            The composite image will include all images within the current date selection.
+            Use the date selection tool to filter out specific dates.
           </p>
         </section>
 
         <section id="en-date-selection-tool">
           <h3>5. Date Selection Tool</h3>
-          <img src="media/results5.png" alt="Date Selection Tool" />
+          <img src="media/results5.png" alt="Date Selection Tool">
           <ul>
             <li>Use the date selection tool to filter and select specific dates for analysis.</li>
-            <li>The date selection tool updates the time series plot.</li>
+            <li>The tool updates the time series plot.</li>
             <li>Composite images are based on all selected dates.</li>
           </ul>
         </section>
 
         <section id="en-savitzky-golay">
           <h3>6. Savitzky-Golay Filter</h3>
-          <img src="media/results6.png" alt="Savitzky-Golay Filter" />
+          <img src="media/results6.png" alt="Savitzky-Golay Filter">
           <p>
-            Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.<br />
-            The parameters for the Savitzky-Golay algorithm, such as the order of the polynomial and the window length, can
-            be adjusted as needed to fine-tune the smoothing process.
+            Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.
+            Adjust the polynomial order and window length as needed.
           </p>
         </section>
 
         <section id="en-save-options">
           <h3>7. Save Options</h3>
-          <img src="media/results7.png" alt="Save Options" />
-          <img src="media/results71.png" alt="Save Options - Image" />
+          <img src="media/results7.png" alt="Save Options">
+          <img src="media/results71.png" alt="Save Options - Image">
           <p>
-            Save the time series data in spreadsheet format (CSV).<br />
-            To save the time series as an image, open it in the browser to enable the download option.
+            Save the time series data in CSV format.
+            To save the series as an image, open it in your browser to enable the download option.
           </p>
         </section>
 
         <section id="en-nasa-power">
           <h3>8. NASA POWER Precipitation</h3>
-          <img src="media/results8.png" alt="NASA POWER Precipitation" />
+          <img src="media/results8.png" alt="NASA POWER Precipitation">
           <p>
-            Add monthly precipitation data from NASA POWER for cross-variable comparisons.<br />
-            Save the precipitation data in spreadsheet format (CSV).
+            Add monthly precipitation data from NASA POWER for cross-variable comparisons.
+            Save the precipitation data in CSV format.
           </p>
         </section>
 
         <section id="en-quickly-run-new">
           <h3>9. Quickly Run New Time Series</h3>
-          <img src="media/results9.png" alt="Quickly Run New Time Series" />
+          <img src="media/results9.png" alt="Quickly Run New Time Series">
           <p>
-            Quickly run a new time series analysis by changing the Area of Interest (AOI), Vegetation Index, or time range.
+            Quickly run a new time series analysis by changing the Area of Interest (AOI), vegetation index, or time range.
           </p>
         </section>
 
         <section id="en-clear-layers">
-          <h3>10. Clear All Loaded Layers</h3>
-          <img src="media/results10.png" alt="Clear All Loaded Layers" />
+          <h3>10. Clear All Layers</h3>
+          <img src="media/results10.png" alt="Clear All Layers">
           <p>
-            Clear all loaded layers from the layer panel to start a new analysis or to declutter the workspace.
+            Clear all loaded layers from the QGIS layer panel to start a new analysis or to declutter your workspace.
           </p>
         </section>
 
         <h2 id="en-troubleshooting">Troubleshooting</h2>
         <ul>
-          <li>
-            <strong>Earth Engine Authentication Failed</strong>: Ensure you have the necessary requirements as explained in the
-            authentication tab.
-          </li>
-          <li>
-            <strong>AOI Errors</strong>: Verify the AOI file is valid and has a valid CRS (EPSG:4326 preferred).
-          </li>
+          <li><strong>Earth Engine Authentication Failed</strong>: Ensure you meet all requirements as explained in the authentication section.</li>
+          <li><strong>AOI Errors</strong>: Verify the AOI file is valid and uses a proper CRS (EPSG:4326 is preferred).</li>
         </ul>
 
         <h2 id="en-reporting-issues">Reporting Issues</h2>
         <p>
           If you encounter any issues or have suggestions for improvements, please open an issue in the
-          <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener"
-            >GitHub Issues</a
-          >
-          section.
+          <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener">GitHub Issues</a> section.
         </p>
 
         <h2 id="en-contribute">Contribute to the Project</h2>
         <p>
-          Contributions are welcome! Please visit the
-          <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener"
-            >GitHub repository</a
-          >
-          to get started.
+          Contributions are welcome! Please visit the <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">GitHub repository</a> to get started.
         </p>
 
         <h2 id="en-license">License</h2>
         <p>
-          RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the
-          <a
-            href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE"
-            target="_blank"
-            rel="noopener"
-            >LICENSE</a
-          >
-          file for details.
+          RAVI is licensed under the GNU General Public License v2.0 or later.
+          Refer to the <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a> file for details.
         </p>
+
+        <!-- About the Author & Supervisors -->
+        <div class="author-section">
+          <h3>About the Author</h3>
+          <p>
+            The RAVI plugin was developed by <strong>Caio Arantes</strong>, an Agricultural Engineering student passionate about precision agriculture and geotechnology, as part of his final graduation project.
+          </p>
+          <p>
+            Feel free to reach out if you have any questions or need further assistance.
+          </p>
+          <p>
+            📧 <strong>Email:</strong> <a href="mailto:caiosimplicioarantes@gmail.com">caiosimplicioarantes@gmail.com</a><br>
+            🔗 <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/caioarantes">linkedin.com/in/caioarantes</a><br>
+            💻 <strong>GitHub:</strong> <a href="https://github.com/caioarantes">github.com/caioarantes</a>
+          </p>
+        </div>
+        <div class="supervisor-section">
+          <h3>Supervisors</h3>
+          <p>This project was supervised by:</p>
+          <ul>
+            <li><strong>Prof. Dr. Lucas Rios do Amaral</strong> - <a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/">More about the supervisor</a></li>
+            <li><strong>M.Sc. Isabella Alves da Cunha</strong> - <a href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/">More about the co-supervisor</a></li>
+          </ul>
+        </div>
       </section>
 
-      <!-- Portuguese Documentation -->
+      <!-- Portuguese Documentation Section -->
       <section id="pt-content" class="lang-content active" lang="pt" aria-hidden="false">
-        <!-- New flex container + Portuguese logo -->
-        <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 20px;">
-
-          <h1 id="pt-intro" style="margin: 0;">
-            RAVI - Análise Remota de Índices de Vegetação
-          </h1>
-        </div>
-       
-
+        <h1 id="pt-intro">RAVI - Análise Remota de Índices de Vegetação</h1>
         <p>
-          RAVI é um plugin para QGIS projetado para se integrar ao Google Earth Engine (GEE), permitindo o processamento e a
-          visualização eficientes de dados geoespaciais. Utilizando o
-          <a
-            href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED"
-            target="_blank"
-            rel="noopener"
-            >catálogo de reflectância de superfície harmonizada</a
-          >
-          do Sentinel-2, o plugin suporta cálculos de índices de vegetação e o download fácil de imagens multiespectrais. Esses recursos
-          tornam a ferramenta viável para estudantes, pesquisadores, agricultores e profissionais de GIS que atuam na agricultura,
-          monitoramento de terras ou gestão ambiental.
+          RAVI é um plugin para QGIS projetado para se integrar ao Google Earth Engine (GEE), permitindo o processamento e a visualização eficientes de dados geoespaciais.
+          Utilizando o <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank" rel="noopener">catálogo de reflectância de superfície harmonizada</a> do Sentinel-2,
+          o plugin suporta cálculos de índices de vegetação e o download fácil de imagens multiespectrais.
+          Esses recursos tornam a ferramenta viável para estudantes, pesquisadores, agricultores e profissionais de GIS.
         </p>
         <div style="text-align: center;">
-          <iframe
-            width="800"
-            height="450"
-            src="https://www.youtube.com/embed/4HC_FZ6GSiM"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div>        
+          <iframe width="800" height="450" src="https://www.youtube.com/embed/4HC_FZ6GSiM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
 
         <h2 id="pt-funcionalidades">Principais Funcionalidades</h2>
         <h3>1. Integração com o Earth Engine</h3>
@@ -737,83 +674,67 @@
           <li>Reinicie o QGIS.</li>
         </ol>
 
-
         <h2 id="pt-uso">Uso</h2>
         <h3 id="pt-passo1">Passo 1: Autenticação</h3>
-        <img src="media_pt/step1.png" alt="Passo 1 - Autenticação" />
+        <img src="media_pt/step1.png" alt="Passo 1 - Autenticação">
         <ul>
           <li>Abra a janela do plugin.</li>
           <li>Autentique-se no Google Earth Engine utilizando suas credenciais.</li>
         </ul>
-        <!-- <div style="text-align: center;">
-          <iframe
-            width="800"
-            height="450"
-            src="https://www.youtube.com/embed/w2IPuMwHIYs"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div> -->
 
         <h3 id="pt-passo2">Passo 2: Selecionar a pasta de saída</h3>
-        <img src="media_pt/step2.png" alt="Passo 2 - Pasta de Saída" />
+        <img src="media_pt/step2.png" alt="Passo 2 - Pasta de Saída">
         <p>Escolha a pasta onde deseja salvar os arquivos de saída.</p>
 
         <h3 id="pt-passo3">Passo 3: Carregar e selecionar a área de interesse (AOI)</h3>
-        <img src="media_pt/step3.png" alt="Passo 3 - Carregar AOI" />
+        <img src="media_pt/step3.png" alt="Passo 3 - Carregar AOI">
         <ul>
           <li>Selecione uma AOI carregando um arquivo shapefile ou GeoJSON.</li>
           <li>Certifique-se de que a geometria é válida (apenas Polygon ou MultiPolygon).</li>
           <li>Adicione uma camada do Google Maps ao canvas do QGIS para melhor visualização e contexto.</li>
-          <li>
-            Use o botão <strong>Construir área de interesse a partir da extensão do mapa</strong> para gerar automaticamente
-            uma nova AOI com base na extensão atual da tela.
-          </li>
+          <li>Use o botão <strong>Construir área de interesse a partir da extensão do mapa</strong> para gerar automaticamente uma nova AOI com base na extensão atual da tela.</li>
         </ul>
 
         <h3 id="pt-passo4">Passo 4: Definir o intervalo de tempo para busca de imagens</h3>
-        <img src="media_pt/step4.png" alt="Passo 4 - Intervalo de Tempo" />
+        <img src="media_pt/step4.png" alt="Passo 4 - Intervalo de Tempo">
         <p>Defina um intervalo de tempo personalizado ou selecione um sugerido.</p>
 
         <h3 id="pt-passo5">Passo 5: Selecionar o índice de vegetação para análise de séries temporais</h3>
-        <img src="media_pt/step5.png" alt="Passo 5 - Selecionar Índice" />
+        <img src="media_pt/step5.png" alt="Passo 5 - Selecionar Índice">
         <p>Escolha o índice de vegetação que deseja analisar a partir do menu.</p>
 
         <h3 id="pt-passo6">Passo 6: Filtro de sobreposição de imagens</h3>
-        <img src="media_pt/step6.png" alt="Passo 6 - Filtro de Sobreposição" />
-        <p>Utilize o filtro de Buffer de AOI para reduzir o limite da AOI para análise.</p>
+        <img src="media_pt/step6.png" alt="Passo 6 - Filtro de Sobreposição">
+        <p>Utilize o filtro de sobreposição para ajustar a seleção de imagens conforme os requisitos da sua análise.</p>
 
         <h3 id="pt-passo7">Passo 7: Buffer de AOI</h3>
-        <img src="media_pt/step7.png" alt="Passo 7 - Buffer de AOI" />
-        <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+        <img src="media_pt/step7.png" alt="Passo 7 - Buffer de AOI">
+        <p>Defina o buffer da AOI para restringir a área de análise.</p>
 
         <h3 id="pt-passo8">Passo 8: Filtro de porcentagem de pixels nublados</h3>
-        <img src="media_pt/step8.png" alt="Passo 8 - Filtro de Pixels Nublados" />
-        <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+        <img src="media_pt/step8.png" alt="Passo 8 - Filtro de Pixels Nublados">
+        <p>Configure o filtro de porcentagem de pixels nublados conforme os requisitos da análise.</p>
 
         <h3 id="pt-passo9">Passo 9: Filtro de porcentagem de pixels válidos</h3>
-        <img src="media_pt/step9.png" alt="Passo 9 - Filtro de Pixels Válidos" />
-        <p>Defina o filtro especificado de acordo com os requisitos da sua análise.</p>
+        <img src="media_pt/step9.png" alt="Passo 9 - Filtro de Pixels Válidos">
+        <p>Configure o filtro de porcentagem de pixels válidos conforme os requisitos da análise.</p>
 
-        <h2 id="pt-resultados">Página de Resultados</h2>
+        <h2 id="pt-resultados">Resultados</h2>
         <section id="pt-grafico-series-temporais">
           <h3>1. Gráfico de Séries Temporais</h3>
-          <img src="media_pt/results1.png" alt="Gráfico de Séries Temporais" />
+          <img src="media_pt/results1.png" alt="Gráfico de Séries Temporais">
           <ul>
-            <li>Visualize a série temporal do índice de vegetação selecionado sobre a AOI definida.</li>
+            <li>Visualize a série temporal do índice de vegetação sobre a AOI definida.</li>
             <li>Coloque o cursor sobre o gráfico para ver valores e datas específicos para uma análise detalhada.</li>
           </ul>
         </section>
 
         <section id="pt-load-rgb-layer">
           <h3>2. Carregar Camada RGB (Foco em um Dia)</h3>
-          <img src="media_pt/results2.png" alt="Carregar Camada RGB" />
+          <img src="media_pt/results2.png" alt="Carregar Camada RGB">
           <p>
             Carregue e exiba uma camada RGB para uma data específica para analisar a aparência visual da área.
-            Todas as bandas espectrais são baixadas, e os números das bandas correspondem às bandas do Sentinel-2
-            conforme listado na tabela abaixo:
+            Todas as bandas espectrais são baixadas, e os números das bandas correspondem às bandas do Sentinel-2 conforme listado abaixo:
           </p>
           <table>
             <thead>
@@ -909,118 +830,119 @@
 
         <section id="pt-load-index-layer">
           <h3>3. Carregar Camada de Índice (Foco em um Dia)</h3>
-          <img src="media/results3.png" alt="Load Index Layer" />
+          <img src="media/results3.png" alt="Carregar Camada de Índice">
           <p>Carregue e exiba uma camada de índice de vegetação para uma data específica.</p>
         </section>
 
         <section id="pt-load-index-composite">
           <h3>4. Carregar Camada de Índice (Sintética)</h3>
-          <img src="media/results4.png" alt="Load Index Composite" />
+          <img src="media/results4.png" alt="Carregar Camada de Índice (Sintética)">
           <p>
-            Gere e exiba uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário.<br />
-            A imagem sintética incluirá todas as imagens dentro do intervalo de datas atual. Utilize a ferramenta de seleção de data
-            para filtrar datas específicas.
+            Gere e exiba uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário.
+            A imagem sintética incluirá todas as imagens dentro do intervalo de datas atual.
+            Utilize a ferramenta de seleção de data para filtrar datas específicas.
           </p>
         </section>
 
         <section id="pt-date-selection-tool">
           <h3>5. Ferramenta de Seleção de Data</h3>
-          <img src="media/results5.png" alt="Date Selection Tool" />
+          <img src="media/results5.png" alt="Ferramenta de Seleção de Data">
           <ul>
             <li>Use a ferramenta de seleção de data para filtrar e selecionar datas específicas para análise.</li>
-            <li>A ferramenta de seleção de data atualiza o gráfico de séries temporais.</li>
+            <li>A ferramenta atualiza o gráfico de séries temporais.</li>
             <li>Imagens sintéticas são baseadas em todas as datas selecionadas.</li>
           </ul>
         </section>
 
         <section id="pt-savitzky-golay">
           <h3>6. Filtro Savitzky-Golay</h3>
-          <img src="media/results6.png" alt="Savitzky-Golay Filter" />
+          <img src="media/results6.png" alt="Filtro Savitzky-Golay">
           <p>
-            Aplique o filtro de Savitzky-Golay para suavizar os dados de séries temporais e aprimorar a análise de tendências.<br />
-            Os parâmetros do algoritmo Savitzky-Golay, como a ordem do polinômio e o tamanho da janela, podem ser ajustados conforme
-            necessário para refinar o processo de suavização.
+            Aplique o filtro de Savitzky-Golay para suavizar os dados de séries temporais e aprimorar a análise de tendências.
+            Ajuste a ordem do polinômio e o tamanho da janela conforme necessário.
           </p>
         </section>
 
         <section id="pt-save-options">
           <h3>7. Opções de Salvamento</h3>
-          <img src="media/results7.png" alt="Save Options" />
-          <img src="media/results71.png" alt="Save Options - Image" />
+          <img src="media/results7.png" alt="Opções de Salvamento">
+          <img src="media/results71.png" alt="Opções de Salvamento - Imagem">
           <p>
-            Salve os dados da série temporal em formato de planilha (CSV).<br />
-            Para salvar a série temporal como imagem, abra-a no navegador para habilitar a opção de download.
+            Salve os dados da série temporal em formato CSV.
+            Para salvar a série como imagem, abra-a no navegador para habilitar a opção de download.
           </p>
         </section>
 
         <section id="pt-nasa-power">
           <h3>8. Precipitação NASA POWER</h3>
-          <img src="media/results8.png" alt="NASA POWER Precipitation" />
+          <img src="media/results8.png" alt="Precipitação NASA POWER">
           <p>
-            Adicione dados mensais de precipitação do NASA POWER para comparações entre variáveis.<br />
-            Salve os dados de precipitação em formato de planilha (CSV).
+            Adicione dados mensais de precipitação do NASA POWER para comparações entre variáveis.
+            Salve os dados em formato CSV.
           </p>
         </section>
 
         <section id="pt-quickly-run-new">
           <h3>9. Executar Nova Série</h3>
-          <img src="media/results9.png" alt="Quickly Run New Time Series" />
+          <img src="media/results9.png" alt="Executar Nova Série">
           <p>
-            Execute rapidamente uma nova análise de série temporal alterando a Área de Interesse (AOI), o Índice de Vegetação
-            ou o intervalo de tempo.
+            Execute rapidamente uma nova análise de série temporal alterando a Área de Interesse (AOI), o índice de vegetação ou o intervalo de tempo.
           </p>
         </section>
 
         <section id="pt-clear-layers">
-          <h3>10. Limpar Todas as Camadas</h3>
-          <img src="media/results10.png" alt="Clear All Loaded Layers" />
+          <h3>10. Limpar Camadas</h3>
+          <img src="media/results10.png" alt="Limpar Camadas">
           <p>
-            Limpe todas as camadas carregadas do painel de camadas para iniciar uma nova análise ou para organizar o espaço de trabalho.
+            Limpe todas as camadas carregadas do painel para iniciar uma nova análise ou para organizar o espaço de trabalho.
           </p>
         </section>
 
         <h2 id="pt-troubleshooting">Solução de Problemas</h2>
         <ul>
-          <li>
-            <strong>Falha na Autenticação do Earth Engine</strong>: Certifique-se de que você tem os requisitos necessários,
-            conforme explicado na aba de autenticação.
-          </li>
-          <li>
-            <strong>Erros de AOI</strong>: Verifique se o arquivo da AOI é válido e se possui um CRS válido (de preferência EPSG:4326).
-          </li>
+          <li><strong>Falha na Autenticação do Earth Engine</strong>: Certifique-se de que você atende aos requisitos necessários, conforme explicado na aba de autenticação.</li>
+          <li><strong>Erros de AOI</strong>: Verifique se o arquivo da AOI é válido e possui um CRS adequado (preferencialmente EPSG:4326).</li>
         </ul>
 
         <h2 id="pt-reporting-issues">Relatar Problemas</h2>
         <p>
-          Se você encontrar problemas ou tiver sugestões de melhorias, abra uma issue na seção de
-          <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener"
-            >GitHub Issues</a
-          >.
+          Se encontrar problemas ou tiver sugestões, abra uma issue na seção de <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener">GitHub Issues</a>.
         </p>
 
         <h2 id="pt-contribute">Contribuição</h2>
         <p>
-          Contribuições são bem-vindas! Visite o
-          <a
-            href="https://github.com/caioarantes/ravi-qgis-plugin"
-            target="_blank"
-            rel="noopener"
-            >repositório do GitHub</a
-          >
-          para começar.
+          Contribuições são bem-vindas! Visite o <a href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">repositório do GitHub</a> para começar.
         </p>
 
         <h2 id="pt-license">Licença</h2>
         <p>
-          RAVI é licenciado sob a GNU General Public License v2.0 ou superior. Consulte o arquivo
-          <a
-            href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE"
-            target="_blank"
-            rel="noopener"
-            >LICENSE</a
-          >
-          para mais detalhes.
+          RAVI é licenciado sob a GNU General Public License v2.0 ou superior.
+          Consulte o arquivo <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a> para mais detalhes.
         </p>
+
+        <!-- Sobre o Autor & Orientadores -->
+        <div class="author-section">
+          <h2>Sobre o Autor</h2>
+          <p>
+            O plugin RAVI foi desenvolvido por <strong>Caio Arantes</strong>, estudante de Engenharia Agrícola entusiasta de agricultura de precisão e geotecnologia, como parte de seu trabalho de conclusão de curso.
+          </p>
+          <p>
+            Sinta-se à vontade para entrar em contato se tiver alguma dúvida.
+          </p>
+          <p>
+            📧 <strong>Email:</strong> <a href="mailto:caiosimplicioarantes@gmail.com">caiosimplicioarantes@gmail.com</a><br>
+            🔗 <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/caioarantes">linkedin.com/in/caioarantes</a><br>
+            💻 <strong>GitHub:</strong> <a href="https://github.com/caioarantes">github.com/caioarantes</a>
+          </p>
+        </div>
+        <div class="supervisor-section">
+          <h3>Orientadores</h3>
+          <p>Este projeto foi orientado por:</p>
+          <ul>
+            <li><strong>Prof. Dr. Lucas Rios do Amaral</strong> - <a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/">Mais sobre o orientador</a></li>
+            <li><strong>M.Sc. Isabella Alves da Cunha</strong> - <a href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/">Mais sobre a coorientadora</a></li>
+          </ul>
+        </div>
       </section>
     </main>
   </div>
@@ -1035,22 +957,19 @@
       langButtons.forEach((button) => {
         button.addEventListener('click', () => {
           const selectedLang = button.dataset.lang;
-
-          // Toggle content sections based on selected language
+          // Toggle content sections
           langContents.forEach((content) => {
             const isActive = content.id === `${selectedLang}-content`;
             content.classList.toggle('active', isActive);
             content.setAttribute('aria-hidden', !isActive);
           });
-
-          // Update button active states
+          // Update button states
           langButtons.forEach((btn) => {
             const isActive = btn.dataset.lang === selectedLang;
             btn.classList.toggle('active', isActive);
             btn.setAttribute('aria-pressed', isActive);
           });
-
-          // Show/hide sidebars
+          // Show/hide sidebars and update document title
           if (selectedLang === 'en') {
             sidebarEn.style.display = 'block';
             sidebarPt.style.display = 'none';
@@ -1060,7 +979,6 @@
             sidebarPt.style.display = 'block';
             document.title = 'Documentação do RAVI';
           }
-
           // Smooth scroll to top
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
