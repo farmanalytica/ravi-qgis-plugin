@@ -575,12 +575,16 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             # self.zoom_to_layer(shp_name)
+            self.update
             self.get_selected_layer_path
+            self.load_vector_layers()
             self.load_vector_layers()
             self.find_area()
             # iface.mapCanvas().setExtent(loaded_layer.extent())  # Optional: Set the canvas extent to the layer extent
         else:
             print("Failed to load the shapefile.")
+
+        
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
