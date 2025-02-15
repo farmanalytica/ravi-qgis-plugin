@@ -66,7 +66,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1816,7 +1816,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>60</y>
        <width>1131</width>
-       <height>401</height>
+       <height>361</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -2054,9 +2054,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>700</x>
-       <y>420</y>
+       <y>390</y>
        <width>241</width>
-       <height>121</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="font">
@@ -2071,7 +2071,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>60</y>
+        <y>80</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -2111,7 +2111,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>80</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -2156,7 +2156,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
+        <y>120</y>
         <width>181</width>
         <height>21</height>
        </rect>
@@ -2183,7 +2183,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>90</y>
+        <y>120</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -2289,7 +2289,7 @@ p, li { white-space: pre-wrap; }
         <x>10</x>
         <y>30</y>
         <width>91</width>
-        <height>21</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -2352,6 +2352,11 @@ p, li { white-space: pre-wrap; }
       <item>
        <property name="text">
         <string>Desvio Padrão</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Area Under Curve (AUC)</string>
        </property>
       </item>
      </widget>
@@ -2425,9 +2430,9 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
-        <width>61</width>
-        <height>20</height>
+        <y>69</y>
+        <width>51</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">

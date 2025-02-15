@@ -1501,67 +1501,51 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print("Composição de índices vegetativos")
         indice_vegetacao = self.indice_composicao.currentText()
         metrica = self.metrica.currentText()
-        """
-        Calculates and downloads an image from Sentinel-2 data for a specified
-        area of interest, time range, vegetation index, and metric.
-        If a file with the same name exists, it adds a numerical suffix
-        to the filename to avoid overwriting. Then loads the image into QGIS.
-        """
 
+        # Extrai as datas selecionadas (formato YYYY-MM-DD)
         Date_list_selection = (
-            [
-                date.strftime("%Y-%m-%d")
-                for date in pd.to_datetime(self.df_aux["date"]).tolist()
-            ]
+            [date.strftime("%Y-%m-%d") for date in pd.to_datetime(self.df_aux["date"]).tolist()]
             if "date" in self.df_aux.columns
             else []
         )
         print(f"Selected dates for time series: {Date_list_selection}")
 
         print("Final number of images before:", self.sentinel2.size().getInfo())
-        # Print the dates of the images in the collection for debugging purposes
         dates_in_collection = self.sentinel2.aggregate_array("date").getInfo()
         print(f"Dates in the collection: {dates_in_collection}")
-
         print(f"Selected dates (timestamps): {Date_list_selection}")
 
-        # Filter the collection by the dates
+        # Filtra a coleção Sentinel-2 pelas datas selecionadas
         sentinel2_selected_dates = self.sentinel2.filter(
             ee.Filter.inList("date", ee.List(Date_list_selection))
         )
-
         print("Final number of images after:", sentinel2_selected_dates.size().getInfo())
 
-        # Calculate the specified vegetation index for each image in the collection
+        # Função para calcular o índice vegetal desejado e preservar a data
         def calculate_index(image):
             if indice_vegetacao == "NDVI":
-                return image.normalizedDifference(["B8", "B4"]).rename("NDVI")
+                return image.normalizedDifference(["B8", "B4"]).rename("NDVI") \
+                            .copyProperties(image, ["system:time_start"])
             elif indice_vegetacao == "EVI":
                 return image.expression(
-                    "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "BLUE": image.select("B2"),
-                    },
-                ).rename("EVI")
+                    "2.5 * ((NIR/10000 - RED/10000) / (NIR/10000 + 6*RED/10000 - 7.5*BLUE/10000 + 1))",
+                    {"NIR": image.select("B8"), "RED": image.select("B4"), "BLUE": image.select("B2")}
+                ).rename("EVI").copyProperties(image, ["system:time_start"])
             elif indice_vegetacao == "SAVI":
                 return image.expression(
-                    "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "L": 0.5,  # Adjust L value as needed
-                    },
-                ).rename("SAVI")
+                    "(1 + L) * ((NIR/10000 - RED/10000) / (NIR/10000 + RED/10000 + L))",
+                    {"NIR": image.select("B8"), "RED": image.select("B4"), "L": 0.5}
+                ).rename("SAVI").copyProperties(image, ["system:time_start"])
             elif indice_vegetacao == "GNDVI":
-                return image.normalizedDifference(["B8", "B3"]).rename("GNDVI")
+                return image.normalizedDifference(["B8", "B3"]).rename("GNDVI") \
+                            .copyProperties(image, ["system:time_start"])
             else:
                 raise ValueError(f"Invalid indice_vegetacao: {indice_vegetacao}")
 
+        # Aplica o cálculo do índice à coleção filtrada
         index_collection = sentinel2_selected_dates.map(calculate_index)
 
-        # Apply the specified metric to the vegetation index collection
+        # Seleção da métrica de agregação
         if metrica in ["Mean", "Média"]:
             final_image = index_collection.mean()
         elif metrica in ["Max", "Máximo"]:
@@ -1574,36 +1558,75 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             final_image = index_collection.max().subtract(index_collection.min())
         elif metrica in ["Standard Deviation", "Desvio Padrão"]:
             final_image = index_collection.reduce(ee.Reducer.stdDev())
+        elif metrica in ["Sum", "Soma"]:
+            final_image = index_collection.sum()
+        elif metrica in ["Area Under Curve (AUC)"]:
+            # --- Cálculo da AUC por pixel via método de array ---
+            count = index_collection.size().getInfo()
+            if count < 2:
+                raise ValueError("Número insuficiente de imagens para calcular a AUC.")
 
+            # Cria uma "pilha" dos índices (cada imagem vira uma banda)
+            indexStack = index_collection.toBands()
+            # Define uma máscara válida (mínimo valor da máscara de todas as bandas)
+            validMask = indexStack.mask().reduce(ee.Reducer.min())
+            
+            # Obtém os nomes das bandas (cada banda corresponde a uma data)
+            bands = indexStack.bandNames()
+            
+            # Define a data inicial; certifique-se de que self.inicio esteja no formato "YYYY-MM-DD"
+            start_date = ee.Date(self.inicio)
+            # Cria uma lista de timestamps em dias relativos à data inicial
+            timestamps = index_collection.aggregate_array("system:time_start").map(
+                lambda date: ee.Number(ee.Date(date).difference(start_date, "day"))
+            )
+            
+            # Alinha os timestamps com o número de bandas
+            alignedTimestamps = ee.List(timestamps.slice(0, bands.size()))
+            # Cria uma imagem com constantes baseadas nos timestamps e renomeia para os nomes das bandas
+            timeImage = ee.Image.constant(alignedTimestamps).rename(bands).toArray()
+            
+            # Converte a pilha de índices para um array
+            ndviArray = indexStack.toArray()
+            
+            # Calcula as diferenças entre timestamps consecutivos
+            diffs = timeImage.arraySlice(0, 1).subtract(timeImage.arraySlice(0, 0, -1))
+            # Soma os valores de NDVI de imagens consecutivas
+            sums = ndviArray.arraySlice(0, 1).add(ndviArray.arraySlice(0, 0, -1))
+            # Aplica a regra do trapézio: (diferença * soma) / 2 e reduz o array pela soma dos intervalos
+            auc = diffs.multiply(sums).divide(2).arrayReduce(ee.Reducer.sum(), [0])
+            # Extrai o resultado final, aplica a máscara e define como imagem final
+            final_image = ee.Image(auc.arrayGet([0])).updateMask(validMask)
+        else:
+            raise ValueError(f"Invalid metric: {metrica}")
+
+        # Recorta a imagem final à área de interesse (AOI)
         final_image = final_image.clip(self.aoi.geometry())
 
-        url = final_image.getDownloadUrl(
-            {
-                "scale": 10,
-                "region": self.aoi.geometry().bounds().getInfo(),
-                "format": "GeoTIFF",
-            }
-        )
+        # Gera a URL de download para a imagem final (GeoTIFF, escala de 10)
+        url = final_image.getDownloadUrl({
+            "scale": 10,
+            "region": self.aoi.geometry().bounds().getInfo(),
+            "format": "GeoTIFF"
+        })
 
         base_output_file = f"{metrica}_{indice_vegetacao}.tiff"
         output_file = self.get_unique_filename(base_output_file)
-
         response = requests.get(url)
         with open(output_file, "wb") as f:
             f.write(response.content)
-
         print(f"{indice_vegetacao} image downloaded as {output_file}")
 
+        # Recorta a imagem raster usando a camada vetorial (normalmente a AOI)
         layer_name = f"{indice_vegetacao} {metrica}"
-
         base_output_file = f"{metrica}_{indice_vegetacao}_clipped.tiff"
         output_file_clipped = self.get_unique_filename(base_output_file)
+        self.clip_raster_by_vector(output_file, self.selected_aio_layer_path, output_file_clipped, layer_name)
 
-        self.clip_raster_by_vector(
-            output_file, self.selected_aio_layer_path, output_file_clipped, layer_name
-        )
-
+        # Carrega a camada raster com estilo colorido no QGIS
         self.load_raster_layer_colorful(output_file_clipped, layer_name, indice_vegetacao)
+        QApplication.restoreOverrideCursor()
+
 
     def clip_raster_by_vector(self, raster_path, shapefile_path, output_path, layer_name):
         print(f"Clipping raster {raster_path} by vector {shapefile_path} to {output_path}")
@@ -2512,8 +2535,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.dataunica.addItems(datas)
         self.dataunica.setCurrentIndex(self.dataunica.count() - 1)
 
-    def load_raster_layer_colorful(self, raster_file_path, layer_name, metrica=None):
-        print(f"Loading raster layer color: {metrica}")
+    def load_raster_layer_colorful(self, raster_file_path, layer_name, index=None):
+        print(f"Loading raster layer color: {index}")
 
         # Load the raster layer
         raster_layer = QgsRasterLayer(raster_file_path, layer_name)
@@ -2564,7 +2587,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Refresh the layer to update the visualization
             raster_layer.triggerRepaint()
 
-        if metrica == 'NDVI':
+        print(index, self.metrica.currentText())
+
+        if index == 'NDVI' and self.metrica.currentText() != 'Area Under Curve (AUC)':
+            print('Rendering NDVI 0-1')
             # Clone the current renderer
             newrend = raster_layer.renderer().clone()
 
