@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>RAVIDialogBase</class>
  <widget class="QDialog" name="RAVIDialogBase">
@@ -12,6 +12,35 @@
   </property>
   <property name="windowTitle">
    <string>RAVI - Remote Analysis of Vegetation Indices</string>
+  </property>
+  <property name="styleSheet">
+   <string>QPushButton {
+        background-color: #d1e7ff; /* Soft Blue */
+        color: black;
+        border-radius: 6px;
+        padding: 5px;
+    }
+    QPushButton:hover {
+        background-color: #b6d4fe; /* Slightly Darker Blue */
+    }
+    QPushButton#QPushButton_back {
+        background-color: #e2e3e5; /* Soft Gray */
+    }
+    QPushButton#QPushButton_back:hover {
+        background-color: #d6d8db; /* Slightly Darker Gray */
+    }
+    QPushButton#QPushButton_next {
+        background-color: #d1e7ff;
+    }
+    QPushButton#QPushButton_next:hover {
+        background-color: #b6d4fe;
+    }
+    QPushButton#clear_raster, QPushButton#clear_nasa {
+        background-color: #f8d7da; /* Soft Red */
+    }
+    QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
+        background-color: #f1b0b7; /* Slightly Darker Red */
+    }</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -37,7 +66,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>6</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -58,6 +87,11 @@
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Setup Authentication</string>
      </property>
@@ -70,6 +104,11 @@
        <width>341</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Reset Autentication</string>
@@ -85,23 +124,23 @@
       </rect>
      </property>
      <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;title&gt;RAVI QGIS Plugin Information&lt;/title&gt;&lt;style type="text/css"&gt;
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;RAVI QGIS Plugin Information&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;"&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;To use this plugin, you need the following:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:large; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style=" font-family:'sans-serif'; color:#333333;" style=" margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://earthengine.google.com/"&gt;&lt;span style=" font-weight:600; text-decoration: underline; color:#007bff;"&gt;An Active Google Earth Engine Account:&lt;/span&gt;&lt;/a&gt; A registered and approved GEE account (provides access to datasets, APIs, and tools). &lt;/li&gt;
-&lt;li style=" font-family:'sans-serif'; color:#333333;" style=" margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://console.cloud.google.com"&gt;&lt;span style=" font-weight:600; text-decoration: underline; color:#007bff;"&gt;A Google Cloud Project (and its ID):&lt;/span&gt;&lt;/a&gt; A Google Cloud project linked to your GEE account (handles authentication, API enablement, and quota management for Earth Engine services). &lt;/li&gt;&lt;/ul&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;a href="https://caioarantes.github.io/qgis-EasyDEM-plugin/"&gt;&lt;span style=" font-family:'sans-serif'; text-decoration: underline; color:#007bff;"&gt;Click here&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; to access the step-by-step guide. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;The authentication token will be stored locally, allowing you to skip browser login during future authentications. To switch accounts, click 'Reset Authentication'. &lt;/span&gt;&lt;/p&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;About the Author&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:large; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;The RAVI plugin was developed by &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-weight:600; color:#333333;"&gt;Caio Arantes&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;, an Agricultural Engineering student passionate about precision agriculture and geotechnology, as part of his final graduation project. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;Feel free to reach out if you have any questions or need further assistance.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;📧 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-weight:600; color:#333333;"&gt;Email:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;/span&gt;&lt;a href="mailto:caiosimplicioarantes@gmail.com"&gt;&lt;span style=" font-family:'sans-serif'; text-decoration: underline; color:#007bff;"&gt;caiosimplicioarantes@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;br /&gt;🔗 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-weight:600; color:#333333;"&gt;LinkedIn:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;/span&gt;&lt;a href="https://www.linkedin.com/in/caioarantes"&gt;&lt;span style=" font-family:'sans-serif'; text-decoration: underline; color:#007bff;"&gt;linkedin.com/in/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;br /&gt;💻 &lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-weight:600; color:#333333;"&gt;GitHub:&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;/span&gt;&lt;a href="https://github.com/caioarantes"&gt;&lt;span style=" font-family:'sans-serif'; text-decoration: underline; color:#007bff;"&gt;github.com/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;h3 style=" margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;"&gt;Supervisors&lt;/span&gt;&lt;span style=" font-family:'sans-serif'; font-size:large; font-weight:600; color:#333333;"&gt; &lt;/span&gt;&lt;/h3&gt;
-&lt;p style=" margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-family:'sans-serif'; color:#333333;"&gt;This project was supervised by: &lt;/span&gt;&lt;/p&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style=" font-family:'sans-serif'; color:#333333;" style=" margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-weight:600;"&gt;Prof. Dr. Lucas Rios do Amaral&lt;/span&gt; - &lt;a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/"&gt;&lt;span style=" text-decoration: underline; color:#007bff;"&gt;More about the supervisor&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;
-&lt;li style=" font-family:'sans-serif'; color:#333333;" style=" margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;"&gt;&lt;span style=" font-weight:600;"&gt;M.Sc. Isabella Alves da Cunha&lt;/span&gt; - &lt;a href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/"&gt;&lt;span style=" text-decoration: underline; color:#007bff;"&gt;More about the co-supervisor&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;To use this plugin, you need the following:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;An Active Google Earth Engine Account:&lt;/span&gt;&lt;/a&gt; A registered and approved GEE account (provides access to datasets, APIs, and tools). &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;A Google Cloud Project (and its ID):&lt;/span&gt;&lt;/a&gt; A Google Cloud project linked to your GEE account (handles authentication, API enablement, and quota management for Earth Engine services). &lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://caioarantes.github.io/qgis-EasyDEM-plugin/&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; to access the step-by-step guide. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;The authentication token will be stored locally, allowing you to skip browser login during future authentications. To switch accounts, click 'Reset Authentication'. &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;About the Author&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;The RAVI plugin was developed by &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Caio Arantes&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;, an Agricultural Engineering student passionate about precision agriculture and geotechnology, as part of his final graduation project. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;Feel free to reach out if you have any questions or need further assistance.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;📧 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;Email:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;mailto:caiosimplicioarantes@gmail.com&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;caiosimplicioarantes@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;🔗 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;LinkedIn:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://www.linkedin.com/in/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;linkedin.com/in/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;br /&gt;💻 &lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt;GitHub:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;a href=&quot;https://github.com/caioarantes&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; text-decoration: underline; color:#007bff;&quot;&gt;github.com/caioarantes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Supervisors&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot;&gt;This project was supervised by: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prof. Dr. Lucas Rios do Amaral&lt;/span&gt; - &lt;a href=&quot;https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;More about the supervisor&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;M.Sc. Isabella Alves da Cunha&lt;/span&gt; - &lt;a href=&quot;https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007bff;&quot;&gt;More about the co-supervisor&lt;/span&gt;&lt;/a&gt; &lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="overwriteMode">
       <bool>true</bool>
@@ -166,8 +205,13 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>90</y>
        <width>721</width>
-       <height>81</height>
+       <height>91</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Select output folder (generated files will be saved in this folder):</string>
@@ -178,8 +222,13 @@ p, li { white-space: pre-wrap; }
         <x>10</x>
         <y>20</y>
         <width>701</width>
-        <height>51</height>
+        <height>61</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="storageMode">
        <enum>QgsFileWidget::GetDirectory</enum>
@@ -197,6 +246,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Back</string>
@@ -217,6 +271,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Next</string>
@@ -243,6 +302,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Next</string>
      </property>
@@ -260,6 +324,11 @@ p, li { white-space: pre-wrap; }
        <height>101</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Select area of interest (AOI):  Load or criate a vector layer then update to list it.</string>
      </property>
@@ -271,6 +340,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Update</string>
@@ -287,26 +361,6 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="QPushButton_back">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>290</y>
-       <width>101</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Back</string>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
-     </property>
-    </widget>
     <widget class="QPushButton" name="hybrid">
      <property name="enabled">
       <bool>true</bool>
@@ -318,6 +372,11 @@ p, li { white-space: pre-wrap; }
        <width>291</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Load Google Maps Layer</string>
@@ -335,6 +394,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Build area of interest from canvas extent</string>
      </property>
@@ -347,6 +411,11 @@ p, li { white-space: pre-wrap; }
        <width>721</width>
        <height>111</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Keep total area smaller than 100 km² (10,000 hectares)</string>
@@ -370,6 +439,31 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="QPushButton_back">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -388,7 +482,7 @@ p, li { white-space: pre-wrap; }
       <number>1</number>
      </property>
      <property name="text">
-      <string />
+      <string/>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
@@ -409,6 +503,11 @@ p, li { white-space: pre-wrap; }
        <height>271</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Time range (yyyy/mm/dd):</string>
      </property>
@@ -420,6 +519,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -460,6 +564,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="dateTime">
        <datetime>
         <hour>0</hour>
@@ -493,6 +602,11 @@ p, li { white-space: pre-wrap; }
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Start:</string>
       </property>
@@ -514,6 +628,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>End:</string>
@@ -540,6 +659,11 @@ p, li { white-space: pre-wrap; }
       <layout class="QGridLayout" name="gridLayout">
        <item row="7" column="0">
         <widget class="QRadioButton" name="radioButton_5years">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Last 5 years</string>
          </property>
@@ -550,6 +674,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="8" column="0">
         <widget class="QRadioButton" name="radioButton_all">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>All available</string>
          </property>
@@ -560,6 +689,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="1" column="0">
         <widget class="QRadioButton" name="radioButton_6months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Last 6 months</string>
          </property>
@@ -567,6 +701,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="0" column="0">
         <widget class="QRadioButton" name="radioButton_3months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Last 3 months</string>
          </property>
@@ -574,6 +713,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="3" column="0">
         <widget class="QRadioButton" name="radioButton_3years">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Last 3 years</string>
          </property>
@@ -581,6 +725,11 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="2" column="0">
         <widget class="QRadioButton" name="radioButton_12months">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Last 12 months</string>
          </property>
@@ -599,6 +748,11 @@ p, li { white-space: pre-wrap; }
         <width>101</width>
         <height>25</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -645,6 +799,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Entire Selected Year:</string>
       </property>
@@ -662,6 +821,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Back</string>
      </property>
@@ -678,6 +842,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Next</string>
@@ -701,6 +870,11 @@ p, li { white-space: pre-wrap; }
        <height>271</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Select the Vegetation Index for the time series plot:</string>
      </property>
@@ -712,6 +886,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -743,6 +922,11 @@ p, li { white-space: pre-wrap; }
         <height>181</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
      </widget>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_5">
@@ -753,6 +937,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Next</string>
@@ -773,6 +962,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Back</string>
@@ -795,6 +989,11 @@ p, li { white-space: pre-wrap; }
        <width>721</width>
        <height>271</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Imagery Overlap with AOI : (Higher value, stricter filtering): </string>
@@ -845,6 +1044,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>90%</string>
       </property>
@@ -870,6 +1074,11 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="plainText">
        <string>This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high overlap threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
@@ -923,7 +1132,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string />
+      <string/>
      </property>
     </widget>
    </widget>
@@ -943,6 +1152,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Back</string>
      </property>
@@ -959,6 +1173,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Next</string>
@@ -977,6 +1196,11 @@ p, li { white-space: pre-wrap; }
        <height>271</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>AOI Buffer (meters):</string>
      </property>
@@ -989,15 +1213,19 @@ p, li { white-space: pre-wrap; }
         <height>181</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;"&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;This feature allows you to specify a buffer distance in meters to flexibly adjust the Area of Interest (AOI) by applying either a negative or a positive buffer:&lt;/p&gt;
-&lt;ul style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li style="" style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-weight:600;"&gt;Negative Buffer:&lt;/span&gt; When a negative buffer is applied, the external edges of the AOI are trimmed, concentrating the analysis on the central region. This approach minimizes edge effects, such as noise or distortions, resulting in more precise and representative data from the core area.&lt;/li&gt;
-&lt;li style="" style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-weight:600;"&gt;Positive Buffer:&lt;/span&gt; When a positive buffer is applied, the AOI is expanded to include not only the central area but also the borders and an additional surrounding area. This expansion can be beneficial for capturing contextual information or ensuring that slight inaccuracies in the AOI boundary do not exclude relevant data.&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;By enabling both types of buffers, users have the flexibility to tailor data extraction based on their specific analysis objectives—whether that means focusing on the core region with a negative buffer, including adjacent areas with a positive buffer, or even comparing both approaches.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This feature allows you to specify a buffer distance in meters to flexibly adjust the Area of Interest (AOI) by applying either a negative or a positive buffer:&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Negative Buffer:&lt;/span&gt; When a negative buffer is applied, the external edges of the AOI are trimmed, concentrating the analysis on the central region. This approach minimizes edge effects, such as noise or distortions, resulting in more precise and representative data from the core area.&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Positive Buffer:&lt;/span&gt; When a positive buffer is applied, the AOI is expanded to include not only the central area but also the borders and an additional surrounding area. This expansion can be beneficial for capturing contextual information or ensuring that slight inaccuracies in the AOI boundary do not exclude relevant data.&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_buffer">
@@ -1008,6 +1236,11 @@ p, li { white-space: pre-wrap; }
         <width>51</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>0 m</string>
@@ -1065,6 +1298,11 @@ p, li { white-space: pre-wrap; }
        <height>271</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Cloudy Pixel Percentage Limit: (Lower value applies stricter filtering): </string>
      </property>
@@ -1114,6 +1352,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>40%</string>
       </property>
@@ -1126,6 +1369,11 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="plainText">
        <string>Sentinel-2 imagery is captured in tiles, each covering an area of 100 km² (10 km x 10 km). The cloud cover percentage for these tiles represents the proportion of the entire 100 km² area obscured by clouds. For smaller Areas of Interest (AOI), this overall tile-level cloud cover metric may not directly reflect the conditions inside the AOI itself. In such cases, other filters can provide a more precise assessment.</string>
@@ -1144,6 +1392,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Back</string>
      </property>
@@ -1160,6 +1413,11 @@ p, li { white-space: pre-wrap; }
        <width>101</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Next</string>
@@ -1182,6 +1440,11 @@ p, li { white-space: pre-wrap; }
        <width>721</width>
        <height>271</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering)</string>
@@ -1232,6 +1495,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>80%</string>
       </property>
@@ -1245,6 +1513,11 @@ p, li { white-space: pre-wrap; }
         <height>121</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="title">
        <string> SCL classes to include: (Classes to count as invalid inside the AOI)</string>
       </property>
@@ -1256,6 +1529,11 @@ p, li { white-space: pre-wrap; }
          <width>181</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Cloud high probability</string>
@@ -1273,6 +1551,11 @@ p, li { white-space: pre-wrap; }
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Cloud shadows</string>
        </property>
@@ -1289,6 +1572,11 @@ p, li { white-space: pre-wrap; }
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Water</string>
        </property>
@@ -1301,6 +1589,11 @@ p, li { white-space: pre-wrap; }
          <width>221</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Cloud medium probability</string>
@@ -1318,6 +1611,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Thin cirrus</string>
        </property>
@@ -1333,6 +1631,11 @@ p, li { white-space: pre-wrap; }
          <width>211</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Saturated or defective pixel</string>
@@ -1350,6 +1653,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>No Data (Missing data)</string>
        </property>
@@ -1366,6 +1674,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Vegetation</string>
        </property>
@@ -1378,6 +1691,11 @@ p, li { white-space: pre-wrap; }
          <width>121</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Not-vegetated</string>
@@ -1392,6 +1710,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Unclassified</string>
        </property>
@@ -1405,6 +1728,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Topographic casted shadows</string>
        </property>
@@ -1417,6 +1745,11 @@ p, li { white-space: pre-wrap; }
          <width>111</width>
          <height>17</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Snow or ice</string>
@@ -1433,12 +1766,12 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;"&gt;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;This filter uses the &lt;a href="https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/"&gt;&lt;span style=" text-decoration: underline; color:#0000ff;"&gt;Scene Classification Layer (SCL)&lt;/span&gt;&lt;/a&gt; to calculate the percentage of valid pixels within the specified Area of Interest (AOI). It excludes images with a percentage of valid pixels falling below a user-defined threshold. Valid pixels are determined based on selected SCL classes.&lt;/p&gt;
-&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;The original images remain intact unless the option &amp;quot;Apply SCL mask to remove pixels&amp;quot; is selected. This option is independent of the filtering threshold and, when enabled, directly modifies the image data by removing pixels classified as invalid. This alteration impacts the computation of time series data as well as daily and composite images, as only valid pixels are considered in these calculations.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This filter uses the &lt;/span&gt;&lt;a href=&quot;https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Scene Classification Layer (SCL)&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; to calculate the percentage of valid pixels within the specified Area of Interest (AOI). It excludes images with a percentage of valid pixels falling below a user-defined threshold. Valid pixels are determined based on selected SCL classes.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The original images remain intact unless the option &amp;quot;Apply SCL mask to remove pixels&amp;quot; is selected. This option is independent of the filtering threshold and, when enabled, directly modifies the image data by removing pixels classified as invalid. This alteration impacts the computation of time series data as well as daily and composite images, as only valid pixels are considered in these calculations.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>
@@ -1463,6 +1796,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Back</string>
      </property>
@@ -1483,6 +1821,11 @@ p, li { white-space: pre-wrap; }
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Run</string>
      </property>
@@ -1495,6 +1838,11 @@ p, li { white-space: pre-wrap; }
        <width>311</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Apply SCL mask to remove pixels</string>
@@ -1514,6 +1862,11 @@ p, li { white-space: pre-wrap; }
        <height>151</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Select a Date: (yyyy-mm-dd):</string>
      </property>
@@ -1527,7 +1880,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string />
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1549,7 +1902,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string />
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -1570,6 +1923,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QPushButton" name="load_1rgb">
       <property name="geometry">
@@ -1579,6 +1937,11 @@ p, li { white-space: pre-wrap; }
         <width>151</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Load RGB layer</string>
@@ -1593,6 +1956,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Load index</string>
       </property>
@@ -1605,6 +1973,11 @@ p, li { white-space: pre-wrap; }
         <width>91</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -1662,6 +2035,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Index:</string>
       </property>
@@ -1694,6 +2072,11 @@ p, li { white-space: pre-wrap; }
        <height>131</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Savitzky-Golay filter</string>
      </property>
@@ -1705,6 +2088,11 @@ p, li { white-space: pre-wrap; }
         <width>41</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -1741,6 +2129,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Order of the polynomial:</string>
       </property>
@@ -1763,6 +2156,11 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Display filtered time series</string>
       </property>
@@ -1775,6 +2173,11 @@ p, li { white-space: pre-wrap; }
         <width>181</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Filter window's lenght:</string>
@@ -1798,6 +2201,11 @@ p, li { white-space: pre-wrap; }
         <height>22</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
      </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox_7">
@@ -1810,7 +2218,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="title">
-      <string />
+      <string/>
      </property>
      <widget class="QPushButton" name="salvar">
       <property name="geometry">
@@ -1820,6 +2228,11 @@ p, li { white-space: pre-wrap; }
         <width>151</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Save as spredsheet</string>
@@ -1833,6 +2246,11 @@ p, li { white-space: pre-wrap; }
         <width>161</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Open in the browser</string>
@@ -1848,6 +2266,11 @@ p, li { white-space: pre-wrap; }
        <height>151</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Composite image</string>
      </property>
@@ -1859,6 +2282,11 @@ p, li { white-space: pre-wrap; }
         <width>191</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Load composite layer</string>
@@ -1872,6 +2300,11 @@ p, li { white-space: pre-wrap; }
         <width>121</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -1902,6 +2335,11 @@ p, li { white-space: pre-wrap; }
         <width>121</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -1956,6 +2394,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Métrica:</string>
       </property>
@@ -1977,6 +2420,11 @@ p, li { white-space: pre-wrap; }
         <width>61</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Index</string>
@@ -2007,6 +2455,11 @@ p, li { white-space: pre-wrap; }
        <height>71</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>Date seletion tool</string>
      </property>
@@ -2018,6 +2471,11 @@ p, li { white-space: pre-wrap; }
         <width>151</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Open date selection</string>
@@ -2033,6 +2491,11 @@ p, li { white-space: pre-wrap; }
        <height>31</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Clear all loaded layers</string>
      </property>
@@ -2046,6 +2509,11 @@ p, li { white-space: pre-wrap; }
        <height>111</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="title">
       <string>NasaPower Precipitation</string>
      </property>
@@ -2057,6 +2525,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Load</string>
@@ -2071,6 +2544,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Clear</string>
       </property>
@@ -2083,6 +2561,11 @@ p, li { white-space: pre-wrap; }
         <width>71</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Save</string>
@@ -2097,6 +2580,11 @@ p, li { white-space: pre-wrap; }
        <width>1121</width>
        <height>71</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="title">
       <string>New time series</string>
@@ -2113,6 +2601,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Run</string>
       </property>
@@ -2125,6 +2618,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -2158,6 +2656,11 @@ p, li { white-space: pre-wrap; }
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
       </property>
       <property name="dateTime">
        <datetime>
@@ -2197,6 +2700,11 @@ p, li { white-space: pre-wrap; }
         <width>81</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -2255,6 +2763,11 @@ p, li { white-space: pre-wrap; }
         <width>71</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Update</string>
@@ -2337,11 +2850,11 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
      <property name="locale">
-      <locale language="Portuguese" country="Brazil" />
+      <locale language="Portuguese" country="Brazil"/>
      </property>
      <property name="url" stdset="0">
       <url>
-       <string />
+       <string/>
       </url>
      </property>
     </widget>
@@ -2356,33 +2869,7 @@ p, li { white-space: pre-wrap; }
     <zorder>groupBox_12</zorder>
    </widget>
   </widget>
- <property name="styleSheet"><string>QPushButton {
-        background-color: #d1e7ff; /* Soft Blue */
-        color: black;
-        border-radius: 6px;
-        padding: 5px;
-    }
-    QPushButton:hover {
-        background-color: #b6d4fe; /* Slightly Darker Blue */
-    }
-    QPushButton#QPushButton_back {
-        background-color: #e2e3e5; /* Soft Gray */
-    }
-    QPushButton#QPushButton_back:hover {
-        background-color: #d6d8db; /* Slightly Darker Gray */
-    }
-    QPushButton#QPushButton_next {
-        background-color: #d1e7ff;
-    }
-    QPushButton#QPushButton_next:hover {
-        background-color: #b6d4fe;
-    }
-    QPushButton#clear_raster, QPushButton#clear_nasa {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
-    }</string></property></widget>
+ </widget>
  <customwidgets>
   <customwidget>
    <class>QgsFileWidget</class>
@@ -2400,6 +2887,6 @@ p, li { white-space: pre-wrap; }
    <header location="global">QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources />
- <connections />
+ <resources/>
+ <connections/>
 </ui>

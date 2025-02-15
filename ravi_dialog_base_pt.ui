@@ -13,6 +13,35 @@
   <property name="windowTitle">
    <string>RAVI - Análise Remota de Índices de Vegetação</string>
   </property>
+  <property name="styleSheet">
+   <string>QPushButton {
+        background-color: #d1e7ff; /* Soft Blue */
+        color: black;
+        border-radius: 6px;
+        padding: 5px;
+    }
+    QPushButton:hover {
+        background-color: #b6d4fe; /* Slightly Darker Blue */
+    }
+    QPushButton#QPushButton_back {
+        background-color: #e2e3e5; /* Soft Gray */
+    }
+    QPushButton#QPushButton_back:hover {
+        background-color: #d6d8db; /* Slightly Darker Gray */
+    }
+    QPushButton#QPushButton_next {
+        background-color: #d1e7ff;
+    }
+    QPushButton#QPushButton_next:hover {
+        background-color: #b6d4fe;
+    }
+    QPushButton#clear_raster, QPushButton#clear_nasa {
+        background-color: #f8d7da; /* Soft Red */
+    }
+    QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
+        background-color: #f1b0b7; /* Slightly Darker Red */
+    }</string>
+  </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
@@ -37,7 +66,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>6</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -98,7 +127,7 @@
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Informações do Plugin RAVI para QGIS&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;h3 style=&quot; margin-top:10px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:14pt; font-weight:600; color:#333333;&quot;&gt;Para usar este plugin, você precisa do seguinte:&lt;/span&gt;&lt;span style=&quot; font-family:'sans-serif'; font-size:12pt; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
 &lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:3px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://earthengine.google.com/&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Uma Conta Ativa no Google Earth Engine:&lt;/span&gt;&lt;/a&gt; Uma conta GEE registrada e aprovada (fornece acesso a conjuntos de dados, APIs e ferramentas). &lt;/li&gt;
 &lt;li style=&quot; font-family:'sans-serif'; font-size:12pt; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:8px; margin-right:8px; -qt-block-indent:0; text-indent:0px; line-height:130%;&quot;&gt;&lt;a href=&quot;https://console.cloud.google.com&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#007bff;&quot;&gt;Um Projeto no Google Cloud (e seu ID):&lt;/span&gt;&lt;/a&gt; Um projeto do Google Cloud vinculado à sua conta GEE (gerencia autenticação, habilitação de API e gerenciamento de cotas para serviços do Earth Engine). &lt;/li&gt;&lt;/ul&gt;
@@ -319,31 +348,6 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="QPushButton_back">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>290</y>
-       <width>101</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Voltar</string>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
-     </property>
-    </widget>
     <widget class="QPushButton" name="hybrid">
      <property name="enabled">
       <bool>true</bool>
@@ -421,6 +425,31 @@ p, li { white-space: pre-wrap; }
        <string>Área total:</string>
       </property>
      </widget>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_back">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>290</y>
+       <width>101</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Voltar</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
@@ -717,6 +746,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Ano Selecinado Completo:</string>
       </property>
@@ -952,6 +986,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>90%</string>
       </property>
@@ -977,6 +1016,11 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
       </property>
       <property name="plainText">
        <string>Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
@@ -1133,8 +1177,7 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Esse recurso permite especificar uma distância de buffer em metros para ajustar a Área de Interesse (AOI) de forma flexível, podendo ser aplicada tanto uma expansão quanto uma contração da área:&lt;/p&gt;
 &lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Buffer negativo:&lt;/span&gt; Quando aplicado um buffer negativo, as bordas externas da AOI são eliminadas, concentrando a análise na região central. Essa abordagem reduz possíveis efeitos de borda, como ruídos ou distorções, resultando em dados mais precisos e representativos da área interna.&lt;/li&gt;
-&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Buffer positivo:&lt;/span&gt; Ao utilizar um buffer positivo, a AOI é expandida para incluir não só a região central, mas também as bordas e uma área adicional ao redor. Essa expansão pode ser útil para capturar informações contextuais ou para garantir que pequenas imprecisões na delimitação não excluam partes relevantes dos dados.&lt;/li&gt;&lt;/ul&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Com a possibilidade de aplicar ambos os tipos de buffer, o usuário pode ajustar a extração dos dados conforme os objetivos da análise. Dependendo do estudo, pode ser vantajoso focar na região central com um buffer negativo ou incluir áreas adjacentes com um buffer positivo, ou até combinar ambas as abordagens para análises comparativas.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Buffer positivo:&lt;/span&gt; Ao utilizar um buffer positivo, a AOI é expandida para incluir não só a região central, mas também as bordas e uma área adicional ao redor. Essa expansão pode ser útil para capturar informações contextuais ou para garantir que pequenas imprecisões na delimitação não excluam partes relevantes dos dados.&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_buffer">
@@ -1261,6 +1304,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>40%</string>
       </property>
@@ -1273,6 +1321,11 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="plainText">
        <string>As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 100 km² (10 km x 10 km). A porcentagem de cobertura de nuvens nesses blocos representa a proporção da área total de 100 km² que está obscurecida por nuvens. Para Áreas de Interesse (AOI) menores, essa métrica geral de cobertura de nuvens no bloco pode não refletir diretamente as condições dentro da própria AOI. Em tais casos, outros filtros podem fornecer uma avaliação mais precisa.</string>
@@ -1394,6 +1447,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>80 %</string>
       </property>
@@ -1424,6 +1482,11 @@ p, li { white-space: pre-wrap; }
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Sombras de nuvens</string>
        </property>
@@ -1440,6 +1503,11 @@ p, li { white-space: pre-wrap; }
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Água</string>
        </property>
@@ -1452,6 +1520,11 @@ p, li { white-space: pre-wrap; }
          <width>241</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Média probabilidade de nuvens</string>
@@ -1469,6 +1542,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Pixel saturado ou defeituoso</string>
        </property>
@@ -1484,6 +1562,11 @@ p, li { white-space: pre-wrap; }
          <width>241</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Sem dados (dados ausentes)</string>
@@ -1501,6 +1584,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Vegetação</string>
        </property>
@@ -1513,6 +1601,11 @@ p, li { white-space: pre-wrap; }
          <width>141</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Não-Vegetação</string>
@@ -1527,6 +1620,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Não classificado</string>
        </property>
@@ -1540,6 +1638,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Sombras topográficas</string>
        </property>
@@ -1552,6 +1655,11 @@ p, li { white-space: pre-wrap; }
          <width>231</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Alta probabilidade de nuvens</string>
@@ -1569,6 +1677,11 @@ p, li { white-space: pre-wrap; }
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Cirrus fino</string>
        </property>
@@ -1584,6 +1697,11 @@ p, li { white-space: pre-wrap; }
          <width>121</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Neve ou gelo</string>
@@ -1792,6 +1910,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <item>
        <property name="text">
         <string>NDVI</string>
@@ -1822,6 +1945,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Carregar RGB</string>
       </property>
@@ -1835,6 +1963,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Carregar Índice</string>
       </property>
@@ -1847,6 +1980,11 @@ p, li { white-space: pre-wrap; }
         <width>281</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="Line" name="line">
@@ -1883,6 +2021,11 @@ p, li { white-space: pre-wrap; }
         <width>61</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Índice:</string>
@@ -1933,6 +2076,11 @@ p, li { white-space: pre-wrap; }
         <height>22</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <item>
        <property name="text">
         <string>2</string>
@@ -1968,6 +2116,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Ordem do polinômio:</string>
       </property>
@@ -1990,6 +2143,11 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Exibir série temporal filtrada</string>
       </property>
@@ -2002,6 +2160,11 @@ p, li { white-space: pre-wrap; }
         <width>181</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Janela do filtro:</string>
@@ -2024,6 +2187,11 @@ p, li { white-space: pre-wrap; }
         <width>51</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
      </widget>
     </widget>
@@ -2124,6 +2292,11 @@ p, li { white-space: pre-wrap; }
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Métrica:</string>
       </property>
@@ -2145,6 +2318,11 @@ p, li { white-space: pre-wrap; }
         <width>141</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -2186,6 +2364,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <item>
        <property name="text">
         <string>NDVI</string>
@@ -2216,6 +2399,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Carregar Imagem Sintética</string>
       </property>
@@ -2241,6 +2429,11 @@ p, li { white-space: pre-wrap; }
         <width>61</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Índice:</string>
@@ -2288,6 +2481,11 @@ p, li { white-space: pre-wrap; }
         <width>121</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Abrir seleção</string>
@@ -2338,6 +2536,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Carregar</string>
       </property>
@@ -2351,6 +2554,11 @@ p, li { white-space: pre-wrap; }
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Apagar</string>
       </property>
@@ -2363,6 +2571,11 @@ p, li { white-space: pre-wrap; }
         <width>71</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Salvar</string>
