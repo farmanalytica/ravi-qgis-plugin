@@ -13,9 +13,8 @@
   <property name="windowTitle">
    <string>RAVI - Análise Remota de Índices de Vegetação</string>
   </property>
-
   <property name="styleSheet">
-  <string>
+   <string>
     QPushButton {
         background-color: #d1e7ff; /* Soft Blue */
         color: black;
@@ -25,12 +24,12 @@
     QPushButton:hover {
         background-color: #b6d4fe; /* Slightly Darker Blue */
     }
-    QPushButton#QPushButton_back, QPushButton#QPushButton_back_2 {
+    <!-- QPushButton#QPushButton_back, QPushButton#QPushButton_back_2 {
         background-color: #e2e3e5; /* Soft Gray */
-    }
-    QPushButton#QPushButton_back:hover, QPushButton#QPushButton_back_2:hover {
+    } -->
+    <!-- QPushButton#QPushButton_back:hover, QPushButton#QPushButton_back_2:hover {
         background-color: #d6d8db; /* Slightly Darker Gray */
-    }
+    } -->
     QPushButton#QPushButton_next {
         background-color: #d1e7ff;
     }
@@ -45,9 +44,6 @@
     }
   </string>
   </property>
-
-
-
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
@@ -72,7 +68,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>8</number>
+    <number>5</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1028,11 +1024,11 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="font">
        <font>
-        <pointsize>11</pointsize>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="plainText">
-       <string>Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
+       <string>As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 100 km² (10 km x 10 km). Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
       </property>
      </widget>
     </widget>
