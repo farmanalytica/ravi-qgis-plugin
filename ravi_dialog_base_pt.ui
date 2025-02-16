@@ -13,8 +13,10 @@
   <property name="windowTitle">
    <string>RAVI - Análise Remota de Índices de Vegetação</string>
   </property>
+
   <property name="styleSheet">
-   <string>QPushButton {
+  <string>
+    QPushButton {
         background-color: #d1e7ff; /* Soft Blue */
         color: black;
         border-radius: 6px;
@@ -23,10 +25,10 @@
     QPushButton:hover {
         background-color: #b6d4fe; /* Slightly Darker Blue */
     }
-    QPushButton#QPushButton_back {
+    QPushButton#QPushButton_back, QPushButton#QPushButton_back_2 {
         background-color: #e2e3e5; /* Soft Gray */
     }
-    QPushButton#QPushButton_back:hover {
+    QPushButton#QPushButton_back:hover, QPushButton#QPushButton_back_2:hover {
         background-color: #d6d8db; /* Slightly Darker Gray */
     }
     QPushButton#QPushButton_next {
@@ -40,8 +42,12 @@
     }
     QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
         background-color: #f1b0b7; /* Slightly Darker Red */
-    }</string>
+    }
+  </string>
   </property>
+
+
+
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>

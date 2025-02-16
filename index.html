@@ -9,178 +9,35 @@
     content="RAVI - Remote Analysis of Vegetation Indices via QGIS and Google Earth Engine.">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
-    /* CSS Variables */
-    :root {
-      --primary-color: #2c7a5a;
-      --hover-color: #1f5a41;
-      --bg-color: #f0f0f0;
-      --text-color: #333;
-      --sidebar-bg: #ffffff;
-      --font-family: 'Segoe UI', Arial, sans-serif;
-      --mobile-sidebar-width: 250px;
-    }
-
-    /* Global Styles */
-    * {
+    /* CSS Reset */
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-family);
       margin: 0;
       padding: 0;
-      background: var(--bg-color);
+    }
+
+    /* Variables */
+    :root {
+      --primary-color: #2c7a5a;
+      --bg-color: #f0f0f0;
+      --text-color: #333;
+      --sidebar-bg: #fff;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Base Styles */
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
     }
 
-    /* Container for main content */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      display: flex;
-      /* Use flexbox for sidebar and main content */
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      background: var(--sidebar-bg);
-      border-right: 1px solid #ccc;
-      padding: 20px;
-      overflow-y: auto;
-      position: sticky;
-      top: 0;
-      height: calc(100vh - 20px);
-      /* Subtract padding from height */
-    }
-
-    .sidebar h2 {
-      font-size: 18px;
-      margin-top: 0;
-      color: var(--primary-color);
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 10px 0;
-    }
-
-    .sidebar li {
-      margin: 8px 0;
-    }
-
-    .sidebar a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-
-    .sidebar a:hover {
-      text-decoration: underline;
-    }
-
-    /* Language Toggle Buttons */
-    .lang-buttons {
-      text-align: center;
-      margin: 20px auto;
-      padding: 15px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(5px);
-    }
-
-    .lang-btn {
-      padding: 12px 30px;
-      margin: 0 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: 25px;
-      background: #fff;
-      color: var(--primary-color);
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-    }
-
-    .lang-btn:hover,
-    .lang-btn.active {
-      background: var(--primary-color);
-      color: #fff;
-      transform: translateY(-2px);
-    }
-
-    /* Language Content Sections */
-    .lang-content {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .lang-content.active {
-      display: block;
-    }
-
-    /* Headings and Paragraphs */
-    h1,
-    h2,
-    h3 {
-      color: var(--primary-color);
-      margin-top: 30px;
-    }
-
-    h1 {
-      border-bottom: 3px solid var(--primary-color);
-      padding-bottom: 10px;
-    }
-
-    p {
-      line-height: 1.6;
-      margin: 15px 0;
-    }
-
-    /* Images */
-    img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 25px auto;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Tables */
-    table {
-      width: 100%;
-      margin: 25px 0;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-      overflow-x: auto;
-      display: block;
-    }
-
-    th,
-    td {
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background: #f8f9fa;
-      font-weight: 600;
-    }
-
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-
     a {
-      text-decoration: none;
       color: var(--primary-color);
+      text-decoration: none;
       font-weight: 500;
     }
 
@@ -188,47 +45,13 @@
       text-decoration: underline;
     }
 
-    /* Animation */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #ddd;
-      margin: 30px 0;
-    }
-
-    /* Additional Sections for Author and Supervisors */
-    .author-section,
-    .supervisor-section {
-      margin: 20px 0;
-    }
-
-    .author-section h3,
-    .supervisor-section h3 {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-
-    .author-section p,
-    .supervisor-section p,
-    .author-section ul,
-    .supervisor-section ul {
-      margin-left: 15px;
-    }
-
-    .author-section ul,
-    .supervisor-section ul {
-      list-style: disc;
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     /* Video Container (Responsive) */
@@ -238,6 +61,7 @@
       /* 16:9 aspect ratio */
       height: 0;
       overflow: hidden;
+      margin: 20px 0;
     }
 
     .video-container iframe {
@@ -248,147 +72,277 @@
       height: 100%;
     }
 
-    /* Main Content Area */
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid #ccc;
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0; /* Reset default ul padding */
+    }
+
+    .sidebar li {
+      margin: 8px 0;
+    }
+
+    /* Language Buttons */
+    .lang-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .lang-btn {
+      padding: 10px 20px;
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      background-color: #fff;
+      color: var(--primary-color);
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .lang-btn:hover,
+    .lang-btn.active {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    /* Main Content */
     main {
       flex: 1;
-      /* Take up remaining space */
       padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    /* Lists */
+    ul {
+      padding-left: 20px; /* Add padding for bullet points */
+      margin-bottom: 15px;
+    }
+
+    ol {
+      padding-left: 20px; /* Add padding for numbered lists */
+      margin-bottom: 15px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+      display: block;
+      background-color: #fff;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
 
     /* Mobile Styles */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
-        /* Stack sidebar and main content */
-        padding: 10px;
       }
 
       .sidebar {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #ccc;
-        padding: 10px;
-        overflow-y: visible;
         position: static;
         height: auto;
+        border-bottom: 1px solid #ccc;
+        overflow-x: auto;
+      }
+
+      main {
+        padding: 10px;
       }
 
       .lang-buttons {
-        margin: 10px auto;
-        padding: 10px;
+        justify-content: space-around;
       }
 
       .lang-btn {
-        padding: 8px 20px;
-        font-size: 14px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
       }
+    }
 
-      img {
-        margin: 15px auto;
-      }
+    /* Language Content Sections */
+    .lang-content {
+      display: none;
+    }
 
-      th,
-      td {
-        padding: 8px 10px;
-        font-size: 0.9em;
-      }
+    .lang-content.active {
+      display: block;
     }
   </style>
 </head>
 
 <body>
-  <aside class="sidebar" aria-label="Navigation Sidebar">
-    <nav class="lang-buttons" aria-label="Language Selection">
-      <button class="lang-btn active" data-lang="pt" aria-pressed="true" aria-label="Mudar para Português">Português</button>
-      <button class="lang-btn" data-lang="en" aria-pressed="false" aria-label="Switch to English">English</button>
-    </nav>
-
-    <div id="sidebar-en" style="display: none;">
-      <h2>Sections</h2>
-      <ul>
-        <li><a href="#en-intro">Introduction</a></li>
-        <li><a href="#en-key-features">Key Features</a></li>
-        <li><a href="#en-installation">Installation</a></li>
-        <li>
-          <a href="#en-usage">Usage</a>
-          <ul>
-            <li><a href="#en-step1">Step 1: Authentication</a></li>
-            <li><a href="#en-step2">Step 2: Select output folder</a></li>
-            <li><a href="#en-step3">Step 3: Load AOI</a></li>
-            <li><a href="#en-step4">Step 4: Define time range</a></li>
-            <li><a href="#en-step5">Step 5: Select vegetation index</a></li>
-            <li><a href="#en-step6">Step 6: Imagery Overlap filter</a></li>
-            <li><a href="#en-step7">Step 7: AOI Buffer</a></li>
-            <li><a href="#en-step8">Step 8: Cloud pixel filter</a></li>
-            <li><a href="#en-step9">Step 9: Valid pixel filter</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#en-results">Results</a>
-          <ul>
-            <li><a href="#en-time-series-plot">Time Series Plot</a></li>
-            <li><a href="#en-load-rgb-layer">Load RGB Layer</a></li>
-            <li><a href="#en-load-index-layer">Load Index Layer (Day)</a></li>
-            <li><a href="#en-load-index-composite">Load Index Layer (Composite)</a></li>
-            <li><a href="#en-date-selection-tool">Date Selection Tool</a></li>
-            <li><a href="#en-savitzky-golay">Savitzky-Golay Filter</a></li>
-            <li><a href="#en-save-options">Save Options</a></li>
-            <li><a href="#en-nasa-power">NASA POWER Precipitation</a></li>
-            <li><a href="#en-quickly-run-new">Quickly Run New TS</a></li>
-            <li><a href="#en-clear-layers">Clear All Layers</a></li>
-          </ul>
-        </li>
-        <li><a href="#en-troubleshooting">Troubleshooting</a></li>
-        <li><a href="#en-reporting-issues">Reporting Issues</a></li>
-        <li><a href="#en-contribute">Contribute</a></li>
-        <li><a href="#en-license">License</a></li>
-      </ul>
-    </div>
-
-    <div id="sidebar-pt" style="display: block;">
-      <h2>Seções</h2>
-      <ul>
-        <li><a href="#pt-intro">Introdução</a></li>
-        <li><a href="#pt-funcionalidades">Funcionalidades</a></li>
-        <li><a href="#pt-instalacao">Instalação</a></li>
-        <li>
-          <a href="#pt-uso">Uso</a>
-          <ul>
-            <li><a href="#pt-passo1">Passo 1: Autenticação</a></li>
-            <li><a href="#pt-passo2">Passo 2: Selecionar a pasta de saída</a></li>
-            <li><a href="#pt-passo3">Passo 3: Carregar AOI</a></li>
-            <li><a href="#pt-passo4">Passo 4: Definir intervalo de tempo</a></li>
-            <li><a href="#pt-passo5">Passo 5: Selecionar índice de vegetação</a></li>
-            <li><a href="#pt-passo6">Passo 6: Filtro de sobreposição</a></li>
-            <li><a href="#pt-passo7">Passo 7: Buffer de AOI</a></li>
-            <li><a href="#pt-passo8">Passo 8: Filtro de pixels nublados</a></li>
-            <li><a href="#pt-passo9">Passo 9: Filtro de pixels válidos</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#pt-resultados">Resultados</a>
-          <ul>
-            <li><a href="#pt-grafico-series-temporais">Gráfico de Séries Temporais</a></li>
-            <li><a href="#pt-load-rgb-layer">Carregar Camada RGB</a></li>
-            <li><a href="#pt-load-index-layer">Carregar Camada de Índice (Dia)</a></li>
-            <li><a href="#pt-load-index-composite">Carregar Camada de Índice (Sintética)</a></li>
-            <li><a href="#pt-date-selection-tool">Ferramenta de Seleção de Data</a></li>
-            <li><a href="#pt-savitzky-golay">Filtro Savitzky-Golay</a></li>
-            <li><a href="#pt-save-options">Opções de Salvamento</a></li>
-            <li><a href="#pt-nasa-power">Precipitação NASA POWER</a></li>
-            <li><a href="#pt-quickly-run-new">Executar Nova Série</a></li>
-            <li><a href="#pt-clear-layers">Limpar Camadas</a></li>
-          </ul>
-        </li>
-        <li><a href="#pt-troubleshooting">Solução de Problemas</a></li>
-        <li><a href="#pt-reporting-issues">Relatar Problemas</a></li>
-        <li><a href="#pt-contribute">Contribuição</a></li>
-        <li><a href="#pt-license">Licença</a></li>
-      </ul>
-    </div>
-  </aside>
-
   <div class="container">
+    <aside class="sidebar" aria-label="Navigation Sidebar">
+      <nav class="lang-buttons" aria-label="Language Selection">
+        <button class="lang-btn active" data-lang="pt" aria-pressed="true"
+          aria-label="Mudar para Português">Português</button>
+        <button class="lang-btn" data-lang="en" aria-pressed="false"
+          aria-label="Switch to English">English</button>
+      </nav>
+
+      <div id="sidebar-en" style="display: none;">
+        <h2>Sections</h2>
+        <ul>
+          <li><a href="#en-intro">Introduction</a></li>
+          <li><a href="#en-key-features">Key Features</a></li>
+          <li><a href="#en-installation">Installation</a></li>
+          <li>
+            <a href="#en-usage">Usage</a>
+            <ul>
+              <li><a href="#en-step1">Step 1: Authentication</a></li>
+              <li><a href="#en-step2">Step 2: Select output folder</a></li>
+              <li><a href="#en-step3">Step 3: Load AOI</a></li>
+              <li><a href="#en-step4">Step 4: Define time range</a></li>
+              <li><a href="#en-step5">Step 5: Select vegetation index</a></li>
+              <li><a href="#en-step6">Step 6: Imagery Overlap filter</a></li>
+              <li><a href="#en-step7">Step 7: AOI Buffer</a></li>
+              <li><a href="#en-step8">Step 8: Cloud pixel filter</a></li>
+              <li><a href="#en-step9">Step 9: Valid pixel filter</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#en-results">Panel</a>
+            <ul>
+              <li><a href="#en-time-series-plot">Time Series Plot</a></li>
+              <li><a href="#en-load-rgb-layer">Load RGB Layer</a></li>
+              <li><a href="#en-load-index-layer">Load Index Layer (Day)</a></li>
+              <li><a href="#en-load-index-composite">Load Index Layer (Composite)</a></li>
+              <li><a href="#en-date-selection-tool">Date Selection Tool</a></li>
+              <li><a href="#en-savitzky-golay">Savitzky-Golay Filter</a></li>
+              <li><a href="#en-save-options">Save Options</a></li>
+              <li><a href="#en-nasa-power">NASA POWER Precipitation</a></li>
+              <li><a href="#en-quickly-run-new">Quickly Run New TS</a></li>
+              <li><a href="#en-clear-layers">Clear All Layers</a></li>
+            </ul>
+          </li>
+          <li><a href="#en-troubleshooting">Troubleshooting</a></li>
+          <li><a href="#en-reporting-issues">Reporting Issues</a></li>
+          <li><a href="#en-contribute">Contribute</a></li>
+          <li><a href="#en-license">License</a></li>
+          <li><a href="#en-about">About the Author</a></li>
+        </ul>
+      </div>
+
+      <div id="sidebar-pt" style="display: block;">
+        <h2>Seções</h2>
+        <ul>
+          <li><a href="#pt-intro">Introdução</a></li>
+          <li><a href="#pt-funcionalidades">Funcionalidades</a></li>
+          <li><a href="#pt-instalacao">Instalação</a></li>
+          <li>
+            <a href="#pt-uso">Uso</a>
+            <ul>
+              <li><a href="#pt-passo1">Passo 1: Autenticação</a></li>
+              <li><a href="#pt-passo2">Passo 2: Selecionar a pasta de saída</a></li>
+              <li><a href="#pt-passo3">Passo 3: Carregar AOI</a></li>
+              <li><a href="#pt-passo4">Passo 4: Definir intervalo de tempo</a></li>
+              <li><a href="#pt-passo5">Passo 5: Selecionar índice de vegetação</a></li>
+              <li><a href="#pt-passo6">Passo 6: Filtro de sobreposição</a></li>
+              <li><a href="#pt-passo7">Passo 7: Buffer de AOI</a></li>
+              <li><a href="#pt-passo8">Passo 8: Filtro de pixels nublados</a></li>
+              <li><a href="#pt-passo9">Passo 9: Filtro de pixels válidos</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#pt-resultados">Painel</a>
+            <ul>
+              <li><a href="#pt-grafico-series-temporais">Gráfico de Séries Temporais</a></li>
+              <li><a href="#pt-load-rgb-layer">Carregar Camada RGB</a></li>
+              <li><a href="#pt-load-index-layer">Carregar Camada de Índice (Dia)</a></li>
+              <li><a href="#pt-load-index-composite">Carregar Camada de Índice (Sintética)</a></li>
+              <li><a href="#pt-date-selection-tool">Ferramenta de Remoção de Data</a></li>
+              <li><a href="#pt-savitzky-golay">Filtro Savitzky-Golay</a></li>
+              <li><a href="#pt-save-options">Opções de Salvamento</a></li>
+              <li><a href="#pt-nasa-power">Precipitação NASA POWER</a></li>
+              <li><a href="#pt-quickly-run-new">Executar Nova Série</a></li>
+              <li><a href="#pt-clear-layers">Limpar Camadas</a></li>
+            </ul>
+          </li>
+          <li><a href="#pt-troubleshooting">Solução de Problemas</a></li>
+          <li><a href="#pt-reporting-issues">Relatar Problemas</a></li>
+          <li><a href="#pt-contribute">Contribuição</a></li>
+          <li><a href="#pt-license">Licença</a></li>
+          <li><a href="#pt-sobre">Sobre o Autor</a></li>
+        </ul>
+      </div>
+    </aside>
+
     <main>
       <article id="en-content" class="lang-content" lang="en" aria-hidden="true">
         <section>
@@ -469,7 +423,7 @@
             <li>Select <strong>Manage and Install Plugins</strong>.</li>
             <li>In the "All" tab, search for "RAVI", select it, and click <strong>Install</strong>.</li>
             <li>Ensure that RAVI is checked in the installed plugins list.</li>
-            <li>Restart QGIS.</li>
+            <li><strong>IMPORTANT:</strong> Restart QGIS</li>
           </ol>
         </section>
 
@@ -477,9 +431,12 @@
           <h2 id="en-usage">Usage</h2>
           <section>
             <h3 id="en-step1">Step 1: Authentication</h3>
-            <img src="media/step1.png" alt="Authentication dialog in RAVI plugin">
-            <img src="media/step1-1.png" alt="Authentication dialog showing login options">
-            <img src="media/step1-2.png" alt="Successful authentication message">
+            <img src="media/step1.png" alt="Authentication dialog in RAVI plugin"
+              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing the login options.">
+            <img src="media/step1-1.png" alt="Authentication dialog showing login options"
+              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing the login options.">
+            <img src="media/step1-2.png" alt="Successful authentication message"
+              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing a successful authentication message.">
             <ul>
               <li>Open the plugin dialog.</li>
               <li>Authenticate with Google Earth Engine using your credentials.</li>
@@ -488,13 +445,15 @@
 
           <section>
             <h3 id="en-step2">Step 2: Select output folder</h3>
-            <img src="media/step2.png" alt="File selection dialog for output folder">
+            <img src="media/step2.png" alt="File selection dialog for output folder"
+              aria-label="Screenshot of the file selection dialog for choosing the output folder.">
             <p>Choose the folder where you want to save the output files.</p>
           </section>
 
           <section>
             <h3 id="en-step3">Step 3: Load and select the area of interest (AOI)</h3>
-            <img src="media/step3.png" alt="AOI selection from a shapefile">
+            <img src="media/step3.png" alt="AOI selection from a shapefile"
+              aria-label="Screenshot of the AOI selection process from a shapefile.">
             <ul>
               <li>Select an AOI by loading a shapefile or GeoJSON file.</li>
               <li>Ensure the geometry is valid (Polygon or MultiPolygon only).</li>
@@ -506,46 +465,53 @@
 
           <section>
             <h3 id="en-step4">Step 4: Define time range for imagery search</h3>
-            <img src="media/step4.png" alt="Date selection interface for time range">
+            <img src="media/step4.png" alt="Date selection interface for time range"
+              aria-label="Screenshot of the date selection interface for defining the time range.">
             <p>Set a custom time range or select a suggested one.</p>
           </section>
 
           <section>
             <h3 id="en-step5">Step 5: Select vegetation index for time series analysis</h3>
-            <img src="media/step5.png" alt="Dropdown menu for vegetation index selection">
+            <img src="media/step5.png" alt="Dropdown menu for vegetation index selection"
+              aria-label="Screenshot of the dropdown menu for selecting the vegetation index.">
             <p>Choose the vegetation index you want to analyze from the dropdown menu.</p>
           </section>
 
           <section>
             <h3 id="en-step6">Step 6: Imagery Overlap filter</h3>
-            <img src="media/step6.png" alt="Interface for setting imagery overlap filter">
+            <img src="media/step6.png" alt="Interface for setting imagery overlap filter"
+              aria-label="Screenshot of the interface for setting the imagery overlap filter.">
             <p>Set the specified filter according to your analysis requirements.</p>
           </section>
 
           <section>
             <h3 id="en-step7">Step 7: AOI Buffer</h3>
-            <img src="media/step7.png" alt="Interface for setting AOI buffer distance">
-            <p>Use AOI Buffer filter to reduce the AOI boundary for analysis.</p>
+            <img src="media/step7.png" alt="Interface for setting AOI buffer distance"
+              aria-label="Screenshot of the interface for setting the AOI buffer distance.">
+            <p>Set the Buffer according to your analysis requirements.</p>
           </section>
 
           <section>
             <h3 id="en-step8">Step 8: Cloud pixel percentage filter</h3>
-            <img src="media/step8.png" alt="Interface for setting cloud pixel percentage filter">
+            <img src="media/step8.png" alt="Interface for setting cloud pixel percentage filter"
+              aria-label="Screenshot of the interface for setting the cloud pixel percentage filter.">
             <p>Set the specified filter according to your analysis requirements.</p>
           </section>
 
           <section>
             <h3 id="en-step9">Step 9: Valid pixel percentage filter</h3>
-            <img src="media/step9.png" alt="Interface for setting valid pixel percentage filter">
+            <img src="media/step9.png" alt="Interface for setting valid pixel percentage filter"
+              aria-label="Screenshot of the interface for setting the valid pixel percentage filter.">
             <p>Set the specified filter according to your analysis requirements.</p>
           </section>
         </section>
 
         <section>
-          <h2 id="en-results">Results</h2>
+          <h2 id="en-results">Panel</h2>
           <section id="en-time-series-plot">
             <h3>1. Time Series Plot</h3>
-            <img src="media/results1.png" alt="Interactive time series plot">
+            <img src="media/results1.png" alt="Interactive time series plot"
+              aria-label="Screenshot of the interactive time series plot.">
             <ul>
               <li>Visualize the time series of the selected vegetation index over the defined AOI.</li>
               <li>Hover over the plot to see specific values and dates for detailed analysis.</li>
@@ -554,7 +520,8 @@
 
           <section id="en-load-rgb-layer">
             <h3>2. Load RGB Layer (Focus on a Day)</h3>
-            <img src="media/results2.png" alt="RGB layer visualization in QGIS">
+            <img src="media/results2.png" alt="RGB layer visualization in QGIS"
+              aria-label="Screenshot of the RGB layer visualization in QGIS.">
             <p>
               Load and display an RGB layer for a specific date to analyze the visual appearance of the area.
               All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed
@@ -655,13 +622,15 @@
 
           <section id="en-load-index-layer">
             <h3>3. Load Index Layer (Focus on a Day)</h3>
-            <img src="media/results3.png" alt="Vegetation index layer visualization in QGIS">
+            <img src="media/results3.png" alt="Vegetation index layer visualization in QGIS"
+              aria-label="Screenshot of the vegetation index layer visualization in QGIS.">
             <p>Load and display a vegetation index layer for a specific date.</p>
           </section>
 
           <section id="en-load-index-composite">
             <h3>4. Load Index Layer (Composite)</h3>
-            <img src="media/results4.png" alt="Composite vegetation index layer visualization">
+            <img src="media/results4.png" alt="Composite vegetation index layer visualization"
+              aria-label="Screenshot of the composite vegetation index layer visualization.">
             <p>
               Generate and display a composite image based on the selected vegetation index and the user-defined
               metric.
@@ -672,7 +641,8 @@
 
           <section id="en-date-selection-tool">
             <h3>5. Date Selection Tool</h3>
-            <img src="media/results5.png" alt="Date selection tool interface">
+            <img src="media/results5.png" alt="Date selection tool interface"
+              aria-label="Screenshot of the date selection tool interface.">
             <ul>
               <li>Use the date selection tool to filter and select specific dates for analysis.</li>
               <li>The tool updates the time series plot.</li>
@@ -682,7 +652,8 @@
 
           <section id="en-savitzky-golay">
             <h3>6. Savitzky-Golay Filter</h3>
-            <img src="media/results6.png" alt="Savitzky-Golay filter settings interface">
+            <img src="media/results6.png" alt="Savitzky-Golay filter settings interface"
+              aria-label="Screenshot of the Savitzky-Golay filter settings interface.">
             <p>
               Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.
               Adjust the polynomial order and window length as needed.
@@ -691,8 +662,12 @@
 
           <section id="en-save-options">
             <h3>7. Save Options</h3>
-            <img src="media/results7.png" alt="Save options interface">
-            <img src="media/results71.png" alt="Save options for image download">
+            <img src="media/results7.png" alt="Save options interface"
+              aria-label="Screenshot of the save options interface.">
+            <img src="media/results71.png" alt="Save options for image download"
+              aria-label="Screenshot of the save options for image download.">
+            <img src="media/save_csv.png" alt="Save options for spreadsheet download"
+              aria-label="Screenshot of the save options for spreadsheet download.">
             <p>
               Save the time series data in CSV format.
               To save the series as an image, open it in your browser to enable the download option.
@@ -701,7 +676,8 @@
 
           <section id="en-nasa-power">
             <h3>8. NASA POWER Precipitation</h3>
-            <img src="media/results8.png" alt="NASA POWER precipitation data visualization">
+            <img src="media/results8.png" alt="NASA POWER precipitation data visualization"
+              aria-label="Screenshot of the NASA POWER precipitation data visualization.">
             <p>
               Add monthly precipitation data from NASA POWER for cross-variable comparisons.
               Save the precipitation data in CSV format.
@@ -710,7 +686,8 @@
 
           <section id="en-quickly-run-new">
             <h3>9. Quickly Run New Time Series</h3>
-            <img src="media/results9.png" alt="Quick run new time series interface">
+            <img src="media/results9.png" alt="Quick run new time series interface"
+              aria-label="Screenshot of the quick run new time series interface.">
             <p>
               Quickly run a new time series analysis by changing the Area of Interest (AOI), vegetation index, or time
               range.
@@ -719,7 +696,8 @@
 
           <section id="en-clear-layers">
             <h3>10. Clear All Layers</h3>
-            <img src="media/results10.png" alt="Clear all layers button">
+            <img src="media/results10.png" alt="Clear all layers button"
+              aria-label="Screenshot of the clear all layers button.">
             <p>
               Clear all loaded layers from the QGIS layer panel to start a new analysis or to declutter your
               workspace.
@@ -765,7 +743,7 @@
         </section>
 
         <section class="author-section">
-          <h3>About the Author</h3>
+          <h2 id="en-about">About the Author</h2>
           <p>
             The RAVI plugin was developed by <strong>Caio Arantes</strong>, an Agricultural Engineering student
             passionate about precision agriculture and geotechnology, as part of his final graduation project.
@@ -855,7 +833,8 @@
             <li><strong>Gráficos</strong>: Crie gráficos interativos de séries temporais usando o Plotly.</li>
             <li><strong>Estilização de Raster</strong>: Aplique rampas de cores predefinidas (por exemplo, RdYlGn) para
               melhor clareza visual.</li>
-            <li><strong>Opções de Exportação</strong>: Exporte os dados processados como GeoTIFFs, CSVs ou rasters estilizados.</li>
+            <li><strong>Opções de Exportação</strong>: Exporte os dados processados como GeoTIFFs, CSVs ou rasters
+              estilizados.</li>
           </ul>
         </section>
 
@@ -872,12 +851,10 @@
 
         <section>
           <h2 id="pt-instalacao">Instalação</h2>
-          <div style="text-align: center;">
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/4ojflhWtqQI" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-            </div>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/4ojflhWtqQI" title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
           </div>
           <p>Para instalar o RAVI:</p>
           <ol>
@@ -885,23 +862,22 @@
             <li>Selecione <strong>Gerenciar e Instalar Plugins</strong>.</li>
             <li>Na aba "Todos", pesquise por "RAVI", selecione-o e clique em <strong>Instalar</strong>.</li>
             <li>Certifique-se de que o RAVI está marcado na lista de plugins instalados.</li>
-            <li>Reinicie o QGIS.</li>
+            <li><strong>IMPORTANTE:</strong> Reinicie o QGIS.</li>
           </ol>
         </section>
 
         <section>
           <h2 id="pt-uso">Uso</h2>
-          <div style="text-align: center;">
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/5CG1lTuzzP0" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-            </div>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/5CG1lTuzzP0" title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
           </div>
 
           <section>
             <h3 id="pt-passo1">Passo 1: Autenticação</h3>
-            <img src="media_pt/step1.png" alt="Janela de autenticação do plugin RAVI">
+            <img src="media_pt/step1.png" alt="Janela de autenticação do plugin RAVI"
+              aria-label="Screenshot da janela de autenticação do plugin RAVI.">
             <ul>
               <li>Abra a janela do plugin.</li>
               <li>Autentique-se no Google Earth Engine utilizando suas credenciais.</li>
@@ -910,13 +886,15 @@
 
           <section>
             <h3 id="pt-passo2">Passo 2: Selecionar a pasta de saída</h3>
-            <img src="media_pt/step2.png" alt="Diálogo de seleção de pasta para saída">
+            <img src="media_pt/step2.png" alt="Diálogo de seleção de pasta para saída"
+              aria-label="Screenshot do diálogo de seleção de pasta para a pasta de saída.">
             <p>Escolha a pasta onde deseja salvar os arquivos de saída.</p>
           </section>
 
           <section>
             <h3 id="pt-passo3">Passo 3: Carregar e selecionar a área de interesse (AOI)</h3>
-            <img src="media_pt/step3.png" alt="Seleção de AOI a partir de um shapefile">
+            <img src="media_pt/step3.png" alt="Seleção de AOI a partir de um shapefile"
+              aria-label="Screenshot da seleção de AOI a partir de um shapefile.">
             <ul>
               <li>Selecione uma AOI carregando um arquivo shapefile ou GeoJSON.</li>
               <li>Certifique-se de que a geometria é válida (apenas Polygon ou MultiPolygon).</li>
@@ -928,47 +906,54 @@
 
           <section>
             <h3 id="pt-passo4">Passo 4: Definir o intervalo de tempo para busca de imagens</h3>
-            <img src="media_pt/step4.png" alt="Interface de seleção de data para intervalo de tempo">
+            <img src="media_pt/step4.png" alt="Interface de seleção de data para intervalo de tempo"
+              aria-label="Screenshot da interface de seleção de data para o intervalo de tempo.">
             <p>Defina um intervalo de tempo personalizado ou selecione um sugerido.</p>
           </section>
 
           <section>
             <h3 id="pt-passo5">Passo 5: Selecionar o índice de vegetação para análise de séries temporais</h3>
-            <img src="media_pt/step5.png" alt="Menu suspenso para seleção de índice de vegetação">
+            <img src="media_pt/step5.png" alt="Menu suspenso para seleção de índice de vegetação"
+              aria-label="Screenshot do menu suspenso para a seleção do índice de vegetação.">
             <p>Escolha o índice de vegetação que deseja analisar a partir do menu.</p>
           </section>
 
           <section>
             <h3 id="pt-passo6">Passo 6: Filtro de sobreposição de imagens</h3>
-            <img src="media_pt/step6.png" alt="Interface para definir filtro de sobreposição de imagens">
+            <img src="media_pt/step6.png" alt="Interface para definir filtro de sobreposição de imagens"
+              aria-label="Screenshot da interface para definir o filtro de sobreposição de imagens.">
             <p>Utilize o filtro de sobreposição para ajustar a seleção de imagens conforme os requisitos da sua
               análise.</p>
           </section>
 
           <section>
             <h3 id="pt-passo7">Passo 7: Buffer de AOI</h3>
-            <img src="media_pt/step7.png" alt="Interface para definir buffer da AOI">
-            <p>Defina o buffer da AOI para restringir a área de análise.</p>
+            <img src="media_pt/step7.png" alt="Interface para definir buffer da AOI"
+              aria-label="Screenshot da interface para definir o buffer da AOI.">
+            <p>Configure o Buffer conforme os requisitos da análise.</p>
           </section>
 
           <section>
             <h3 id="pt-passo8">Passo 8: Filtro de porcentagem de pixels nublados</h3>
-            <img src="media_pt/step8.png" alt="Interface para configurar filtro de porcentagem de pixels nublados">
+            <img src="media_pt/step8.png" alt="Interface para configurar filtro de porcentagem de pixels nublados"
+              aria-label="Screenshot da interface para configurar o filtro de porcentagem de pixels nublados.">
             <p>Configure o filtro de porcentagem de pixels nublados conforme os requisitos da análise.</p>
           </section>
 
           <section>
             <h3 id="pt-passo9">Passo 9: Filtro de porcentagem de pixels válidos</h3>
-            <img src="media_pt/step9.png" alt="Interface para configurar filtro de porcentagem de pixels válidos">
+            <img src="media_pt/step9.png" alt="Interface para configurar filtro de porcentagem de pixels válidos"
+              aria-label="Screenshot da interface para configurar o filtro de porcentagem de pixels válidos.">
             <p>Configure o filtro de porcentagem de pixels válidos conforme os requisitos da análise.</p>
           </section>
         </section>
 
         <section>
-          <h2 id="pt-resultados">Resultados</h2>
+          <h2 id="pt-resultados">Painel</h2>
           <section id="pt-grafico-series-temporais">
             <h3>1. Gráfico de Séries Temporais</h3>
-            <img src="media_pt/results1.png" alt="Gráfico interativo de séries temporais">
+            <img src="media_pt/results1.png" alt="Gráfico interativo de séries temporais"
+              aria-label="Screenshot do gráfico interativo de séries temporais.">
             <ul>
               <li>Visualize a série temporal do índice de vegetação sobre a AOI definida.</li>
               <li>Coloque o cursor sobre o gráfico para ver valores e datas específicos para uma análise detalhada.</li>
@@ -977,7 +962,8 @@
 
           <section id="pt-load-rgb-layer">
             <h3>2. Carregar Camada RGB (Foco em um Dia)</h3>
-            <img src="media_pt/results2.png" alt="Visualização de camada RGB no QGIS">
+            <img src="media_pt/results2.png" alt="Visualização de camada RGB no QGIS"
+              aria-label="Screenshot da visualização da camada RGB no QGIS.">
             <p>
               Carregue e exiba uma camada RGB para uma data específica para analisar a aparência visual da área.
               Todas as bandas espectrais são baixadas, e os números das bandas correspondem às bandas do Sentinel-2
@@ -1078,13 +1064,15 @@
 
           <section id="pt-load-index-layer">
             <h3>3. Carregar Camada de Índice (Foco em um Dia)</h3>
-            <img src="media/results3.png" alt="Visualização de camada de índice de vegetação no QGIS">
+            <img src="media_pt/results3.png" alt="Visualização de camada de índice de vegetação no QGIS"
+              aria-label="Screenshot da visualização da camada de índice de vegetação no QGIS.">
             <p>Carregue e exiba uma camada de índice de vegetação para uma data específica.</p>
           </section>
 
           <section id="pt-load-index-composite">
             <h3>4. Carregar Camada de Índice (Sintética)</h3>
-            <img src="media/results4.png" alt="Visualização de camada de índice de vegetação composta">
+            <img src="media_pt/results4.png" alt="Visualização de camada de índice de vegetação composta"
+              aria-label="Screenshot da visualização da camada de índice de vegetação composta.">
             <p>
               Gere e exiba uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo
               usuário.
@@ -1094,18 +1082,20 @@
           </section>
 
           <section id="pt-date-selection-tool">
-            <h3>5. Ferramenta de Seleção de Data</h3>
-            <img src="media/results5.png" alt="Interface da ferramenta de seleção de data">
+            <h3>5. Ferramenta de Remoção de Data</h3>
+            <img src="media_pt/results5.png" alt="Interface da ferramenta de seleção de data"
+              aria-label="Screenshot da interface da ferramenta de seleção de data.">
             <ul>
-              <li>Use a ferramenta de seleção de data para filtrar e selecionar datas específicas para análise.</li>
+              <li>Use a ferramenta de remoção de data para filtrar e selecionar datas e periodos específicos para análise.</li>
               <li>A ferramenta atualiza o gráfico de séries temporais.</li>
-              <li>Imagens sintéticas são baseadas em todas as datas selecionadas.</li>
+              <li>IMPORTANTE: Imagens sintéticas são baseadas em todas as datas atualmente selecionadas.</li>
             </ul>
           </section>
 
           <section id="pt-savitzky-golay">
             <h3>6. Filtro Savitzky-Golay</h3>
-            <img src="media/results6.png" alt="Interface de configurações do filtro Savitzky-Golay">
+            <img src="media_pt/results6.png" alt="Interface de configurações do filtro Savitzky-Golay"
+              aria-label="Screenshot da interface de configurações do filtro Savitzky-Golay.">
             <p>
               Aplique o filtro de Savitzky-Golay para suavizar os dados de séries temporais e aprimorar a análise de
               tendências.
@@ -1115,8 +1105,12 @@
 
           <section id="pt-save-options">
             <h3>7. Opções de Salvamento</h3>
-            <img src="media/results7.png" alt="Interface de opções de salvamento">
-            <img src="media/results71.png" alt="Opções de salvamento para download de imagem">
+            <img src="media_pt/results7.png" alt="Interface de opções de salvamento"
+              aria-label="Screenshot da interface de opções de salvamento.">
+            <img src="media_pt/results71.png" alt="Opções de salvamento para download de imagem"
+              aria-label="Screenshot das opções de salvamento para download de imagem.">
+            <img src="media_pt/save_csv.png" alt="Opções de salvamento para download de planilha"
+              aria-label="Screenshot das opções de salvamento para download de planilha.">            
             <p>
               Salve os dados da série temporal em formato CSV.
               Para salvar a série como imagem, abra-a no navegador para habilitar a opção de download.
@@ -1125,7 +1119,8 @@
 
           <section id="pt-nasa-power">
             <h3>8. Precipitação NASA POWER</h3>
-            <img src="media/results8.png" alt="Visualização de dados de precipitação NASA POWER">
+            <img src="media_pt/results8.png" alt="Visualização de dados de precipitação NASA POWER"
+              aria-label="Screenshot da visualização de dados de precipitação NASA POWER.">
             <p>
               Adicione dados mensais de precipitação do NASA POWER para comparações entre variáveis.
               Salve os dados em formato CSV.
@@ -1134,7 +1129,8 @@
 
           <section id="pt-quickly-run-new">
             <h3>9. Executar Nova Série</h3>
-            <img src="media/results9.png" alt="Interface para executar nova série rapidamente">
+            <img src="media_pt/results9.png" alt="Interface para executar nova série rapidamente"
+              aria-label="Screenshot da interface para executar nova série rapidamente.">
             <p>
               Execute rapidamente uma nova análise de série temporal alterando a Área de Interesse (AOI), o índice de
               vegetação ou o intervalo de tempo.
@@ -1143,7 +1139,8 @@
 
           <section id="pt-clear-layers">
             <h3>10. Limpar Camadas</h3>
-            <img src="media/results10.png" alt="Botão para limpar todas as camadas">
+            <img src="media_pt/results10.png" alt="Botão para limpar todas as camadas"
+              aria-label="Screenshot do botão para limpar todas as camadas.">
             <p>
               Limpe todas as camadas carregadas do painel para iniciar uma nova análise ou para organizar o espaço de
               trabalho.
@@ -1190,7 +1187,7 @@
         </section>
 
         <section class="author-section">
-          <h2>Sobre o Autor</h2>
+          <h2 id="pt-sobre">Sobre o Autor</h2>
           <p>
             O plugin RAVI foi desenvolvido por <strong>Caio Arantes</strong>, estudante de Engenharia Agrícola
             entusiasta de agricultura de precisão e geotecnologia, como parte de seu trabalho de conclusão de curso.
@@ -1266,5 +1263,3 @@
 </body>
 
 </html>
-
-              
