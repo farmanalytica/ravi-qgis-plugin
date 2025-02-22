@@ -375,6 +375,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print("Coordinate capture tool activated.")
             print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
             self.sentinel2_selected_dates_update()
+            self.crs_transform()
         else:  # Checkbox is unchecked (inactive) / Checkbox não está marcada
             # (inativa)
             self.deactivate_coordinate_capture_tool()
@@ -893,6 +894,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.get_selected_layer_path()
         self.load_vector_function()
         self.find_area()
+
+
+    def crs_transform(self):
+        project = QgsProject.instance()
+        project.setCrs(QgsCoordinateReferenceSystem("EPSG:4326"))
 
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
