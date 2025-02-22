@@ -8,7 +8,7 @@
         begin                : 2024-10-24
         git sha              : $Format:%H$
         copyright            : (C) 2024 by Caio Arantes
-        email                : github.com/caioarantes
+        email                : caiosimplicioarante@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -20,6 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+
 import re
 import os
 import sys
@@ -41,6 +42,17 @@ from shapely.geometry import shape
 import tempfile
 import os
 
+import os
+import tempfile
+from qgis.core import (
+    QgsVectorLayer,
+    QgsVectorFileWriter,
+    QgsFeatureRequest,
+    QgsProject,
+)
+
+from PyQt5.QtGui import QColor
+
 # PyQt5 and QGIS imports
 from PyQt5.QtCore import QDate, Qt, QVariant
 from PyQt5.QtWidgets import (
@@ -56,8 +68,11 @@ from qgis.core import (
     QgsCoordinateReferenceSystem, QgsCoordinateTransform, 
     QgsMultiBandColorRenderer, QgsContrastEnhancement, 
     QgsProcessingFeedback, QgsApplication, QgsRectangle, 
-    QgsFeature, QgsGeometry, QgsField, QgsVectorFileWriter,
+    QgsFeature, QgsGeometry, QgsField, QgsVectorFileWriter
 )
+
+from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
+
 from qgis.utils import iface
 import qgis
 
@@ -87,99 +102,35 @@ import sys
 import os
 from PyQt5 import uic
 from PyQt5.QtCore import QSettings
+from qgis.core import QgsProject, QgsMapLayer, QgsWkbTypes
 
 
 # =============================================================================
 # Earth Engine API Installation and Version Check
 # =============================================================================
 
-
-def get_installed_version():
-    """Return the installed Earth Engine API version, or None if not installed."""
-    try:
-        import ee
-
-        return ee.__version__
-    except ImportError:
-        return None
-
-
-def get_latest_version():
-    """Query PyPI for the latest Earth Engine API version."""
-    try:
-        url = "https://pypi.org/pypi/earthengine-api/json"
-        with urllib.request.urlopen(url) as response:
-            data = json.load(response)
-        return data["info"]["version"]
-    except Exception as e:
-        print("Error fetching latest version from PyPI:", e)
-        return None
+from .modules import (
+    ee_utils,
+    qgis_utils,
+    plot_utils,
+    file_utils,
+    map_tools,
+    nasa_power,
+    vegetation_index_info,
+    save_utils,
+)  
 
 
-def install_earthengine_api():
-    """Install or upgrade the Earth Engine API to the latest version using pip's internal API."""
-    try:
-        # Attempt to use pip.main (for older pip versions)
-        import pip
+from .modules.coordinate_capture import CoordinateCaptureTool
 
-        print("Using pip version:", pip.__version__)
-        pip_args = ["install", "--upgrade", "earthengine-api"]
-        pip.main(pip_args)
-        print("Earth Engine API installed/upgraded successfully (using pip.main).")
-    except AttributeError:
-        # Fallback for newer pip versions that do not expose pip.main
-        try:
-            from pip._internal.cli.main import main as pip_main
-
-            pip_main(["install", "--upgrade", "earthengine-api"])
-            print(
-                "Earth Engine API installed/upgraded successfully (using pip._internal)."
-            )
-        except Exception as e:
-            print("An error occurred during installation:", e)
-    except Exception as e:
-        print("An error occurred during installation:", e)
-
-
-# Determine installed and latest versions.
-installed_version = get_installed_version()
-latest_version = get_latest_version()
-
-if installed_version:
-    print("Installed Earth Engine API version:", installed_version)
-else:
-    print("Earth Engine API is not installed.")
-
-if latest_version:
-    print("Latest Earth Engine API version available on PyPI:", latest_version)
-else:
-    print("Could not determine the latest Earth Engine API version from PyPI.")
-
-# If there's no installation or the installed version differs from the latest, install/upgrade.
-if (installed_version is None) or (
-    latest_version is not None and installed_version != latest_version
-):
-    print("Upgrading/Installing Earth Engine API to the latest version...")
-    install_earthengine_api()
-    # Invalidate caches so that the newly installed package is found.
-    importlib.invalidate_caches()
-else:
-    print("Latest version is already installed. Importing Earth Engine API...")
-
-# Import the Earth Engine API and print its version.
 try:
-    importlib.import_module("ee")
     import ee
-
-    print("Final Earth Engine API version:", ee.__version__)
-except ImportError:
-    print("Earth Engine API could not be imported after installation.")
-
+except:
+    pass
 
 # =============================================================================
 # RAVIDialog Class Definition
 # =============================================================================
-
 
 # Load the .ui file based on the language setting
 settings = QSettings()
@@ -192,7 +143,6 @@ else:
     ui_file = "ravi_dialog_base.ui"
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
-
 
 class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
@@ -208,17 +158,26 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
 
         self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
+        
+        self.coordinate_capture_tool = None
+
+        # Find the checkbox in the UI
+        self.checkBox_captureCoordinates = self.findChild(QtWidgets.QCheckBox, "checkBox_captureCoordinates")
+
+        if self.checkBox_captureCoordinates:
+            self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
+        else:
+            print("Error: Capture coordinates checkbox not found in the UI.")
 
         # Determine language for UI elements
         settings = QSettings()
         user_locale = settings.value(
             "locale/userLocale", "en"
         )  # Example: 'en_US' or 'pt_BR'
-        language = user_locale[0:2]  # Get the first 2 characters: 'en' or 'pt'
-
-        self.language = language == "pt"
+        self.language = user_locale[0:2]  # Get the first 2 characters: 'en' or 'pt'
 
         # Initialize variables
+        self.plot1 = None
         self.autentication = False
         self.folder_set = False
         self.inicio = None
@@ -233,7 +192,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.selected_dates = []
         self.output_folder = None
         self.df_nasa = None
+        self.df_points = None
         self.daily_precipitation = None
+        self.selected_aio_layer_path = None
 
         # UI setup and signal connections
         self.setup_ui()
@@ -245,13 +206,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
 
         # Set default values
-        self.last_12m_clicked()
-        
+        self.last_clicked(3)
         self.index_explain()
         self.tabWidget.setCurrentIndex(0)
         self.resizeEvent("small")
 
-        # Ensure this sets up self.project_QgsPasswordLineEdit (or rename to something like self.projectIdLineEdit)
         # Connect the textChanged signal to automatically save changes.
         self.project_QgsPasswordLineEdit.textChanged.connect(self.autoSaveProjectId)
 
@@ -266,16 +225,18 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
+        self.clear_button_points.clicked.connect(self.remove_all_dots)
+        self.QPushButton_features.clicked.connect(self.QPushButton_features_clicked)
         self.autenticacao.clicked.connect(self.auth)
         self.desautenticacao.clicked.connect(self.auth_clear)
-        self.update_vector.clicked.connect(self.load_vector_layers_2)
-        self.update_vector_2.clicked.connect(self.load_vector_layers)
+        self.update_vector.clicked.connect(self.update_vector_clicked)
+        self.update_vector_2.clicked.connect(self.update_vector_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
-        self.load_1index.clicked.connect(self.first_index)
-        self.load_1rgb.clicked.connect(self.first_rgb)
-        self.composicao.clicked.connect(self.composicao_clicked)
+        self.load_1index.clicked.connect(self.load_index)
+        self.load_1rgb.clicked.connect(self.load_rgb)
+        self.composicao.clicked.connect(self.composite_clicked)
         self.clear_raster.clicked.connect(self.clear_all_raster_layers)
-        self.hybrid.clicked.connect(self.hybrid_function)
+        self.hybrid.clicked.connect(map_tools.hybrid_function)
         self.QPushButton_next.clicked.connect(self.next_clicked)
         self.QPushButton_next_2.clicked.connect(self.next_clicked)
         self.QPushButton_next_3.clicked.connect(self.next_clicked)
@@ -294,57 +255,206 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
         self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked)
         self.navegador.clicked.connect(self.open_browser)
+        self.navegador_2.clicked.connect(self.open_browser_2)
+        self.navegador_3.clicked.connect(self.open_browser_3)
         self.datasrecorte.clicked.connect(self.datasrecorte_clicked)
+        self.datasrecorte_2.clicked.connect(self.datasrecorte_clicked)
+        self.datasrecorte_3.clicked.connect(self.datasrecorte_clicked)
+
         self.salvar.clicked.connect(self.salvar_clicked)
+        self.salvar_2.clicked.connect(self.salvar_clicked_2)
+        self.salvar_3.clicked.connect(self.salvar_clicked_3)
         self.salvar_nasa.clicked.connect(self.salvar_nasa_clicked)
         self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
-
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
-
         self.radioButton_all.clicked.connect(self.all_clicked)
-        self.radioButton_3months.clicked.connect(self.last_3m_clicked)
-        self.radioButton_6months.clicked.connect(self.last_6m_clicked)
-        self.radioButton_12months.clicked.connect(self.last_12m_clicked)
-        self.radioButton_3years.clicked.connect(self.last_3_years_clicked)
-        self.radioButton_5years.clicked.connect(self.last_5_years_clicked)
-        # self.radioButton_select_year.clicked.connect(self.selected_year_clicked)
+        self.radioButton_3months.clicked.connect(lambda: self.last_clicked(3))
+        self.radioButton_6months.clicked.connect(lambda: self.last_clicked(6))
+        self.radioButton_12months.clicked.connect(lambda: self.last_clicked(12))
+        self.radioButton_3years.clicked.connect(lambda: self.last_clicked(3*12))
+        self.radioButton_5years.clicked.connect(lambda: self.last_clicked(5*12))
         self.combo_year.currentIndexChanged.connect(self.selected_year_clicked)
-        self.horizontalSlider_local_pixel_limit.valueChanged.connect(
-            self.update_labels
-        )
+        self.horizontalSlider_local_pixel_limit.valueChanged.connect(self.update_labels)
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
         self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
-        self.horizontalSlider_total_pixel_limit.valueChanged.connect(
-            self.update_labels
-        )
+        self.horizontalSlider_total_pixel_limit.valueChanged.connect(self.update_labels)
         self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
         self.series_indice.currentIndexChanged.connect(self.reload_update)
         self.incioedit_2.dateChanged.connect(self.reload_update2)
         self.finaledit_2.dateChanged.connect(self.reload_update2)
         self.incioedit.dateChanged.connect(self.reload_update)
         self.finaledit.dateChanged.connect(self.reload_update)
-        self.vector_layer_combobox_2.currentIndexChanged.connect(
-            self.combobox_2_update
-        )
-
-        self.nasapower.clicked.connect(self.open_nasapower)
+        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
+        self.nasapower.clicked.connect(self.nasapower_clicked)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
         self.textEdit.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
-
         self.series_indice.currentIndexChanged.connect(self.index_explain)
+
+    def nasapower_clicked(self):
+        """Handles the event when the "NASA POWER" button is clicked."""
+        # Get the latitude and longitude from the UI
+        self.find_centroid()
+        self.df_nasa, self.daily_precipitation = nasa_power.open_nasapower(str(self.lat), str(self.lon), self.df_aux.date.tolist()[0], self.df_aux.date.tolist()[-1])
+        self.plot_timeseries()
+
+    def toggle_coordinate_capture_tool(self, state):
+        """Toggles the coordinate capture tool based on the checkbox state."""
+        canvas = iface.mapCanvas()
+        if state == Qt.Checked:  # Checkbox is checked (active)
+            # Deactivate any existing tool before activating the new one
+            if canvas.mapTool():
+                canvas.unsetMapTool(canvas.mapTool())
+            if not self.coordinate_capture_tool:  # Only create if it doesn't exist
+                self.coordinate_capture_tool = CoordinateCaptureTool(canvas, self)
+                print("CoordinateCaptureTool created")
+            canvas.setMapTool(self.coordinate_capture_tool)
+            print("Coordinate capture tool activated.")
+            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+            self.sentinel2_selected_dates_update()
+        else:  # Checkbox is unchecked (inactive)
+            self.deactivate_coordinate_capture_tool()
+            print("Coordinate capture tool deactivated.")
+            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+
+
+    def activate_coordinate_capture_tool(self):
+        canvas = iface.mapCanvas()
+        if self.checkBox_captureCoordinates.isChecked():  # Button is checked (active)
+            # Deactivate any existing tool before activating the new one
+            if canvas.mapTool():
+                canvas.unsetMapTool(canvas.mapTool())
+            self.coordinate_capture_tool = CoordinateCaptureTool(canvas, self)
+            canvas.setMapTool(self.coordinate_capture_tool)
+            print("Coordinate capture tool activated.")
+        else:  # Button is unchecked (inactive)
+            self.deactivate_coordinate_capture_tool()
+            print("Coordinate capture tool deactivated.")
+
+    def deactivate_coordinate_capture_tool(self):
+        """Deactivates the coordinate capture map tool."""
+        print("deactivate_coordinate_capture_tool called")
+        if (
+            hasattr(self, "coordinate_capture_tool")
+            and self.coordinate_capture_tool
+        ):
+            canvas = iface.mapCanvas()
+            canvas.unsetMapTool(self.coordinate_capture_tool)
+
+            #self.coordinate_capture_tool = None  # Deactivate the tool
+            print("CoordinateCaptureTool deactivated")
+            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+        else:
+            print("No coordinate capture tool to deactivate.")
+
+
+    def remove_all_dots(self):
+        """Removes all dots from the map canvas."""
+        print("remove_all_dots called")
+        canvas = iface.mapCanvas()
+
+        # Access rubberBands through the tool if it exists, otherwise use an empty list
+        rubberBands = []
+        if (
+            self.coordinate_capture_tool
+            and hasattr(self.coordinate_capture_tool, "rubberBands")
+        ):
+            rubberBands = self.coordinate_capture_tool.rubberBands
+
+        # Iterate through the rubber bands and remove them from the scene
+        if rubberBands:
+            for rubberBand in list(rubberBands):
+                try:
+                    canvas.scene().removeItem(rubberBand)
+                except Exception as e:
+                    print(f"Error removing rubber band: {e}")
+
+            iface.mapCanvas().refresh()  # Refresh the canvas
+
+            # Clear dataframes and web view
+            self.df_points = None
+            self.df_aux_points = None
+            self.webView_3.setHtml("")
+
+            print("All dots removed.")
+
+        # Clear the list in the tool, if the tool exists
+        if (
+            self.coordinate_capture_tool
+            and hasattr(self.coordinate_capture_tool, "rubberBands")
+        ):
+            self.coordinate_capture_tool.rubberBands = []
+        else:
+            print("No dots to remove.")
+
 
     # =========================================================================
     # Project ID Management
     # =========================================================================
 
-    def load_vector_layers_2(self):
-        self.load_vector_layers()
-        self.load_vector_layers()
+    def process_coordinates(self, longitude, latitude):
+        """Processes the captured coordinates with Earth Engine."""
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            # 1. Define the point (longitude, latitude)
+            point = ee.Geometry.Point(longitude, latitude)
+
+            # 2. Buffer the point to create a *very* small polygon (e.g., 2 meters)
+            aoi = point.buffer(2)
+
+            # Do something with the aoi (e.g., print its information)
+            print(f"AOI (point) defined") 
+            name = f'lat: {round(latitude,5)}, long: {round(longitude,5)}'
+            print('point:', name)
+            #print(self.point_calculate_timeseries(aoi, name))
+
+            if self.df_points is None:
+                self.df_points = self.df_aux[['date', 'AOI_average']]
+                self.df_points['date'] = pd.to_datetime(self.df_points['date'])
+
+            new_df = self.point_calculate_timeseries(aoi, name)
+            new_df['date'] = pd.to_datetime(new_df['date'])
+            print(new_df)
+            self.df_points = pd.merge(self.df_points, new_df, on='date', how='outer')
+
+
+            self.df_ajust_points()
+            self.plot_timeseries_points()
+        except Exception as e:
+            QApplication.restoreOverrideCursor()
+            print(f"Error processing with Earth Engine: {e}")
+            QMessageBox.critical(
+                self,
+                "Earth Engine Error",
+                f"An error occurred: {e}",
+            )
+        QApplication.restoreOverrideCursor()
+
+    def plot_timeseries_points(self):
+        print("Plotting time series for points...")
+        
+        df = self.df_aux_points
+        print(df.shape)
+
+        # Melt the dataframe to have a long format
+        df_melted = df.melt(id_vars='date', var_name='Point', value_name=self.series_indice.currentText())
+
+        # Create the line plot with varied color and line dash
+        fig = px.line(df_melted, x='date', y=self.series_indice.currentText(), color='Point', line_dash='Point', title=f"Time Series - {self.series_indice.currentText()} - Points")
+        fig.update_layout(
+            yaxis_title=self.series_indice.currentText(), 
+            title=f"Time Series - {self.series_indice.currentText()} - Points",
+            xaxis_title=None 
+        )
+        self.fig_3 = fig
+        # fig.show()
+
+        self.webView_3.setHtml(fig.to_html(include_plotlyjs='cdn', config=self.config))
+        print("Feature info calculated and plotted.")
 
     def loadProjectId(self):
         """Loads the saved project ID from QSettings and sets it in the widget."""
@@ -362,9 +472,206 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
 
     # =========================================================================
-    # UI Element Event Handlers
-    # =========================================================================
+    
+    def load_fields(self, id_column=None):
+        # Get the system's temporary directory
+        temp_folder = tempfile.gettempdir()
+        print(f"Temporary folder: {temp_folder}")
 
+        # Input shapefile path
+        input_path = self.selected_aio_layer_path
+
+        # Open the layer
+        layer = QgsVectorLayer(input_path, "Polygons", "ogr")
+        if not layer.isValid():
+            print("Failed to load the layer.")
+            return
+
+        # Populate the attributes_id combobox with unique field names
+        unique_fields = [field.name() for field in layer.fields()]
+
+        self.attributes_id.clear()
+        self.attributes_id.addItems(sorted(unique_fields))
+
+    def QPushButton_features_clicked(self):
+        # try:
+        #     self.sentinel2_selected_dates_update()
+        #     QApplication.setOverrideCursor(Qt.WaitCursor)
+        #     feature_info = self.split_features(self.attributes_id.currentText())
+        #     self.feature_info(feature_info)
+        #     self.df_ajust_points()
+        #     self.plot_timeseries_feature
+        # except Exception as e:
+        #     print(f"Error splitting features: {str(e)}")
+        #     self.pop_aviso(str(e))
+        #     QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        self.sentinel2_selected_dates_update()
+        feature_info = self.split_features(self.attributes_id.currentText())
+        self.feature_info(feature_info)
+        self.df_ajust_features()
+        self.plot_timeseries_features()
+        QApplication.restoreOverrideCursor()
+
+
+    def split_features(self, id_column=None):
+        """
+        Splits each feature from the selected vector layer into individual shapefiles,
+        using a specified attribute column for identification.
+        
+        Args:
+            id_column (str): Name of the attribute column to use for identification.
+                            If None, feature ID will be used.
+        
+        Returns:
+            dict: Dictionary mapping feature identifiers to their shapefile paths
+            
+        """
+        
+        # Get the system's temporary directory
+        temp_folder = tempfile.gettempdir()
+        print(f"Temporary folder: {temp_folder}")
+
+        # Input shapefile path
+        input_path = self.selected_aio_layer_path
+
+        # Open the layer
+        layer = QgsVectorLayer(input_path, "Polygons", "ogr")
+
+        # Validate id_column if provided
+        if id_column and id_column not in [field.name() for field in layer.fields()]:
+            raise ValueError(f"Column '{id_column}' not found in layer attributes")
+        
+
+        feature_count = layer.featureCount()
+        print(f"Total features to process: {feature_count}")
+
+        # Dictionary to store feature identifiers and their corresponding paths
+        feature_info = {}
+
+        # Process each feature
+        for feature in layer.getFeatures():
+            # Get feature identifier
+            if id_column:
+                feature_identifier = str(feature[id_column])
+                # Clean the identifier for use in filename
+                feature_identifier = "".join(c for c in feature_identifier 
+                                        if c.isalnum() or c in ('-', '_'))
+            else:
+                feature_identifier = str(feature.id())
+
+            # Create output filename using the identifier
+            output_path = os.path.join(temp_folder, f"feature_{feature_identifier}.shp")
+
+            # Create a memory layer with the same attributes
+            memory_layer = QgsVectorLayer(
+                f"Polygon?crs={layer.crs().authid()}", 
+                f"feature_{feature_identifier}", 
+                "memory"
+            )
+
+            # Set up the memory layer
+            memory_layer.startEditing()
+            memory_provider = memory_layer.dataProvider()
+            memory_provider.addAttributes(layer.fields())
+            memory_layer.updateFields()
+            memory_provider.addFeature(feature)
+            memory_layer.commitChanges()
+
+            try:
+                # Save the memory layer as a new shapefile
+                save_options = QgsVectorFileWriter.SaveVectorOptions()
+                save_options.driverName = "ESRI Shapefile"
+
+                error = QgsVectorFileWriter.writeAsVectorFormat(
+                    memory_layer,
+                    output_path,
+                    "UTF-8",
+                    layer.crs(),
+                    "ESRI Shapefile"
+                )
+
+                if error[0] != QgsVectorFileWriter.NoError:
+                    print(f"Error saving feature {feature_identifier}: {error}")
+                else:
+                    print(f"Feature {feature_identifier} saved to: {output_path}")
+                    # Store the feature information
+                    feature_info[feature_identifier] = {
+                        'path': output_path,
+                        'attributes': {field.name(): feature[field.name()] 
+                                    for field in layer.fields()}
+                    }
+
+            except Exception as e:
+                print(f"Error saving feature {feature_identifier}: {str(e)}")
+            finally:
+                # Clean up memory layer
+                del memory_layer
+
+        print("\nFinished processing all features.")
+        print("Generated feature information:")
+        for identifier, info in feature_info.items():
+            print(f"\nFeature: {identifier}")
+            print(f"Path: {info['path']}")
+            print("Attributes:")
+            for attr_name, attr_value in info['attributes'].items():
+                print(f"  {attr_name}: {attr_value}")
+
+        return feature_info
+           
+    def feature_info(self, feature_info):
+
+        features = []
+
+        for feature_id, info in feature_info.items():
+            # Get the name from attributes, handle cases where 'NAME' might not exist
+            print(f"Feature ID: {self.attributes_id.currentText()}")
+            name = info['attributes'].get(self.attributes_id.currentText(), 'N/A')
+
+            path = info['path']
+
+            self.aoi_feature = self.load_vector_function(path)
+            df_feature = self.feature_calculate_timeseries(name)
+            df_feature['date'] = pd.to_datetime(df_feature['date'])
+            features.append(df_feature)
+
+        # Merge all dataframes in the features list horizontally on the 'date' key
+
+        df_aux = self.df_aux[['date', 'AOI_average']]
+        df_aux.date = pd.to_datetime(df_aux.date)
+                             
+        features.append(df_aux)
+        merged_df = features[0]
+        for df in features[1:]:
+            merged_df = pd.merge(merged_df, df, on='date', how='outer')
+
+        print(f"Merged features calculated for {len(features)} features.")
+        df = merged_df.copy()
+        
+        df['date'] = pd.to_datetime(df['date'])
+
+        self.df_features = df
+
+    def plot_timeseries_features(self):
+        df = self.df_aux_features
+
+        # Melt the dataframe to have a long format
+        df_melted = df.melt(id_vars='date', var_name='Polygon', value_name=self.series_indice.currentText())
+
+        # Create the line plot with varied color and line dash
+        fig = px.line(df_melted, x='date', y=self.series_indice.currentText(), color='Polygon', line_dash='Polygon', title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}")
+        fig.update_layout(
+            yaxis_title=self.series_indice.currentText(), 
+            title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}",
+            xaxis_title=None  # Remove x-axis label
+        )
+        self.fig_2 = fig
+        # fig.show()
+
+        self.webView_2.setHtml(fig.to_html(include_plotlyjs='cdn', config=self.config))
+        print("Feature info calculated and plotted.")
+        
     def combobox_2_update(self):
         self.vector_layer_combobox.setCurrentIndex(
             self.vector_layer_combobox_2.currentIndex()
@@ -384,48 +691,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         """Clears the NASA data and updates the timeseries plot."""
         self.df_nasa = None
         self.plot_timeseries()
-
-    def hybrid_function(self):
-        """Adds a Google Hybrid XYZ tile layer to the QGIS project if it is not already present."""
-        existing_layers = QgsProject.instance().mapLayers().values()
-        layer_names = [layer.name() for layer in existing_layers]
-        if "Google Hybrid" in layer_names:
-            self.pop_aviso("Google Hybrid layer already added.")
-            return
-
-        google_hybrid_url = "type=xyz&zmin=0&zmax=20&url=https://mt1.google.com/vt/lyrs%3Dy%26x%3D{x}%26y%3D{y}%26z%3D{z}"
-        layer_name = "Google Hybrid"
-        provider_type = "wms"
-
-        try:
-            # Create the XYZ tile layer
-            google_hybrid_layer = QgsRasterLayer(
-                google_hybrid_url, layer_name, provider_type
-            )
-
-            if google_hybrid_layer.isValid():
-                # Add the layer to the project
-                QgsProject.instance().addMapLayer(google_hybrid_layer, False)
-
-                # Set the project CRS to EPSG:4326 (WGS 84)
-                crs_4326 = QgsCoordinateReferenceSystem("EPSG:4326")
-                QgsProject.instance().setCrs(crs_4326)
-
-                # Adjust visibility and add to the layer tree
-                google_hybrid_layer.setOpacity(1)
-                root = QgsProject.instance().layerTreeRoot()
-                root.addLayer(google_hybrid_layer)
-
-                # Refresh the canvas and zoom to extent
-                iface.mapCanvas().refresh()
-                iface.mapCanvas().zoomToFullExtent()
-                print(f"{layer_name} layer added successfully in EPSG:4326.")
-            else:
-                print(f"Failed to load {layer_name}. Invalid layer.")
-        except Exception as e:
-            print(f"Error loading {layer_name}: {e}")
-        project = QgsProject.instance()
-        project.setCrs(QgsCoordinateReferenceSystem("EPSG:4326"))
 
     def update_labels(self):
         """Updates the text of several labels based on the values of horizontal sliders."""
@@ -450,17 +715,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print(f"Opening URL: {url.toString()}")
         webbrowser.open(url.toString())
 
-    def last_6m_clicked(self):
+    def last_clicked(self, months):
         today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=6)).strftime(
-            "%Y-%m-%d"
-        )
-        self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
-        self.incioedit.setDate(QDate.fromString(one_month_ago, "yyyy-MM-dd"))
-
-    def last_3m_clicked(self):
-        today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=3)).strftime(
+        one_month_ago = (datetime.today() - relativedelta(months=months)).strftime(
             "%Y-%m-%d"
         )
         self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
@@ -472,32 +729,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
         self.incioedit.setDate(QDate.fromString(since, "yyyy-MM-dd"))
 
-    def last_12m_clicked(self):
-        today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=12)).strftime(
-            "%Y-%m-%d"
-        )
-        self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
-        self.incioedit.setDate(QDate.fromString(one_month_ago, "yyyy-MM-dd"))
-
-    def last_3_years_clicked(self):
-        """Sets the date range in the UI to the last 3 years from today."""
-        today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=36)).strftime(
-            "%Y-%m-%d"
-        )
-        self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
-        self.incioedit.setDate(QDate.fromString(one_month_ago, "yyyy-MM-dd"))
-
-    def last_5_years_clicked(self):
-        """Updates the date fields to reflect the current date and the date from five years ago."""
-        today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=60)).strftime(
-            "%Y-%m-%d"
-        )
-        self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
-        self.incioedit.setDate(QDate.fromString(one_month_ago, "yyyy-MM-dd"))
-
     def selected_year_clicked(self):
         """Sets the date range in the UI to the selected year from the combo box."""
         year = self.combo_year.currentText()
@@ -507,6 +738,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.finaledit.setDate(QDate.fromString(end, "yyyy-MM-dd"))
 
     def build_vector_layer_clicked(self):
+        self.vector_builder()
+        self.load_vector_layers()
+        self.get_selected_layer_path()
+        self.load_vector_function()
+        self.find_area()
+
+    def vector_builder(self):    
         """Handles the event when the "Build Vector Layer" button is clicked."""
         project = QgsProject.instance()
         project.setCrs(QgsCoordinateReferenceSystem("EPSG:4326"))
@@ -574,66 +812,42 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 print(f"Layer reprojected to EPSG:4326")
 
             QgsProject.instance().addMapLayer(loaded_layer)
-            # self.zoom_to_layer(shp_name)
-            self.update
-            self.get_selected_layer_path
-            self.load_vector_layers()
-            self.load_vector_layers()
-            self.find_area()
-            # iface.mapCanvas().setExtent(loaded_layer.extent())  # Optional: Set the canvas extent to the layer extent
         else:
             print("Failed to load the shapefile.")
-
-        
-
+            self.pop_aviso_auth("Failed to load the shapefile.")
+     
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
         df = self.df_aux
         try:
-            df = df[["date", "average_index", "savitzky_golay_filtered", "image_id"]]
+            df = df[["date", "AOI_average", "savitzky_golay_filtered", "image_id"]]
         except:
-            df = df[["date", "average_index", "image_id"]]
+            df = df[["date", "AOI_average", "image_id"]]
 
-        name = (
-            f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series.csv"
-        )
-        caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
-        if not caminho:
-            return
-        with open(caminho, "w", newline="") as arquivo:
-            arquivo.write(df.to_csv(index=False))
+        name = (f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series.csv"        )
+        save_utils.save(df, name, self)
 
-        # Open the file after saving (platform-specific)
-        if platform.system() == "Windows":
-            os.startfile(caminho)
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.call(["open", caminho])
-        else:  # Linux and other Unix-like systems
-            subprocess.call(["xdg-open", caminho])
+    def salvar_clicked_2(self):
+        """Handles the event when the save button is clicked."""
+        df = self.df_features
+        name = (f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series_features.csv")
+        save_utils.save(df, name, self)
+
+    def salvar_clicked_3(self):
+        """Handles the event when the save button is clicked."""
+        df = self.df_points
+        name = (f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series_points.csv")
+        save_utils.save(df, name, self)
 
     def salvar_nasa_clicked(self):
         if self.df_nasa is None:
             self.pop_aviso("No NASA data to save.")
             return
-
-        df = self.daily_precipitation
         name = (
             f"nasa_power_precipitation_{self.vector_layer_combobox.currentText()}.csv"
         )
 
-        caminho, _ = QFileDialog.getSaveFileName(self, "Salvar", name, "CSV Files (*.csv)")
-        if not caminho:
-            return
-        with open(caminho, "w", newline="") as arquivo:
-            arquivo.write(df.to_csv(index=False))
-
-        # Open the file after saving (platform-specific)
-        if platform.system() == "Windows":
-            os.startfile(caminho)
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.call(["open", caminho])
-        else:  # Linux and other Unix-like systems
-            subprocess.call(["xdg-open", caminho])
+        save_utils.save(self.daily_precipitation, name, self)
 
     def datasrecorte_clicked(self):
         """Opens a dialog for selecting specific dates for the time series."""
@@ -790,6 +1004,22 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print(f"Selected dates for time series (applied): {self.recorte_datas}")
         self.df_ajust()
         self.plot_timeseries()
+        
+        try:
+            self.df_ajust_features()
+            self.plot_timeseries_features()
+            print("Feature info updated and ploted).")
+        except:
+            pass
+
+        try:
+            self.df_ajust_points()
+            self.plot_timeseries_points()
+            print("Points info updated and ploted).")
+        except:
+            pass
+    
+    
 
     def toggle_group_visibility(self, group_widget, toggle_button, group_label):
         """
@@ -877,7 +1107,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.setFixedSize(self.width(), self.height())  # Lock to small size
         elif size == "big":
             self.resize(1145, 582)
-            self.centralizar()
             self.setFixedSize(self.width(), self.height())  # Lock to big size
 
     def on_tab_changed(self, index):
@@ -885,30 +1114,40 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if not self.autentication:
             self.tabWidget.setCurrentIndex(0)
             return
-        if index in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+        if index < 9:
             self.resizeEvent("small")
-        elif index == 9:
-            self.resizeEvent("big")
-            self.centralizar()
-        elif index == 9 and self.df is not None:
-            self.resizeEvent("big")
-            self.centralizar()
-            self.plot_timeseries()
 
-        if index == 1:
+        if index >=9 and self.df is None:
+            self.tabWidget.setCurrentIndex(8)
+            return
+
+        if index >=9:
+            self.resizeEvent("big")
+
+        if index == 1 and not hasattr(self, 'path_suggestion_loaded'):
             self.load_path_sugestion()
+            self.path_suggestion_loaded = True
 
         if index == 2 and not hasattr(self, 'vector_layers_loaded'):
             self.load_vector_layers()
             self.vector_layers_loaded = True
             try:
+                self.load_vector_layers()
                 self.get_selected_layer_path()
-                self.find_area()
             except:
                 pass
-
+                
         if index > 2 and not self.QPushButton_next.isEnabled():
             self.tabWidget.setCurrentIndex(2)
+
+        if index == 10 and self.plot1 is not None:
+            self.load_fields()
+
+        if index != 11:
+            try:
+                self.checkBox_captureCoordinates.setChecked(False)
+            except:
+                pass
 
     def next_clicked(self):
         self.tabWidget.setCurrentIndex(
@@ -948,10 +1187,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 if assets.get("assets") is not None:  # Valid project detected
                     print("Default project is valid.")
-                    self.pop_aviso_auth("Authentication successful!")
+                    #self.pop_aviso_auth("Authentication successful!")
                     self.autentication = True
-                    # self.load_vector_layers()
-                    # self.load_path_sugestion()
                     self.next_clicked()
                 else:
                     print(
@@ -1110,43 +1347,47 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         elif ret == QMessageBox.Cancel:
             print("Cancel button clicked")
             return False
+        
+    def update_vector_clicked(self):
+        self.load_vector_layers()
+        self.get_selected_layer_path()
+        self.load_vector_function()
+        #self.find_area()
 
     def load_vector_layers(self):
         # Get all layers in the current QGIS project
         layers = list(QgsProject.instance().mapLayers().values())
 
-        # Filter vector layers
+        # Filter polygon and multipolygon vector layers
         vector_layers = [
-            layer for layer in layers if layer.type() == QgsMapLayer.VectorLayer
+            layer
+            for layer in layers
+            if layer.type() == QgsMapLayer.VectorLayer
+            and layer.geometryType() == QgsWkbTypes.PolygonGeometry
         ]
 
-        # Extract the names of vector layers
-        current_layer_names = [
+        # Get current layer names
+        current_layer_names = set(
             self.vector_layer_combobox.itemText(i)
             for i in range(self.vector_layer_combobox.count())
-        ]
-
-        # Identify newly added layers
-        new_layers = [
-            layer for layer in vector_layers if layer.name() not in current_layer_names
-        ]
+        )
 
         # Clear the combobox and the dictionary
         self.vector_layer_combobox.clear()
         self.vector_layer_ids = {}
 
-        # Populate the combobox and update the dictionary
+        # Find the new layer while populating the combobox
+        new_layer_name = None
         for layer in vector_layers:
             layer_name = layer.name()
             self.vector_layer_combobox.addItem(layer_name)
             self.vector_layer_ids[layer_name] = layer.id()
+            
+            # If this layer wasn't in the previous list, it's new
+            if layer_name not in current_layer_names:
+                new_layer_name = layer_name
 
-        # If new layers are detected, set the combobox index to the most recent one
-        if new_layers:
-            last_added_layer = new_layers[-1]
-            index = self.vector_layer_combobox.findText(last_added_layer.name())
-            self.vector_layer_combobox.setCurrentIndex(index)
-
+        # Update the second combobox
         self.vector_layer_combobox_2.clear()
         self.vector_layer_combobox_2.addItems(
             self.vector_layer_combobox.itemText(i)
@@ -1155,6 +1396,14 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.vector_layer_combobox_2.setCurrentIndex(
             self.vector_layer_combobox.currentIndex()
         )
+
+        # If we found a new layer, select it
+        if new_layer_name:
+            index = self.vector_layer_combobox.findText(new_layer_name)
+            self.vector_layer_combobox.setCurrentIndex(index)
+        
+        if self.vector_layer_combobox.count() == 0:
+            self.pop_aviso("No vector layers found in the project.")
 
 
     def get_selected_layer_path(self):
@@ -1195,7 +1444,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             )  # Debug: Show selected layer path
 
             # Trigger the processing function
-            self.load_vector_function()
+            self.aoi = self.load_vector_function()
             area = self.find_area()
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
@@ -1207,7 +1456,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 return None
 
             self.QPushButton_next.setEnabled(True)
-            self.load_vector_function()
+            #self.load_vector_function()
             return None
         else:
             print(
@@ -1215,7 +1464,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             )
             return None
 
-    def first_index(self):
+    def load_index(self):
         """
         Calculates a vegetation index, downloads the GeoTIFF, and adds it to the QGIS project
         as a styled raster layer, ensuring unique names for each layer.
@@ -1297,8 +1546,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print(f"Layer name adjusted to '{layer_name}' to ensure uniqueness.")
 
             # Add raster layer with styling
-            self.load_raster_layer_colorful(
-                output_file, layer_name, vegetation_index
+            map_tools.load_raster_layer_colorful(
+                output_file, layer_name, vegetation_index, None
             )
 
         except Exception as e:
@@ -1306,11 +1555,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         finally:
             QApplication.restoreOverrideCursor()  # Restore the default cursor
 
-    def first_rgb(self):
-        """
-        Fetches the first Sentinel-2 image for the selected date, downloads it,
-        and adds it as an RGB layer in QGIS without duplication.
-        """
+    def load_rgb(self):
+
         # Set the cursor to indicate processing
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
@@ -1321,10 +1567,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             first_image = self.sentinel2.filter(
                 ee.Filter.inList("date", date)
             ).first()
-
-            # Print the number of days in the collection
-            # num_days = first_image.size().getInfo()
-            # print(f"Number of days in the collection (unique?): {num_days}")
 
             # Clip image to AOI
             first_image = first_image.clip(self.aoi)
@@ -1498,13 +1740,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print(f"Unique filename: {output_file}")
         return output_file
 
-    def composicao_clicked(self):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
-        print("Composição de índices vegetativos")
-        indice_vegetacao = self.indice_composicao.currentText()
-        metrica = self.metrica.currentText()
+    def sentinel2_selected_dates_update(self):
 
-        # Extrai as datas selecionadas (formato YYYY-MM-DD)
         Date_list_selection = (
             [date.strftime("%Y-%m-%d") for date in pd.to_datetime(self.df_aux["date"]).tolist()]
             if "date" in self.df_aux.columns
@@ -1522,6 +1759,19 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             ee.Filter.inList("date", ee.List(Date_list_selection))
         )
         print("Final number of images after:", sentinel2_selected_dates.size().getInfo())
+
+        self.sentinel2_selected_dates = sentinel2_selected_dates
+
+    def composite_clicked(self):
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        self.sentinel2_selected_dates_update()
+        self.composite()
+        QApplication.restoreOverrideCursor()    
+
+    def composite(self):
+        print("Composição de índices vegetativos")
+        indice_vegetacao = self.indice_composicao.currentText()
+        metrica = self.metrica.currentText()
 
         # Função para calcular o índice vegetal desejado e preservar a data
         def calculate_index(image):
@@ -1545,7 +1795,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 raise ValueError(f"Invalid indice_vegetacao: {indice_vegetacao}")
 
         # Aplica o cálculo do índice à coleção filtrada
-        index_collection = sentinel2_selected_dates.map(calculate_index)
+        index_collection = self.sentinel2_selected_dates.map(calculate_index)
 
         # Seleção da métrica de agregação
         if metrica in ["Mean", "Média"]:
@@ -1626,9 +1876,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.clip_raster_by_vector(output_file, self.selected_aio_layer_path, output_file_clipped, layer_name)
 
         # Carrega a camada raster com estilo colorido no QGIS
-        self.load_raster_layer_colorful(output_file_clipped, layer_name, indice_vegetacao)
-        QApplication.restoreOverrideCursor()
-
+        map_tools.load_raster_layer_colorful(output_file_clipped, layer_name, indice_vegetacao, self.metrica.currentText())
 
     def clip_raster_by_vector(self, raster_path, shapefile_path, output_path, layer_name):
         print(f"Clipping raster {raster_path} by vector {shapefile_path} to {output_path}")
@@ -1657,15 +1905,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
 
         print(f"Clipping result: {result}")
-
-        # # Load the clipped raster into QGIS
-        # clipped_layer = QgsRasterLayer(output_path, "Clipped Raster")
-        # if clipped_layer.isValid():
-        #     QgsProject.instance().addMapLayer(clipped_layer)
-        #     print(f"Clipped raster saved and added to QGIS: {output_path}")
-        # else:
-        #     print("Failed to add the clipped raster to QGIS.")
-        
+       
     def on_file_changed(self, file_path):
         """Slot called when the selected file changes."""
         print(f"File selected: {file_path}")
@@ -1675,264 +1915,20 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # self.check_next_button()
 
     def index_explain(self):
-        vegetation_indices = {
-            "NDVI": """
-                <h3>Normalized Difference Vegetation Index (NDVI)</h3>
-                <p>
-                    The Normalized Difference Vegetation Index (NDVI) is a widely used and well-established 
-                    indicator of vegetation health and vigor. It exploits the contrasting spectral 
-                    reflectance properties of plant pigments, particularly chlorophyll. 
-                    Healthy vegetation strongly absorbs visible red light for photosynthesis while 
-                    reflecting a significant portion of near-infrared (NIR) radiation. 
-                    Conversely, non-vegetated areas like soil and water tend to reflect both red and 
-                    NIR light more equally. 
-                </p>
-                <p>
-                    The NDVI formula is calculated as follows:
-                </p>
-                <pre>
-        NDVI = (NIR - RED) / (NIR + RED)
-                </pre>
-                <p>
-                    where:
-                    <ul>
-                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
-                        <li><b>RED</b>: Reflectance in the red band</li>
-                    </ul>
-                    By calculating the difference between NIR and red reflectance and normalizing it 
-                    by their sum, NDVI effectively enhances the vegetation signal while minimizing 
-                    the influence of factors like variations in illumination and atmospheric conditions. 
-                    NDVI values typically range from -1 to 1. 
-                    Higher values (closer to 1) generally indicate denser, healthier vegetation with 
-                    higher leaf area and chlorophyll content. 
-                    Lower values (closer to -1) often correspond to bare soil, water, or senescent 
-                    (dying) vegetation.
-                </p>
-            """,
-            "GNDVI": """
-                <h3>Green Normalized Difference Vegetation Index (GNDVI)</h3>
-                <p>
-                    The Green Normalized Difference Vegetation Index (GNDVI) is a modification of NDVI 
-                    that utilizes the green band of the electromagnetic spectrum instead of the red band. 
-                    Chlorophyll, the primary pigment involved in photosynthesis, strongly absorbs 
-                    blue and red light while reflecting green light. 
-                    Therefore, GNDVI is particularly sensitive to variations in chlorophyll content 
-                    within plant canopies.
-                </p>
-                <p>
-                    The GNDVI formula is calculated as:
-                </p>
-                <pre>
-        GNDVI = (NIR - GREEN) / (NIR + GREEN)
-                </pre>
-                <p>
-                    where:
-                    <ul>
-                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
-                        <li><b>GREEN</b>: Reflectance in the green band</li>
-                    </ul>
-                    This sensitivity makes GNDVI a valuable tool for:
-                    <ul>
-                        <li>Monitoring plant stress and nutrient deficiencies</li>
-                        <li>Detecting early signs of disease or pest infestations</li>
-                        <li>Assessing crop vigor and yield potential</li>
-                        <li>Studying the impact of environmental factors on plant growth</li>
-                    </ul>
-                </p>
-            """,
-            "EVI": """
-                <h3>Enhanced Vegetation Index (EVI)</h3>
-                <p>
-                    The Enhanced Vegetation Index (EVI) was developed to address some of the limitations 
-                    of NDVI, particularly in areas of high biomass or atmospheric interference. 
-                    EVI incorporates a blue band in its calculation, which helps to minimize the 
-                    influence of atmospheric aerosols and soil background noise. 
-                    Additionally, EVI uses a canopy background adjustment term to improve sensitivity 
-                    in areas of high biomass and to better discriminate vegetation from non-vegetated 
-                    surfaces.
-                </p>
-                <p>
-                    The EVI formula is calculated as:
-                </p>
-                <pre>
-        EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
-                </pre>
-                <p>
-                    where:
-                    <ul>
-                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
-                        <li><b>RED</b>: Reflectance in the red band</li>
-                        <li><b>BLUE</b>: Reflectance in the blue band</li>
-                    </ul>
-                    EVI has proven to be highly effective in:
-                    <ul>
-                        <li>Monitoring vegetation dynamics in diverse ecosystems</li>
-                        <li>Estimating biomass and productivity</li>
-                        <li>Assessing the impact of climate change on vegetation</li>
-                        <li>Mapping vegetation cover and land use/land cover change</li>
-                    </ul>
-                </p>
-            """,
-            "SAVI": """
-                <h3>Soil-Adjusted Vegetation Index (SAVI)</h3>
-                <p>
-                    The Soil-Adjusted Vegetation Index (SAVI) is specifically designed to minimize 
-                    the influence of soil background reflectance, particularly in areas with sparse 
-                    vegetation cover. 
-                    In such areas, soil reflectance can significantly impact the accuracy of 
-                    vegetation indices like NDVI.
-                </p>
-                <p>
-                    SAVI incorporates a soil brightness correction factor (L) into its calculation. 
-                    This factor adjusts the sensitivity of the index to soil background, 
-                    allowing for more accurate assessment of vegetation in areas with varying 
-                    soil conditions. SAVI is particularly useful in:
-                    <ul>
-                        <li>Arid and semi-arid regions</li>
-                        <li>Agricultural areas with low plant cover</li>
-                        <li>Disturbed or degraded ecosystems</li>
-                    </ul>
-                </p>
-                <p>
-                    The SAVI formula is calculated as:
-                </p>
-                <pre>
-        SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
-                </pre>
-                <p>
-                    where:
-                    <ul>
-                        <li><b>NIR</b>: Reflectance in the near-infrared band</li>
-                        <li><b>RED</b>: Reflectance in the red band</li>
-                        <li><b>L</b>: Soil brightness correction factor (typically set to 0.5)</li>
-                    </ul>
-                </p>
-                <p><b>Note:</b> For this plugin, the soil brightness correction factor (L) is set to 0.5.</p>
-            """
-        }
-
-        vegetation_indices_pt = {
-            "NDVI": """
-                <h3>Índice de Vegetação por Diferença Normalizada (NDVI)</h3>
-                <p>
-                    O Índice de Vegetação por Diferença Normalizada (NDVI) é um indicador amplamente utilizado e bem estabelecido da saúde e vigor da vegetação. Ele explora as propriedades de reflectância espectral contrastantes dos pigmentos das plantas, particularmente a clorofila. A vegetação saudável absorve fortemente a luz vermelha visível para a fotossíntese enquanto reflete uma parte significativa da radiação do infravermelho próximo (NIR). Por outro lado, áreas não vegetadas, como solo e água, tendem a refletir a luz vermelha e NIR de forma mais equilibrada.
-                </p>
-                <p>
-                    A fórmula do NDVI é calculada da seguinte forma:
-                </p>
-                <pre>
-        NDVI = (NIR - RED) / (NIR + RED)
-                </pre>
-                <p>
-                    onde:
-                    <ul>
-                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
-                        <li><b>RED</b>: Reflectância na banda vermelha</li>
-                    </ul>
-                    Ao calcular a diferença entre a reflectância do NIR e da luz vermelha e normalizando-a pela soma dos dois, o NDVI realça efetivamente o sinal da vegetação enquanto minimiza a influência de fatores como variações na iluminação e condições atmosféricas. Os valores do NDVI geralmente variam de -1 a 1. Valores mais altos (próximos de 1) indicam, em geral, vegetação mais densa e saudável, com maior área foliar e teor de clorofila. Valores mais baixos (próximos de -1) frequentemente correspondem a solo exposto, água ou vegetação senescente (em declínio).
-                </p>
-            """,
-            "GNDVI": """
-                <h3>Índice de Vegetação por Diferença Normalizada Verde (GNDVI)</h3>
-                <p>
-                    O Índice de Vegetação por Diferença Normalizada Verde (GNDVI) é uma modificação do NDVI que utiliza a banda verde do espectro eletromagnético em vez da banda vermelha. A clorofila, o pigmento primário envolvido na fotossíntese, absorve fortemente a luz azul e vermelha, enquanto reflete a luz verde. Portanto, o GNDVI é particularmente sensível às variações no conteúdo de clorofila dentro dos dosséis das plantas.
-                </p>
-                <p>
-                    A fórmula do GNDVI é calculada como:
-                </p>
-                <pre>
-        GNDVI = (NIR - GREEN) / (NIR + GREEN)
-                </pre>
-                <p>
-                    onde:
-                    <ul>
-                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
-                        <li><b>GREEN</b>: Reflectância na banda verde</li>
-                    </ul>
-                    Essa sensibilidade torna o GNDVI uma ferramenta valiosa para:
-                    <ul>
-                        <li>Monitorar o estresse das plantas e deficiências nutricionais</li>
-                        <li>Detectar sinais precoces de doenças ou infestações por pragas</li>
-                        <li>Avaliar o vigor das culturas e o potencial de rendimento</li>
-                        <li>Estudar o impacto de fatores ambientais no crescimento das plantas</li>
-                    </ul>
-                </p>
-            """,
-            "EVI": """
-                <h3>Índice de Vegetação Aprimorado (EVI)</h3>
-                <p>
-                    O Índice de Vegetação Aprimorado (EVI) foi desenvolvido para superar algumas das limitações do NDVI, particularmente em áreas com alta biomassa ou interferência atmosférica. O EVI incorpora uma banda azul em seu cálculo, o que ajuda a minimizar a influência de aerossóis atmosféricos e o ruído do fundo do solo. Além disso, o EVI utiliza um termo de ajuste do fundo do dossel para melhorar a sensibilidade em áreas de alta biomassa e para discriminar melhor a vegetação de superfícies não vegetadas.
-                </p>
-                <p>
-                    A fórmula do EVI é calculada como:
-                </p>
-                <pre>
-        EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
-                </pre>
-                <p>
-                    onde:
-                    <ul>
-                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
-                        <li><b>RED</b>: Reflectância na banda vermelha</li>
-                        <li><b>BLUE</b>: Reflectância na banda azul</li>
-                    </ul>
-                    O EVI tem se mostrado altamente eficaz em:
-                    <ul>
-                        <li>Monitorar a dinâmica da vegetação em diversos ecossistemas</li>
-                        <li>Estimar a biomassa e a produtividade</li>
-                        <li>Avaliar o impacto das mudanças climáticas na vegetação</li>
-                        <li>Mapear a cobertura vegetal e as mudanças no uso/ocupação do solo</li>
-                    </ul>
-                </p>
-            """,
-            "SAVI": """
-                <h3>Índice de Vegetação Ajustado ao Solo (SAVI)</h3>
-                <p>
-                    O Índice de Vegetação Ajustado ao Solo (SAVI) foi desenvolvido especificamente para minimizar a influência da reflectância do solo, especialmente em áreas com cobertura vegetal esparsa. Em tais áreas, a reflectância do solo pode impactar significativamente a precisão de índices de vegetação como o NDVI.
-                </p>
-                <p>
-                    O SAVI incorpora um fator de correção do brilho do solo (L) em seu cálculo. Esse fator ajusta a sensibilidade do índice ao fundo do solo, permitindo uma avaliação mais precisa da vegetação em áreas com condições de solo variadas. O SAVI é particularmente útil em:
-                    <ul>
-                        <li>Regiões áridas e semiáridas</li>
-                        <li>Áreas agrícolas com baixa cobertura de vegetação</li>
-                        <li>Ecossistemas perturbados ou degradados</li>
-                    </ul>
-                </p>
-                <p>
-                    A fórmula do SAVI é calculada como:
-                </p>
-                <pre>
-        SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
-                </pre>
-                <p>
-                    onde:
-                    <ul>
-                        <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
-                        <li><b>RED</b>: Reflectância na banda vermelha</li>
-                        <li><b>L</b>: Fator de correção do brilho do solo (geralmente definido como 0.5)</li>
-                    </ul>
-                </p>
-                <p><b>Nota:</b> Para este plugin, o fator de correção do brilho do solo (L) está definido como 0.5.</p>
-            """
-        }
-
         if self.language:
-            explanation = vegetation_indices_pt.get(self.series_indice.currentText())
+            explanation = vegetation_index_info.vegetation_indices_pt.get(self.series_indice.currentText())
         else:
-            explanation = vegetation_indices.get(self.series_indice.currentText())
+            explanation = vegetation_index_info.vegetation_indices.get(self.series_indice.currentText())
         self.textBrowser_index_explain.setHtml(explanation)
-
-
-
-
-    def load_vector_function(self):
+   
+    def load_vector_function(self, shapefile_path=None):
         """
         Loads the vector layer from the selected file path, reprojects it to EPSG:4326,
         dissolves multiple features if necessary, and converts it into an Earth Engine
         FeatureCollection representing the AOI.
         """
-        shapefile_path = self.selected_aio_layer_path
-        self.aoi = None  # Ensure the attribute exists to avoid AttributeError
+        if shapefile_path is None:
+            shapefile_path = self.selected_aio_layer_path
 
         try:
             # Load the shapefile, handling both .zip archives and regular files.
@@ -1949,33 +1945,23 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                         return
 
                     # Read shapefile directly from the zip archive.
-                    self.aoi = gpd.read_file(f"zip://{shapefile_path}/{shapefile_within_zip}")
+                    aoi = gpd.read_file(f"zip://{shapefile_path}/{shapefile_within_zip}")
             else:
-                self.aoi = gpd.read_file(shapefile_path)
+                aoi = gpd.read_file(shapefile_path)
 
             # Reproject the GeoDataFrame to EPSG:4326 to ensure correct coordinates for Earth Engine.
-            self.aoi = self.aoi.to_crs(epsg=4326)
+            aoi = aoi.to_crs(epsg=4326)
 
-            if self.aoi.empty:
+            if aoi.empty:
                 print("The shapefile does not contain any geometries.")
                 return
 
             # Dissolve multiple features into a single geometry if necessary.
-            if len(self.aoi) > 1:
-                self.aoi = self.aoi.dissolve()
+            if len(aoi) > 1:
+                aoi = aoi.dissolve()
 
             # Extract the first geometry.
-            geometry = self.aoi.geometry.iloc[0]
-
-            # Validate the geometry type.
-            if geometry.geom_type not in ['Polygon', 'MultiPolygon']:
-                print("The geometry is not a valid type (Polygon or MultiPolygon).")
-                self.aio_set = False
-                self.aoi_ckecked_function()
-                self.pop_aviso("The geometry is not a valid type (Polygon or MultiPolygon).")
-                QApplication.restoreOverrideCursor()
-                
-                return
+            geometry = aoi.geometry.iloc[0]
 
             # Convert the geometry to GeoJSON format.
             geojson = geometry.__geo_interface__
@@ -1992,7 +1978,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Create an Earth Engine geometry object.
             ee_geometry = ee.Geometry(geojson)
             feature = ee.Feature(ee_geometry)
-            self.aoi = ee.FeatureCollection([feature])
+            aoi = ee.FeatureCollection([feature])
 
             print("AOI defined successfully.")
             self.QPushButton_next.setEnabled(True)
@@ -2003,6 +1989,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             
             self.aoi_ckecked  = True
             self.aoi_ckecked_function()
+
+            return aoi
 
         except Exception as e:
             print(f"Error in load_vector_function: {e}")
@@ -2021,50 +2009,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.aoi_ckecked_function()
         return area
 
-    def open_nasapower(self):
-        self.find_centroid()
-        longitude = str(self.lon)
-        latitude = str(self.lat)
-        start = self.df_aux.date.tolist()[0]
-        end = self.df_aux.date.tolist()[-1]
-        print(f"Latitude: {latitude}, Longitude: {longitude}")
-        print(f"Start date: {start}, End date: {end}")
-        print("Opening NASA POWER data for the selected location...")
-
-        start_date = datetime.strptime(str(start).split()[0], "%Y-%m-%d")
-        end_date = datetime.strptime(str(end).split()[0], "%Y-%m-%d")
-        # start_date = datetime.strptime(str(start), "%Y-%m-%d")
-        # end_date = datetime.strptime(str(end), "%Y-%m-%d")
-
-        # Adjust the start date to the first day of the month
-        new_start = start_date.replace(day=1).strftime("%Y%m%d")
-        
-        # Adjust the end date to the last day of the month
-        new_end = (end_date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-        new_end = new_end.strftime("%Y%m%d")
-        
-        # Print the adjusted start and end dates for debugging
-        print(new_start, new_end)
-
-
-        base_url = (f"https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR&community=RE&longitude={longitude}&latitude={latitude}&start={new_start}&end={new_end}&format=JSON")
-        api_request_url = base_url.format(longitude=longitude, latitude=latitude)
-        response = requests.get(url=api_request_url, verify=True, timeout=1000)
-        content = json.loads(response.content.decode('utf-8'))
-        df = pd.DataFrame.from_dict(content['properties']['parameter'])
-        df[df < 0] = 0
-        
-        # Convert the index to datetime
-        df.index = pd.to_datetime(df.index, format='%Y%m%d')
-        self.daily_precipitation = df.reset_index().rename(columns={'index': 'Date'}).copy()
-        
-
-        # Resample the data to monthly frequency and sum the values
-        monthly_sum = df.resample('M').sum()
-        print(monthly_sum)
-        self.df_nasa = monthly_sum
-        self.plot_timeseries()
-
     def find_area(self):
         try:
             area_km2 = self.aoi.geometry().area().getInfo() / 1e6  # Convert from square meters to square kilometers
@@ -2075,8 +2019,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         except Exception as e:
             print(f"Error in find_area: {e}")
             self.aoi_area.setText(f"Total Area:")
-            return 0
-    
+            return 0   
 
     def aoi_ckecked_function(self):
         if self.aoi_ckecked and self.folder_set:
@@ -2086,7 +2029,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def resetting(self):
         self.recorte_datas = None
-        self.load_vector_function()
+        self.aoi = self.load_vector_function()
         self.get_dates()
         # self.customfilter.setChecked(False)
         #self.remove_cloudy.setChecked(False)
@@ -2094,14 +2037,30 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.filtro_grau.setCurrentIndex(0)
         self.window_len.setCurrentIndex(0)
         self.df_nasa = None
+        self.df_aux = None
+        self.df_points = None
 
     def loadtimeseries_clicked(self):
-        # Find the centroid of the AOI and check if the area is within the limit
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            self.resetting()
+            self.ee_load_collection()
+            self.calculate_timeseries()
+            self.plot_timeseries()
+            self.tabWidget.setCurrentIndex(9)
+            self.centralizar()
+            self.webView_2.setHtml("")
+            self.webView_3.setHtml("")  
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            QApplication.restoreOverrideCursor()
+            self.pop_aviso_auth(f"An error occurred: {e}")
+        QApplication.restoreOverrideCursor()
 
+    def ee_load_collection(self):    
+        # Find the centroid of the AOI and check if the area is within the limit
         
         # Reset settings and set the cursor to indicate processing
-        self.resetting()
-        QApplication.setOverrideCursor(Qt.WaitCursor)
 
         # Retrieve user inputs for date range, cloud percentage, and AOI
         inicio = self.inicio
@@ -2121,32 +2080,32 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         
         # Check if the collection is empty
         if sentinel2.size().getInfo() == 0:
-            self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
             QApplication.restoreOverrideCursor()
+            self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
             return
               
         # Apply AOI coverage filter to the image collection
         if coverage_threshold > 0:
             sentinel2 = self.AOI_coverage_filter(sentinel2, aoi, coverage_threshold)
             if sentinel2.size().getInfo() == 0:
-                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 QApplication.restoreOverrideCursor()
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 return            
 
         if local_pixel_limit > 0:
             # Apply local pixel limit filter to the image collection
             sentinel2 = self.filter_within_AOI(sentinel2, aoi, local_pixel_limit)
             if sentinel2.size().getInfo() == 0:
-                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 QApplication.restoreOverrideCursor()
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 return
 
         # Apply cloud and shadow mask if the checkbox is checked
         if self.mask.isChecked():
             sentinel2 = self.SCL_filter(sentinel2, aoi)
             if sentinel2.size().getInfo() == 0:
-                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 QApplication.restoreOverrideCursor()
+                self.pop_aviso("No images found for the selected criteria. Please select a larger date range or less strick filtering and try again.")
                 return
 
         sentinel2 = self.uniqueday_collection(sentinel2)
@@ -2154,11 +2113,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Store the filtered image collection in the instance variable
         self.sentinel2 = sentinel2
 
-        # Calculate the time series and plot it
-        self.calculate_timeseries()
-        self.plot_timeseries()
-
     def uniqueday_collection(self, sentinel2):
+
+        print("Filtering to unique days...")
+        print("Original collection size:", sentinel2.size().getInfo())
         # Step 1: Aggregate timestamps from the ImageCollection
         original_timestamps = sentinel2.aggregate_array('system:time_start').getInfo()
 
@@ -2168,6 +2126,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Step 3: Identify unique dates and map them back to the original timestamps
         df = pd.DataFrame(list(zip(original_timestamps, formatted_dates)), columns=['timestamp', 'date'])
         first_timestamps_per_date = df.groupby('date')['timestamp'].min().tolist()
+
+        print(f"Number of unique dates: {len(first_timestamps_per_date)}")
 
         # Step 4: Filter the collection to include only the first image for each unique date
         return sentinel2.filter(
@@ -2387,15 +2347,138 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         image_ids = result.aggregate_array('system:index').getInfo()
 
         # Combine the dates, mean indices, and image IDs into a DataFrame
-        df = pd.DataFrame({'date': dates, 'average_index': mean_indices, 'image_id': image_ids})
-
-        print(df)
+        df = pd.DataFrame({'date': dates, 'AOI_average': mean_indices, 'image_id': image_ids})
 
         # Optional: Smoothing or further processing
         self.df = df.copy()
         self.df_aux = df.copy()
         self.load_dates()
         self.plot_timeseries()
+
+    def feature_calculate_timeseries(self, name):
+        vegetation_index = self.series_indice.currentText()
+
+        # Buffer the AOI geometry inward by 10 meters (adjust distance as needed)
+        buffer_distance = self.horizontalSlider_buffer.value()
+        if buffer_distance != 0:
+            print(f"Buffer distance: {buffer_distance} meters")
+            aoi = self.aoi_feature.map(lambda feature: feature.buffer(buffer_distance))
+        else:
+            print("No buffer applied")
+            aoi = self.aoi_feature
+
+        # Define the vegetation index calculation in a function
+        def calculate_index(image):
+            if vegetation_index == 'NDVI':
+                index_image = image.normalizedDifference(['B8', 'B4']).rename('index')
+            elif vegetation_index == 'EVI':
+                index_image = image.expression(
+                    '2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))', {
+                        'NIR': image.select('B8'),
+                        'RED': image.select('B4'),
+                        'BLUE': image.select('B2')
+                    }
+                ).rename('index')
+            elif vegetation_index == 'SAVI':
+                L = 0.5
+                index_image = image.expression(
+                    '(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)', {
+                        'NIR': image.select('B8'),
+                        'RED': image.select('B4'),
+                        'L': L
+                    }
+                ).rename('index')
+            elif vegetation_index == 'GCI':
+                index_image = image.expression(
+                    'NIR / GREEN - 1', {
+                        'NIR': image.select('B8'),
+                        'GREEN': image.select('B3')
+                    }
+                ).rename('index')
+            elif vegetation_index == 'GNDVI':
+                index_image = image.normalizedDifference(['B8', 'B3']).rename('index')
+            else:
+                raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
+            
+            # Calculate mean value for the index over AOI
+            mean_index = index_image.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=aoi,
+                scale=10,
+                bestEffort=True
+            ).get('index')
+            
+            return image.set({'mean_index': mean_index})
+
+        # Map the calculation function over the collection and get results
+        result = self.sentinel2_selected_dates.map(calculate_index)
+        result = result.filter(ee.Filter.notNull(['mean_index']))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array('date').getInfo()
+        mean_indices = result.aggregate_array('mean_index').getInfo()
+
+        # Combine the dates, mean indices
+        print(f"Creating DataFrame for {name}")
+        return pd.DataFrame({'date': dates, name: mean_indices})
+  
+    def point_calculate_timeseries(self, aoi, name):
+        vegetation_index = self.series_indice.currentText()
+
+        # Define the vegetation index calculation in a function
+        def calculate_index(image):
+            if vegetation_index == 'NDVI':
+                index_image = image.normalizedDifference(['B8', 'B4']).rename('index')
+            elif vegetation_index == 'EVI':
+                index_image = image.expression(
+                    '2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))', {
+                        'NIR': image.select('B8'),
+                        'RED': image.select('B4'),
+                        'BLUE': image.select('B2')
+                    }
+                ).rename('index')
+            elif vegetation_index == 'SAVI':
+                L = 0.5
+                index_image = image.expression(
+                    '(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)', {
+                        'NIR': image.select('B8'),
+                        'RED': image.select('B4'),
+                        'L': L
+                    }
+                ).rename('index')
+            elif vegetation_index == 'GCI':
+                index_image = image.expression(
+                    'NIR / GREEN - 1', {
+                        'NIR': image.select('B8'),
+                        'GREEN': image.select('B3')
+                    }
+                ).rename('index')
+            elif vegetation_index == 'GNDVI':
+                index_image = image.normalizedDifference(['B8', 'B3']).rename('index')
+            else:
+                raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
+            
+            # Calculate mean value for the index over AOI
+            mean_index = index_image.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=aoi,
+                scale=10,
+                bestEffort=True
+            ).get('index')
+            
+            return image.set({'mean_index': mean_index})
+
+        # Map the calculation function over the collection and get results
+        result = self.sentinel2_selected_dates.map(calculate_index)
+        result = result.filter(ee.Filter.notNull(['mean_index']))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array('date').getInfo()
+        mean_indices = result.aggregate_array('mean_index').getInfo()
+
+        # Combine the dates, mean indices
+        print(f"Creating DataFrame for {name}")
+        return pd.DataFrame({'date': dates, name: mean_indices})
 
     def clear_all_raster_layers(self):
         # Get the current project instance
@@ -2417,7 +2500,25 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if self.recorte_datas:
             df = df[df['date'].isin(self.recorte_datas)]
             self.df_aux = df.copy()
+        else:
+            self.df_aux = df.copy()
 
+    def df_ajust_features(self):
+        df = self.df_features.copy()
+        if self.recorte_datas:
+            df = df[df['date'].isin(self.recorte_datas)]
+            self.df_aux_features = df.copy()
+        else:
+            self.df_aux_features = df.copy()
+
+    def df_ajust_points(self):
+        df = self.df_points.copy()
+        if self.recorte_datas:
+            df = df[df['date'].isin(self.recorte_datas)]
+            self.df_aux_points = df.copy()
+        else:
+            self.df_aux_points = df.copy()
+   
     def df_run_filter(self):
         df = self.df_aux.copy()
         try:
@@ -2437,9 +2538,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 print(f'Window length too large. Using maximum value: {window_length}')
 
             # Apply Savitzky-Golay filter to smooth the time series
-
             
-            df['savitzky_golay_filtered'] = savgol_filter(df['average_index'], window_length=window_length, polyorder=polyorder)
+            df['savitzky_golay_filtered'] = savgol_filter(df['AOI_average'], window_length=window_length, polyorder=polyorder)
             self.df_aux = df.copy()
             return True
         except Exception as e:
@@ -2448,19 +2548,16 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.plot_timeseries()
             return False
 
-        
-
     def plot_timeseries(self):
         print('plot1 started')
-        self.df_ajust()
-        
+
         # Prepare to plot
         myFile = io.StringIO()
         if self.QCheckBox_sav_filter.isChecked() and self.df_run_filter():
             df = self.df_aux
             try:
                 self.fig = go.Figure()
-                self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
+                self.fig.add_trace(go.Scatter(x=df['date'], y=df['AOI_average'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
                 self.fig.add_trace(go.Scatter(x=df['date'], y=df['savitzky_golay_filtered'], mode='lines', name=f"{self.series_indice.currentText()} filtered", line=dict(color='purple')))
             except Exception as e:
                 self.pop_aviso(f"An error occurred while plotting: {e}")
@@ -2468,10 +2565,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             df = self.df_aux
             self.fig = go.Figure()
-            self.fig.add_trace(go.Scatter(x=df['date'], y=df['average_index'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
+            self.fig.add_trace(go.Scatter(x=df['date'], y=df['AOI_average'], mode='lines', name=self.series_indice.currentText(), line=dict(color='green')))
        
         self.fig.update_layout(
-            xaxis_title='Date', 
+            #xaxis_title='Date', 
             yaxis_title=self.series_indice.currentText(), 
             title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}               Image count: {len(df)}"
         )
@@ -2479,7 +2576,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.fig.update_traces(hovertemplate='date = %{x|%Y-%m-%d}<br>average_ndvi = %{y:.2f}<extra></extra>')
         
         # Configurations for the Plotly plot
-        config = {
+        self.config = {
             'displaylogo': False,
             'modeBarButtonsToRemove': [
                 "toImage", "sendDataToCloud", "zoom2d", "pan2d", "select2d",
@@ -2513,112 +2610,33 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     overlaying='y',
                     side='right',
                 ),
-                xaxis=dict(title='Date'),
+                xaxis=None,
             )
-
-        
-        # Update layout and render the plot
-        self.fig.write_html(myFile, config=config)
-        html = myFile.getvalue()  
-        self.webView.setHtml(html)
-        print('ok plot1')
-
     
-        self.tabWidget.setCurrentIndex(9)
-        # self.showNormal()
-        QApplication.restoreOverrideCursor()
+        # Update layout and render the plot
+        self.webView.setHtml(self.fig.to_html(include_plotlyjs='cdn', config=self.config))
+
+        self.plot1 = True
 
     def open_browser(self):
         self.fig.show()
+
+    def open_browser_2(self):
+        try:
+            self.fig_2.show()
+        except:
+            self.pop_aviso("No data to plot")
+
+    def open_browser_3(self):
+        try:
+            self.fig_3.show()
+        except:
+            self.pop_aviso("No data to plot")
 
     def load_dates(self):
         datas = self.df.date.unique().astype(str).tolist()
         self.dataunica.clear()
         self.dataunica.addItems(datas)
         self.dataunica.setCurrentIndex(self.dataunica.count() - 1)
-
-    def load_raster_layer_colorful(self, raster_file_path, layer_name, index=None):
-        print(f"Loading raster layer color: {index}")
-
-        # Load the raster layer
-        raster_layer = QgsRasterLayer(raster_file_path, layer_name)
-        if not raster_layer.isValid():
-            print("Failed to load raster layer!")
-        else:
-            QgsProject.instance().addMapLayer(raster_layer, False)
-            root = QgsProject.instance().layerTreeRoot()
-            root.insertChildNode(0, QgsLayerTreeLayer(raster_layer))
-            print("Raster layer loaded successfully!")
-
-            # Create a color ramp shader
-            color_ramp_shader = QgsColorRampShader()
-            color_ramp_shader.setColorRampType(QgsColorRampShader.Interpolated)
-
-            # Load the predefined color ramp (e.g., RdYlGn) from the QGIS style manager
-            style = QgsStyle().defaultStyle()
-            color_ramp = style.colorRamp('RdYlGn')
-
-            # Check if the color ramp is successfully loaded
-            if color_ramp:
-                # Define the number of color stops
-                num_stops = 5
-                min_val = raster_layer.dataProvider().bandStatistics(1).minimumValue
-                max_val = raster_layer.dataProvider().bandStatistics(1).maximumValue
-                step = (max_val - min_val) / (num_stops - 1)
-
-                # Create color ramp items by interpolating the color ramp
-                color_ramp_items = []
-                for i in range(num_stops):
-                    value = min_val + i * step
-                    color = color_ramp.color(i / (num_stops - 1))  # Interpolates color along the ramp
-                    color_ramp_items.append(QgsColorRampShader.ColorRampItem(value, color))
-
-                # Set the color ramp items to the color ramp shader
-                color_ramp_shader.setColorRampItemList(color_ramp_items)
-            else:
-                print("Color ramp 'RdYlGn' not found in the QGIS style library.")
-
-            # Create a raster shader and set it to use the color ramp shader
-            raster_shader = QgsRasterShader()
-            raster_shader.setRasterShaderFunction(color_ramp_shader)
-
-            # Apply the raster shader to the raster layer renderer
-            renderer = QgsSingleBandPseudoColorRenderer(raster_layer.dataProvider(), 1, raster_shader)
-            raster_layer.setRenderer(renderer)
-
-            # Refresh the layer to update the visualization
-            raster_layer.triggerRepaint()
-
-        print(index, self.metrica.currentText())
-
-        if index == 'NDVI' and self.metrica.currentText() != 'Area Under Curve (AUC)':
-            print('Rendering NDVI 0-1')
-            # Clone the current renderer
-            newrend = raster_layer.renderer().clone()
-
-            # Set the classification range (min and max values)
-            # newrend.setClassificationMin(min_val)
-            # newrend.setClassificationMax(max_val)
-            newrend.setClassificationMin(0)
-            newrend.setClassificationMax(1)
-
-            # Apply the new renderer to the layer
-            raster_layer.setRenderer(newrend)
-            # Refresh the map canvas to reflect the changes
-            iface.mapCanvas().refresh()
-        else:
-            # Clone the current renderer
-            newrend = raster_layer.renderer().clone()
-
-            # Set the classification range (min and max values)
-            newrend.setClassificationMin(min_val)
-            newrend.setClassificationMax(max_val)
-            # newrend.setClassificationMin(0)
-            # newrend.setClassificationMax(1)
-
-            # Apply the new renderer to the layer
-            raster_layer.setRenderer(newrend)
-            # Refresh the map canvas to reflect the changes
-            iface.mapCanvas().refresh()
 
         QApplication.restoreOverrideCursor()

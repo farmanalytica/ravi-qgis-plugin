@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1172</width>
-    <height>590</height>
+    <width>1643</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,24 +24,32 @@
     QPushButton:hover {
         background-color: #b6d4fe; /* Slightly Darker Blue */
     }
-    <!-- QPushButton#QPushButton_back, QPushButton#QPushButton_back_2 {
-        background-color: #e2e3e5; /* Soft Gray */
-    } -->
-    <!-- QPushButton#QPushButton_back:hover, QPushButton#QPushButton_back_2:hover {
-        background-color: #d6d8db; /* Slightly Darker Gray */
-    } -->
-    QPushButton#QPushButton_next {
-        background-color: #d1e7ff;
+    QPushButton:disabled {
+        background-color: #f0f0f0; /* Light Gray */
+        color: #a0a0a0;
     }
-    QPushButton#QPushButton_next:hover {
-        background-color: #b6d4fe;
-    }
+
     QPushButton#clear_raster, QPushButton#clear_nasa {
         background-color: #f8d7da; /* Soft Red */
     }
     QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
         background-color: #f1b0b7; /* Slightly Darker Red */
     }
+
+    QPushButton#clear_raster, QPushButton#clear_features {
+        background-color: #f8d7da; /* Soft Red */
+    }
+    QPushButton#clear_raster:hover, QPushButton#clear_features:hover {
+        background-color: #f1b0b7; /* Slightly Darker Red */
+    }
+
+    QPushButton#clear_raster, QPushButton#clear_button_points {
+        background-color: #f8d7da; /* Soft Red */
+    }
+    QPushButton#clear_raster:hover, QPushButton#clear_button_points:hover {
+        background-color: #f1b0b7; /* Slightly Darker Red */
+    }
+
   </string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
@@ -68,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -696,7 +704,7 @@ p, li { white-space: pre-wrap; }
           <string>Últimos 12 meses</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -724,6 +732,9 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="text">
           <string>Últimos 3 meses</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -2579,7 +2590,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Apagar</string>
+       <string>Remover precipitação</string>
       </property>
      </widget>
      <widget class="QPushButton" name="salvar_nasa">
@@ -2642,9 +2653,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QDateEdit" name="incioedit_2">
       <property name="geometry">
        <rect>
-        <x>770</x>
+        <x>760</x>
         <y>30</y>
-        <width>111</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -2828,7 +2839,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>740</x>
+        <x>730</x>
         <y>29</y>
         <width>31</width>
         <height>31</height>
@@ -2861,6 +2872,372 @@ p, li { white-space: pre-wrap; }
        <string>Índice:</string>
       </property>
      </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_11">
+    <attribute name="title">
+     <string>Análise Multipolígono</string>
+    </attribute>
+    <widget class="QWebView" name="webView_2" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>160</y>
+       <width>1141</width>
+       <height>401</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
+     <property name="acceptDrops">
+      <bool>true</bool>
+     </property>
+     <property name="locale">
+      <locale language="Portuguese" country="Brazil"/>
+     </property>
+     <property name="url" stdset="0">
+      <url>
+       <string/>
+      </url>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_16">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1121</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Campo Identificador:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="attributes_id">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>10</y>
+        <width>201</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="QPushButton_features">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Executar Análise</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="navegador_2">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>10</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Abrir no navegador</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_2">
+      <property name="geometry">
+       <rect>
+        <x>930</x>
+        <y>10</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Salvar como planilha</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_valid_pixels_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>1111</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso é voltado para áreas de interesse do tipo Multipolígono e permite visualizar simultaneamente a série temporal de cada polígono individualmente. Para um funcionamento correto, é necessário selecionar um campo da tabela de atributos que identifique exclusivamente cada polígono. A seleção de imagens é a mesma da área de interrese definida na aba &amp;quot;Painel&amp;quot;, e o buffer configurado (Passo 7) será aplicado separadamente a cada polígono. O tempo de processamento pode varias significativamente dependendo da quantidade de polígonos e imagens.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="overwriteMode">
+       <bool>true</bool>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
+      <property name="openLinks">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="datasrecorte_2">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>10</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Abrir seleção de datas</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_12">
+    <attribute name="title">
+     <string>Análise de Pontos</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1121</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QPushButton" name="clear_button_points">
+      <property name="geometry">
+       <rect>
+        <x>960</x>
+        <y>10</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Redefinir análise</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_3">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>10</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Salvar como planilha</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_captureCoordinates">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>241</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Ativar comparação de pontos</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_valid_pixels_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>1101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso permite a análise da série temporal de pontos selecionados no mapa. Para utilizá-lo, ative a opção &amp;quot;Ativar comparação de pontos&amp;quot; e clique na tela para iniciar a análise do ponto, que será adicionada ao gráfico após alguns segundos. Cada clique adiciona um novo ponto à análise. Cada ponto criado corresponde a uma nova área de interesse que abrange apenas um único pixel (10m x 10m) em sua região central, mesmo que o contorno exibido pareça maior. A análise utiliza a mesma seleção de imagens definida na aba &amp;quot;Painel&amp;quot;, portanto, evite selecionar pontos fora da área de interesse original.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="overwriteMode">
+       <bool>true</bool>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
+      <property name="openLinks">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="navegador_3">
+      <property name="geometry">
+       <rect>
+        <x>610</x>
+        <y>10</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Abrir no navegador</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="datasrecorte_3">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>10</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Abrir seleção de datas</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWebView" name="webView_3" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>160</y>
+       <width>1141</width>
+       <height>401</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
+     <property name="acceptDrops">
+      <bool>true</bool>
+     </property>
+     <property name="locale">
+      <locale language="Portuguese" country="Brazil"/>
+     </property>
+     <property name="url" stdset="0">
+      <url>
+       <string/>
+      </url>
+     </property>
     </widget>
    </widget>
   </widget>
