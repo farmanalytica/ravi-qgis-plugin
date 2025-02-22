@@ -3,7 +3,6 @@ from qgis.core import QgsWkbTypes, QgsGeometry
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
 import random
 
-
 # Define a class for our custom map tool
 class CoordinateCaptureTool(QgsMapToolEmitPoint):
     def __init__(self, canvas, ravi_dialog):
