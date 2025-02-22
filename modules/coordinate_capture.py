@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QColor
-from qgis.core import QgsWkbTypes, QgsGeometry
+from qgis.core import QgsWkbTypes, QgsGeometry, QgsCoordinateTransform, QgsCoordinateReferenceSystem, QgsProject
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
 import random
 
@@ -13,6 +13,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         self.latitude = None
         self.longitude = None
         self.dot_color = self.generate_bright_color()
+        self.transform = QgsCoordinateTransform(self.canvas.mapSettings().destinationCrs(), QgsCoordinateReferenceSystem(4326), QgsProject.instance())
         print("CoordinateCaptureTool initialized")  # Debugging
         print(f"self.rubberBands: {self.rubberBands}")  # Debugging
 
@@ -26,6 +27,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
     def canvasReleaseEvent(self, event):
         # Get the clicked point in map coordinates
         point = self.toMapCoordinates(event.pos())
+        point = self.transform.transform(point)  # Transform to EPSG:4326
         self.latitude = point.y()
         self.longitude = point.x()
 
