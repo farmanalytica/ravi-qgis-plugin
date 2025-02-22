@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1549</width>
-    <height>759</height>
+    <height>846</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -3047,6 +3047,8 @@ p, li { white-space: pre-wrap; }
       </url>
      </property>
     </widget>
+    <zorder>webView_3</zorder>
+    <zorder>groupBox_13</zorder>
    </widget>
    <widget class="QWidget" name="tab_11">
     <attribute name="title">

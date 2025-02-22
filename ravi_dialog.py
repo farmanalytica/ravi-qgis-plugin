@@ -143,9 +143,6 @@ from qgis.core import QgsProject, QgsMapLayer, QgsWkbTypes
 
 from .modules import (
     ee_utils,
-    qgis_utils,
-    plot_utils,
-    file_utils,
     map_tools,
     nasa_power,
     vegetation_index_info,
