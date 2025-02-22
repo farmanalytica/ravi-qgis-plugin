@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>11</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -2881,6 +2881,182 @@ p, li { white-space: pre-wrap; }
     <zorder>groupBox_29</zorder>
     <zorder>groupBox_12</zorder>
    </widget>
+   <widget class="QWidget" name="tab_12">
+    <attribute name="title">
+     <string>Points Analysis</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1121</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QPushButton" name="clear_button_points">
+      <property name="geometry">
+       <rect>
+        <x>990</x>
+        <y>10</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clear Analysis</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_3">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>10</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Save as spredsheet</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_captureCoordinates">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>241</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Activate Points Analysis</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_valid_pixels_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>1101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This feature enables the analysis of the time series for points selected on the map. To use it, activate the &amp;quot;Enable point comparison&amp;quot; option and click on the screen to start the point analysis, which will be added to the chart after a few seconds. Each click adds a new point to the analysis. Each created point corresponds to a new area of interest that covers only a single pixel (10m x 10m) at its central region, even if the displayed outline appears larger. The analysis uses the same image selection defined in the &amp;quot;Panel&amp;quot; tab, so avoid selecting points outside the original area of interest.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="overwriteMode">
+       <bool>true</bool>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
+      <property name="openLinks">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="navegador_3">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>10</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Open in the browser</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="datasrecorte_3">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>10</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Open date selection tool</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWebView" name="webView_3" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>140</y>
+       <width>1141</width>
+       <height>441</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
+     <property name="acceptDrops">
+      <bool>true</bool>
+     </property>
+     <property name="locale">
+      <locale language="Portuguese" country="Brazil"/>
+     </property>
+     <property name="url" stdset="0">
+      <url>
+       <string/>
+      </url>
+     </property>
+    </widget>
+    <zorder>webView_3</zorder>
+    <zorder>groupBox_13</zorder>
+   </widget>
    <widget class="QWidget" name="tab_11">
     <attribute name="title">
      <string>MultiPolygon Analysis</string>
@@ -3074,182 +3250,6 @@ p, li { white-space: pre-wrap; }
     </widget>
     <zorder>webView_2</zorder>
     <zorder>groupBox_16</zorder>
-   </widget>
-   <widget class="QWidget" name="tab_12">
-    <attribute name="title">
-     <string>Points Analysis</string>
-    </attribute>
-    <widget class="QGroupBox" name="groupBox_13">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>1121</width>
-       <height>151</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string/>
-     </property>
-     <widget class="QPushButton" name="clear_button_points">
-      <property name="geometry">
-       <rect>
-        <x>990</x>
-        <y>10</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Clear Analysis</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="salvar_3">
-      <property name="geometry">
-       <rect>
-        <x>810</x>
-        <y>10</y>
-        <width>171</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Save as spredsheet</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox_captureCoordinates">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>241</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Activate Points Analysis</string>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_valid_pixels_3">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>1101</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This feature enables the analysis of the time series for points selected on the map. To use it, activate the &amp;quot;Enable point comparison&amp;quot; option and click on the screen to start the point analysis, which will be added to the chart after a few seconds. Each click adds a new point to the analysis. Each created point corresponds to a new area of interest that covers only a single pixel (10m x 10m) at its central region, even if the displayed outline appears larger. The analysis uses the same image selection defined in the &amp;quot;Panel&amp;quot; tab, so avoid selecting points outside the original area of interest.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="overwriteMode">
-       <bool>true</bool>
-      </property>
-      <property name="textInteractionFlags">
-       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-      </property>
-      <property name="openLinks">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="navegador_3">
-      <property name="geometry">
-       <rect>
-        <x>640</x>
-        <y>10</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Open in the browser</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="datasrecorte_3">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>10</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Open date selection tool</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWebView" name="webView_3" native="true">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>140</y>
-       <width>1141</width>
-       <height>441</height>
-      </rect>
-     </property>
-     <property name="mouseTracking">
-      <bool>true</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="contextMenuPolicy">
-      <enum>Qt::NoContextMenu</enum>
-     </property>
-     <property name="acceptDrops">
-      <bool>true</bool>
-     </property>
-     <property name="locale">
-      <locale language="Portuguese" country="Brazil"/>
-     </property>
-     <property name="url" stdset="0">
-      <url>
-       <string/>
-      </url>
-     </property>
-    </widget>
-    <zorder>webView_3</zorder>
-    <zorder>groupBox_13</zorder>
    </widget>
   </widget>
  </widget>
