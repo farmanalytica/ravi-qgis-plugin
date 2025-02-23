@@ -54,7 +54,7 @@ from qgis.core import (
 from PyQt5.QtGui import QColor
 
 # PyQt5 and QGIS imports / Importações PyQt5 e QGIS
-from PyQt5.QtCore import QDate, Qt, QVariant
+from PyQt5.QtCore import QDate, Qt, QVariant, QSettings
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -132,7 +132,7 @@ import json
 import sys
 import os
 from PyQt5 import uic
-from PyQt5.QtCore import QSettings
+
 from qgis.core import QgsProject, QgsMapLayer, QgsWkbTypes
 
 
@@ -164,9 +164,7 @@ except:
 
 # Load the .ui file based on the language setting / Carrega o arquivo .ui com
 # base na configuração de idioma
-settings = QSettings()
-user_locale = settings.value("locale/userLocale", "en")  # Example: 'en_US' or 'pt_BR'
-language = user_locale[0:2]  # Get the first 2 characters: 'en' or 'pt'
+language = QSettings().value("locale/userLocale", "en")[0:2]
 
 if language == "pt":
     ui_file = "ravi_dialog_base_pt.ui"
@@ -211,11 +209,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # Determine language for UI elements / Determina o idioma para os
         # elementos da UI
-        settings = QSettings()
-        user_locale = settings.value(
-            "locale/userLocale", "en"
-        )  # Example: 'en_US' or 'pt_BR'
-        self.language = user_locale[0:2]  # Get the first 2 characters: 'en' or 'pt'
+        self.language = QSettings().value("locale/userLocale", "en")[0:2]
 
         # Initialize variables / Inicializa variáveis
         self.plot1 = None
@@ -1418,21 +1412,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.mQgsFileWidget.setFilePath(self.output_folder)
 
     def pop_warning(self, aviso):
-
         QApplication.restoreOverrideCursor()
         msg = QMessageBox(self)
         msg.setWindowTitle("Warning!")
         msg.setIcon(QMessageBox.Warning)
         msg.setText(aviso)
-
-        # Set buttons with Ok on the right / Define os botões com Ok à direita
         msg.setStandardButtons(QMessageBox.Ok)
-
-        # Access the buttons to set custom text / Acessa os botões para definir
-        # o texto personalizado
-        ok_button = msg.button(QMessageBox.Ok)
-        ok_button.setText("OK")
-
+        msg.button(QMessageBox.Ok).setText("OK")
         msg.exec_()
 
     def update_vector_clicked(self):
@@ -2241,6 +2227,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.centralizar()
             self.webView_2.setHtml("")
             self.webView_3.setHtml("")
+            print("Time series loaded successfully.")
+            
+            if self.language == "pt":
+                self.pop_warning("\n".join(self.collection_info_pt))
+            else:
+                self.pop_warning("\n".join(self.collection_info))
+        
         except Exception as e:
             print(f"An error occurred: {e}")
             QApplication.restoreOverrideCursor()
@@ -2248,6 +2241,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         QApplication.restoreOverrideCursor()
 
     def ee_load_collection(self):
+
+        self.collection_info = []
+        self.collection_info_pt = []
         """Loads the Earth Engine image collection based on user-defined
         criteria."""
         """Carrega a coleção de imagens do Earth Engine com base nos critérios
@@ -2272,17 +2268,39 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
             .filterDate(inicio, final)
             .filterBounds(aoi)
-            .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", nuvem))
+            #.filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", nuvem))
             .map(lambda image: image.set("date", image.date().format("YYYY-MM-dd")))
         )
 
         # Check if the collection is empty
-        if sentinel2.size().getInfo() == 0:
+        original_count = sentinel2.size().getInfo()
+        print(f"Collection size before any filtering: {original_count}")
+        self.collection_info.append(f"Collection size before any filtering: {original_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção antes de qualquer filtro: {original_count}")
+
+        if original_count == 0:
             QApplication.restoreOverrideCursor()
             self.pop_warning(
                 "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
             )
             return
+
+        # Apply cloud percentage filter
+        sentinel2 = sentinel2.filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", nuvem))
+
+        # Check if the collection is empty after cloud filtering
+        cloud_filtered_count = sentinel2.size().getInfo()
+        print(f"Collection size after cloud filtering: {cloud_filtered_count}")
+        self.collection_info.append(f"Collection size after tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtragem de nuvem (Passo 8): {cloud_filtered_count}")
+
+        if cloud_filtered_count == 0:
+            QApplication.restoreOverrideCursor()
+            self.pop_warning(
+                "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
+            )
+            return
+
 
         # Apply AOI coverage filter to the image collection
         if coverage_threshold > 0:
@@ -2296,7 +2314,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         if local_pixel_limit > 0:
             # Apply local pixel limit filter to the image collection
-            sentinel2 = self.filter_within_AOI(sentinel2, aoi, local_pixel_limit)
+            sentinel2 = self.SCL_filter(sentinel2, aoi, local_pixel_limit)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
                 self.pop_warning(
@@ -2306,7 +2324,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         # Apply cloud and shadow mask if the checkbox is checked
         if self.mask.isChecked():
-            sentinel2 = self.SCL_filter(sentinel2, aoi)
+            sentinel2 = self.SCL_mask(sentinel2, aoi)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
                 self.pop_warning(
@@ -2341,7 +2359,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
         first_timestamps_per_date = df.groupby("date")["timestamp"].min().tolist()
 
-        print(f"Number of unique dates: {len(first_timestamps_per_date)}")
+        print(f"Collection size after keeping only unique dates: {len(first_timestamps_per_date)}")
+        self.collection_info.append(f"Collection size after keeping only unique dates: {len(first_timestamps_per_date)}")
+        self.collection_info_pt.append(f"Tamanho da coleção após manter apenas datas únicas: {len(first_timestamps_per_date)}")
 
         # Step 4: Filter the collection to include only the first image for each
         # unique date
@@ -2354,6 +2374,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         Interest (AOI)."""
         """Filtra a coleção de imagens com base na cobertura da Área de
         Interesse (AOI)."""
+        print("Applying AOI coverage filter...")
         if coverage_threshold == 1:
             coverage_threshold = 0.9999  # Avoid floating-point comparison issues
 
@@ -2402,24 +2423,28 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Apply the filter to get the final collection
         covering_colection = sentinel2_with_ratio.filter(coverage_filter)
 
-        # Get the number of images before filtering
-        initial_count = sentinel2.size().getInfo()
 
         # Get the number of images after coverage filtering
         filtered_count = covering_colection.size().getInfo()
 
-        print(f"Number of images before coverage filtering: {initial_count}")
         print(
-            f"Number of images with >= {coverage_threshold*100}% AOI coverage: {filtered_count}"
+            f"Collection size after >= {coverage_threshold*100}% AOI coverage: {filtered_count}"
         )
+        self.collection_info.append(f"Collection size after >= {coverage_threshold*100}% AOI coverage (Step 6): {filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após >= {coverage_threshold*100}% de cobertura da AOI (Passo 6): {filtered_count}")
+        
 
         return covering_colection
 
-    def filter_within_AOI(self, sentinel2, aoi, valid_pixel_threshold):
+    def SCL_filter(self, sentinel2, aoi, valid_pixel_threshold):
         """Filters the image collection based on the percentage of valid pixels
         within the AOI."""
         """Filtra a coleção de imagens com base na porcentagem de pixels
         válidos dentro da AOI."""
+
+        print("Applying SCL filter...")
+        #print("Original collection size:", sentinel2.size().getInfo())
+
         scl_classes_behavior = {
             0: self.mask_class0.isChecked(),  # No data
             1: self.mask_class1.isChecked(),  # Saturated/defective
@@ -2476,20 +2501,23 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             ee.Filter.gte("percentage_valid_pixels", valid_pixel_threshold)
         )
 
-        # Get the number of images in the filtered collection
-        filtered_count = filtered_collection.size().getInfo()
-
         masked_timestamps = filtered_collection.aggregate_array("system:time_start").getInfo()
 
-        return sentinel2.filter(
+        sentinel2 =  sentinel2.filter(
             ee.Filter.inList("system:time_start", ee.List(masked_timestamps))
         )
 
-    def SCL_filter(self, sentinel2, aoi):
-        """Applies a Scene Classification Layer (SCL) filter to the image
+        print("Collection size after SCL filter:", sentinel2.size().getInfo())
+        self.collection_info.append(f"Collection size after SCL filter (Step 9): {sentinel2.size().getInfo()}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtro SCL (Passo 9): {sentinel2.size().getInfo()}")
+        return sentinel2
+
+    def SCL_mask(self, sentinel2, aoi):
+        """Applies a Scene Classification Layer (SCL) mask
         collection."""
-        """Aplica um filtro de Camada de Classificação de Cena (SCL) à coleção
+        """Aplica uma mascara de Camada de Classificação de Cena (SCL) à coleção
         de imagens."""
+        print("Applying SCL MASK...")
         scl_classes_behavior = {
             0: self.mask_class0.isChecked(),  # No data
             1: self.mask_class1.isChecked(),  # Saturated/defective

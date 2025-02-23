@@ -9,9 +9,11 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QApplication
 )
+from PyQt5.QtCore import QSettings
 
 print("Importing Earth Engine API utility functions...")
 # Define utility functions for Earth Engine API installation and initialization.
+
 
 def get_installed_version():
     """Return the installed Earth Engine API version, or None if not installed."""
@@ -44,8 +46,12 @@ def install_earthengine_api():
         pip.main(pip_args)
         print("Earth Engine API installed/upgraded successfully (using pip.main).")
         QApplication.restoreOverrideCursor()
-        QMessageBox.information(None, "Information", 
-                                "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
+        if QSettings().value("locale/userLocale", "en")[:2] == "pt":
+            QMessageBox.information(None, "Informação", 
+                                    "A API do Google Earth Engine foi instalada ou atualizada. Por favor, reinicie o QGIS para que o plugin RAVI funcione corretamente.")
+        else:
+            QMessageBox.information(None, "Information", 
+                                    "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
     except AttributeError:
         # Fallback for newer pip versions that do not expose pip.main
         try:
@@ -56,8 +62,12 @@ def install_earthengine_api():
                 "Earth Engine API installed/upgraded successfully (using pip._internal)."
             )
             QApplication.restoreOverrideCursor()
-            QMessageBox.information(None, "Information", 
-                                    "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
+            if QSettings().value("locale/userLocale", "en")[:2] == "pt":
+                QMessageBox.information(None, "Informação", 
+                                        "A API do Google Earth Engine foi instalada ou atualizada. Por favor, reinicie o QGIS para que o plugin RAVI funcione corretamente.")
+            else:
+                QMessageBox.information(None, "Information", 
+                                        "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
         except Exception as e:
             print("An error occurred during installation:", e)
     except Exception as e:
