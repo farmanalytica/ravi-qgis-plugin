@@ -885,13 +885,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
         if self.output_folder is None:
-            self.pop_aviso_auth("Please select a output folder first.")
+            self.pop_warning_auth("Please select a output folder first.")
             return
 
         existing_layers = QgsProject.instance().mapLayers().values()
         layer_names = [layer.name() for layer in existing_layers]
         if "Google Hybrid" not in layer_names:
-            self.pop_aviso_auth("Please load the Google Hybrid layer first.")
+            self.pop_warning_auth("Please load the Google Hybrid layer first.")
             return
 
         # Get the canvas and its CRS
@@ -970,7 +970,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
         else:
             print("Failed to load the shapefile.")
-            self.pop_aviso_auth("Failed to load the shapefile.")
+            self.pop_warning_auth("Failed to load the shapefile.")
 
 
     def salvar_clicked(self):
@@ -1007,7 +1007,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def salvar_nasa_clicked(self):
         if self.df_nasa is None:
-            self.pop_aviso("No NASA data to save.")
+            self.pop_warning("No NASA data to save.")
             return
         name = (
             f"nasa_power_precipitation_{self.vector_layer_combobox.currentText()}.csv"
@@ -1412,7 +1412,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # diretório sugerido
         self.mQgsFileWidget.setFilePath(self.output_folder)
 
-    def pop_aviso(self, aviso):
+    def pop_warning(self, aviso):
 
         QApplication.restoreOverrideCursor()
         msg = QMessageBox(self)
@@ -1490,7 +1490,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.vector_layer_combobox.setCurrentIndex(index)
 
         if self.vector_layer_combobox.count() == 0:
-            self.pop_aviso("No vector layers found in the project.")
+            self.pop_warning("No vector layers found in the project.")
 
     def get_selected_layer_path(self):
         """
@@ -1547,12 +1547,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             area = self.find_area()
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
-                self.pop_aviso(
+                self.pop_warning(
                     f"Area too large ({area:.2f} km²). The limit is 100 km²."
                 )
                 return None
             if area == 0:
-                self.pop_aviso("Selected layer is not valid")
+                self.pop_warning("Selected layer is not valid")
                 self.QPushButton_next.setEnabled(False)
                 return None
 
@@ -1714,7 +1714,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     }
                 )
             except Exception as e:
-                self.pop_aviso_auth(f"Failed to generate download URL: {e}")
+                self.pop_warning_auth(f"Failed to generate download URL: {e}")
                 return
 
             # Define output file
@@ -1731,7 +1731,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                             f.write(chunk)
                 print(f"Image downloaded to {output_file}")
             except requests.exceptions.RequestException as e:
-                self.pop_aviso_auth(f"Error downloading image: {e}")
+                self.pop_warning_auth(f"Error downloading image: {e}")
                 return
 
             # Add the image as a raster layer in QGIS
@@ -1740,7 +1740,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             layer = QgsRasterLayer(output_file, layer_name)
             if not layer.isValid():
-                self.pop_aviso_auth(f"Failed to load the layer: {output_file}")
+                self.pop_warning_auth(f"Failed to load the layer: {output_file}")
                 return
 
             # Set min and max values for each band (Red, Green, Blue)
@@ -1797,7 +1797,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             root.insertChildNode(0, QgsLayerTreeLayer(layer))
             iface.setActiveLayer(layer)
         except Exception as e:
-            self.pop_aviso_auth(f"An error occurred: {e}")
+            self.pop_warning_auth(f"An error occurred: {e}")
         finally:
             QApplication.restoreOverrideCursor()
 
@@ -2232,7 +2232,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         except Exception as e:
             print(f"An error occurred: {e}")
             QApplication.restoreOverrideCursor()
-            self.pop_aviso_auth(f"An error occurred: {e}")
+            self.pop_warning_auth(f"An error occurred: {e}")
         QApplication.restoreOverrideCursor()
 
     def ee_load_collection(self):
@@ -2267,7 +2267,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Check if the collection is empty
         if sentinel2.size().getInfo() == 0:
             QApplication.restoreOverrideCursor()
-            self.pop_aviso(
+            self.pop_warning(
                 "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
             )
             return
@@ -2277,7 +2277,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             sentinel2 = self.AOI_coverage_filter(sentinel2, aoi, coverage_threshold)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
-                self.pop_aviso(
+                self.pop_warning(
                     "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
                 )
                 return
@@ -2287,7 +2287,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             sentinel2 = self.filter_within_AOI(sentinel2, aoi, local_pixel_limit)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
-                self.pop_aviso(
+                self.pop_warning(
                     "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
                 )
                 return
@@ -2297,7 +2297,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             sentinel2 = self.SCL_filter(sentinel2, aoi)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
-                self.pop_aviso(
+                self.pop_warning(
                     "No images found for the selected criteria. Please select a larger date range or less strick filtering and try again."
                 )
                 return
@@ -2805,7 +2805,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.df_aux = df.copy()
             return True
         except Exception as e:
-            self.pop_aviso(
+            self.pop_warning(
                 f"Not enough images to apply the Savitzky-Golay filter. Please select a larger date range or less strick filtering."
             )
             self.QCheckBox_sav_filter.setChecked(False)
@@ -2844,7 +2844,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     )
                 )
             except Exception as e:
-                self.pop_aviso(f"An error occurred while plotting: {e}")
+                self.pop_warning(f"An error occurred while plotting: {e}")
                 self.QCheckBox_sav_filter.setChecked(False)
         else:
             df = self.df_aux
@@ -2948,7 +2948,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         try:
             self.fig_2.show()
         except:
-            self.pop_aviso("No data to plot")
+            self.pop_warning("No data to plot")
 
     def open_browser_3(self):
         """Opens the points plot in a web browser."""
@@ -2956,7 +2956,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         try:
             self.fig_3.show()
         except:
-            self.pop_aviso("No data to plot")
+            self.pop_warning("No data to plot")
 
     def load_dates(self):
         """Loads the unique dates from the DataFrame into the date selection

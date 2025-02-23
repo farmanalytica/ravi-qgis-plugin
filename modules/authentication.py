@@ -61,7 +61,7 @@ def auth(dialog):
 
             if assets.get("assets") is not None:  # Valid project detected
                 print("Default project is valid.")
-                dialog.pop_aviso("Authentication successful!")
+                dialog.pop_warning("Authentication successful!")
                 dialog.autentication = True
                 dialog.next_clicked()
             else:
@@ -72,7 +72,7 @@ def auth(dialog):
             # Invalid project or access issue / Projeto inválido ou problema
             # de acesso
             print(f"Default project validation failed: {e}")
-            dialog.pop_aviso_auth(
+            dialog.pop_warning(
                 f"Default project validation failed: {e}\nFollow the instructions to have a valid Google Cloud project."
             )
             auth_clear(dialog, True)
@@ -84,20 +84,20 @@ def auth(dialog):
         if "Earth Engine client library not initialized" in str(e):
             message = "Authentication failed. Please authenticate again."
             print(message)
-            dialog.pop_aviso_auth(message)
+            dialog.pop_warning(message)
         else:
             message = (
                 f"An error occurred during authentication or initialization: {e}"
             )
             print(message)
-            dialog.pop_aviso_auth(message)
+            dialog.pop_warning(message)
             auth_clear(dialog, True)
 
     except Exception as e:
         # Handle unexpected errors / Lida com erros inesperados
         message = f"An unexpected error occurred: {e}"
         print(message)
-        dialog.pop_aviso_auth(message)
+        dialog.pop_warning(message)
 
 
 def auth_clear(dialog, silent=False):
@@ -136,12 +136,12 @@ def auth_clear(dialog, silent=False):
             if not silent:
                 message = "Earth Engine configuration cleared successfully (all files deleted)."
                 print(message)
-                dialog.pop_aviso_auth(message)
+                dialog.pop_warning(message)
         except Exception as e:
             message = f"Error clearing Earth Engine configuration: {e}"
             print(message)
-            dialog.pop_aviso_auth(message)
+            dialog.pop_warning(message)
     else:
         message = "No Earth Engine configuration found to clear."
         print(message)
-        dialog.pop_aviso_auth(message)
+        dialog.pop_warning(message)
