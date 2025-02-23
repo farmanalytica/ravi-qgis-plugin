@@ -147,6 +147,7 @@ from .modules import (
     nasa_power,
     vegetation_index_info,
     save_utils,
+    authentication
 )
 
 
@@ -179,7 +180,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(RAVIDialog, self).__init__(parent)
-
+     
         self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
         super().__init__(
             None,
@@ -190,7 +191,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
 
+        authentication.loadProjectId(self)
+
         self.coordinate_capture_tool = None
+
+        
 
         # Find the checkbox in the UI / Encontra a checkbox na UI
         self.checkBox_captureCoordinates = self.findChild(
@@ -235,7 +240,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # UI setup and signal connections / Configuração da UI e conexões de sinal
         self.setup_ui()
         self.connect_signals()
-        self.loadProjectId()
+        authentication.loadProjectId(self)
 
         self.combo_year.addItems(
             [str(year) for year in range(2017, datetime.now().year + 1)]
@@ -246,10 +251,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.index_explain()
         self.tabWidget.setCurrentIndex(0)
         self.resizeEvent("small")
-
-        # Connect the textChanged signal to automatically save changes. /
-        # Conecta o sinal textChanged para salvar as mudanças automaticamente.
-        self.project_QgsPasswordLineEdit.textChanged.connect(self.autoSaveProjectId)
 
     def setup_ui(self):
         """Initial UI setup."""
@@ -262,13 +263,21 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
         self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
 
+
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
         """Conecta os sinais da UI aos seus respectivos slots."""
+
+        self.autenticacao.clicked.connect(lambda: authentication.auth(self))
+        self.desautenticacao.clicked.connect(lambda: authentication.auth_clear(self))
+        
+        # Connect the textChanged signal to the autoSaveProjectId function
+        self.project_QgsPasswordLineEdit.textChanged.connect(
+            lambda new_text: authentication.autoSaveProjectId(self, new_text)
+        )
+
         self.clear_button_points.clicked.connect(self.remove_all_dots)
         self.QPushButton_features.clicked.connect(self.QPushButton_features_clicked)
-        self.autenticacao.clicked.connect(self.auth)
-        self.desautenticacao.clicked.connect(self.auth_clear)
         self.update_vector.clicked.connect(self.update_vector_clicked)
         self.update_vector_2.clicked.connect(self.update_vector_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
@@ -342,6 +351,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.textEdit.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
         self.series_indice.currentIndexChanged.connect(self.index_explain)
+
+
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -543,24 +554,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
         print("Feature info calculated and plotted.")
 
-    def loadProjectId(self):
-        """Loads the saved project ID from QSettings and sets it in the widget."""
-        """Carrega o ID do projeto salvo de QSettings e o define no widget."""
-        settings = QSettings()
-        saved_project_id = settings.value("MyPlugin/projectID", "", type=str)
-        self.project_QgsPasswordLineEdit.setText(saved_project_id)
-        print("Loaded project ID:", saved_project_id)
-        self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
-
-    def autoSaveProjectId(self, new_text):
-        """Automatically saves the project ID to QSettings whenever the text changes."""
-        """Salva automaticamente o ID do projeto em QSettings sempre que o texto
-        muda."""
-        settings = QSettings()
-        settings.setValue("MyPlugin/projectID", new_text)
-        print("Project ID auto-saved:", new_text)
-        self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
-
     # =========================================================================
 
     def load_fields(self, id_column=None):
@@ -586,18 +579,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.attributes_id.addItems(sorted(unique_fields))
 
     def QPushButton_features_clicked(self):
-        # try:
-        #     self.sentinel2_selected_dates_update()
-        #     QApplication.setOverrideCursor(Qt.WaitCursor)
-        #     feature_info = self.split_features(self.attributes_id.currentText())
-        #     self.feature_info(feature_info)
-        #     self.df_ajust_points()
-        #     self.plot_timeseries_feature
-        # except Exception as e:
-        #     print(f"Error splitting features: {str(e)}")
-        #     self.pop_aviso(str(e))
-        #     QApplication.restoreOverrideCursor()
-        # QApplication.restoreOverrideCursor()
         QApplication.setOverrideCursor(Qt.WaitCursor)
         self.sentinel2_selected_dates_update()
         feature_info = self.split_features(self.attributes_id.currentText())
@@ -1395,124 +1376,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             (self.tabWidget.currentIndex() - 1) % self.tabWidget.count()
         )
 
-    def auth(self):
-        """
-        Authenticates Earth Engine and validates the default project. Warnings
-        are displayed only if the default project is invalid.
-        """
-        """
-        Autentica o Earth Engine e valida o projeto padrão. Avisos são
-        exibidos apenas se o projeto padrão for inválido.
-        """
-        try:
-            # Step 1: Authenticate and initialize Earth Engine / Passo 1:
-            # Autentica e inicializa o Earth Engine
-            print("Authenticating Earth Engine...")
-            ee.Authenticate()
-            project_id = re.sub(
-                r"[^a-zA-Z0-9_-]", "", self.project_QgsPasswordLineEdit.text()
-            )
-            ee.Initialize(project=project_id)
-            print("Authentication successful!")
-
-            # Step 2: Test default project / Passo 2: Testa o projeto padrão
-            print("Testing default project...")
-            default_project_path = (
-                f"projects/{project_id}/assets/"  # Replace with your default project's path if known
-            )
-
-            # Attempt to list assets in the default project / Tenta listar os
-            # ativos no projeto padrão
-            try:
-                assets = ee.data.listAssets({"parent": default_project_path})
-                print(f"Assets in default project: {assets}")
-
-                if assets.get("assets") is not None:  # Valid project detected
-                    print("Default project is valid.")
-                    # self.pop_aviso_auth("Authentication successful!")
-                    self.autentication = True
-                    self.next_clicked()
-                else:
-                    print(
-                        "Default project is valid but contains no assets."
-                    )  # No warning needed for this case
-            except ee.EEException as e:
-                # Invalid project or access issue / Projeto inválido ou problema
-                # de acesso
-                print(f"Default project validation failed: {e}")
-                self.pop_aviso_auth(
-                    f"Default project validation failed: {e}\nFollow the instructions to have a valid Google Cloud project."
-                )
-                self.auth_clear(True)
-
-        except ee.EEException as e:
-            # Handle Earth Engine-specific errors / Lida com erros
-            # específicos do Earth Engine
-            print(f"Earth Engine error: {e}")
-            if "Earth Engine client library not initialized" in str(e):
-                message = "Authentication failed. Please authenticate again."
-                print(message)
-                self.pop_aviso_auth(message)
-            else:
-                message = (
-                    f"An error occurred during authentication or initialization: {e}"
-                )
-                print(message)
-                self.pop_aviso_auth(message)
-                self.auth_clear(True)
-
-        except Exception as e:
-            # Handle unexpected errors / Lida com erros inesperados
-            message = f"An unexpected error occurred: {e}"
-            print(message)
-            self.pop_aviso_auth(message)
-
-    def auth_clear(self, silent=False):
-        """
-        Completely clears Earth Engine authentication by deleting the entire
-        Earth Engine configuration directory, including credentials and cached
-        data.
-        """
-        """
-        Limpa completamente a autenticação do Earth Engine, excluindo todo o
-        diretório de configuração do Earth Engine, incluindo credenciais e
-        dados em cache.
-        """
-        self.project_QgsPasswordLineEdit.clear()
-        self.autenticacao.setEnabled(False)
-        self.autentication = False
-
-        system = platform.system()
-
-        # Determine the Earth Engine configuration directory based on OS. /
-        # Determina o diretório de configuração do Earth Engine com base no SO.
-        if system == "Windows":
-            config_dir = os.path.join(
-                os.environ["USERPROFILE"], ".config", "earthengine"
-            )
-        elif system in ["Linux", "Darwin"]:  # Linux or MacOS (Darwin)
-            config_dir = os.path.join(os.environ["HOME"], ".config", "earthengine")
-        else:
-            raise Exception(f"Unsupported operating system: {system}")
-
-        # Check if the configuration directory exists and delete it. / Verifica
-        # se o diretório de configuração existe e o exclui.
-        if os.path.exists(config_dir):
-            try:
-                shutil.rmtree(config_dir)
-                if not silent:
-                    message = "Earth Engine configuration cleared successfully (all files deleted)."
-                    print(message)
-                    self.pop_aviso_auth(message)
-            except Exception as e:
-                message = f"Error clearing Earth Engine configuration: {e}"
-                print(message)
-                self.pop_aviso_auth(message)
-        else:
-            message = "No Earth Engine configuration found to clear."
-            print(message)
-            self.pop_aviso_auth(message)
-
     def get_dates(self):
         # Get the date from the QDateEdit widget / Obtém a data do widget
         # QDateEdit
@@ -1549,35 +1412,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # diretório sugerido
         self.mQgsFileWidget.setFilePath(self.output_folder)
 
-    def pop_aviso_auth(self, aviso):
-        """
-        Displays a warning message box with the given message and Ok button.
+    def pop_aviso(self, aviso):
 
-        Args:
-            aviso (str): The warning message to display in the message box.
-
-        Returns:
-            None
-
-        Note:
-            This method restores the override cursor before displaying the
-            message box.
-        """
-        """
-        Exibe uma caixa de mensagem de aviso com a mensagem fornecida e o botão
-        Ok.
-
-        Args:
-            aviso (str): A mensagem de aviso a ser exibida na caixa de
-                mensagem.
-
-        Returns:
-            None
-
-        Note:
-            Este método restaura o cursor de substituição antes de exibir a caixa
-            de mensagem.
-        """
         QApplication.restoreOverrideCursor()
         msg = QMessageBox(self)
         msg.setWindowTitle("Warning!")
@@ -1590,67 +1426,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Access the buttons to set custom text / Acessa os botões para definir
         # o texto personalizado
         ok_button = msg.button(QMessageBox.Ok)
-        ok_button.setText("Ok")
+        ok_button.setText("OK")
 
         msg.exec_()
-
-    def pop_aviso(self, aviso):
-        """
-        Displays a warning message box with the given message and Ok/Cancel
-        buttons.
-
-        Args:
-            aviso (str): The warning message to display in the message box.
-
-        Returns:
-            bool: True if the Ok button is clicked, False if the Cancel button
-                is clicked.
-
-        Note:
-            This method restores the override cursor before displaying the
-            message box.
-        """
-        """
-        Exibe uma caixa de mensagem de aviso com a mensagem fornecida e os
-        botões Ok/Cancelar.
-
-        Args:
-            aviso (str): A mensagem de aviso a ser exibida na caixa de
-                mensagem.
-
-        Returns:
-            bool: True se o botão Ok for clicado, False se o botão Cancelar for
-                clicado.
-
-        Note:
-            Este método restaura o cursor de substituição antes de exibir a caixa
-            de mensagem.
-        """
-        QApplication.restoreOverrideCursor()
-        msg = QMessageBox(self)
-        msg.setWindowTitle("Warning!")
-        msg.setIcon(QMessageBox.Warning)
-        msg.setText(aviso)
-
-        # Set buttons with Ok on the right and Cancel on the left / Define os
-        # botões com Ok à direita e Cancelar à esquerda
-        msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Ok)
-
-        # Access the buttons to set custom text / Acessa os botões para definir
-        # o texto personalizado
-        cancel_button = msg.button(QMessageBox.Cancel)
-        ok_button = msg.button(QMessageBox.Ok)
-        cancel_button.setText("Cancel")
-        ok_button.setText("Ok")
-
-        ret = msg.exec_()  # Display the message box / Exibe a caixa de mensagem
-
-        if ret == QMessageBox.Ok:
-            print("Ok button clicked")
-            return True
-        elif ret == QMessageBox.Cancel:
-            print("Cancel button clicked")
-            return False
 
     def update_vector_clicked(self):
         self.load_vector_layers()
