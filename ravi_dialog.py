@@ -885,13 +885,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
         if self.output_folder is None:
-            self.pop_warning_auth("Please select a output folder first.")
+            self.pop_warning("Please select a output folder first.")
             return
 
         existing_layers = QgsProject.instance().mapLayers().values()
         layer_names = [layer.name() for layer in existing_layers]
         if "Google Hybrid" not in layer_names:
-            self.pop_warning_auth("Please load the Google Hybrid layer first.")
+            self.pop_warning("Please load the Google Hybrid layer first.")
             return
 
         # Get the canvas and its CRS
@@ -970,7 +970,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
         else:
             print("Failed to load the shapefile.")
-            self.pop_warning_auth("Failed to load the shapefile.")
+            self.pop_warning("Failed to load the shapefile.")
 
 
     def salvar_clicked(self):
@@ -1334,12 +1334,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if index < 9:
             self.resizeEvent("small")
 
+        if index >= 9:
+            self.resizeEvent("big")
+
         if index >= 9 and self.df is None:
             self.tabWidget.setCurrentIndex(8)
             return
-
-        if index >= 9:
-            self.resizeEvent("big")
 
         if index == 1 and not hasattr(self, "path_suggestion_loaded"):
             self.load_path_sugestion()
@@ -1354,8 +1354,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             except:
                 pass
 
+        if index > 1 and not self.QPushButton_next_4.isEnabled():
+            self.tabWidget.setCurrentIndex(1)
+            return
+        
         if index > 2 and not self.QPushButton_next.isEnabled():
             self.tabWidget.setCurrentIndex(2)
+            return
 
         if index == 11 and self.plot1 is not None:
             self.load_fields()
@@ -1714,7 +1719,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     }
                 )
             except Exception as e:
-                self.pop_warning_auth(f"Failed to generate download URL: {e}")
+                self.pop_warning(f"Failed to generate download URL: {e}")
                 return
 
             # Define output file
@@ -1731,7 +1736,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                             f.write(chunk)
                 print(f"Image downloaded to {output_file}")
             except requests.exceptions.RequestException as e:
-                self.pop_warning_auth(f"Error downloading image: {e}")
+                self.pop_warning(f"Error downloading image: {e}")
                 return
 
             # Add the image as a raster layer in QGIS
@@ -1740,7 +1745,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             layer = QgsRasterLayer(output_file, layer_name)
             if not layer.isValid():
-                self.pop_warning_auth(f"Failed to load the layer: {output_file}")
+                self.pop_warning(f"Failed to load the layer: {output_file}")
                 return
 
             # Set min and max values for each band (Red, Green, Blue)
@@ -1797,7 +1802,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             root.insertChildNode(0, QgsLayerTreeLayer(layer))
             iface.setActiveLayer(layer)
         except Exception as e:
-            self.pop_warning_auth(f"An error occurred: {e}")
+            self.pop_warning(f"An error occurred: {e}")
         finally:
             QApplication.restoreOverrideCursor()
 
@@ -2065,11 +2070,18 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def on_file_changed(self, file_path):
         """Slot called when the selected file changes."""
         """Slot chamado quando o arquivo selecionado muda."""
-        print(f"File selected: {file_path}")
-        self.output_folder = file_path
-        self.folder_set = True
-        self.aoi_ckecked_function()
-        # self.check_next_button()
+        
+        if self.mQgsFileWidget.filePath():
+            print(f"File selected: {file_path}")
+            self.output_folder = file_path
+            self.folder_set = True
+            self.QPushButton_next_4.setEnabled(True)
+        else:
+            print("No file selected.")
+            self.folder_set = False
+            self.QPushButton_next_4.setEnabled(False)
+
+
 
     def index_explain(self):
         if self.language:
@@ -2232,7 +2244,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         except Exception as e:
             print(f"An error occurred: {e}")
             QApplication.restoreOverrideCursor()
-            self.pop_warning_auth(f"An error occurred: {e}")
+            self.pop_warning(f"An error occurred: {e}")
         QApplication.restoreOverrideCursor()
 
     def ee_load_collection(self):
