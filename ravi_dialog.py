@@ -903,8 +903,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
-        """Manipula o evento quando o botão "Build Vector Layer" é clicado."""
-        self.crs_transform()
         if self.output_folder is None:
             self.pop_aviso_auth("Please select a output folder first.")
             return
@@ -915,68 +913,84 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.pop_aviso_auth("Please load the Google Hybrid layer first.")
             return
 
-        # Get the extent of the current map canvas / Obtém a extensão do canvas
-        # do mapa atual
+        # Get the canvas and its CRS
         canvas = iface.mapCanvas()
+        canvas_crs = canvas.mapSettings().destinationCrs()
+        target_crs = QgsCoordinateReferenceSystem("EPSG:4326")
+        
+        # Get the extent in canvas CRS
         extent = canvas.extent()
+        
+        # Create transformer from canvas CRS to EPSG:4326
+        transform = QgsCoordinateTransform(
+            canvas_crs,
+            target_crs,
+            QgsProject.instance()
+        )
+        
+        # Transform the extent to EPSG:4326
+        extent_4326 = transform.transformBoundingBox(extent)
 
-        # Create a polygon (rectangle) representing the extent / Cria um
-        # polígono (retângulo) representando a extensão
-        rect = QgsRectangle(extent)
-
-        crs = "EPSG:4326"  # Use CRS 4326
-        # Create a vector layer with the extent as a polygon / Cria uma camada
-        # vetorial com a extensão como um polígono
-        layer = QgsVectorLayer(f"Polygon?crs={crs}", "canvas_extent", "memory")
+        # Create a vector layer in EPSG:4326
+        layer = QgsVectorLayer(
+            "Polygon?crs=EPSG:4326",
+            "canvas_extent",
+            "memory"
+        )
         pr = layer.dataProvider()
 
-        # Add fields (if necessary) / Adiciona campos (se necessário)
+        # Add fields
         pr.addAttributes([QgsField("id", QVariant.Int)])
         layer.updateFields()
 
-        # Create a feature for the extent / Cria uma feição para a extensão
+        # Create a feature with the transformed extent
         feature = QgsFeature()
-        geometry = QgsGeometry.fromRect(rect)
+        geometry = QgsGeometry.fromRect(extent_4326)
         feature.setGeometry(geometry)
-        feature.setAttributes([1])  # You can set any attribute value here
+        feature.setAttributes([1])
         pr.addFeature(feature)
 
-        # Update layer and add it to the map / Atualiza a camada e a adiciona
-        # ao mapa
+        # Update layer extents
         layer.updateExtents()
 
+        # Generate unique filename and save
         shp_path = self.get_unique_filename("canvas_extent.shp")
         print(f"Shapefile path: {shp_path}")
         shp_name = os.path.basename(shp_path).replace(".shp", "")
         print(f"Shapefile name: {shp_name}")
 
+        # Write the layer to disk
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        
         QgsVectorFileWriter.writeAsVectorFormat(
-            layer, shp_path, "UTF-8", layer.crs(), "ESRI Shapefile"
+            layer,
+            shp_path,
+            save_options
         )
 
-        # Load the shapefile into the canvas / Carrega o shapefile no canvas
+        # Load the shapefile
         loaded_layer = QgsVectorLayer(shp_path, shp_name, "ogr")
         if loaded_layer.isValid():
-            # Check if the CRS is EPSG:4326 / Verifica se o CRS é EPSG:4326
+            # Verify CRS
             if loaded_layer.crs().authid() != "EPSG:4326":
-                # Reproject the layer to EPSG:4326 / Reprojeta a camada para
-                # EPSG:4326
-                crs_4326 = QgsCoordinateReferenceSystem("EPSG:4326")
-                loaded_layer = processing.run(
-                    "qgis:reprojectlayer",
-                    {
-                        "INPUT": loaded_layer,
-                        "TARGET_CRS": crs_4326,
-                        "OUTPUT": "memory:",
-                    },
-                )["OUTPUT"]
-                loaded_layer.setCrs(crs_4326)
-                print(f"Layer reprojected to EPSG:4326")
+                print("Warning: Layer CRS is not EPSG:4326, reprojecting...")
+                # Reproject if necessary
+                params = {
+                    'INPUT': loaded_layer,
+                    'TARGET_CRS': target_crs,
+                    'OUTPUT': 'memory:'
+                }
+                reprojected = processing.run("native:reprojectlayer", params)['OUTPUT']
+                loaded_layer = reprojected
 
             QgsProject.instance().addMapLayer(loaded_layer)
+            print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
         else:
             print("Failed to load the shapefile.")
             self.pop_aviso_auth("Failed to load the shapefile.")
+
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
