@@ -479,7 +479,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             # Do something with the aoi (e.g., print its information) / Faz
             # algo com a aoi (ex: imprime suas informações)
             print(f"AOI (point) defined")
-            name = f"lat: {round(latitude,5)}, long: {round(longitude,5)}"
+            name = f"({round(latitude,5)},{round(longitude,5)})"
             print("point:", name)
             # print(self.point_calculate_timeseries(aoi, name))
 
@@ -516,7 +516,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # um formato longo
         df_melted = df.melt(
             id_vars="date",
-            var_name="Point",
+            var_name="Points (lat, long)",
             value_name=self.series_indice.currentText(),
         )
 
@@ -526,8 +526,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             df_melted,
             x="date",
             y=self.series_indice.currentText(),
-            color="Point",
-            line_dash="Point",
+            color="Points (lat, long)",
+            line_dash="Points (lat, long)",
             title=f"Time Series - {self.series_indice.currentText()} - Points",
         )
         fig.update_layout(
