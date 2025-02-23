@@ -5,6 +5,10 @@ import urllib.request
 import json
 import importlib
 
+from PyQt5.QtWidgets import (
+    QMessageBox
+)
+
 print("Importing Earth Engine API utility functions...")
 # Define utility functions for Earth Engine API installation and initialization.
 
@@ -38,6 +42,8 @@ def install_earthengine_api():
         pip_args = ["install", "--upgrade", "earthengine-api"]
         pip.main(pip_args)
         print("Earth Engine API installed/upgraded successfully (using pip.main).")
+        QMessageBox.information(None, "Information", 
+                                "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
     except AttributeError:
         # Fallback for newer pip versions that do not expose pip.main
         try:
@@ -47,6 +53,8 @@ def install_earthengine_api():
             print(
                 "Earth Engine API installed/upgraded successfully (using pip._internal)."
             )
+            QMessageBox.information(None, "Information", 
+                                    "The Earth Engine API has been installed or upgraded. Please restart QGIS for the RAVI plugin to function correctly.")
         except Exception as e:
             print("An error occurred during installation:", e)
     except Exception as e:
