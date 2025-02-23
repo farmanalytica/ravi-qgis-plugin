@@ -193,8 +193,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         self.coordinate_capture_tool = None
 
-        
-
         # Find the checkbox in the UI / Encontra a checkbox na UI
         self.checkBox_captureCoordinates = self.findChild(
             QtWidgets.QCheckBox, "checkBox_captureCoordinates"
@@ -421,47 +419,37 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def remove_all_dots(self):
         """Removes all dots from the map canvas."""
-        """Remove todos os pontos do canvas do mapa."""
         print("remove_all_dots called")
         canvas = iface.mapCanvas()
 
-        # Access rubberBands through the tool if it exists, otherwise use an
-        # empty list / Acessa rubberBands através da ferramenta se existir,
-        # caso contrário, usa uma lista vazia
-        rubberBands = []
-        if (
-            self.coordinate_capture_tool
-            and hasattr(self.coordinate_capture_tool, "rubberBands")
-        ):
-            rubberBands = self.coordinate_capture_tool.rubberBands
+        if not self.coordinate_capture_tool:
+            print("No coordinate capture tool active.")
+            return  # Exit if no tool is active
 
-        # Iterate through the rubber bands and remove them from the scene /
-        # Itera através das rubber bands e remove-as da cena
-        if rubberBands:
-            for rubberBand in list(rubberBands):
-                try:
-                    canvas.scene().removeItem(rubberBand)
-                except Exception as e:
-                    print(f"Error removing rubber band: {e}")
+        rubberBands = self.coordinate_capture_tool.rubber_bands
 
-            iface.mapCanvas().refresh()  # Refresh the canvas / Atualiza o canvas
-
-            # Clear dataframes and web view / Limpa os dataframes e a web view
-            self.df_points = None
-            self.df_aux_points = None
-            self.webView_3.setHtml("")
-
-            print("All dots removed.")
-
-        # Clear the list in the tool, if the tool exists / Limpa a lista na
-        # ferramenta, se a ferramenta existir
-        if (
-            self.coordinate_capture_tool
-            and hasattr(self.coordinate_capture_tool, "rubberBands")
-        ):
-            self.coordinate_capture_tool.rubberBands = []
-        else:
+        if not rubberBands:
             print("No dots to remove.")
+            return
+
+        for rubberBand in list(rubberBands):
+            try:
+                canvas.scene().removeItem(rubberBand)
+            except Exception as e:
+                print(f"Error removing rubber band: {e}")
+
+        iface.mapCanvas().refresh()  # Refresh the canvas
+
+        # Clear dataframes and web view
+        self.df_points = None
+        self.df_aux_points = None
+        self.webView_3.setHtml("")
+
+        print("All dots removed.")
+
+        # Clear the list in the tool
+        self.coordinate_capture_tool.rubber_bands = []
+
 
     # =========================================================================
     # Project ID Management / Gerenciamento do ID do Projeto
@@ -2292,7 +2280,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         cloud_filtered_count = sentinel2.size().getInfo()
         print(f"Collection size after cloud filtering: {cloud_filtered_count}")
         self.collection_info.append(f"Collection size after tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
-        self.collection_info_pt.append(f"Tamanho da coleção após filtragem de nuvem (Passo 8): {cloud_filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtro de {nuvem}% de limite de nuvem na cena (Passo 8): {cloud_filtered_count}")
 
         if cloud_filtered_count == 0:
             QApplication.restoreOverrideCursor()
@@ -2428,10 +2416,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         filtered_count = covering_colection.size().getInfo()
 
         print(
-            f"Collection size after >= {coverage_threshold*100}% AOI coverage: {filtered_count}"
+            f"Collection size after filtro >= {coverage_threshold*100}% AOI coverage: {filtered_count}"
         )
-        self.collection_info.append(f"Collection size after >= {coverage_threshold*100}% AOI coverage (Step 6): {filtered_count}")
-        self.collection_info_pt.append(f"Tamanho da coleção após >= {coverage_threshold*100}% de cobertura da AOI (Passo 6): {filtered_count}")
+        self.collection_info.append(f"Collection size after filter >= {coverage_threshold*100}% AOI coverage (Step 6): {filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtro >= {coverage_threshold*100}% de cobertura da AOI (Passo 6): {filtered_count}")
         
 
         return covering_colection
