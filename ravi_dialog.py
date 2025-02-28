@@ -35,14 +35,8 @@ import array
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from qgis.core import QgsWkbTypes
-
-import zipfile
 import geopandas as gpd
 from shapely.geometry import shape
-import tempfile
-import os
-
-import os
 import tempfile
 from qgis.core import (
     QgsVectorLayer,
@@ -50,10 +44,7 @@ from qgis.core import (
     QgsFeatureRequest,
     QgsProject,
 )
-
 from PyQt5.QtGui import QColor
-
-# PyQt5 and QGIS imports / Importações PyQt5 e QGIS
 from PyQt5.QtCore import QDate, Qt, QVariant, QSettings
 from PyQt5.QtWidgets import (
     QApplication,
@@ -74,6 +65,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QToolButton,
     QTextBrowser,
+    QSizePolicy,
 )
 from qgis.PyQt import uic, QtWidgets
 from qgis.core import (
@@ -100,58 +92,29 @@ from qgis.core import (
     QgsField,
     QgsVectorFileWriter,
 )
-
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
-
 from qgis.utils import iface
 import qgis
-
-from PyQt5.QtWidgets import QSizePolicy
-
-# Scientiffic and data processing libraries / Bibliotecas científicas e de
-# processamento de dados
 import pandas as pd
 import numpy as np
 from scipy.signal import savgol_filter
-import geopandas as gpd
 import requests
-import os
-import platform
 import shutil
 import processing
-
-
-# Plotly imports for visualization / Importações Plotly para visualização
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
-import importlib
 import urllib.request
-import json
-import sys
-import os
-from PyQt5 import uic
-
-from qgis.core import QgsProject, QgsMapLayer, QgsWkbTypes
-
-
-# =============================================================================
-# Earth Engine API Installation and Version Check / Instalação da API Earth
-# Engine e verificação de versão
-# =============================================================================
-
 from .modules import (
     ee_utils,
     map_tools,
     nasa_power,
     vegetation_index_info,
     save_utils,
-    authentication
+    authentication,
 )
-
-
 from .modules.coordinate_capture import CoordinateCaptureTool
+
 
 try:
     import ee
