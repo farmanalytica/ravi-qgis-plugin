@@ -218,7 +218,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
         self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
 
-
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
         """Conecta os sinais da UI aos seus respectivos slots."""
@@ -239,6 +238,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.load_1index.clicked.connect(self.load_index)
         self.load_1rgb.clicked.connect(self.load_rgb)
         self.composicao.clicked.connect(self.composite_clicked)
+        self.load_1index_preview.clicked.connect(lambda: self.load_index(True))
+        self.load_1rgb_preview.clicked.connect(lambda: self.load_rgb(True))
+        self.composicao_preview.clicked.connect(lambda: self.composite_clicked(True))
         self.clear_raster.clicked.connect(self.clear_all_raster_layers)
         self.hybrid.clicked.connect(map_tools.hybrid_function)
         self.QPushButton_next.clicked.connect(self.next_clicked)
@@ -409,6 +411,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.webView_3.setHtml("")
 
         print("All dots removed.")
+        CoordinateCaptureTool.DOT_COLORS = []
+
+
 
         # Clear the list in the tool
         self.coordinate_capture_tool.rubber_bands = []
@@ -498,6 +503,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             fig.to_html(include_plotlyjs="cdn", config=self.config)
         )
         print("Feature info calculated and plotted.")
+
+        print('colors:')
+        print(CoordinateCaptureTool.DOT_COLORS)
 
     # =========================================================================
 
@@ -821,7 +829,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.load_vector_function()
         self.find_area()
 
-
     def crs_transform(self):
         project = QgsProject.instance()
         project.setCrs(QgsCoordinateReferenceSystem("EPSG:4326"))
@@ -916,7 +923,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             print("Failed to load the shapefile.")
             self.pop_warning("Failed to load the shapefile.")
-
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1268,7 +1274,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.resize(743, 373)
             self.setFixedSize(self.width(), self.height())  # Lock to small size
         elif size == "big":
-            self.resize(1145, 582)
+            self.resize(1145, 620)
             self.setFixedSize(self.width(), self.height())  # Lock to big size
 
     def on_tab_changed(self, index):
@@ -1507,7 +1513,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             )
             return None
 
-    def load_index(self):
+    def load_index(self, temporary=False):
         """
         Calculates a vegetation index, downloads the GeoTIFF, and adds it to
         the QGIS project as a styled raster layer, ensuring unique names for
@@ -1576,7 +1582,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 }
             )
             base_output_file = f"{vegetation_index}_{date[0]}.tiff"
-            output_file = self.get_unique_filename(base_output_file)
+            output_file = self.get_unique_filename(base_output_file, temporary)
 
             # Download the image / Baixa a imagem
             response = requests.get(url)
@@ -1608,7 +1614,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         finally:
             QApplication.restoreOverrideCursor()  # Restore the default cursor
 
-    def load_rgb(self):
+    def load_rgb(self, temporary=False):
         # Set the cursor to indicate processing
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
@@ -1661,7 +1667,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             # Define output file
             base_output_file = f"Sentinel2_AllBands_{date[0]}.tiff"
-            output_file = self.get_unique_filename(base_output_file)
+            output_file = self.get_unique_filename(base_output_file, temporary)
 
             # Download the image
             try:
@@ -1792,14 +1798,19 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         print(f"Zoomed to layer extent with margin: {expanded_extent.toString()}")
 
-    def get_unique_filename(self, base_file_name):
+    def get_unique_filename(self, base_file_name, temporary=False):
         name, extension = os.path.splitext(base_file_name)
-        output_file = os.path.join(self.output_folder, base_file_name)
+        if temporary:
+            output_folder = tempfile.gettempdir()  # Get system's temp directory
+            output_file = os.path.join(output_folder, base_file_name)
+        else:
+            output_file = os.path.join(self.output_folder, base_file_name)
+            output_folder = self.output_folder
         counter = 1
 
         while os.path.exists(output_file):
             output_file = os.path.join(
-                self.output_folder, f"{name}_{counter}{extension}"
+                output_folder, f"{name}_{counter}{extension}"
             )
             counter += 1
 
@@ -1832,13 +1843,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         self.sentinel2_selected_dates = sentinel2_selected_dates
 
-    def composite_clicked(self):
+    def composite_clicked(self, temporary=False):
         QApplication.setOverrideCursor(Qt.WaitCursor)
         self.sentinel2_selected_dates_update()
-        self.composite()
+        self.composite(temporary)
         QApplication.restoreOverrideCursor()
 
-    def composite(self):
+    def composite(self, temporary):
         print("Composição de índices vegetativos")
         indice_vegetacao = self.indice_composicao.currentText()
         metrica = self.metrica.currentText()
@@ -1953,7 +1964,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         )
 
         base_output_file = f"{metrica}_{indice_vegetacao}.tiff"
-        output_file = self.get_unique_filename(base_output_file)
+        output_file = self.get_unique_filename(base_output_file, True)
         response = requests.get(url)
         with open(output_file, "wb") as f:
             f.write(response.content)
@@ -1962,7 +1973,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Recorta a imagem raster usando a camada vetorial (normalmente a AOI)
         layer_name = f"{indice_vegetacao} {metrica}"
         base_output_file = f"{metrica}_{indice_vegetacao}_clipped.tiff"
-        output_file_clipped = self.get_unique_filename(base_output_file)
+        output_file_clipped = self.get_unique_filename(base_output_file, temporary)
         self.clip_raster_by_vector(
             output_file, self.selected_aio_layer_path, output_file_clipped, layer_name
         )
@@ -2944,6 +2955,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def open_browser_3(self):
         """Opens the points plot in a web browser."""
         """Abre o gráfico de pontos em um navegador da web."""
+        
         try:
             self.fig_3.show()
         except:

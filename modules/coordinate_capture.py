@@ -14,11 +14,14 @@ import random
 class CoordinateCaptureTool(QgsMapToolEmitPoint):
     """
     A map tool for capturing coordinates from the map canvas and processing
-    them using a provided dialog.  It displays a colored dot at each captured
+    them using a provided dialog. It displays a colored dot at each captured
     coordinate.
     """
 
     WGS84_EPSG = "EPSG:4326"  # Constant for WGS84 CRS
+
+    # Global variable to store colors
+    DOT_COLORS = []
 
     def __init__(self, canvas, ravi_dialog):
         """
@@ -35,6 +38,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         self.latitude = None
         self.longitude = None
         self.dot_color = self.generate_bright_color()
+        CoordinateCaptureTool.DOT_COLORS.append(self.dot_color)
         self.wgs84_crs = QgsCoordinateReferenceSystem(
             self.WGS84_EPSG
         )  # Store CRS object
@@ -48,7 +52,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
 
     def canvasReleaseEvent(self, event):
         """
-        Handles the canvas release event (mouse click).  Transforms the clicked
+        Handles the canvas release event (mouse click). Transforms the clicked
         point to WGS84, displays a dot, and processes the coordinates.
 
         Args:
@@ -103,7 +107,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
 
         Args:
             point: The point (QgsPointXY) in the project's CRS where the dot
-                   should be displayed.
+                should be displayed.
         """
         rubber_band = QgsRubberBand(self.canvas, QgsWkbTypes.PointGeometry)
         rubber_band.setColor(self.dot_color)
@@ -115,10 +119,11 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
 
         self.rubber_bands.append(rubber_band)
         self.dot_color = self.generate_bright_color()
+        CoordinateCaptureTool.DOT_COLORS.append(self.dot_color)
 
     def deactivate(self):
         """
-        Deactivates the tool, clearing the stored coordinates.  It does NOT
+        Deactivates the tool, clearing the stored coordinates. It does NOT
         remove the dots from the canvas.
         """
         self.latitude = None
