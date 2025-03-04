@@ -1841,7 +1841,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>60</y>
        <width>1131</width>
-       <height>361</height>
+       <height>371</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -1869,9 +1869,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>390</y>
+       <y>430</y>
        <width>301</width>
-       <height>191</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="font">
@@ -1929,9 +1929,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="imagem_unica_indice">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>70</y>
-        <width>121</width>
+        <x>180</x>
+        <y>30</y>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
@@ -1965,7 +1965,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>70</y>
         <width>141</width>
         <height>31</height>
        </rect>
@@ -1983,7 +1983,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>150</y>
+        <y>110</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -2002,7 +2002,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>281</width>
+        <width>161</width>
         <height>31</height>
        </rect>
       </property>
@@ -2018,7 +2018,7 @@ p, li { white-space: pre-wrap; }
         <x>60</x>
         <y>50</y>
         <width>31</width>
-        <height>101</height>
+        <height>81</height>
        </rect>
       </property>
       <property name="orientation">
@@ -2031,45 +2031,18 @@ p, li { white-space: pre-wrap; }
         <x>220</x>
         <y>50</y>
         <width>21</width>
-        <height>101</height>
+        <height>91</height>
        </rect>
       </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="label_38">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>70</y>
-        <width>61</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Índice:</string>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::AutoText</enum>
-      </property>
-      <property name="scaledContents">
-       <bool>false</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-     </widget>
      <widget class="QPushButton" name="load_1rgb">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>150</y>
+        <y>110</y>
         <width>141</width>
         <height>31</height>
        </rect>
@@ -2087,7 +2060,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>110</y>
+        <y>70</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -2101,17 +2074,30 @@ p, li { white-space: pre-wrap; }
        <string>Preview</string>
       </property>
      </widget>
+     <widget class="Line" name="line_2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>40</y>
+        <width>118</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
      <zorder>line_3</zorder>
      <zorder>label_23</zorder>
      <zorder>label_26</zorder>
-     <zorder>imagem_unica_indice</zorder>
      <zorder>line</zorder>
      <zorder>load_1index</zorder>
-     <zorder>dataunica</zorder>
      <zorder>load_1rgb_preview</zorder>
-     <zorder>label_38</zorder>
      <zorder>load_1rgb</zorder>
      <zorder>load_1index_preview</zorder>
+     <zorder>line_2</zorder>
+     <zorder>imagem_unica_indice</zorder>
+     <zorder>dataunica</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
@@ -2311,9 +2297,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>320</x>
-       <y>390</y>
+       <y>430</y>
        <width>221</width>
-       <height>191</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="font">
@@ -2464,7 +2450,7 @@ p, li { white-space: pre-wrap; }
         <x>130</x>
         <y>60</y>
         <width>21</width>
-        <height>91</height>
+        <height>71</height>
        </rect>
       </property>
       <property name="orientation">
@@ -2503,7 +2489,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>201</width>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -2519,9 +2505,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>150</y>
-        <width>201</width>
+        <x>110</x>
+        <y>110</y>
+        <width>101</width>
         <height>31</height>
        </rect>
       </property>
@@ -2534,14 +2520,28 @@ p, li { white-space: pre-wrap; }
        <string>Download</string>
       </property>
      </widget>
+     <widget class="Line" name="line_6">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>70</y>
+        <width>21</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
      <zorder>line_5</zorder>
      <zorder>label_27</zorder>
      <zorder>label_28</zorder>
      <zorder>metrica</zorder>
-     <zorder>indice_composicao</zorder>
      <zorder>label_29</zorder>
-     <zorder>composicao_preview</zorder>
      <zorder>composicao</zorder>
+     <zorder>line_6</zorder>
+     <zorder>composicao_preview</zorder>
+     <zorder>indice_composicao</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
@@ -2930,6 +2930,34 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="quickview">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>440</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Quickview</string>
+     </property>
+    </widget>
+    <zorder>webView</zorder>
+    <zorder>groupBox</zorder>
+    <zorder>groupBox_2</zorder>
+    <zorder>groupBox_8</zorder>
+    <zorder>groupBox_4</zorder>
+    <zorder>clear_raster</zorder>
+    <zorder>groupBox_29</zorder>
+    <zorder>groupBox_12</zorder>
+    <zorder>groupBox_7</zorder>
+    <zorder>quickview</zorder>
    </widget>
    <widget class="QWidget" name="tab_12">
     <attribute name="title">
@@ -3297,41 +3325,6 @@ p, li { white-space: pre-wrap; }
        <string>Abrir seleção de datas</string>
       </property>
      </widget>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_13">
-    <attribute name="title">
-     <string>QuickView</string>
-    </attribute>
-    <widget class="QWebView" name="webView_4" native="true">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>130</y>
-       <width>1141</width>
-       <height>481</height>
-      </rect>
-     </property>
-     <property name="mouseTracking">
-      <bool>true</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="contextMenuPolicy">
-      <enum>Qt::NoContextMenu</enum>
-     </property>
-     <property name="acceptDrops">
-      <bool>true</bool>
-     </property>
-     <property name="locale">
-      <locale language="Portuguese" country="Brazil"/>
-     </property>
-     <property name="url" stdset="0">
-      <url>
-       <string/>
-      </url>
-     </property>
     </widget>
    </widget>
   </widget>

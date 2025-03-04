@@ -20,7 +20,12 @@ email                : caiosimplicioarante@gmail.com
 *                                                                         *
 ***************************************************************************/
 """
-
+import os
+import tempfile
+import datetime
+import requests
+import concurrent.futures
+from functools import partial
 import re
 import os
 import sys
@@ -2329,36 +2334,54 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.sentinel2 = sentinel2
 
     def uniqueday_collection(self, sentinel2):
-        """Filters the image collection to include only one image per day."""
-        """Filtra a coleção de imagens para incluir apenas uma imagem por dia."""
+        """
+        Filters the image collection to include only one image per day,
+        prioritizing images with higher AOI coverage ratio.
+        """
         print("Filtering to unique days...")
         print("Original collection size:", sentinel2.size().getInfo())
-        # Step 1: Aggregate timestamps from the ImageCollection
-        original_timestamps = sentinel2.aggregate_array("system:time_start").getInfo()
-
-        # Step 2: Convert timestamps to formatted dates
-        formatted_dates = [
-            datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d")
-            for ts in original_timestamps
-        ]
-
-        # Step 3: Identify unique dates and map them back to the original
-        # timestamps
-        df = pd.DataFrame(
-            list(zip(original_timestamps, formatted_dates)),
-            columns=["timestamp", "date"],
-        )
-        first_timestamps_per_date = df.groupby("date")["timestamp"].min().tolist()
-
-        print(f"Collection size after keeping only unique dates: {len(first_timestamps_per_date)}")
-        self.collection_info.append(f"Collection size after keeping only unique dates: {len(first_timestamps_per_date)}")
-        self.collection_info_pt.append(f"Tamanho da coleção após manter apenas datas únicas: {len(first_timestamps_per_date)}")
-
-        # Step 4: Filter the collection to include only the first image for each
-        # unique date
+        
+        # Get all images with their properties including coverage_ratio
+        image_list = sentinel2.toList(sentinel2.size())
+        size = image_list.size().getInfo()
+        
+        # Create a list to store image data
+        image_data = []
+        
+        # Extract timestamp, date, and coverage_ratio for each image
+        for i in range(size):
+            image = ee.Image(image_list.get(i))
+            timestamp = image.get('system:time_start').getInfo()
+            date = datetime.fromtimestamp(timestamp / 1000).strftime("%Y-%m-%d")
+            
+            # Get coverage_ratio (default to 0 if not present)
+            coverage_ratio = image.get('coverage_ratio')
+            if coverage_ratio:
+                coverage_ratio = coverage_ratio.getInfo()
+            else:
+                coverage_ratio = 0
+                
+            image_data.append({
+                'timestamp': timestamp,
+                'date': date,
+                'coverage_ratio': coverage_ratio
+            })
+        
+        # Create DataFrame and find the image with highest coverage for each date
+        df = pd.DataFrame(image_data)
+        
+        # Group by date and get the timestamp with the highest coverage_ratio
+        best_timestamps = df.loc[df.groupby('date')['coverage_ratio'].idxmax()]['timestamp'].tolist()
+        
+        print(f"Collection size after keeping only unique dates: {len(best_timestamps)}")
+        self.collection_info.append(f"Collection size after keeping only unique dates: {len(best_timestamps)}")
+        self.collection_info_pt.append(f"Tamanho da coleção após manter apenas datas únicas: {len(best_timestamps)}")
+        
+        # Filter the collection to include only the best image for each unique date
         return sentinel2.filter(
-            ee.Filter.inList("system:time_start", ee.List(first_timestamps_per_date))
+            ee.Filter.inList("system:time_start", ee.List(best_timestamps))
         )
+
 
     def AOI_coverage_filter(self, sentinel2, aoi, coverage_threshold):
         """Filters the image collection based on the coverage of the Area of
