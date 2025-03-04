@@ -121,6 +121,11 @@ try:
 except:
     pass
 
+try:
+    import dash
+except:
+    pass    
+
 # =============================================================================
 # RAVIDialog Class Definition / Definição da Classe RAVIDialog
 # =============================================================================
