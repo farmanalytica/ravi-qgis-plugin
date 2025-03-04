@@ -473,16 +473,35 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         df = self.df_aux_points
         print(df.shape)
 
-        # Melt the dataframe to have a long format / Transforma o dataframe para
-        # um formato longo
+        # Melt the dataframe to have a long format
         df_melted = df.melt(
             id_vars="date",
             var_name="Points (lat, long)",
             value_name=self.series_indice.currentText(),
         )
 
-        # Create the line plot with varied color and line dash / Cria o gráfico
-        # de linha com cor e traço variados
+        # Get unique point labels
+        unique_points = df_melted["Points (lat, long)"].unique()
+        
+        # Create color mapping
+        color_map = {}
+        
+        # Use blue for the first point
+        if len(unique_points) > 0:
+            color_map[unique_points[0]] = "blue"
+        
+        # Use the captured colors for the remaining points
+        for i, point in enumerate(unique_points[1:], 1):
+            if i-1 < len(CoordinateCaptureTool.DOT_COLORS):
+                # Convert QColor to hex string
+                qcolor = CoordinateCaptureTool.DOT_COLORS[i-1]
+                hex_color = f"#{qcolor.red():02x}{qcolor.green():02x}{qcolor.blue():02x}"
+                color_map[point] = hex_color
+        
+        print("Color mapping:")
+        print(color_map)
+
+        # Create the line plot with custom colors
         fig = px.line(
             df_melted,
             x="date",
@@ -490,22 +509,27 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             color="Points (lat, long)",
             line_dash="Points (lat, long)",
             title=f"Time Series - {self.series_indice.currentText()} - Points",
+            color_discrete_map=color_map
         )
+        
         fig.update_layout(
             yaxis_title=self.series_indice.currentText(),
             title=f"Time Series - {self.series_indice.currentText()} - Points",
             xaxis_title=None,  # Remove x-axis label
         )
+        
         self.fig_3 = fig
         # fig.show()
 
         self.webView_3.setHtml(
             fig.to_html(include_plotlyjs="cdn", config=self.config)
         )
+        
         print("Feature info calculated and plotted.")
+        
+        # print('colors:')
+        # print(CoordinateCaptureTool.DOT_COLORS)
 
-        print('colors:')
-        print(CoordinateCaptureTool.DOT_COLORS)
 
     # =========================================================================
 

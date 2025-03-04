@@ -38,7 +38,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         self.latitude = None
         self.longitude = None
         self.dot_color = self.generate_bright_color()
-        CoordinateCaptureTool.DOT_COLORS.append(self.dot_color)
+        # Don't add the color here - will add it when actually used
         self.wgs84_crs = QgsCoordinateReferenceSystem(
             self.WGS84_EPSG
         )  # Store CRS object
@@ -117,9 +117,12 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         rubber_band.setToGeometry(QgsGeometry.fromPointXY(point), None)
         rubber_band.show()
 
-        self.rubber_bands.append(rubber_band)
-        self.dot_color = self.generate_bright_color()
+        # Add the current color to the list when it's actually used
         CoordinateCaptureTool.DOT_COLORS.append(self.dot_color)
+        self.rubber_bands.append(rubber_band)
+        
+        # Generate a new color for the next dot
+        self.dot_color = self.generate_bright_color()
 
     def deactivate(self):
         """
