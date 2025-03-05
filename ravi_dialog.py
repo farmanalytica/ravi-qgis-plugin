@@ -276,6 +276,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.datasrecorte.clicked.connect(self.datasrecorte_clicked)
         self.datasrecorte_2.clicked.connect(self.datasrecorte_clicked)
         self.datasrecorte_3.clicked.connect(self.datasrecorte_clicked)
+        self.add_dot.clicked.connect(self.add_dot_from_coordinates)
 
         self.salvar.clicked.connect(self.salvar_clicked)
         self.salvar_2.clicked.connect(self.salvar_clicked_2)
@@ -920,10 +921,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Update layer extents
         layer.updateExtents()
 
-        # Generate unique filename and save
-        shp_path = self.get_unique_filename("canvas_extent.shp")
+        # Generate unique filename and layer name with subdirectory
+        shp_path, shp_name = self.get_subdirectory_filename("canvas_extent")
         print(f"Shapefile path: {shp_path}")
-        shp_name = os.path.basename(shp_path).replace(".shp", "")
         print(f"Shapefile name: {shp_name}")
 
         # Write the layer to disk
@@ -954,9 +954,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
-        else:
-            print("Failed to load the shapefile.")
-            self.pop_warning("Failed to load the shapefile.")
+
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1831,6 +1829,40 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         canvas.refresh()
 
         print(f"Zoomed to layer extent with margin: {expanded_extent.toString()}")
+
+    def get_subdirectory_filename(self, base_name, temporary=False):
+        """
+        Creates a unique layer name with incrementing number and 
+        matching subdirectory, then returns the unique filename path.
+        """
+        if temporary:
+            base_output_folder = tempfile.gettempdir()
+        else:
+            base_output_folder = self.output_folder
+        
+        # Find a unique layer name with incrementing number
+        counter = 1
+        layer_name = f"{base_name}{counter}"
+        subdirectory_path = os.path.join(base_output_folder, layer_name)
+        
+        # Keep incrementing until we find an unused name
+        while os.path.exists(subdirectory_path):
+            counter += 1
+            layer_name = f"{base_name}{counter}"
+            subdirectory_path = os.path.join(base_output_folder, layer_name)
+        
+        # Create the directory
+        os.makedirs(subdirectory_path)
+        
+        # Create the filename with the same base name
+        file_name = f"{layer_name}.shp"
+        file_path = os.path.join(subdirectory_path, file_name)
+        
+        print(f"Unique layer name: {layer_name}")
+        print(f"Unique filename: {file_path}")
+        
+        return file_path, layer_name
+
 
     def get_unique_filename(self, base_file_name, temporary=False):
         name, extension = os.path.splitext(base_file_name)
@@ -3022,3 +3054,18 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.dataunica.clear()
         self.dataunica.addItems(datas)
         self.dataunica.setCurrentIndex(self.dataunica.count() - 1)
+
+    def add_dot_from_coordinates(self):
+        # Defina as coordenadas que você deseja adicionar
+        longitude = -38.60284  # Exemplo de longitude
+        latitude = -11.7564  # Exemplo de latitude
+
+        # Check if the coordinate capture tool is active
+        if self.coordinate_capture_tool is None:
+            print("Coordinate capture tool is not active.")
+            self.checkBox_captureCoordinates.setChecked(True)
+            self.activate_coordinate_capture_tool()
+        
+        # Chame o método para adicionar o ponto
+        self.coordinate_capture_tool.add_dot_from_coordinates(longitude, latitude)
+        self.process_coordinates(longitude, latitude)

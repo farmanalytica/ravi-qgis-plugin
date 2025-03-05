@@ -124,6 +124,27 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         # Generate a new color for the next dot
         self.dot_color = self.generate_bright_color()
 
+    def add_dot_from_coordinates(self, longitude, latitude):
+        """
+        Adds a colored dot to the map canvas based on provided WGS84 coordinates.
+
+        Args:
+            longitude: The longitude of the point in WGS84.
+            latitude: The latitude of the point in WGS84.
+        """
+        # Create a QgsPointXY object from WGS84 coordinates
+        point_wgs84 = QgsPointXY(longitude, latitude)
+
+        # Transform the point from WGS84 to the project's CRS
+        project_crs = self.canvas.mapSettings().destinationCrs()
+        transformer = QgsCoordinateTransform(
+            self.wgs84_crs, project_crs, QgsProject.instance()
+        )
+        point_project = transformer.transform(point_wgs84)
+
+        # Display the dot on the canvas
+        self.display_dot(point_project)
+
     def deactivate(self):
         """
         Deactivates the tool, clearing the stored coordinates. It does NOT

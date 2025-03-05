@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1839,9 +1839,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
+       <y>90</y>
        <width>1131</width>
-       <height>371</height>
+       <height>351</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -2933,9 +2933,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="quickview">
      <property name="geometry">
       <rect>
-       <x>560</x>
-       <y>440</y>
-       <width>111</width>
+       <x>10</x>
+       <y>90</y>
+       <width>271</width>
        <height>31</height>
       </rect>
      </property>
@@ -2945,7 +2945,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Quickview</string>
+      <string>Carregar Quickview (Experimental)</string>
      </property>
     </widget>
     <zorder>webView</zorder>
@@ -3132,8 +3132,27 @@ p, li { white-space: pre-wrap; }
       </url>
      </property>
     </widget>
+    <widget class="QPushButton" name="add_dot">
+     <property name="geometry">
+      <rect>
+       <x>950</x>
+       <y>170</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add dot</string>
+     </property>
+    </widget>
     <zorder>webView_3</zorder>
     <zorder>groupBox_13</zorder>
+    <zorder>add_dot</zorder>
    </widget>
    <widget class="QWidget" name="tab_11">
     <attribute name="title">
