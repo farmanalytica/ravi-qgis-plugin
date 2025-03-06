@@ -3056,9 +3056,28 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.dataunica.setCurrentIndex(self.dataunica.count() - 1)
 
     def add_dot_from_coordinates(self):
-        # Defina as coordenadas que você deseja adicionar
-        longitude = -38.60284  # Exemplo de longitude
-        latitude = -11.7564  # Exemplo de latitude
+        """Adds a dot to the map from latitude and longitude values entered in QLineEdit widgets.
+        Handles commas as decimal separators and validates input with regex.
+        """
+        longitude_text = self.mLineEdit_longitude.text()
+        latitude_text = self.mLineEdit_latitude.text()
+
+        # Replace commas with periods
+        longitude_text = longitude_text.replace(",", ".")
+        latitude_text = latitude_text.replace(",", ".")
+
+        # Regex to validate the format
+        regex = r"[-+]?\d+(\.\d*)?"
+        if not (re.match(regex, longitude_text) and re.match(regex, latitude_text)):
+            self.pop_warning("Invalid longitude/latitude format. Please enter numeric values.")
+            return
+
+        try:
+            longitude = float(longitude_text)
+            latitude = float(latitude_text)
+        except ValueError:
+            self.pop_warning("Invalid longitude/latitude format. Please enter numeric values.")
+            return
 
         # Check if the coordinate capture tool is active
         if self.coordinate_capture_tool is None:
@@ -3066,6 +3085,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.checkBox_captureCoordinates.setChecked(True)
             self.activate_coordinate_capture_tool()
         
-        # Chame o método para adicionar o ponto
+        # Call the method to add the point
         self.coordinate_capture_tool.add_dot_from_coordinates(longitude, latitude)
         self.process_coordinates(longitude, latitude)
