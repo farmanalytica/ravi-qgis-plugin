@@ -595,138 +595,100 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def split_features(self, id_column=None):
         """
         Splits each feature from the selected vector layer into individual
-        shapefiles, using a specified attribute column for identification.
-
-        Args:
-            id_column (str): Name of the attribute column to use for
-                identification. If None, feature ID will be used.
-
-        Returns:
-            dict: Dictionary mapping feature identifiers to their shapefile paths
+        shapefiles using memory layers and avoids creating multiple memory layers
+        inside the loop.
         """
-        """
-        Divide cada feição da camada vetorial selecionada em shapefiles
-        individuais, usando uma coluna de atributo especificada para
-        identificação.
-
-        Args:
-            id_column (str): Nome da coluna de atributo a ser usada para
-                identificação. Se None, o ID da feição será usado.
-
-        Returns:
-            dict: Dicionário mapeando identificadores de feição para seus
-                caminhos de shapefile
-        """
-
-        # Get the system's temporary directory / Obtém o diretório temporário do
-        # sistema
+        # Get the system's temporary directory
         temp_folder = tempfile.gettempdir()
         print(f"Temporary folder: {temp_folder}")
 
-        # Input shapefile path / Caminho do shapefile de entrada
+        # Input shapefile path
         input_path = self.selected_aio_layer_path
 
-        # Open the layer / Abre a camada
+        # Open the layer
         layer = QgsVectorLayer(input_path, "Polygons", "ogr")
 
-        # Validate id_column if provided / Valida id_column se fornecido
-        if (
-            id_column
-            and id_column not in [field.name() for field in layer.fields()]
-        ):
-            raise ValueError(
-                f"Column '{id_column}' not found in layer attributes"
-            )
+        # Validate id_column if provided
+        if id_column and id_column not in [field.name() for field in layer.fields()]:
+            raise ValueError(f"Column '{id_column}' not found in layer attributes")
 
         feature_count = layer.featureCount()
         print(f"Total features to process: {feature_count}")
 
-        # Dictionary to store feature identifiers and their corresponding paths /
-        # Dicionário para armazenar identificadores de feição e seus caminhos
-        # correspondentes
         feature_info = {}
 
-        # Process each feature / Processa cada feição
-        for feature in layer.getFeatures():
-            # Get feature identifier / Obtém o identificador da feição
-            if id_column:
-                feature_identifier = str(feature[id_column])
-                # Clean the identifier for use in filename / Limpa o
-                # identificador para uso no nome do arquivo
-                feature_identifier = "".join(
-                    c for c in feature_identifier if c.isalnum() or c in ("-", "_")
-                )
-            else:
-                feature_identifier = str(feature.id())
+        # Create a single memory layer outside the loop
+        memory_layer = QgsVectorLayer(
+            f"Polygon?crs={layer.crs().authid()}", "split_features_memory_layer", "memory"
+        )
+        memory_layer.startEditing()
+        memory_provider = memory_layer.dataProvider()
+        memory_provider.addAttributes(layer.fields())
+        memory_layer.updateFields()
 
-            # Create output filename using the identifier / Cria o nome do
-            # arquivo de saída usando o identificador
-            output_path = os.path.join(
-                temp_folder, f"feature_{feature_identifier}.shp"
-            )
-
-            # Create a memory layer with the same attributes / Cria uma camada
-            # de memória com os mesmos atributos
-            memory_layer = QgsVectorLayer(
-                f"Polygon?crs={layer.crs().authid()}",
-                f"feature_{feature_identifier}",
-                "memory",
-            )
-
-            # Set up the memory layer / Configura a camada de memória
-            memory_layer.startEditing()
-            memory_provider = memory_layer.dataProvider()
-            memory_provider.addAttributes(layer.fields())
-            memory_layer.updateFields()
-            memory_provider.addFeature(feature)
-            memory_layer.commitChanges()
-
-            try:
-                # Save the memory layer as a new shapefile / Salva a camada de
-                # memória como um novo shapefile
-                save_options = QgsVectorFileWriter.SaveVectorOptions()
-                save_options.driverName = "ESRI Shapefile"
-
-                error = QgsVectorFileWriter.writeAsVectorFormat(
-                    memory_layer,
-                    output_path,
-                    "UTF-8",
-                    layer.crs(),
-                    "ESRI Shapefile",
-                )
-
-                if error[0] != QgsVectorFileWriter.NoError:
-                    print(f"Error saving feature {feature_identifier}: {error}")
-                else:
-                    print(
-                        f"Feature {feature_identifier} saved to: {output_path}"
+        try:
+            for feature in layer.getFeatures():
+                # Get feature identifier
+                if id_column:
+                    feature_identifier = str(feature[id_column])
+                    feature_identifier = "".join(
+                        c for c in feature_identifier if c.isalnum() or c in ("-", "_")
                     )
-                    # Store the feature information / Armazena as informações da
-                    # feição
-                    feature_info[feature_identifier] = {
-                        "path": output_path,
-                        "attributes": {
-                            field.name(): feature[field.name()]
-                            for field in layer.fields()
-                        },
-                    }
+                else:
+                    feature_identifier = str(feature.id())
 
-            except Exception as e:
-                print(f"Error saving feature {feature_identifier}: {str(e)}")
-            finally:
-                # Clean up memory layer / Limpa a camada de memória
-                del memory_layer
+                output_path = os.path.join(
+                    temp_folder, f"feature_{feature_identifier}.shp"
+                )
+
+                # Clear existing features from the memory layer
+                memory_provider.truncate()
+                memory_layer.commitChanges()
+                memory_layer.startEditing()
+
+                # Add the current feature to the memory layer
+                memory_provider.addFeature(feature)
+                memory_layer.commitChanges()
+
+                try:
+                    # Save the memory layer as a new shapefile
+                    save_options = QgsVectorFileWriter.SaveVectorOptions()
+                    save_options.driverName = "ESRI Shapefile"
+
+                    error = QgsVectorFileWriter.writeAsVectorFormat(
+                        memory_layer,
+                        output_path,
+                        "UTF-8",
+                        layer.crs(),
+                        "ESRI Shapefile",
+                    )
+
+                    if error[0] != QgsVectorFileWriter.NoError:
+                        print(f"Error saving feature {feature_identifier}: {error}")
+                    else:
+                        print(
+                            f"Feature {feature_identifier} saved to: {output_path}"
+                        )
+                        feature_info[feature_identifier] = {
+                            "path": output_path,
+                            "attributes": {
+                                field.name(): feature[field.name()]
+                                for field in layer.fields()
+                            },
+                        }
+
+                except Exception as e:
+                    print(f"Error saving feature {feature_identifier}: {str(e)}")
+                finally:
+                    pass # No need to clean memory layer inside the loop
+
+        finally:
+            memory_layer.commitChanges()
+            del memory_layer  # Clean up memory layer
 
         print("\nFinished processing all features.")
-        print("Generated feature information:")
-        for identifier, info in feature_info.items():
-            print(f"\nFeature: {identifier}")
-            print(f"Path: {info['path']}")
-            print("Attributes:")
-            for attr_name, attr_value in info["attributes"].items():
-                print(f"  {attr_name}: {attr_value}")
-
         return feature_info
+
 
     def feature_info(self, feature_info):
         features = []
@@ -2089,138 +2051,30 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         QApplication.restoreOverrideCursor()
 
     def composite(self, temporary):
+        """Calculates a composite of the selected vegetation index over the selected dates."""
         print("Composição de índices vegetativos")
+        
+        # Get the selected vegetation index and metric for aggregation
         indice_vegetacao = self.indice_composicao.currentText()
         metrica = self.metrica.currentText()
 
-        # Função para calcular o índice vegetal desejado e preservar a data
+        # Function to calculate the desired vegetation index and preserve the date
         def calculate_index(image):
-            if indice_vegetacao == "NDVI":
-                return (
-                    image.normalizedDifference(["B8", "B4"])
-                    .rename("NDVI")
-                    .copyProperties(image, ["system:time_start"])
-                )
-            elif indice_vegetacao == "EVI":
-                return (
-                    image.expression(
-                        "2.5 * ((NIR/10000 - RED/10000) / (NIR/10000 + 6*RED/10000 - 7.5*BLUE/10000 + 1))",
-                        {
-                            "NIR": image.select("B8"),
-                            "RED": image.select("B4"),
-                            "BLUE": image.select("B2"),
-                        },
-                    )
-                    .rename("EVI")
-                    .copyProperties(image, ["system:time_start"])
-                )
-            elif indice_vegetacao == "SAVI":
-                return (
-                    image.expression(
-                        "(1 + L) * ((NIR/10000 - RED/10000) / (NIR/10000 + RED/10000 + L))",
-                        {"NIR": image.select("B8"), "RED": image.select("B4"), "L": 0.5},
-                    )
-                    .rename("SAVI")
-                    .copyProperties(image, ["system:time_start"])
-                )
-            elif indice_vegetacao == "MSAVI":
-                index_image = image.expression(
-                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                    },
-                ).rename("MSAVI")
-            elif indice_vegetacao == "GNDVI":
-                return (
-                    image.normalizedDifference(["B8", "B3"])
-                    .rename("GNDVI")
-                    .copyProperties(image, ["system:time_start"])
-                )
-            elif indice_vegetacao == "SFDVI":
-                index_image = image.expression(
-                    "(NIR - SWIR) / (NIR + SWIR)",
-                    {
-                        "NIR": image.select("B8"),
-                        "SWIR": image.select("B11"),
-                    },
-                ).rename("SFDVI")
-            elif indice_vegetacao == "CIgreen":
-                index_image = image.expression(
-                    "(NIR / GREEN) - 1",
-                    {
-                        "NIR": image.select("B8"),
-                        "GREEN": image.select("B3"),
-                    },
-                ).rename("CIgreen")
-            elif indice_vegetacao == "NDRE":
-                index_image = image.normalizedDifference(["B8", "B5"]).rename("NDRE")
-            else:
-                raise ValueError(f"Invalid indice_vegetacao: {indice_vegetacao}")
-            
+            # Calculate the vegetation index using the existing method
+            index_image = self.calculate_vegetation_index(image, indice_vegetacao)
+            # Preserve the original image's time property
+            return index_image.copyProperties(image, ["system:time_start"])
 
-        # Aplica o cálculo do índice à coleção filtrada
+        # Apply the index calculation to the filtered collection
         index_collection = self.sentinel2_selected_dates.map(calculate_index)
 
-        # Seleção da métrica de agregação
-        if metrica in ["Mean", "Média"]:
-            final_image = index_collection.mean()
-        elif metrica in ["Max", "Máximo"]:
-            final_image = index_collection.max()
-        elif metrica in ["Min", "Mínimo"]:
-            final_image = index_collection.min()
-        elif metrica in ["Median", "Mediana"]:
-            final_image = index_collection.median()
-        elif metrica in ["Amplitude"]:
-            final_image = index_collection.max().subtract(index_collection.min())
-        elif metrica in ["Standard Deviation", "Desvio Padrão"]:
-            final_image = index_collection.reduce(ee.Reducer.stdDev())
-        elif metrica in ["Sum", "Soma"]:
-            final_image = index_collection.sum()
-        elif metrica in ["Area Under Curve (AUC)"]:
-            # --- Cálculo da AUC por pixel via método de array ---
-            count = index_collection.size().getInfo()
-            if count < 2:
-                raise ValueError("Número insuficiente de imagens para calcular a AUC.")
+        # Aggregate the index collection based on the selected metric
+        final_image = self.aggregate_index_collection(index_collection, metrica)
 
-            # Cria uma "pilha" dos índices (cada imagem vira uma banda)
-            indexStack = index_collection.toBands()
-            # Define uma máscara válida (mínimo valor da máscara de todas as bandas)
-            validMask = indexStack.mask().reduce(ee.Reducer.min())
+        # Optional: Further processing of final_image can be added here
+        # For example, you might want to download the final image or add it to the QGIS project
 
-            # Obtém os nomes das bandas (cada banda corresponde a uma data)
-            bands = indexStack.bandNames()
-
-            # Define a data inicial; certifique-se de que self.inicio esteja no formato "YYYY-MM-DD"
-            start_date = ee.Date(self.inicio)
-            # Cria uma lista de timestamps em dias relativos à data inicial
-            timestamps = index_collection.aggregate_array("system:time_start").map(
-                lambda date: ee.Number(ee.Date(date).difference(start_date, "day"))
-            )
-
-            # Alinha os timestamps com o número de bandas
-            alignedTimestamps = ee.List(timestamps.slice(0, bands.size()))
-            # Cria uma imagem com constantes baseadas nos timestamps e renomeia para os nomes das bandas
-            timeImage = ee.Image.constant(alignedTimestamps).rename(bands).toArray()
-
-            # Converte a pilha de índices para um array
-            ndviArray = indexStack.toArray()
-
-            # Calcula as diferenças entre timestamps consecutivos
-            diffs = timeImage.arraySlice(0, 1).subtract(timeImage.arraySlice(0, 0, -1))
-            # Soma os valores de NDVI de imagens consecutivas
-            sums = ndviArray.arraySlice(0, 1).add(ndviArray.arraySlice(0, 0, -1))
-            # Aplica a regra do trapézio: (diferença * soma) / 2 e reduz o array pela soma dos intervalos
-            auc = diffs.multiply(sums).divide(2).arrayReduce(ee.Reducer.sum(), [0])
-            # Extrai o resultado final, aplica a máscara e define como imagem final
-            final_image = ee.Image(auc.arrayGet([0])).updateMask(validMask)
-        else:
-            raise ValueError(f"Invalid metric: {metrica}")
-
-        # Recorta a imagem final à área de interesse (AOI)
-        final_image = final_image.clip(self.aoi.geometry())
-
-        # Gera a URL de download para a imagem final (GeoTIFF, escala de 10)
+        # Prepare download URL and output filename for the final image
         url = final_image.getDownloadUrl(
             {
                 "scale": 10,
@@ -2248,6 +2102,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         map_tools.load_raster_layer_colorful(
             output_file_clipped, layer_name, indice_vegetacao, self.metrica.currentText()
         )
+
 
     def clip_raster_by_vector(
         self, raster_path, shapefile_path, output_path, layer_name
@@ -2519,7 +2374,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Check if the collection is empty after cloud filtering
         cloud_filtered_count = sentinel2.size().getInfo()
         print(f"Collection size after cloud filtering: {cloud_filtered_count}")
-        self.collection_info.append(f"Collection size after tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
+        self.collection_info.append(f"Collection size after {nuvem}% tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
         self.collection_info_pt.append(f"Tamanho da coleção após filtro de {nuvem}% de limite de nuvem na cena (Passo 8): {cloud_filtered_count}")
 
         if cloud_filtered_count == 0:
