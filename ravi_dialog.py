@@ -1561,98 +1561,94 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 f"Layer '{layer_name}' with ID '{layer_id}' not found in the project."
             )
             return None
+        
+    def calculate_vegetation_index(self, image, index_name):
+        """
+        Calculates the specified vegetation index for the given image using
+        dictionary-based expressions.
+
+        Args:
+            image (ee.Image): The input Earth Engine image.
+            index_name (str): The name of the vegetation index to calculate
+                (e.g., "NDVI", "EVI").
+
+        Returns:
+            ee.Image: The image containing the calculated vegetation index, renamed
+                to "index".
+
+        Raises:
+            ValueError: If an unsupported vegetation index is specified.
+        """
+        index_expressions = {
+            "NDVI": 'image.normalizedDifference(["B8", "B4"]).rename("index")',
+            "EVI": (
+                "image.expression("
+                "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
+                "{"
+                '"NIR": image.select("B8"),'
+                '"RED": image.select("B4"),'
+                '"BLUE": image.select("B2"),'
+                "})"
+                '.rename("index")'
+            ),
+            "SAVI": (
+                "image.expression("
+                "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
+                '{"NIR": image.select("B8"), "RED": image.select("B4"), "L": 0.5}',
+                ')'
+                '.rename("index")'
+            ),
+            "GNDVI": 'image.normalizedDifference(["B8", "B3"]).rename("index")',
+            "MSAVI": (
+                "image.expression("
+                '((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2',
+                '{"NIR": image.select("B8"), "RED": image.select("B4")}',
+                ')'
+                '.rename("index")'
+            ),
+            "SFDVI": (
+                "image.expression("
+                '(NIR - SWIR) / (NIR + SWIR)',
+                '{"NIR": image.select("B8"), "SWIR": image.select("B11")}',
+                ')'
+                '.rename("index")'
+            ),
+            "CIgreen": (
+                "image.expression("
+                '(NIR / GREEN) - 1',
+                '{"NIR": image.select("B8"), "GREEN": image.select("B3")}',
+                ')'
+                '.rename("index")'
+            ),
+            "NDRE": 'image.normalizedDifference(["B8", "B5"]).rename("index")',
+        }
+
+        if index_name in index_expressions:
+            expression = index_expressions[index_name]
+            # Execute the expression using eval()
+            index_image = eval(expression)
+            return index_image
+        else:
+            raise ValueError(f"Unsupported vegetation index: {index_name}")
+
 
     def load_index(self, temporary=False):
-        """
-        Calculates a vegetation index, downloads the GeoTIFF, and adds it to
+        """Calculates a vegetation index, downloads the GeoTIFF, and adds it to
         the QGIS project as a styled raster layer, ensuring unique names for
-        each layer.
-        """
-        """
-        Calcula um índice de vegetação, baixa o GeoTIFF e o adiciona ao projeto
-        QGIS como uma camada raster estilizada, garantindo nomes exclusivos
-        para cada camada.
-        """
+        each layer."""
         try:
             print("First index clicked")
-            QApplication.setOverrideCursor(
-                Qt.WaitCursor
-            )  # Set wait cursor for user feedback
+            QApplication.setOverrideCursor(Qt.WaitCursor)
 
-            # Retrieve vegetation index and date inputs / Recupera o índice de
-            # vegetação e as entradas de data
             vegetation_index = self.imagem_unica_indice.currentText()
             date = [self.dataunica.currentText()]
 
-            first_image = self.sentinel2.filter(
-                ee.Filter.inList("date", date)
-            ).first()
-
-            # Clip image to AOI / Recorta a imagem para a AOI
+            first_image = self.sentinel2.filter(ee.Filter.inList("date", date)).first()
             first_image = first_image.clip(self.aoi)
 
-            # Calculate the selected vegetation index / Calcula o índice de
-            # vegetação selecionado
-            if vegetation_index == "NDVI":
-                index_image = first_image.normalizedDifference(["B8", "B4"]).rename(
-                    "NDVI"
-                )
-            elif vegetation_index == "GNDVI":
-                index_image = first_image.normalizedDifference(["B8", "B3"]).rename(
-                    "GNDVI"
-                )
-            elif vegetation_index == "MSAVI":
-                index_image = first_image.expression(
-                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
-                    {
-                        "NIR": first_image.select("B8"),
-                        "RED": first_image.select("B4"),
-                    },
-                ).rename("MSAVI")
-            elif vegetation_index == "EVI":
-                index_image = first_image.expression(
-                    "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                    {
-                        "NIR": first_image.select("B8"),
-                        "RED": first_image.select("B4"),
-                        "BLUE": first_image.select("B2"),
-                    },
-                ).rename("EVI")
-            elif vegetation_index == "SAVI":
-                L = 0.5  # Soil brightness correction factor
-                index_image = first_image.expression(
-                    "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                    {
-                        "NIR": first_image.select("B8"),
-                        "RED": first_image.select("B4"),
-                        "L": L,
-                    },
-                ).rename("SAVI")
-            elif vegetation_index == "SFDVI":
-                index_image = first_image.expression(
-                    "(NIR - SWIR) / (NIR + SWIR)",
-                    {
-                        "NIR": first_image.select("B8"),
-                        "SWIR": first_image.select("B11"),
-                    },
-                ).rename("SFDVI")
-            elif vegetation_index == "CIgreen":
-                index_image = first_image.expression(
-                    "(NIR / GREEN) - 1",
-                    {
-                        "NIR": first_image.select("B8"),
-                        "GREEN": first_image.select("B3"),
-                    },
-                ).rename("CIgreen")
-            elif vegetation_index == "NDRE":
-                index_image = first_image.normalizedDifference(["B8", "B5"]).rename("NDRE")
-            else:
-                raise ValueError(f"Invalid vegetation index: {vegetation_index}")
+            index_image = self.calculate_vegetation_index(first_image, vegetation_index)
 
-            
-
-            # Prepare download URL and output filename / Prepara o URL de
-            # download e o nome do arquivo de saída
+            # Prepare download URL and output filename
             url = index_image.getDownloadUrl(
                 {
                     "scale": 10,
@@ -1663,7 +1659,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             base_output_file = f"{vegetation_index}_{date[0]}.tiff"
             output_file = self.get_unique_filename(base_output_file, temporary)
 
-            # Download the image / Baixa a imagem
+            # Download the image
             response = requests.get(url)
             if response.status_code == 200:
                 with open(output_file, "wb") as f:
@@ -1673,7 +1669,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 print(f"Failed to download image. HTTP Status: {response.status_code}")
                 return
 
-            # Prepare unique layer name / Prepara o nome exclusivo da camada
+            # Prepare unique layer name
             layer_name = f"{vegetation_index} {date[0]}"
             base_name = layer_name
             i = 1
@@ -1682,8 +1678,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 i += 1
             print(f"Layer name adjusted to '{layer_name}' to ensure uniqueness.")
 
-            # Add raster layer with styling / Adiciona a camada raster com
-            # estilo
+            # Add raster layer with styling
             map_tools.load_raster_layer_colorful(
                 output_file, layer_name, vegetation_index, None
             )
@@ -1691,7 +1686,138 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         except Exception as e:
             print(f"An error occurred: {e}")
         finally:
-            QApplication.restoreOverrideCursor()  # Restore the default cursor
+            QApplication.restoreOverrideCursor()
+
+    def aggregate_index_collection(self, index_collection, metrica):
+        """Aggregates the index collection based on the specified metric."""
+        if metrica in ["Mean", "Média"]:
+            return index_collection.mean()
+        elif metrica in ["Max", "Máximo"]:
+            return index_collection.max()
+        elif metrica in ["Min", "Mínimo"]:
+            return index_collection.min()
+        elif metrica in ["Median", "Mediana"]:
+            return index_collection.median()
+        elif metrica in ["Amplitude"]:
+            return index_collection.max().subtract(index_collection.min())
+        elif metrica in ["Standard Deviation", "Desvio Padrão"]:
+            return index_collection.reduce(ee.Reducer.stdDev())
+        elif metrica in ["Sum", "Soma"]:
+            return index_collection.sum()
+        elif metrica in ["Area Under Curve (AUC)"]:
+            return self.calculate_auc(index_collection)
+        else:
+            raise ValueError(f"Invalid metric: {metrica}")
+
+    def calculate_auc(self, index_collection):
+        """Calculates the Area Under Curve (AUC) for the index collection."""
+        count = index_collection.size().getInfo()
+        if count < 2:
+            raise ValueError("Número insuficiente de imagens para calcular a AUC.")
+
+        indexStack = index_collection.toBands()
+        # Define a mask valid (minimum mask value of all bands)
+        validMask = indexStack.mask().reduce(ee.Reducer.min())
+
+        # Get the band names (each band corresponds to a date)
+        bands = indexStack.bandNames()
+
+        # Define the start date; ensure self.inicio is in "YYYY-MM-DD" format
+        start_date = ee.Date(self.inicio)
+        # Create a list of timestamps in days relative to the start date
+        timestamps = index_collection.aggregate_array("system:time_start").map(
+            lambda date: ee.Number(ee.Date(date).difference(start_date, "day"))
+        )
+
+        # Align timestamps with the number of bands
+        alignedTimestamps = ee.List(timestamps.slice(0, bands.size()))
+        # Create an image with constants based on timestamps and rename to band names
+        timeImage = ee.Image.constant(alignedTimestamps).rename(bands).toArray()
+
+        # Convert the index stack to an array
+        ndviArray = indexStack.toArray()
+
+        # Calculate differences between consecutive timestamps
+        diffs = timeImage.arraySlice(0, 1).subtract(timeImage.arraySlice(0, 0, -1))
+        # Sum the NDVI values of consecutive images
+        sums = ndviArray.arraySlice(0, 1).add(ndviArray.arraySlice(0, 0, -1))
+        # Apply the trapezoidal rule: (difference * sum) / 2 and reduce the array by the sum of intervals
+        auc = diffs.multiply(sums).divide(2).arrayReduce(ee.Reducer.sum(), [0])
+        # Extract the final result, apply the mask, and define as the final image
+        final_image = ee.Image(auc.arrayGet([0])).updateMask(validMask)
+
+        return final_image
+
+    def calculate_timeseries(self):
+        """Calculates the time series of the selected vegetation index for the AOI."""
+        vegetation_index = self.series_indice.currentText()
+        aoi = self.apply_buffer(self.aoi)
+
+        result = self.sentinel2.map(lambda image: self.calculate_index_with_mean(image, vegetation_index, aoi))
+        result = result.filter(ee.Filter.notNull(["mean_index"]))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array("date").getInfo()
+        mean_indices = result.aggregate_array("mean_index").getInfo()
+        image_ids = result.aggregate_array("system:index").getInfo()
+
+        # Combine the dates, mean indices, and image IDs into a DataFrame
+        df = pd.DataFrame({"date": dates, "AOI_average": mean_indices, "image_id": image_ids})
+
+        # Optional: Smoothing or further processing
+        self.df = df.copy()
+        self.df_aux = df.copy()
+        self.load_dates()
+        self.plot_timeseries()
+
+    def apply_buffer(self, aoi):
+        """Applies a buffer to the AOI geometry."""
+        buffer_distance = self.horizontalSlider_buffer.value()
+        if buffer_distance != 0:
+            print(f"Buffer distance: {buffer_distance} meters")
+            return aoi.map(lambda feature: feature.buffer(buffer_distance))
+        else:
+            print("No buffer applied")
+            return aoi
+
+    def calculate_index_with_mean(self, image, index_name, aoi):
+        """Calculates the mean value for the specified index over the AOI."""
+        index_image = self.calculate_vegetation_index(image, index_name)
+        mean_index = (
+            index_image.reduceRegion(
+                reducer=ee.Reducer.mean(), geometry=aoi, scale=10, bestEffort=True
+            ).get("index")
+        )
+        return image.set({"mean_index": mean_index})
+
+    def feature_calculate_timeseries(self, name):
+        """Calculates the time series of the selected vegetation index for a specific feature."""
+        vegetation_index = self.series_indice.currentText()
+        aoi = self.apply_buffer(self.aoi_feature)
+
+        result = self.sentinel2_selected_dates.map(lambda image: self.calculate_index_with_mean(image, vegetation_index, aoi))
+        result = result.filter(ee.Filter.notNull(["mean_index"]))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array("date").getInfo()
+        mean_indices = result.aggregate_array("mean_index").getInfo()
+
+        print(f"Creating DataFrame for {name}")
+        return pd.DataFrame({"date": dates, name: mean_indices})
+
+    def point_calculate_timeseries(self, aoi, name):
+        """Calculates the time series of the selected vegetation index for a specific point."""
+        vegetation_index = self.series_indice.currentText()
+
+        result = self.sentinel2_selected_dates.map(lambda image: self.calculate_index_with_mean(image, vegetation_index, aoi))
+        result = result.filter(ee.Filter.notNull(["mean_index"]))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array("date").getInfo()
+        mean_indices = result.aggregate_array("mean_index").getInfo()
+
+        print(f"Creating DataFrame for {name}")
+        return pd.DataFrame({"date": dates, name: mean_indices})
 
     def load_rgb(self, temporary=False):
         # Set the cursor to indicate processing
@@ -2442,51 +2568,41 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def uniqueday_collection(self, sentinel2):
         """
         Filters the image collection to include only one image per day,
-        prioritizing images with higher AOI coverage ratio.
+        prioritizing images with higher AOI coverage ratio, using Earth Engine
+        operations.
         """
-        print("Filtering to unique days...")
+        print("Filtering to unique days using Earth Engine...")
         print("Original collection size:", sentinel2.size().getInfo())
-        
-        # Get all images with their properties including coverage_ratio
-        image_list = sentinel2.toList(sentinel2.size())
-        size = image_list.size().getInfo()
-        
-        # Create a list to store image data
-        image_data = []
-        
-        # Extract timestamp, date, and coverage_ratio for each image
-        for i in range(size):
-            image = ee.Image(image_list.get(i))
-            timestamp = image.get('system:time_start').getInfo()
-            date = datetime.fromtimestamp(timestamp / 1000).strftime("%Y-%m-%d")
-            
-            # Get coverage_ratio (default to 0 if not present)
-            coverage_ratio = image.get('coverage_ratio')
-            if coverage_ratio:
-                coverage_ratio = coverage_ratio.getInfo()
-            else:
-                coverage_ratio = 0
-                
-            image_data.append({
-                'timestamp': timestamp,
-                'date': date,
-                'coverage_ratio': coverage_ratio
-            })
-        
-        # Create DataFrame and find the image with highest coverage for each date
-        df = pd.DataFrame(image_data)
-        
-        # Group by date and get the timestamp with the highest coverage_ratio
-        best_timestamps = df.loc[df.groupby('date')['coverage_ratio'].idxmax()]['timestamp'].tolist()
-        
-        print(f"Collection size after keeping only unique dates: {len(best_timestamps)}")
-        self.collection_info.append(f"Collection size after keeping only unique dates: {len(best_timestamps)}")
-        self.collection_info_pt.append(f"Tamanho da coleção após manter apenas datas únicas: {len(best_timestamps)}")
-        
-        # Filter the collection to include only the best image for each unique date
-        return sentinel2.filter(
-            ee.Filter.inList("system:time_start", ee.List(best_timestamps))
-        )
+
+        def process_date(date):
+            """Finds the image with the highest coverage for a given date."""
+            date_start = ee.Date(date)
+            date_end = date_start.advance(1, 'day')
+
+            # Filter for images within the day
+            daily_images = sentinel2.filterDate(date_start, date_end)
+
+            # Sort by coverage_ratio (descending) and get the first image
+            best_image = daily_images.sort('coverage_ratio', False).first()
+            return best_image
+
+        # Get list of unique dates
+        dates = sentinel2.aggregate_array("date").distinct()
+
+        # Map the process_date function over the list of unique dates
+        unique_images = ee.List(dates.map(process_date))
+
+        # Filter out any null values (in case a date has no images)
+        unique_images = unique_images.removeAll([None])
+
+        # Convert back to an ImageCollection
+        filtered_collection = ee.ImageCollection(unique_images)
+
+        print(f"Collection size after keeping only unique dates: {filtered_collection.size().getInfo()}")
+        self.collection_info.append(f"Collection size after keeping only unique dates: {filtered_collection.size().getInfo()}")
+        self.collection_info_pt.append(f"Tamanho da coleção após manter apenas datas únicas: {filtered_collection.size().getInfo()}")
+
+        return filtered_collection
 
 
     def AOI_coverage_filter(self, sentinel2, aoi, coverage_threshold):
@@ -2668,297 +2784,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         return sentinel2.map(mask_cloud_and_shadows)
 
-    def calculate_timeseries(self):
-        """Calculates the time series of the selected vegetation index for the
-        AOI."""
-        """Calcula a série temporal do índice de vegetação selecionado para a
-        AOI."""
-        vegetation_index = self.series_indice.currentText()
-
-        # Buffer the AOI geometry inward by 10 meters (adjust distance as
-        # needed)
-        buffer_distance = self.horizontalSlider_buffer.value()
-        if buffer_distance != 0:
-            print(f"Buffer distance: {buffer_distance} meters")
-            aoi = self.aoi.map(lambda feature: feature.buffer(buffer_distance))
-        else:
-            print("No buffer applied")
-            aoi = self.aoi
-
-        # Define the vegetation index calculation in a function
-        def calculate_index(image):
-            if vegetation_index == "NDVI":
-                index_image = image.normalizedDifference(["B8", "B4"]).rename("index")
-            elif vegetation_index == "EVI":
-                index_image = image.expression(
-                    "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "BLUE": image.select("B2"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SAVI":
-                L = 0.5
-                index_image = image.expression(
-                    "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "L": L,
-                    },
-                ).rename("index")
-            elif vegetation_index == "GCI":
-                index_image = image.expression(
-                    "NIR / GREEN - 1",
-                    {"NIR": image.select("B8"), "GREEN": image.select("B3")},
-                ).rename("index")
-            elif vegetation_index == "GNDVI":
-                index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
-            elif vegetation_index == "MSAVI":
-                index_image = image.expression(
-                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SFDVI":
-                index_image = image.expression(
-                    "(NIR - SWIR) / (NIR + SWIR)",
-                    {
-                        "NIR": image.select("B8"),
-                        "SWIR": image.select("B11"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "CIgreen":
-                index_image = image.expression(
-                    "(NIR / GREEN) - 1",
-                    {
-                        "NIR": image.select("B8"),
-                        "GREEN": image.select("B3"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "NDRE":
-                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
-            else:
-                raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
-
-            # Calculate mean value for the index over AOI
-            mean_index = (
-                index_image.reduceRegion(
-                    reducer=ee.Reducer.mean(), geometry=aoi, scale=10, bestEffort=True
-                )
-                .get("index")
-            )
-
-            return image.set({"mean_index": mean_index})
-
-        # Map the calculation function over the collection and get results
-        result = self.sentinel2.map(calculate_index)
-        result = result.filter(ee.Filter.notNull(["mean_index"]))
-
-        # Retrieve dates and mean index values separately using aggregate_array
-        dates = result.aggregate_array("date").getInfo()
-        mean_indices = result.aggregate_array("mean_index").getInfo()
-        image_ids = result.aggregate_array("system:index").getInfo()
-
-        # Combine the dates, mean indices, and image IDs into a DataFrame
-        df = pd.DataFrame(
-            {"date": dates, "AOI_average": mean_indices, "image_id": image_ids}
-        )
-
-        # Optional: Smoothing or further processing
-        self.df = df.copy()
-        self.df_aux = df.copy()
-        self.load_dates()
-        self.plot_timeseries()
-
-    def feature_calculate_timeseries(self, name):
-        """Calculates the time series of the selected vegetation index for a
-        specific feature."""
-        """Calcula a série temporal do índice de vegetação selecionado para uma
-        feição específica."""
-        vegetation_index = self.series_indice.currentText()
-
-        # Buffer the AOI geometry inward by 10 meters (adjust distance as
-        # needed)
-        buffer_distance = self.horizontalSlider_buffer.value()
-        if buffer_distance != 0:
-            print(f"Buffer distance: {buffer_distance} meters")
-            aoi = self.aoi_feature.map(lambda feature: feature.buffer(buffer_distance))
-        else:
-            print("No buffer applied")
-            aoi = self.aoi_feature
-
-        # Define the vegetation index calculation in a function
-        def calculate_index(image):
-            if vegetation_index == "NDVI":
-                index_image = image.normalizedDifference(["B8", "B4"]).rename("index")
-            elif vegetation_index == "EVI":
-                index_image = image.expression(
-                    "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "BLUE": image.select("B2"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SAVI":
-                L = 0.5
-                index_image = image.expression(
-                    "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "L": L,
-                    },
-                ).rename("index")
-            elif vegetation_index == "GCI":
-                index_image = image.expression(
-                    "NIR / GREEN - 1",
-                    {"NIR": image.select("B8"), "GREEN": image.select("B3")},
-                ).rename("index")
-            elif vegetation_index == "GNDVI":
-                index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
-            elif vegetation_index == "MSAVI":
-                index_image = image.expression(
-                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SFDVI":
-                index_image = image.expression(
-                    "(NIR - SWIR) / (NIR + SWIR)",
-                    {
-                        "NIR": image.select("B8"),
-                        "SWIR": image.select("B11"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "CIgreen":
-                index_image = image.expression(
-                    "(NIR / GREEN) - 1",
-                    {
-                        "NIR": image.select("B8"),
-                        "GREEN": image.select("B3"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "NDRE":
-                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
-            else:
-                raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
-
-            # Calculate mean value for the index over AOI
-            mean_index = (
-                index_image.reduceRegion(
-                    reducer=ee.Reducer.mean(), geometry=aoi, scale=10, bestEffort=True
-                )
-                .get("index")
-            )
-
-            return image.set({"mean_index": mean_index})
-
-        # Map the calculation function over the collection and get results
-        result = self.sentinel2_selected_dates.map(calculate_index)
-        result = result.filter(ee.Filter.notNull(["mean_index"]))
-
-        # Retrieve dates and mean index values separately using aggregate_array
-        dates = result.aggregate_array("date").getInfo()
-        mean_indices = result.aggregate_array("mean_index").getInfo()
-
-        # Combine the dates, mean indices
-        print(f"Creating DataFrame for {name}")
-        return pd.DataFrame({"date": dates, name: mean_indices})
-
-    def point_calculate_timeseries(self, aoi, name):
-        """Calculates the time series of the selected vegetation index for a
-        specific point."""
-        """Calcula a série temporal do índice de vegetação selecionado para um
-        ponto específico."""
-        vegetation_index = self.series_indice.currentText()
-
-        # Define the vegetation index calculation in a function
-        def calculate_index(image):
-            if vegetation_index == "NDVI":
-                index_image = image.normalizedDifference(["B8", "B4"]).rename("index")
-            elif vegetation_index == "EVI":
-                index_image = image.expression(
-                    "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "BLUE": image.select("B2"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SAVI":
-                L = 0.5
-                index_image = image.expression(
-                    "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                        "L": L,
-                    },
-                ).rename("index")
-            elif vegetation_index == "GCI":
-                index_image = image.expression(
-                    "NIR / GREEN - 1",
-                    {"NIR": image.select("B8"), "GREEN": image.select("B3")},
-                ).rename("index")
-            elif vegetation_index == "GNDVI":
-                index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
-            elif vegetation_index == "MSAVI":
-                index_image = image.expression(
-                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
-                    {
-                        "NIR": image.select("B8"),
-                        "RED": image.select("B4"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "SFDVI":
-                index_image = image.expression(
-                    "(NIR - SWIR) / (NIR + SWIR)",
-                    {
-                        "NIR": image.select("B8"),
-                        "SWIR": image.select("B11"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "CIgreen":
-                index_image = image.expression(
-                    "(NIR / GREEN) - 1",
-                    {
-                        "NIR": image.select("B8"),
-                        "GREEN": image.select("B3"),
-                    },
-                ).rename("index")
-            elif vegetation_index == "NDRE":
-                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
-            else:
-                raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
-
-            # Calculate mean value for the index over AOI
-            mean_index = (
-                index_image.reduceRegion(
-                    reducer=ee.Reducer.mean(), geometry=aoi, scale=10, bestEffort=True
-                )
-                .get("index")
-            )
-
-            return image.set({"mean_index": mean_index})
-
-        # Map the calculation function over the collection and get results
-        result = self.sentinel2_selected_dates.map(calculate_index)
-        result = result.filter(ee.Filter.notNull(["mean_index"]))
-
-        # Retrieve dates and mean index values separately using aggregate_array
-        dates = result.aggregate_array("date").getInfo()
-        mean_indices = result.aggregate_array("mean_index").getInfo()
-
-        # Combine the dates, mean indices
-        print(f"Creating DataFrame for {name}")
-        return pd.DataFrame({"date": dates, name: mean_indices})
 
     def clear_all_raster_layers(self):
         """Removes all raster layers from the QGIS project, except for the
