@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>4</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -852,26 +852,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_index_explain">
       <property name="geometry">
@@ -1940,26 +1920,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
      <widget class="QPushButton" name="load_1rgb_preview">
       <property name="geometry">
@@ -2423,26 +2383,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
      <widget class="Line" name="line_5">
       <property name="geometry">
@@ -2803,26 +2743,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
@@ -3153,9 +3073,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QgsFilterLineEdit" name="mLineEdit_latitude">
      <property name="geometry">
       <rect>
-       <x>620</x>
+       <x>560</x>
        <y>170</y>
-       <width>131</width>
+       <width>171</width>
        <height>31</height>
       </rect>
      </property>
@@ -3175,7 +3095,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
-       <x>550</x>
+       <x>490</x>
        <y>180</y>
        <width>61</width>
        <height>16</height>
@@ -3193,7 +3113,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>780</x>
+       <x>740</x>
        <y>175</y>
        <width>81</width>
        <height>21</height>
@@ -3211,9 +3131,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QgsFilterLineEdit" name="mLineEdit_longitude">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>820</x>
        <y>169</y>
-       <width>131</width>
+       <width>171</width>
        <height>31</height>
       </rect>
      </property>
@@ -3395,7 +3315,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso é voltado para áreas de interesse do tipo Multipolígono e permite visualizar simultaneamente a série temporal de cada polígono individualmente. Para um funcionamento correto, é necessário selecionar um campo da tabela de atributos que identifique exclusivamente cada polígono. A seleção de imagens é a mesma da área de interrese definida na aba &amp;quot;Painel&amp;quot;, e o buffer configurado (Passo 7) será aplicado separadamente a cada polígono. O tempo de processamento pode varias significativamente dependendo da quantidade de polígonos e imagens.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Este recurso é voltado para áreas de interesse do tipo Multipolígono e permite visualizar simultaneamente a série temporal de cada polígono individualmente. Para um funcionamento correto, é necessário selecionar um campo da tabela de atributos que identifique exclusivamente cada polígono. A seleção de imagens é a mesma da área de interrese definida na aba &amp;quot;Painel&amp;quot;, e o buffer configurado (Passo 7) será aplicado separadamente a cada polígono. O tempo de processamento pode variar significativamente dependendo da quantidade de polígonos e imagens.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="overwriteMode">
        <bool>true</bool>

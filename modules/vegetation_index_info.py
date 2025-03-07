@@ -134,6 +134,156 @@ SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
             </ul>
         </p>
         <p><b>Note:</b> For this plugin, the soil brightness correction factor (L) is set to 0.5.</p>
+    """,
+    "MSAVI": """
+        <h3>Modified Soil-Adjusted Vegetation Index (MSAVI)</h3>
+        <p>
+            The Modified Soil-Adjusted Vegetation Index (MSAVI) is an enhancement of the SAVI 
+            designed to further minimize soil background effects on vegetation monitoring. 
+            Unlike SAVI, which uses a constant soil adjustment factor (L), MSAVI dynamically 
+            adjusts this factor based on vegetation density, making it more responsive to 
+            variations in vegetative cover.
+        </p>
+        <p>
+            MSAVI is particularly valuable in areas with mixed vegetation densities and varying 
+            soil backgrounds, as it reduces the need for prior knowledge of vegetation cover. 
+            This makes it ideal for:
+            <ul>
+                <li>Agricultural monitoring across different growth stages</li>
+                <li>Ecological studies in heterogeneous landscapes</li>
+                <li>Land degradation assessment</li>
+                <li>Monitoring vegetation recovery after disturbances</li>
+            </ul>
+        </p>
+        <p>
+            The MSAVI formula is calculated as:
+        </p>
+        <pre>
+MSAVI = (2 * NIR + 1 - sqrt((2 * NIR + 1)² - 8 * (NIR - RED))) / 2
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+            </ul>
+        </p>
+        <p>
+            The self-adjusting nature of MSAVI provides more consistent measurements across 
+            diverse landscapes and vegetation conditions compared to NDVI and SAVI.
+        </p>
+    """,
+    "SFDVI": """
+        <h3>Structurally Focused Difference Vegetation Index (SFDVI)</h3>
+        <p>
+            The Structurally Focused Difference Vegetation Index (SFDVI) is designed to 
+            better capture structural variations in vegetation canopies by combining 
+            spectral information from multiple bands. It evaluates not only chlorophyll 
+            content but also canopy structure and biomass.
+        </p>
+        <p>
+            SFDVI is particularly effective for:
+            <ul>
+                <li>Monitoring crop canopy development</li>
+                <li>Assessing forest structure and biomass</li>
+                <li>Distinguishing between different vegetation types</li>
+                <li>Tracking vegetation structural changes over time</li>
+            </ul>
+        </p>
+        <p>
+            The SFDVI formula is calculated as:
+        </p>
+        <pre>
+SFDVI = (NIR - RED - BLUE) / (NIR + RED + BLUE)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>BLUE</b>: Reflectance in the blue band</li>
+            </ul>
+        </p>
+        <p>
+            By incorporating blue reflectance, SFDVI provides enhanced sensitivity to 
+            structural components of vegetation while maintaining robustness to atmospheric 
+            effects and background noise.
+        </p>
+    """,
+    "CIgreen": """
+        <h3>Chlorophyll Index Green (CIgreen)</h3>
+        <p>
+            The Chlorophyll Index Green (CIgreen) is specifically designed to estimate 
+            chlorophyll content in plant leaves and canopies. Unlike normalized difference 
+            indices, CIgreen uses a ratio-based approach that has shown strong correlation 
+            with actual chlorophyll concentrations in various vegetation types.
+        </p>
+        <p>
+            This index is particularly sensitive to subtle changes in chlorophyll levels, 
+            making it valuable for:
+            <ul>
+                <li>Early detection of plant stress</li>
+                <li>Monitoring crop nitrogen status</li>
+                <li>Assessing photosynthetic capacity</li>
+                <li>Tracking seasonal changes in vegetation health</li>
+            </ul>
+        </p>
+        <p>
+            The CIgreen formula is calculated as:
+        </p>
+        <pre>
+CIgreen = (NIR / GREEN) - 1
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
+            </ul>
+        </p>
+        <p>
+            Higher CIgreen values generally indicate greater chlorophyll content and 
+            healthier vegetation. The index's simple formulation makes it computationally 
+            efficient while still providing valuable insights into plant physiological status.
+        </p>
+    """,
+    "NDRE": """
+        <h3>Normalized Difference Red Edge (NDRE)</h3>
+        <p>
+            The Normalized Difference Red Edge (NDRE) is an advanced vegetation index that 
+            utilizes the red edge portion of the electromagnetic spectrum. The red edge 
+            represents the rapid change in reflectance between the red and near-infrared 
+            regions (approximately 680-730 nm) and is highly sensitive to chlorophyll 
+            content and vegetation health.
+        </p>
+        <p>
+            NDRE is particularly valuable in:
+            <ul>
+                <li>Detecting early signs of crop stress before visible symptoms appear</li>
+                <li>Monitoring nitrogen status in crops with high precision</li>
+                <li>Assessing vegetation health in dense canopies where NDVI may saturate</li>
+                <li>Distinguishing between subtle variations in vegetation condition</li>
+            </ul>
+        </p>
+        <p>
+            The NDRE formula is calculated as:
+        </p>
+        <pre>
+NDRE = (NIR - REDEDGE) / (NIR + REDEDGE)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>REDEDGE</b>: Reflectance in the red edge band (typically 720-740 nm)</li>
+            </ul>
+        </p>
+        <p>
+            NDRE values typically range from -1 to 1, with higher values indicating healthier 
+            vegetation. NDRE offers significant advantages over NDVI in dense vegetation where 
+            NDVI tends to saturate, making it especially useful for precision agriculture and 
+            advanced vegetation monitoring applications.
+        </p>
     """
 }
 
@@ -211,7 +361,7 @@ EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
             </ul>
         </p>
     """,
-    "SAVI": """
+"SAVI": """
         <h3>Índice de Vegetação Ajustado ao Solo (SAVI)</h3>
         <p>
             O Índice de Vegetação Ajustado ao Solo (SAVI) foi desenvolvido especificamente para minimizar a influência da reflectância do solo, especialmente em áreas com cobertura vegetal esparsa. Em tais áreas, a reflectância do solo pode impactar significativamente a precisão de índices de vegetação como o NDVI.
@@ -239,5 +389,155 @@ SAVI = (1 + L) * ((NIR - RED) / (NIR + RED + L))
             </ul>
         </p>
         <p><b>Nota:</b> Para este plugin, o fator de correção do brilho do solo (L) está definido como 0.5.</p>
+    """,
+    "MSAVI": """
+        <h3>Índice de Vegetação Ajustado ao Solo Modificado (MSAVI)</h3>
+        <p>
+            O Índice de Vegetação Ajustado ao Solo Modificado (MSAVI) é um aprimoramento do SAVI 
+            projetado para minimizar ainda mais os efeitos do solo no monitoramento da vegetação. 
+            Diferente do SAVI, que usa um fator de ajuste do solo constante (L), o MSAVI ajusta 
+            este fator dinamicamente com base na densidade da vegetação, tornando-o mais responsivo 
+            às variações na cobertura vegetativa.
+        </p>
+        <p>
+            O MSAVI é particularmente valioso em áreas com densidades de vegetação mistas e diferentes 
+            fundos de solo, pois reduz a necessidade de conhecimento prévio sobre a cobertura vegetal. 
+            Isso o torna ideal para:
+            <ul>
+                <li>Monitoramento agrícola em diferentes estágios de crescimento</li>
+                <li>Estudos ecológicos em paisagens heterogêneas</li>
+                <li>Avaliação de degradação do solo</li>
+                <li>Monitoramento da recuperação da vegetação após distúrbios</li>
+            </ul>
+        </p>
+        <p>
+            A fórmula do MSAVI é calculada como:
+        </p>
+        <pre>
+MSAVI = (2 * NIR + 1 - sqrt((2 * NIR + 1)² - 8 * (NIR - RED))) / 2
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+            </ul>
+        </p>
+        <p>
+            A natureza auto-ajustável do MSAVI proporciona medições mais consistentes em paisagens 
+            diversas e condições de vegetação variadas em comparação com o NDVI e o SAVI.
+        </p>
+    """,
+    "SFDVI": """
+        <h3>Índice de Vegetação por Diferença Focada na Estrutura (SFDVI)</h3>
+        <p>
+            O Índice de Vegetação por Diferença Focada na Estrutura (SFDVI) é projetado para 
+            capturar melhor as variações estruturais nos dosséis da vegetação, combinando 
+            informações espectrais de múltiplas bandas. Ele avalia não apenas o conteúdo de 
+            clorofila, mas também a estrutura do dossel e a biomassa.
+        </p>
+        <p>
+            O SFDVI é particularmente eficaz para:
+            <ul>
+                <li>Monitorar o desenvolvimento do dossel das culturas</li>
+                <li>Avaliar a estrutura e biomassa florestal</li>
+                <li>Distinguir entre diferentes tipos de vegetação</li>
+                <li>Acompanhar mudanças estruturais na vegetação ao longo do tempo</li>
+            </ul>
+        </p>
+        <p>
+            A fórmula do SFDVI é calculada como:
+        </p>
+        <pre>
+SFDVI = (NIR - RED - BLUE) / (NIR + RED + BLUE)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>BLUE</b>: Reflectância na banda azul</li>
+            </ul>
+        </p>
+        <p>
+            Ao incorporar a reflectância do azul, o SFDVI proporciona maior sensibilidade aos 
+            componentes estruturais da vegetação, mantendo a robustez aos efeitos atmosféricos 
+            e ao ruído de fundo.
+        </p>
+    """,
+    "CIgreen": """
+        <h3>Índice de Clorofila Verde (CIgreen)</h3>
+        <p>
+            O Índice de Clorofila Verde (CIgreen) é especificamente projetado para estimar 
+            o conteúdo de clorofila em folhas e dosséis de plantas. Diferente dos índices de 
+            diferença normalizada, o CIgreen usa uma abordagem baseada em razão que tem mostrado 
+            forte correlação com as concentrações reais de clorofila em vários tipos de vegetação.
+        </p>
+        <p>
+            Este índice é particularmente sensível a mudanças sutis nos níveis de clorofila, 
+            tornando-o valioso para:
+            <ul>
+                <li>Detecção precoce de estresse em plantas</li>
+                <li>Monitoramento do status de nitrogênio em culturas</li>
+                <li>Avaliação da capacidade fotossintética</li>
+                <li>Acompanhamento de mudanças sazonais na saúde da vegetação</li>
+            </ul>
+        </p>
+        <p>
+            A fórmula do CIgreen é calculada como:
+        </p>
+        <pre>
+CIgreen = (NIR / GREEN) - 1
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
+            </ul>
+        </p>
+        <p>
+            Valores mais altos de CIgreen geralmente indicam maior conteúdo de clorofila e 
+            vegetação mais saudável. A formulação simples do índice o torna computacionalmente 
+            eficiente, enquanto ainda fornece informações valiosas sobre o status fisiológico das plantas.
+        </p>
+    """,
+    "NDRE": """
+        <h3>Diferença Normalizada da Borda do Vermelho (NDRE)</h3>
+        <p>
+            A Diferença Normalizada da Borda do Vermelho (NDRE) é um índice de vegetação avançado 
+            que utiliza a porção da borda do vermelho do espectro eletromagnético. A borda do vermelho 
+            representa a mudança rápida na reflectância entre as regiões vermelha e infravermelho 
+            próximo (aproximadamente 680-730 nm) e é altamente sensível ao conteúdo de clorofila 
+            e à saúde da vegetação.
+        </p>
+        <p>
+            O NDRE é particularmente valioso para:
+            <ul>
+                <li>Detectar sinais precoces de estresse nas culturas antes que os sintomas visíveis apareçam</li>
+                <li>Monitorar o status de nitrogênio nas culturas com alta precisão</li>
+                <li>Avaliar a saúde da vegetação em dosséis densos onde o NDVI pode saturar</li>
+                <li>Distinguir entre variações sutis na condição da vegetação</li>
+            </ul>
+        </p>
+        <p>
+            A fórmula do NDRE é calculada como:
+        </p>
+        <pre>
+NDRE = (NIR - REDEDGE) / (NIR + REDEDGE)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>REDEDGE</b>: Reflectância na banda da borda do vermelho (tipicamente 720-740 nm)</li>
+            </ul>
+        </p>
+        <p>
+            Os valores do NDRE geralmente variam de -1 a 1, com valores mais altos indicando vegetação 
+            mais saudável. O NDRE oferece vantagens significativas sobre o NDVI em vegetação densa onde 
+            o NDVI tende a saturar, tornando-o especialmente útil para agricultura de precisão e 
+            aplicações avançadas de monitoramento de vegetação.
+        </p>
     """
 }

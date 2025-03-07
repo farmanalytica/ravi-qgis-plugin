@@ -202,6 +202,23 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.daily_precipitation = None
         self.selected_aio_layer_path = None
 
+        vegetation_index = [
+            "NDVI",
+            "GNDVI",
+            "EVI",
+            "SAVI",
+            "MSAVI",
+            "SFDVI",
+            "CIgreen",
+            "NDRE"
+        ]
+
+        self.imagem_unica_indice.addItems(vegetation_index)
+        self.indice_composicao.addItems(vegetation_index)
+        self.series_indice_2.addItems(vegetation_index)
+        self.series_indice.addItems(vegetation_index)
+
+
         # UI setup and signal connections / Configuração da UI e conexões de sinal
         self.setup_ui()
         self.connect_signals()
@@ -1584,6 +1601,14 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 index_image = first_image.normalizedDifference(["B8", "B3"]).rename(
                     "GNDVI"
                 )
+            elif vegetation_index == "MSAVI":
+                index_image = first_image.expression(
+                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                    {
+                        "NIR": first_image.select("B8"),
+                        "RED": first_image.select("B4"),
+                    },
+                ).rename("MSAVI")
             elif vegetation_index == "EVI":
                 index_image = first_image.expression(
                     "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
@@ -1603,6 +1628,28 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                         "L": L,
                     },
                 ).rename("SAVI")
+            elif vegetation_index == "SFDVI":
+                index_image = first_image.expression(
+                    "(NIR - SWIR) / (NIR + SWIR)",
+                    {
+                        "NIR": first_image.select("B8"),
+                        "SWIR": first_image.select("B11"),
+                    },
+                ).rename("SFDVI")
+            elif vegetation_index == "CIgreen":
+                index_image = first_image.expression(
+                    "(NIR / GREEN) - 1",
+                    {
+                        "NIR": first_image.select("B8"),
+                        "GREEN": first_image.select("B3"),
+                    },
+                ).rename("CIgreen")
+            elif vegetation_index == "NDRE":
+                index_image = first_image.normalizedDifference(["B8", "B5"]).rename("NDRE")
+            else:
+                raise ValueError(f"Invalid vegetation index: {vegetation_index}")
+
+            
 
             # Prepare download URL and output filename / Prepara o URL de
             # download e o nome do arquivo de saída
@@ -1950,14 +1997,41 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                     .rename("SAVI")
                     .copyProperties(image, ["system:time_start"])
                 )
+            elif indice_vegetacao == "MSAVI":
+                index_image = image.expression(
+                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                    {
+                        "NIR": image.select("B8"),
+                        "RED": image.select("B4"),
+                    },
+                ).rename("MSAVI")
             elif indice_vegetacao == "GNDVI":
                 return (
                     image.normalizedDifference(["B8", "B3"])
                     .rename("GNDVI")
                     .copyProperties(image, ["system:time_start"])
                 )
+            elif indice_vegetacao == "SFDVI":
+                index_image = image.expression(
+                    "(NIR - SWIR) / (NIR + SWIR)",
+                    {
+                        "NIR": image.select("B8"),
+                        "SWIR": image.select("B11"),
+                    },
+                ).rename("SFDVI")
+            elif indice_vegetacao == "CIgreen":
+                index_image = image.expression(
+                    "(NIR / GREEN) - 1",
+                    {
+                        "NIR": image.select("B8"),
+                        "GREEN": image.select("B3"),
+                    },
+                ).rename("CIgreen")
+            elif indice_vegetacao == "NDRE":
+                index_image = image.normalizedDifference(["B8", "B5"]).rename("NDRE")
             else:
                 raise ValueError(f"Invalid indice_vegetacao: {indice_vegetacao}")
+            
 
         # Aplica o cálculo do índice à coleção filtrada
         index_collection = self.sentinel2_selected_dates.map(calculate_index)
@@ -2641,6 +2715,32 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 ).rename("index")
             elif vegetation_index == "GNDVI":
                 index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
+            elif vegetation_index == "MSAVI":
+                index_image = image.expression(
+                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                    {
+                        "NIR": image.select("B8"),
+                        "RED": image.select("B4"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "SFDVI":
+                index_image = image.expression(
+                    "(NIR - SWIR) / (NIR + SWIR)",
+                    {
+                        "NIR": image.select("B8"),
+                        "SWIR": image.select("B11"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "CIgreen":
+                index_image = image.expression(
+                    "(NIR / GREEN) - 1",
+                    {
+                        "NIR": image.select("B8"),
+                        "GREEN": image.select("B3"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "NDRE":
+                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
             else:
                 raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
 
@@ -2721,6 +2821,32 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 ).rename("index")
             elif vegetation_index == "GNDVI":
                 index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
+            elif vegetation_index == "MSAVI":
+                index_image = image.expression(
+                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                    {
+                        "NIR": image.select("B8"),
+                        "RED": image.select("B4"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "SFDVI":
+                index_image = image.expression(
+                    "(NIR - SWIR) / (NIR + SWIR)",
+                    {
+                        "NIR": image.select("B8"),
+                        "SWIR": image.select("B11"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "CIgreen":
+                index_image = image.expression(
+                    "(NIR / GREEN) - 1",
+                    {
+                        "NIR": image.select("B8"),
+                        "GREEN": image.select("B3"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "NDRE":
+                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
             else:
                 raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
 
@@ -2783,6 +2909,32 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 ).rename("index")
             elif vegetation_index == "GNDVI":
                 index_image = image.normalizedDifference(["B8", "B3"]).rename("index")
+            elif vegetation_index == "MSAVI":
+                index_image = image.expression(
+                    "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                    {
+                        "NIR": image.select("B8"),
+                        "RED": image.select("B4"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "SFDVI":
+                index_image = image.expression(
+                    "(NIR - SWIR) / (NIR + SWIR)",
+                    {
+                        "NIR": image.select("B8"),
+                        "SWIR": image.select("B11"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "CIgreen":
+                index_image = image.expression(
+                    "(NIR / GREEN) - 1",
+                    {
+                        "NIR": image.select("B8"),
+                        "GREEN": image.select("B3"),
+                    },
+                ).rename("index")
+            elif vegetation_index == "NDRE":
+                index_image = image.normalizedDifference(["B8", "B5"]).rename("index")
             else:
                 raise ValueError(f"Unsupported vegetation index: {vegetation_index}")
 
