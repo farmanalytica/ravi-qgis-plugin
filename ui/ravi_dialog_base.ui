@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -272,7 +272,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_4">
@@ -297,7 +297,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons8-forward-button-50.png</normaloff>icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -476,7 +476,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons8-back-button-50.png</normaloff>icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1865,7 +1865,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>390</y>
+       <y>430</y>
        <width>271</width>
        <height>151</height>
       </rect>
@@ -1927,7 +1927,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>251</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -1952,7 +1952,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Load RGB layer</string>
+       <string>Download</string>
       </property>
      </widget>
      <widget class="QPushButton" name="load_1index">
@@ -1970,14 +1970,14 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Load index</string>
+       <string>Download</string>
       </property>
      </widget>
      <widget class="QComboBox" name="imagem_unica_indice">
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>70</y>
+        <y>30</y>
         <width>91</width>
         <height>31</height>
        </rect>
@@ -2011,7 +2011,7 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line_4">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>204</x>
         <y>50</y>
         <width>21</width>
         <height>61</height>
@@ -2024,7 +2024,7 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line_6">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>75</x>
         <y>60</y>
         <width>21</width>
         <height>51</height>
@@ -2034,12 +2034,12 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="label_30">
+     <widget class="QPushButton" name="load_1rgb_preview">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>10</x>
         <y>70</y>
-        <width>61</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -2049,33 +2049,57 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Index:</string>
+       <string>Preview (RGB)</string>
       </property>
-      <property name="textFormat">
-       <enum>Qt::AutoText</enum>
+     </widget>
+     <widget class="QPushButton" name="load_1index_preview">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
       </property>
-      <property name="scaledContents">
-       <bool>false</bool>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
-      <property name="wordWrap">
-       <bool>false</bool>
+      <property name="text">
+       <string>Preview</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line_2">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>40</y>
+        <width>118</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
      <zorder>line_4</zorder>
      <zorder>label_23</zorder>
      <zorder>label_26</zorder>
-     <zorder>dataunica</zorder>
      <zorder>load_1rgb</zorder>
      <zorder>load_1index</zorder>
      <zorder>line_6</zorder>
+     <zorder>load_1rgb_preview</zorder>
+     <zorder>load_1index_preview</zorder>
+     <zorder>line_2</zorder>
+     <zorder>dataunica</zorder>
      <zorder>imagem_unica_indice</zorder>
-     <zorder>label_30</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
        <x>700</x>
-       <y>390</y>
+       <y>430</y>
        <width>241</width>
        <height>151</height>
       </rect>
@@ -2269,7 +2293,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>290</x>
-       <y>390</y>
+       <y>430</y>
        <width>211</width>
        <height>151</height>
       </rect>
@@ -2285,9 +2309,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>110</x>
         <y>110</y>
-        <width>191</width>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -2297,15 +2321,15 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Load composite layer</string>
+       <string>Download</string>
       </property>
      </widget>
      <widget class="QComboBox" name="indice_composicao">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>70</x>
         <y>70</y>
-        <width>121</width>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
@@ -2338,9 +2362,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="metrica">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>70</x>
         <y>30</y>
-        <width>121</width>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
@@ -2388,7 +2412,7 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line_7">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>144</x>
         <y>30</y>
         <width>21</width>
         <height>91</height>
@@ -2428,7 +2452,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_29">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>70</y>
         <width>61</width>
         <height>31</height>
@@ -2452,18 +2476,51 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
      </widget>
+     <widget class="QPushButton" name="composicao_preview">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Preview</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line_8">
+      <property name="geometry">
+       <rect>
+        <x>76</x>
+        <y>80</y>
+        <width>21</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
      <zorder>line_7</zorder>
      <zorder>composicao</zorder>
-     <zorder>indice_composicao</zorder>
      <zorder>metrica</zorder>
      <zorder>label_28</zorder>
      <zorder>label_29</zorder>
+     <zorder>line_8</zorder>
+     <zorder>composicao_preview</zorder>
+     <zorder>indice_composicao</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
        <x>520</x>
-       <y>470</y>
+       <y>510</y>
        <width>171</width>
        <height>71</height>
       </rect>
@@ -2499,7 +2556,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>950</x>
-       <y>510</y>
+       <y>550</y>
        <width>181</width>
        <height>31</height>
       </rect>
@@ -2517,7 +2574,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>950</x>
-       <y>390</y>
+       <y>430</y>
        <width>181</width>
        <height>111</height>
       </rect>
@@ -3054,8 +3111,114 @@ p, li { white-space: pre-wrap; }
       </url>
      </property>
     </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>175</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Longitude:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>180</y>
+       <width>61</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Latitude:</string>
+     </property>
+    </widget>
+    <widget class="QgsFilterLineEdit" name="mLineEdit_longitude">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>169</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>(decimal coordinate)</string>
+     </property>
+     <property name="value">
+      <string/>
+     </property>
+     <property name="qgisRelation" stdset="0">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QgsFilterLineEdit" name="mLineEdit_latitude">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>170</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>(decimal coordinate)</string>
+     </property>
+     <property name="defaultValue">
+      <string/>
+     </property>
+     <property name="value">
+      <string/>
+     </property>
+     <property name="qgisRelation" stdset="0">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="add_dot">
+     <property name="geometry">
+      <rect>
+       <x>1000</x>
+       <y>170</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add point</string>
+     </property>
+    </widget>
     <zorder>webView_3</zorder>
     <zorder>groupBox_13</zorder>
+    <zorder>label_11</zorder>
+    <zorder>label_10</zorder>
+    <zorder>mLineEdit_longitude</zorder>
+    <zorder>mLineEdit_latitude</zorder>
+    <zorder>add_dot</zorder>
    </widget>
    <widget class="QWidget" name="tab_11">
     <attribute name="title">
@@ -3258,6 +3421,11 @@ p, li { white-space: pre-wrap; }
    <class>QgsFileWidget</class>
    <extends>QWidget</extends>
    <header>qgsfilewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qgsfilterlineedit.h</header>
   </customwidget>
   <customwidget>
    <class>QgsPasswordLineEdit</class>

@@ -140,9 +140,9 @@ except:
 language = QSettings().value("locale/userLocale", "en")[0:2]
 
 if language == "pt":
-    ui_file = "ravi_dialog_base_pt.ui"
+    ui_file = os.path.join("ui", "ravi_dialog_base_pt.ui")
 else:
-    ui_file = "ravi_dialog_base.ui"
+    ui_file = os.path.join("ui", "ravi_dialog_base.ui")
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
 
@@ -204,14 +204,25 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
         vegetation_index = [
             "NDVI",
-            "GNDVI",
             "EVI",
             "SAVI",
+            "GNDVI",
             "MSAVI",
             "SFDVI",
             "CIgreen",
-            "NDRE"
+            "NDRE",
+            "ARVI",
+            "NDMI",
+            "NBR",
+            "SIPI",
+            "NDWI",
+            "ReCI",
+            "MTCI",
+            "MCARI",
+            "VARI",
+            "TVI",
         ]
+
 
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
@@ -1527,7 +1538,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def calculate_vegetation_index(self, image, index_name):
         """
         Calculates the specified vegetation index for the given image using
-        dictionary-based expressions.
+        Earth Engine functions directly.
 
         Args:
             image (ee.Image): The input Earth Engine image.
@@ -1541,58 +1552,147 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         Raises:
             ValueError: If an unsupported vegetation index is specified.
         """
-        index_expressions = {
-            "NDVI": 'image.normalizedDifference(["B8", "B4"]).rename("index")',
-            "EVI": (
-                "image.expression("
-                "2.5 * ((NIR / 10000 - RED / 10000) / (NIR / 10000 + 6 * RED / 10000 - 7.5 * BLUE / 10000 + 1))",
-                "{"
-                '"NIR": image.select("B8"),'
-                '"RED": image.select("B4"),'
-                '"BLUE": image.select("B2"),'
-                "})"
-                '.rename("index")'
-            ),
-            "SAVI": (
-                "image.expression("
-                "(1 + L) * ((NIR / 10000) - (RED / 10000)) / ((NIR / 10000) + (RED / 10000) + L)",
-                '{"NIR": image.select("B8"), "RED": image.select("B4"), "L": 0.5}',
-                ')'
-                '.rename("index")'
-            ),
-            "GNDVI": 'image.normalizedDifference(["B8", "B3"]).rename("index")',
-            "MSAVI": (
-                "image.expression("
-                '((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2',
-                '{"NIR": image.select("B8"), "RED": image.select("B4")}',
-                ')'
-                '.rename("index")'
-            ),
-            "SFDVI": (
-                "image.expression("
-                '(NIR - SWIR) / (NIR + SWIR)',
-                '{"NIR": image.select("B8"), "SWIR": image.select("B11")}',
-                ')'
-                '.rename("index")'
-            ),
-            "CIgreen": (
-                "image.expression("
-                '(NIR / GREEN) - 1',
-                '{"NIR": image.select("B8"), "GREEN": image.select("B3")}',
-                ')'
-                '.rename("index")'
-            ),
-            "NDRE": 'image.normalizedDifference(["B8", "B5"]).rename("index")',
+        def evi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
+                {"NIR": nir, "RED": red, "BLUE": blue},
+            ).rename("index")
+
+        def savi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            L = 0.5
+            return image.expression(
+                "(1 + L) * ((NIR - RED) / (NIR + RED + L))",
+                {"NIR": nir, "RED": red, "L": L},
+            ).rename("index")
+
+        def msavi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            return image.expression(
+                "((2 * NIR + 1) - sqrt((2 * NIR + 1) ** 2 - 8 * (NIR - RED))) / 2",
+                {"NIR": nir, "RED": red},
+            ).rename("index")
+
+        def sfdvi(image):
+            return image.expression(
+                "((NIR + GREEN)/2 - (RED + REDEDGE)/2)",
+                {
+                    "NIR": image.select("B8").divide(10000),  # Near-Infrared
+                    "GREEN": image.select("B3").divide(10000),  # Green
+                    "RED": image.select("B4").divide(10000),  # Red
+                    "REDEDGE": image.select("B5").divide(10000),  # Red Edge
+                },
+            ).rename("index")
+
+        def cigreen(image):
+            nir = image.select("B8")
+            green = image.select("B3")
+            return image.expression(
+                "(NIR / GREEN) - 1", {"NIR": nir, "GREEN": green}
+            ).rename("index")
+        
+        def arvi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(NIR - (2 * RED - BLUE)) / (NIR + (2 * RED - BLUE))",
+                {"NIR": nir, "RED": red, "BLUE": blue},
+            ).rename("index")
+        
+        def ndmi(image):
+            return image.normalizedDifference(["B8", "B11"]).rename("index")
+        
+        def nbr(image):
+            return image.normalizedDifference(["B8", "B12"]).rename("index")
+        
+        def sipi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(NIR - BLUE) / (NIR - RED)",
+                {"NIR": nir, "RED": red, "BLUE": blue},
+            ).rename("index")
+        
+        def ndwi(image):
+            return image.normalizedDifference(["B3", "B8"]).rename("index")
+        
+        def reci(image):
+            nir = image.select("B8")
+            rededge = image.select("B5")
+            return image.expression(
+                "(NIR / REDEDGE) - 1",
+                {"NIR": nir, "REDEDGE": rededge},
+            ).rename("index")
+        
+        def mtci(image):
+            nir = image.select("B8")
+            rededge = image.select("B5")
+            red = image.select("B4")
+            return image.expression(
+                "(NIR - REDEDGE) / (REDEDGE - RED)",
+                {"NIR": nir, "REDEDGE": rededge, "RED": red},
+            ).rename("index")
+        
+        def mcari(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            green = image.select("B3").divide(10000)
+            return image.expression(
+                "((REDEDGE - RED) - 0.2 * (REDEDGE - GREEN)) * (REDEDGE / RED)",
+                {"REDEDGE": nir, "RED": red, "GREEN": green},
+            ).rename("index")
+        
+        def vari(image):
+            red = image.select("B4").divide(10000)
+            green = image.select("B3").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(GREEN - RED) / (GREEN + RED - BLUE)",
+                {"GREEN": green, "RED": red, "BLUE": blue},
+            ).rename("index")
+        
+        def tvi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            green = image.select("B3").divide(10000)
+            return image.expression(
+                "0.5 * (120 * (NIR - GREEN) - 200 * (RED - GREEN))",
+                {"NIR": nir, "RED": red, "GREEN": green},
+            ).rename("index")
+
+        index_functions = {
+            "NDVI": lambda image: image.normalizedDifference(["B8", "B4"]).rename("index"),
+            "EVI": evi,
+            "SAVI": savi,
+            "GNDVI": lambda image: image.normalizedDifference(["B8", "B3"]).rename("index"),
+            "MSAVI": msavi,
+            "SFDVI": sfdvi,
+            "CIgreen": cigreen,
+            "NDRE": lambda image: image.normalizedDifference(["B8", "B5"]).rename("index"),
+            "ARVI": arvi,
+            "NDMI": ndmi,
+            "NBR": nbr,
+            "SIPI": sipi,
+            "NDWI": ndwi,
+            "ReCI": reci,
+            "MTCI": mtci,
+            "MCARI": mcari,
+            "VARI": vari,
+            "TVI": tvi
         }
 
-        if index_name in index_expressions:
-            expression = index_expressions[index_name]
-            # Execute the expression using eval()
-            index_image = eval(expression)
+        if index_name in index_functions:
+            index_image = index_functions[index_name](image)
             return index_image
         else:
             raise ValueError(f"Unsupported vegetation index: {index_name}")
-
 
     def load_index(self, temporary=False):
         """Calculates a vegetation index, downloads the GeoTIFF, and adds it to

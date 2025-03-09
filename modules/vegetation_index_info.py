@@ -176,38 +176,31 @@ MSAVI = (2 * NIR + 1 - sqrt((2 * NIR + 1)² - 8 * (NIR - RED))) / 2
     "SFDVI": """
         <h3>Structurally Focused Difference Vegetation Index (SFDVI)</h3>
         <p>
-            The Structurally Focused Difference Vegetation Index (SFDVI) is designed to 
-            better capture structural variations in vegetation canopies by combining 
-            spectral information from multiple bands. It evaluates not only chlorophyll 
-            content but also canopy structure and biomass.
+            The Spectral Feature Depth Vegetation Index (SFDVI) integrates the Red Edge band 
+            with the red band to investigate vegetation behavior by means of the spectral 
+            feature depth.  SFDVI shows more gradations in dense vegetation than NDVI and RENDVI.
         </p>
         <p>
-            SFDVI is particularly effective for:
+            SFDVI is effective for:
             <ul>
-                <li>Monitoring crop canopy development</li>
-                <li>Assessing forest structure and biomass</li>
-                <li>Distinguishing between different vegetation types</li>
-                <li>Tracking vegetation structural changes over time</li>
+                <li>Analyzing vegetation using spectral feature depth.</li>
+                <li>Showing gradations in dense vegetation.</li>
             </ul>
         </p>
         <p>
             The SFDVI formula is calculated as:
         </p>
         <pre>
-SFDVI = (NIR - RED - BLUE) / (NIR + RED + BLUE)
+SFDVI = ((NIR + GREEN)/2 - (RED + REDEDGE)/2)
         </pre>
         <p>
             where:
             <ul>
                 <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
                 <li><b>RED</b>: Reflectance in the red band</li>
-                <li><b>BLUE</b>: Reflectance in the blue band</li>
+                <li><b>REDEDGE</b>: Reflectance in the red edge band</li>
             </ul>
-        </p>
-        <p>
-            By incorporating blue reflectance, SFDVI provides enhanced sensitivity to 
-            structural components of vegetation while maintaining robustness to atmospheric 
-            effects and background noise.
         </p>
     """,
     "CIgreen": """
@@ -284,7 +277,245 @@ NDRE = (NIR - REDEDGE) / (NIR + REDEDGE)
             NDVI tends to saturate, making it especially useful for precision agriculture and 
             advanced vegetation monitoring applications.
         </p>
-    """
+    """,
+    "ARVI": """
+        <h3>Atmospherically Resistant Vegetation Index (ARVI)</h3>
+        <p>
+            The Atmospherically Resistant Vegetation Index (ARVI) is designed to be less sensitive 
+            to atmospheric effects (such as aerosols) compared to NDVI. It incorporates a correction 
+            factor using the blue band to compensate for atmospheric scattering.
+        </p>
+        <p>
+            The ARVI formula is calculated as:
+        </p>
+        <pre>
+ARVI = (NIR - (2 * RED - BLUE)) / (NIR + (2 * RED - BLUE))
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>BLUE</b>: Reflectance in the blue band</li>
+            </ul>
+        </p>
+        <p>
+            ARVI is useful in regions with significant atmospheric aerosol presence, providing a 
+            more accurate assessment of vegetation cover.
+        </p>
+    """,
+    "NDMI": """
+        <h3>Normalized Difference Moisture Index (NDMI)</h3>
+        <p>
+            The Normalized Difference Moisture Index (NDMI) is used to monitor vegetation moisture content. 
+            It is sensitive to changes in the water content of plant canopies.
+        </p>
+        <p>
+            The NDMI formula is calculated as:
+        </p>
+        <pre>
+NDMI = (NIR - SWIR) / (NIR + SWIR)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>SWIR</b>: Reflectance in the shortwave infrared band</li>
+            </ul>
+        </p>
+        <p>
+            NDMI is valuable in drought monitoring, irrigation management, and assessing vegetation stress 
+            related to water availability.
+        </p>
+    """,
+    "NBR": """
+        <h3>Normalized Burn Ratio (NBR)</h3>
+        <p>
+            The Normalized Burn Ratio (NBR) is designed to identify burned areas and assess burn severity. 
+            It uses the difference between near-infrared and shortwave infrared reflectance.
+        </p>
+        <p>
+            The NBR formula is calculated as:
+        </p>
+        <pre>
+NBR = (NIR - SWIR) / (NIR + SWIR)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>SWIR</b>: Reflectance in the shortwave infrared band</li>
+            </ul>
+        </p>
+        <p>
+            NBR is used extensively in post-fire assessment to map burned areas and monitor vegetation recovery.
+        </p>
+    """,
+    "SIPI": """
+        <h3>Structure Insensitive Pigment Index (SIPI)</h3>
+        <p>
+            The Structure Insensitive Pigment Index (SIPI) is used to assess vegetation canopy stress.
+        </p>
+        <p>
+            The SIPI formula is calculated as:
+        </p>
+        <pre>
+SIPI = (NIR - BLUE) / (NIR - RED)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>BLUE</b>: Reflectance in the blue band</li>
+            </ul>
+        </p>
+        <p>
+            SIPI is useful for minimizing canopy structure effects.
+        </p>
+    """,
+    "NDWI": """
+        <h3>Normalized Difference Water Index (NDWI)</h3>
+        <p>
+            The Normalized Difference Water Index (NDWI) is used to monitor changes in water content in
+            vegetation.
+        </p>
+        <p>
+            The NDWI formula is calculated as:
+        </p>
+        <pre>
+NDWI = (GREEN - NIR) / (GREEN + NIR)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+            </ul>
+        </p>
+        <p>
+            NDWI is sensitive to changes in liquid water content of vegetation canopies.
+        </p>
+    """,
+    "ReCI": """
+        <h3>Red Edge Chlorophyll Index (ReCI)</h3>
+        <p>
+            The Red Edge Chlorophyll Index (ReCI) is designed to estimate chlorophyll content in
+            vegetation using the red edge band.
+        </p>
+        <p>
+            The ReCI formula is calculated as:
+        </p>
+        <pre>
+ReCI = (NIR / REDEDGE) - 1
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>REDEDGE</b>: Reflectance in the red edge band</li>
+            </ul>
+        </p>
+        <p>
+            ReCI is particularly useful in precision agriculture for monitoring crop health and
+            nitrogen status.
+        </p>
+    """,
+    "MTCI": """
+        <h3>MERIS Terrestrial Chlorophyll Index (MTCI)</h3>
+        <p>
+            The MERIS Terrestrial Chlorophyll Index (MTCI) is sensitive to chlorophyll content in
+            vegetation.
+        </p>
+        <p>
+            The MTCI formula is calculated as:
+        </p>
+        <pre>
+MTCI = (NIR - REDEDGE) / (REDEDGE - RED)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>REDEDGE</b>: Reflectance in the red edge band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+            </ul>
+        </p>
+        <p>
+            MTCI is useful for estimating chlorophyll content and monitoring vegetation health.
+        </p>
+    """,
+    "MCARI": """
+        <h3>Modified Chlorophyll Absorption Ratio Index (MCARI)</h3>
+        <p>
+            The Modified Chlorophyll Absorption Ratio Index (MCARI) is designed to be sensitive to
+            chlorophyll concentration.
+        </p>
+        <p>
+            The MCARI formula is calculated as:
+        </p>
+        <pre>
+MCARI = ((REDEDGE - RED) - 0.2 * (REDEDGE - GREEN)) * (REDEDGE / RED)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band (used as REDEDGE)</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
+            </ul>
+        </p>
+        <p>
+            MCARI can be used to assess vegetation stress.
+        </p>
+    """,
+    "VARI": """
+        <h3>Visible Atmospherically Resistant Index (VARI)</h3>
+        <p>
+            The Visible Atmospherically Resistant Index (VARI) minimizes atmospheric effects and
+            enhances the vegetation signal in the visible part of the spectrum.
+        </p>
+        <p>
+            The VARI formula is calculated as:
+        </p>
+        <pre>
+VARI = (GREEN - RED) / (GREEN + RED - BLUE)
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>BLUE</b>: Reflectance in the blue band</li>
+            </ul>
+        </p>
+        <p>
+            VARI is useful when atmospheric correction is challenging.
+        </p>
+    """,
+    "TVI": """
+        <h3>Transformed Vegetation Index (TVI)</h3>
+        <p>
+            The Transformed Vegetation Index (TVI) is a transformation of the NDVI index.
+        </p>
+        <p>
+            The TVI formula is calculated as:
+        </p>
+        <pre>
+TVI = 0.5 * (120 * (NIR - GREEN) - 200 * (RED - GREEN))
+        </pre>
+        <p>
+            where:
+            <ul>
+                <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+                <li><b>RED</b>: Reflectance in the red band</li>
+                <li><b>GREEN</b>: Reflectance in the green band</li>
+            </ul>
+        </p>
+        <p>
+            TVI values will be different from NDVI.
+        </p>
+    """,
 }
 
 vegetation_indices_pt = {
@@ -361,10 +592,11 @@ EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
             </ul>
         </p>
     """,
-"SAVI": """
+    "SAVI": """
         <h3>Índice de Vegetação Ajustado ao Solo (SAVI)</h3>
         <p>
-            O Índice de Vegetação Ajustado ao Solo (SAVI) foi desenvolvido especificamente para minimizar a influência da reflectância do solo, especialmente em áreas com cobertura vegetal esparsa. Em tais áreas, a reflectância do solo pode impactar significativamente a precisão de índices de vegetação como o NDVI.
+            O Índice de Vegetação Ajustado ao Solo (SAVI) foi desenvolvido especificamente para minimizar a influência da reflectância do solo, especialmente em áreas com cobertura vegetal 
+esparsa. Em tais áreas, a reflectância do solo pode impactar significativamente a precisão de índices de vegetação como o NDVI.
         </p>
         <p>
             O SAVI incorpora um fator de correção do brilho do solo (L) em seu cálculo. Esse fator ajusta a sensibilidade do índice ao fundo do solo, permitindo uma avaliação mais precisa da vegetação em áreas com condições de solo variadas. O SAVI é particularmente útil em:
@@ -429,40 +661,34 @@ MSAVI = (2 * NIR + 1 - sqrt((2 * NIR + 1)² - 8 * (NIR - RED))) / 2
         </p>
     """,
     "SFDVI": """
-        <h3>Índice de Vegetação por Diferença Focada na Estrutura (SFDVI)</h3>
+        <h3>Spectral Feature Depth Vegetation Index (SFDVI)</h3>
         <p>
-            O Índice de Vegetação por Diferença Focada na Estrutura (SFDVI) é projetado para 
-            capturar melhor as variações estruturais nos dosséis da vegetação, combinando 
-            informações espectrais de múltiplas bandas. Ele avalia não apenas o conteúdo de 
-            clorofila, mas também a estrutura do dossel e a biomassa.
+            O Spectral Feature Depth Vegetation Index (SFDVI) integra a banda Red Edge 
+            com a banda vermelha para investigar o comportamento da vegetação por meio 
+            da profundidade da feição espectral. SFDVI mostra mais gradações em vegetação 
+            densa do que NDVI e RENDVI.
         </p>
         <p>
-            O SFDVI é particularmente eficaz para:
+            SFDVI é eficaz para:
             <ul>
-                <li>Monitorar o desenvolvimento do dossel das culturas</li>
-                <li>Avaliar a estrutura e biomassa florestal</li>
-                <li>Distinguir entre diferentes tipos de vegetação</li>
-                <li>Acompanhar mudanças estruturais na vegetação ao longo do tempo</li>
+                <li>Analisar a vegetação usando a profundidade da feição espectral.</li>
+                <li>Mostrar gradações em vegetação densa.</li>
             </ul>
         </p>
         <p>
             A fórmula do SFDVI é calculada como:
         </p>
         <pre>
-SFDVI = (NIR - RED - BLUE) / (NIR + RED + BLUE)
+SFDVI = ((NIR + GREEN)/2 - (RED + REDEDGE)/2)
         </pre>
         <p>
             onde:
             <ul>
                 <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
                 <li><b>RED</b>: Reflectância na banda vermelha</li>
-                <li><b>BLUE</b>: Reflectância na banda azul</li>
+                <li><b>REDEDGE</b>: Reflectância na banda da borda vermelha</li>
             </ul>
-        </p>
-        <p>
-            Ao incorporar a reflectância do azul, o SFDVI proporciona maior sensibilidade aos 
-            componentes estruturais da vegetação, mantendo a robustez aos efeitos atmosféricos 
-            e ao ruído de fundo.
         </p>
     """,
     "CIgreen": """
@@ -530,7 +756,7 @@ NDRE = (NIR - REDEDGE) / (NIR + REDEDGE)
             onde:
             <ul>
                 <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
-                <li><b>REDEDGE</b>: Reflectância na banda da borda do vermelho (tipicamente 720-740 nm)</li>
+                <li><b>REDEDGE</b>: Reflectância na banda da borda vermelha (tipicamente 720-740 nm)</li>
             </ul>
         </p>
         <p>
@@ -539,5 +765,242 @@ NDRE = (NIR - REDEDGE) / (NIR + REDEDGE)
             o NDVI tende a saturar, tornando-o especialmente útil para agricultura de precisão e 
             aplicações avançadas de monitoramento de vegetação.
         </p>
-    """
+    """,
+    "ARVI": """
+        <h3>Índice de Vegetação Resistente à Atmosfera (ARVI)</h3>
+        <p>
+            O Índice de Vegetação Resistente à Atmosfera (ARVI) é projetado para ser menos sensível 
+            aos efeitos atmosféricos (como aerossóis) em comparação com o NDVI. Ele incorpora um 
+            fator de correção usando a banda azul para compensar a dispersão atmosférica.
+        </p>
+        <p>
+            A fórmula do ARVI é calculada como:
+        </p>
+        <pre>
+ARVI = (NIR - (2 * RED - BLUE)) / (NIR + (2 * RED - BLUE))
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>BLUE</b>: Reflectância na banda azul</li>
+            </ul>
+        </p>
+        <p>
+            O ARVI é útil em regiões com presença significativa de aerossóis atmosféricos, fornecendo 
+            uma avaliação mais precisa da cobertura vegetal.
+        </p>
+    """,
+    "NDMI": """
+        <h3>Índice de Umidade por Diferença Normalizada (NDMI)</h3>
+        <p>
+            O Índice de Umidade por Diferença Normalizada (NDMI) é usado para monitorar o conteúdo de 
+            umidade da vegetação. Ele é sensível a mudanças no conteúdo de água dos dosséis das plantas.
+        </p>
+        <p>
+            A fórmula do NDMI é calculada como:
+        </p>
+        <pre>
+NDMI = (NIR - SWIR) / (NIR + SWIR)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>SWIR</b>: Reflectância na banda do infravermelho de ondas curtas</li>
+            </ul>
+        </p>
+        <p>
+            O NDMI é valioso no monitoramento da seca, no gerenciamento da irrigação e na avaliação 
+            do estresse da vegetação relacionado à disponibilidade de água.
+        </p>
+    """,
+    "NBR": """
+        <h3>Índice de Queimada Normalizada (NBR)</h3>
+        <p>
+            O Índice de Queimada Normalizada (NBR) é projetado para identificar áreas queimadas e avaliar 
+            a severidade da queimada. Ele usa a diferença entre a reflectância do infravermelho próximo e 
+            do infravermelho de ondas curtas.
+        </p>
+        <p>
+            A fórmula do NBR é calculada como:
+        </p>
+        <pre>
+NBR = (NIR - SWIR) / (NIR + SWIR)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>SWIR</b>: Reflectância na banda do infravermelho de ondas curtas</li>
+            </ul>
+        </p>
+        <p>
+            O NBR é usado extensivamente na avaliação pós-incêndio para mapear áreas queimadas e 
+            monitorar a recuperação da vegetação.
+        </p>
+    """,
+    "SIPI": """
+        <h3>Índice de Pigmentos Insensível à Estrutura (SIPI)</h3>
+        <p>
+            O Índice de Pigmentos Insensível à Estrutura (SIPI) é usado para avaliar o estresse do dossel 
+            da vegetação.
+        </p>
+        <p>
+            A fórmula do SIPI é calculada como:
+        </p>
+        <pre>
+SIPI = (NIR - BLUE) / (NIR - RED)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>BLUE</b>: Reflectância na banda azul</li>
+            </ul>
+        </p>
+        <p>
+            SIPI é útil para minimizar os efeitos da estrutura do dossel.
+        </p>
+    """,
+    "NDWI": """
+        <h3>Índice de Água por Diferença Normalizada (NDWI)</h3>
+        <p>
+            O Índice de Água por Diferença Normalizada (NDWI) é usado para monitorar mudanças no conteúdo 
+            de água na vegetação.
+        </p>
+        <p>
+            A fórmula do NDWI é calculada como:
+        </p>
+        <pre>
+NDWI = (GREEN - NIR) / (GREEN + NIR)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+            </ul>
+        </p>
+        <p>
+            NDWI é sensível a mudanças no conteúdo de água líquida dos dosséis de vegetação.
+        </p>
+    """,
+    "ReCI": """
+        <h3>Índice de Clorofila da Borda Vermelha (ReCI)</h3>
+        <p>
+            O Índice de Clorofila da Borda Vermelha (ReCI) é projetado para estimar o conteúdo de 
+            clorofila na vegetação usando a banda da borda vermelha.
+        </p>
+        <p>
+            A fórmula do ReCI é calculada como:
+        </p>
+        <pre>
+ReCI = (NIR / REDEDGE) - 1
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>REDEDGE</b>: Reflectância na banda da borda vermelha</li>
+            </ul>
+        </p>
+        <p>
+            ReCI é particularmente útil na agricultura de precisão para monitorar a saúde das culturas 
+            e o status de nitrogênio.
+        </p>
+    """,
+    "MTCI": """
+        <h3>Índice de Clorofila Terrestre MERIS (MTCI)</h3>
+        <p>
+            O Índice de Clorofila Terrestre MERIS (MTCI) é sensível ao conteúdo de clorofila na vegetação.
+        </p>
+        <p>
+            A fórmula do MTCI é calculada como:
+        </p>
+        <pre>
+MTCI = (NIR - REDEDGE) / (REDEDGE - RED)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>REDEDGE</b>: Reflectância na banda da borda vermelha</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+            </ul>
+        </p>
+        <p>
+            MTCI é útil para estimar o conteúdo de clorofila e monitorar a saúde da vegetação.
+        </p>
+    """,
+    "MCARI": """
+        <h3>Índice de Razão de Absorção de Clorofila Modificado (MCARI)</h3>
+        <p>
+            O Índice de Razão de Absorção de Clorofila Modificado (MCARI) é projetado para ser sensível 
+            à concentração de clorofila.
+        </p>
+        <p>
+            A fórmula do MCARI é calculada como:
+        </p>
+        <pre>
+MCARI = ((REDEDGE - RED) - 0.2 * (REDEDGE - GREEN)) * (REDEDGE / RED)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo (usado como REDEDGE)</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
+            </ul>
+        </p>
+        <p>
+            MCARI pode ser usado para avaliar o estresse da vegetação.
+        </p>
+    """,
+    "VARI": """
+        <h3>Índice Visível Resistente à Atmosfera (VARI)</h3>
+        <p>
+            O Índice Visível Resistente à Atmosfera (VARI) minimiza os efeitos atmosféricos e realça o 
+            sinal da vegetação na parte visível do espectro.
+        </p>
+        <p>
+            A fórmula do VARI é calculada como:
+        </p>
+        <pre>
+VARI = (GREEN - RED) / (GREEN + RED - BLUE)
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>BLUE</b>: Reflectância na banda azul</li>
+            </ul>
+        </p>
+        <p>
+            VARI é útil quando a correção atmosférica é desafiadora.
+        </p>
+    """,
+    "TVI": """
+        <h3>Índice de Vegetação Transformado (TVI)</h3>
+        <p>
+            O Índice de Vegetação Transformado (TVI) é uma transformação do índice NDVI.
+        </p>
+        <p>
+            A fórmula do TVI é calculada como:
+        </p>
+        <pre>
+TVI = 0.5 * (120 * (NIR - GREEN) - 200 * (RED - GREEN))
+        </pre>
+        <p>
+            onde:
+            <ul>
+                <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+                <li><b>RED</b>: Reflectância na banda vermelha</li>
+                <li><b>GREEN</b>: Reflectância na banda verde</li>
+            </ul>
+        </p>
+    """,
 }
