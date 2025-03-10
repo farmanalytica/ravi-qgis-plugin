@@ -120,7 +120,6 @@ from .modules import (
 )
 from .modules.coordinate_capture import CoordinateCaptureTool
 
-
 try:
     import ee
 except:
@@ -248,13 +247,14 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def setup_ui(self):
         """Initial UI setup."""
         """Configuração inicial da UI."""
-        self.textEdit.setReadOnly(True)  # Prevent editing / Impede a edição
-        self.textEdit.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.QTextBrowser.setReadOnly(True)  # Prevent editing / Impede a edição
+        self.QTextBrowser.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.textBrowser_valid_pixels.setReadOnly(True)
         self.textBrowser_valid_pixels.setTextInteractionFlags(
             Qt.TextBrowserInteraction
         )
         self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+
 
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
@@ -288,6 +288,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QPushButton_next_5.clicked.connect(self.next_clicked)
         self.QPushButton_next_6.clicked.connect(self.next_clicked)
         self.QPushButton_next_7.clicked.connect(self.next_clicked)
+        self.QPushButton_next_8.clicked.connect(self.next_clicked)
         self.QPushButton_back.clicked.connect(self.back_clicked)
         self.QPushButton_back_2.clicked.connect(self.back_clicked)
         self.QPushButton_back_3.clicked.connect(self.back_clicked)
@@ -297,7 +298,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QPushButton_back_7.clicked.connect(self.back_clicked)
         self.QPushButton_back_8.clicked.connect(self.back_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
-        self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked)
         self.navegador.clicked.connect(self.open_browser)
         self.navegador_2.clicked.connect(self.open_browser_2)
         self.navegador_3.clicked.connect(self.open_browser_3)
@@ -305,6 +305,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.datasrecorte_2.clicked.connect(self.datasrecorte_clicked)
         self.datasrecorte_3.clicked.connect(self.datasrecorte_clicked)
         self.add_dot.clicked.connect(self.add_dot_from_coordinates)
+        self.QPushButton_skip.clicked.connect(lambda: self.tabWidget.setCurrentIndex(9))
 
         self.salvar.clicked.connect(self.salvar_clicked)
         self.salvar_2.clicked.connect(self.salvar_clicked_2)
@@ -314,9 +315,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
-        self.vector_layer_combobox.currentIndexChanged.connect(
-            self.get_selected_layer_path
-        )
+
+        self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
+        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
+
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
         self.radioButton_3months.clicked.connect(lambda: self.last_clicked(3))
@@ -325,30 +327,85 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.radioButton_3years.clicked.connect(lambda: self.last_clicked(3 * 12))
         self.radioButton_5years.clicked.connect(lambda: self.last_clicked(5 * 12))
         self.combo_year.currentIndexChanged.connect(self.selected_year_clicked)
-        self.horizontalSlider_local_pixel_limit.valueChanged.connect(
-            self.update_labels
-        )
+
+        self.horizontalSlider_local_pixel_limit.valueChanged.connect(self.update_labels)
+        self.horizontalSlider_local_pixel_limit_2.valueChanged.connect(self.update_labels_2)
+
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
+        self.horizontalSlider_aio_cover_2.valueChanged.connect(self.update_labels_2)
+
         self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
-        self.horizontalSlider_total_pixel_limit.valueChanged.connect(
-            self.update_labels
-        )
-        self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
+        self.horizontalSlider_buffer_2.valueChanged.connect(self.update_labels_2)
+
+        self.horizontalSlider_total_pixel_limit.valueChanged.connect(self.update_labels)
+        self.horizontalSlider_total_pixel_limit_2.valueChanged.connect(self.update_labels_2)
+   
         self.series_indice.currentIndexChanged.connect(self.reload_update)
-        self.incioedit_2.dateChanged.connect(self.reload_update2)
-        self.finaledit_2.dateChanged.connect(self.reload_update2)
+        self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
+
         self.incioedit.dateChanged.connect(self.reload_update)
+        self.incioedit_2.dateChanged.connect(self.reload_update2)
+
         self.finaledit.dateChanged.connect(self.reload_update)
-        self.vector_layer_combobox_2.currentIndexChanged.connect(
-            self.combobox_2_update
-        )
+        self.finaledit_2.dateChanged.connect(self.reload_update2)
+
+        
         self.nasapower.clicked.connect(self.nasapower_clicked)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
-        self.textEdit.anchorClicked.connect(self.open_link)
+        self.QTextBrowser.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
         self.series_indice.currentIndexChanged.connect(self.index_explain)
 
+        # Create a list of primary and secondary checkboxes
+        self.primary_masks = [
+            self.mask,
+            self.mask_class0,
+            self.mask_class1,
+            self.mask_class2,
+            self.mask_class3,
+            self.mask_class4,
+            self.mask_class5,
+            self.mask_class6,
+            self.mask_class7,
+            self.mask_class8,
+            self.mask_class9,
+            self.mask_class10,
+            self.mask_class11,
+        ]
 
+        self.secondary_masks = [
+            self.mask_2,
+            self.mask_class0_2,
+            self.mask_class1_2,
+            self.mask_class2_2,
+            self.mask_class3_2,
+            self.mask_class4_2,
+            self.mask_class5_2,
+            self.mask_class6_2,
+            self.mask_class7_2,
+            self.mask_class8_2,
+            self.mask_class9_2,
+            self.mask_class10_2,
+            self.mask_class11_2,
+        ]
+
+        # Connect primary checkboxes to update_masks
+        for primary in self.primary_masks:
+            primary.stateChanged.connect(self.update_masks)
+
+        # Connect secondary checkboxes to update_masks_2
+        for secondary in self.secondary_masks:
+            secondary.stateChanged.connect(self.update_masks_2)
+
+    def update_masks(self):
+        # Synchronize secondary checkboxes based on primary ones
+        for primary, secondary in zip(self.primary_masks, self.secondary_masks):
+            secondary.setChecked(primary.isChecked())
+
+    def update_masks_2(self):
+        # Synchronize primary checkboxes based on secondary ones
+        for primary, secondary in zip(self.primary_masks, self.secondary_masks):
+            primary.setChecked(secondary.isChecked())
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -798,14 +855,43 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         sliders."""
         """Atualiza o texto de vários rótulos com base nos valores dos
         sliders horizontais."""
-        self.label_cloud_aoi.setText(
-            f"{self.horizontalSlider_local_pixel_limit.value()}%"
-        )
+        self.label_cloud_aoi.setText(f"{self.horizontalSlider_local_pixel_limit.value()}%")
+        self.label_cloud_aoi_2.setText(f"{self.horizontalSlider_local_pixel_limit.value()}%")
+        self.horizontalSlider_local_pixel_limit_2.setValue(self.horizontalSlider_local_pixel_limit.value())
+
         self.label_coverage.setText(f"{self.horizontalSlider_aio_cover.value()}%")
-        self.label_cloud.setText(
-            f"{self.horizontalSlider_total_pixel_limit.value()}%"
-        )
+        self.label_coverage_2.setText(f"{self.horizontalSlider_aio_cover.value()}%")
+        self.horizontalSlider_aio_cover_2.setValue(self.horizontalSlider_aio_cover.value())
+
+        self.label_cloud.setText(f"{self.horizontalSlider_total_pixel_limit.value()}%")
+        self.label_cloud_2.setText(f"{self.horizontalSlider_total_pixel_limit.value()}%")
+        self.horizontalSlider_total_pixel_limit_2.setValue(self.horizontalSlider_total_pixel_limit.value())
+
         self.label_buffer.setText(f"{self.horizontalSlider_buffer.value()}m")
+        self.label_buffer_2.setText(f"{self.horizontalSlider_buffer.value()}m")
+        self.horizontalSlider_buffer_2.setValue(self.horizontalSlider_buffer.value())
+
+    def update_labels_2(self):
+        """Updates the text of several labels based on the values of horizontal
+        sliders."""
+        """Atualiza o texto de vários rótulos com base nos valores dos
+        sliders horizontais."""
+        self.label_cloud_aoi.setText(f"{self.horizontalSlider_local_pixel_limit_2.value()}%")
+        self.label_cloud_aoi_2.setText(f"{self.horizontalSlider_local_pixel_limit_2.value()}%")
+        self.horizontalSlider_local_pixel_limit.setValue(self.horizontalSlider_local_pixel_limit_2.value())
+
+        self.label_coverage.setText(f"{self.horizontalSlider_aio_cover_2.value()}%")
+        self.label_coverage_2.setText(f"{self.horizontalSlider_aio_cover_2.value()}%")
+        self.horizontalSlider_aio_cover.setValue(self.horizontalSlider_aio_cover_2.value())
+
+        self.label_cloud.setText(f"{self.horizontalSlider_total_pixel_limit_2.value()}%")
+        self.label_cloud_2.setText(f"{self.horizontalSlider_total_pixel_limit_2.value()}%")
+        self.horizontalSlider_total_pixel_limit.setValue(self.horizontalSlider_total_pixel_limit_2.value())
+
+        self.label_buffer.setText(f"{self.horizontalSlider_buffer_2.value()}m")
+        self.label_buffer_2.setText(f"{self.horizontalSlider_buffer_2.value()}m")
+        self.horizontalSlider_buffer.setValue(self.horizontalSlider_buffer_2.value())
+
 
     def custom_filter_clicked(self):
         """Slot method to handle the custom filter checkbox click event."""
@@ -1310,8 +1396,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         if index >= 9:
             self.resizeEvent("big")
 
-        if index >= 9 and self.df is None:
-            self.tabWidget.setCurrentIndex(8)
+        if index >= 10 and self.df is None:
+            self.tabWidget.setCurrentIndex(9)
             return
 
         if index == 1 and not hasattr(self, "path_suggestion_loaded"):
@@ -1335,10 +1421,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.tabWidget.setCurrentIndex(2)
             return
 
-        if index == 11 and self.plot1 is not None:
+        if index == 12 and self.plot1 is not None:
             self.load_fields()
 
-        if index != 10:
+        if index != 11:
             try:
                 self.checkBox_captureCoordinates.setChecked(False)
             except:
@@ -1398,7 +1484,55 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         msg.setText(aviso)
         msg.setStandardButtons(QMessageBox.Ok)
         msg.button(QMessageBox.Ok).setText("OK")
+        msg.setStyleSheet("font-size: 10pt;")
         msg.exec_()
+
+
+    def pop_warning_2(self, aviso):
+        QApplication.restoreOverrideCursor()  # Restore the cursor if it was overridden
+
+        # Create a custom dialog
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Warning!")
+        
+        # Set up the main layout
+        layout = QVBoxLayout(dialog)
+        
+        # Add the warning message
+        message_label = QLabel(aviso)
+        layout.addWidget(message_label)
+        
+        # Create a horizontal layout for the buttons
+        button_layout = QHBoxLayout()
+        
+        # Create buttons
+        cancel_button = QPushButton("Cancel")
+        ok_button = QPushButton("OK")
+        
+        # Add buttons to the horizontal layout
+        button_layout.addWidget(cancel_button)
+        button_layout.addStretch()  # This will push the OK button to the right
+        button_layout.addWidget(ok_button)
+        
+        # Add the button layout to the main layout
+        layout.addLayout(button_layout)
+        
+        # Connect button signals
+        ok_button.clicked.connect(dialog.accept)
+        cancel_button.clicked.connect(dialog.reject)
+        
+        # Set the stylesheet for the dialog
+        dialog.setStyleSheet("font-size: 10pt;")
+        
+        # Execute the dialog and return the result
+        result = dialog.exec_()
+        
+        # Return which button was pressed
+        if result == QDialog.Accepted:
+            return QMessageBox.Ok
+        else:
+            return QMessageBox.Cancel
+
 
     def update_vector_clicked(self):
         self.load_vector_layers()
@@ -1480,6 +1614,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             print("No layer selected.")
             self.aoi_area.setText("Total Area:")
             self.QPushButton_next.setEnabled(False)
+            self.QPushButton_skip.setEnabled(False)
             return None
         print(f"Layer name from combobox: '{layer_name}'")  # Debug
         self.zoom_to_layer(layer_name)
@@ -1517,6 +1652,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             area = self.find_area()
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
+                self.QPushButton_skip.setEnabled(False)
                 self.pop_warning(
                     f"Area too large ({area:.2f} km²). The limit is 100 km²."
                 )
@@ -1524,9 +1660,11 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             if area == 0:
                 self.pop_warning("Selected layer is not valid")
                 self.QPushButton_next.setEnabled(False)
+                self.QPushButton_skip.setEnabled(False)
                 return None
 
             self.QPushButton_next.setEnabled(True)
+            self.QPushButton_skip.setEnabled(True)
             # self.load_vector_function()
             return None
         else:
@@ -2334,6 +2472,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             print("AOI defined successfully.")
             self.QPushButton_next.setEnabled(True)
+            self.QPushButton_skip.setEnabled(True)
             self.aio_set = True
             self.vector_layer_combobox_2.setCurrentIndex(
                 self.vector_layer_combobox.currentIndex()
@@ -2383,8 +2522,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def aoi_ckecked_function(self):
         if self.aoi_ckecked and self.folder_set:
             self.QPushButton_next.setEnabled(True)
+            self.QPushButton_skip.setEnabled(True)
         else:
             self.QPushButton_next.setEnabled(False)
+            self.QPushButton_skip.setEnabled(False)
 
     def resetting(self):
         self.recorte_datas = None
@@ -2406,16 +2547,24 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.ee_load_collection()
             self.calculate_timeseries()
             self.plot_timeseries()
-            self.tabWidget.setCurrentIndex(9)
-            self.centralizar()
+            
+            #self.centralizar()
             self.webView_2.setHtml("")
             self.webView_3.setHtml("")
             print("Time series loaded successfully.")
             
             if self.language == "pt":
-                self.pop_warning("\n".join(self.collection_info_pt))
+                response = self.pop_warning_2("\n".join(self.collection_info_pt))
             else:
-                self.pop_warning("\n".join(self.collection_info))
+                response = self.pop_warning_2("\n".join(self.collection_info))
+
+            if response == QMessageBox.Ok:
+                print("User clicked OK")
+                self.tabWidget.setCurrentIndex(10)
+            else:
+                print("User clicked Cancel")
+
+            
         
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -2474,8 +2623,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Check if the collection is empty after cloud filtering
         cloud_filtered_count = sentinel2.size().getInfo()
         print(f"Collection size after cloud filtering: {cloud_filtered_count}")
-        self.collection_info.append(f"Collection size after {nuvem}% tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
-        self.collection_info_pt.append(f"Tamanho da coleção após filtro de {nuvem}% de limite de nuvem na cena (Passo 8): {cloud_filtered_count}")
+        self.collection_info.append(f"Collection size after tile cloud percentage filtering (Step 8): {cloud_filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtro de limite de nuvem na cena (Passo 8): {cloud_filtered_count}")
 
         if cloud_filtered_count == 0:
             QApplication.restoreOverrideCursor()
@@ -2621,10 +2770,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         print(
             f"Collection size after filtro >= {coverage_threshold*100}% AOI coverage: {filtered_count}"
         )
-        self.collection_info.append(f"Collection size after filter >= {coverage_threshold*100}% AOI coverage (Step 6): {filtered_count}")
-        self.collection_info_pt.append(f"Tamanho da coleção após filtro >= {coverage_threshold*100}% de cobertura da AOI (Passo 6): {filtered_count}")
+        self.collection_info.append(f"Collection size after AOI overlap filter (Step 6): {filtered_count}")
+        self.collection_info_pt.append(f"Tamanho da coleção após filtro de sobreposição com a AOI (Passo 6): {filtered_count}")
         
-
         return covering_colection
 
     def SCL_filter(self, sentinel2, aoi, valid_pixel_threshold):
