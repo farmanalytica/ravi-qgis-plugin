@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -319,7 +319,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_11">
@@ -830,7 +830,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_2">
@@ -852,7 +852,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -922,7 +922,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_5">
@@ -947,7 +947,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1081,7 +1081,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_back_3">
@@ -1106,7 +1106,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -1149,7 +1149,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_6">
@@ -1171,7 +1171,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_28">
@@ -1395,7 +1395,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_next_7">
@@ -1417,7 +1417,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1807,7 +1807,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
     <widget class="QCheckBox" name="mask">
@@ -1847,7 +1847,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -2712,7 +2712,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-back-button-50.png</normaloff>medias/icons8-back-button-50.png</iconset>
+       <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -2843,6 +2843,10 @@ p, li { white-space: pre-wrap; }
       <property name="text">
        <string>Preview (RGB)</string>
       </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
+      </property>
      </widget>
      <widget class="QPushButton" name="load_1index">
       <property name="geometry">
@@ -2860,6 +2864,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Download</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
       </property>
      </widget>
      <widget class="QComboBox" name="dataunica">
@@ -2920,6 +2928,10 @@ p, li { white-space: pre-wrap; }
       <property name="text">
        <string>Download</string>
       </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
      </widget>
      <widget class="QPushButton" name="load_1index_preview">
       <property name="geometry">
@@ -2937,6 +2949,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Preview</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
       </property>
      </widget>
      <widget class="Line" name="line_2">
@@ -3112,9 +3128,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_7">
      <property name="geometry">
       <rect>
-       <x>770</x>
+       <x>760</x>
        <y>10</y>
-       <width>361</width>
+       <width>371</width>
        <height>51</height>
       </rect>
      </property>
@@ -3126,7 +3142,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>180</x>
         <y>10</y>
-        <width>171</width>
+        <width>181</width>
         <height>31</height>
        </rect>
       </property>
@@ -3137,6 +3153,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Salvar como planilha</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="navegador">
@@ -3350,6 +3370,10 @@ p, li { white-space: pre-wrap; }
       <property name="text">
        <string>Preview</string>
       </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
+      </property>
      </widget>
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
@@ -3367,6 +3391,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Download</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
       </property>
      </widget>
      <widget class="Line" name="line_6">
@@ -3468,7 +3496,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>81</width>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -3502,9 +3530,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar_nasa">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>90</x>
         <y>30</y>
-        <width>71</width>
+        <width>81</width>
         <height>31</height>
        </rect>
       </property>
@@ -3515,6 +3543,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Salvar</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
       </property>
      </widget>
     </widget>
@@ -3582,6 +3614,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Salvar como planilha</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_captureCoordinates">
@@ -3956,6 +3992,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Salvar como planilha</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
       </property>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_valid_pixels_2">

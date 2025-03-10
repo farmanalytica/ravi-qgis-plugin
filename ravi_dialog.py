@@ -297,6 +297,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.QPushButton_back_6.clicked.connect(self.back_clicked)
         self.QPushButton_back_7.clicked.connect(self.back_clicked)
         self.QPushButton_back_8.clicked.connect(self.back_clicked)
+        self.QPushButton_back_9.clicked.connect(self.back_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
         self.navegador.clicked.connect(self.open_browser)
         self.navegador_2.clicked.connect(self.open_browser_2)
@@ -2391,7 +2392,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
 
     def index_explain(self):
-        if self.language:
+        if self.language == "pt":
             explanation = vegetation_index_info.vegetation_indices_pt.get(
                 self.series_indice.currentText()
             )
