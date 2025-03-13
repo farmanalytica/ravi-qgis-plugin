@@ -144,25 +144,34 @@ else:
     ui_file = os.path.join("ui", "ravi_dialog_base.ui")
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
-
-
 class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(RAVIDialog, self).__init__(parent)
-     
-        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
-        super().__init__(
-            None,
-            Qt.WindowStaysOnTopHint
-            | Qt.WindowMinimizeButtonHint
-            | Qt.WindowCloseButtonHint,
-        )
 
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint | Qt.WindowMinimizeButtonHint)
+                     
         self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
 
         authentication.loadProjectId(self)
+        self.inicialize_variables()
 
+        # UI setup and signal connections / Configuração da UI e conexões de sinal
+        self.setup_ui()
+        self.connect_signals()
+        authentication.loadProjectId(self)
+        
+        # Set default values / Define valores padrão
+        self.last_clicked(3)
+        self.index_explain()
+        
+        
+        self.resizeEvent("small")
+        self.tabWidget.setCurrentIndex(0)
+
+
+    def inicialize_variables(self):
+        """Initializes variables."""
         self.coordinate_capture_tool = None
 
         # Find the checkbox in the UI / Encontra a checkbox na UI
@@ -176,6 +185,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             )
         else:
             print("Error: Capture coordinates checkbox not found in the UI.")
+
+            
 
         # Determine language for UI elements / Determina o idioma para os
         # elementos da UI
@@ -201,6 +212,19 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.daily_precipitation = None
         self.selected_aio_layer_path = None
 
+
+    def setup_ui(self):
+          # Prevent manual resizing
+        """Initial UI setup."""
+        """Configuração inicial da UI."""
+        self.QTextBrowser.setReadOnly(True)  # Prevent editing / Impede a edição
+        self.QTextBrowser.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.textBrowser_valid_pixels.setReadOnly(True)
+        self.textBrowser_valid_pixels.setTextInteractionFlags(
+            Qt.TextBrowserInteraction
+        )
+        self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+
         vegetation_index = [
             "NDVI",
             "EVI",
@@ -222,38 +246,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             "TVI",
         ]
 
-
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
         self.series_indice_2.addItems(vegetation_index)
         self.series_indice.addItems(vegetation_index)
-
-
-        # UI setup and signal connections / Configuração da UI e conexões de sinal
-        self.setup_ui()
-        self.connect_signals()
-        authentication.loadProjectId(self)
-
         self.combo_year.addItems(
             [str(year) for year in range(2017, datetime.now().year + 1)]
         )
-
-        # Set default values / Define valores padrão
-        self.last_clicked(3)
-        self.index_explain()
-        self.tabWidget.setCurrentIndex(0)
-        self.resizeEvent("small")
-
-    def setup_ui(self):
-        """Initial UI setup."""
-        """Configuração inicial da UI."""
-        self.QTextBrowser.setReadOnly(True)  # Prevent editing / Impede a edição
-        self.QTextBrowser.setTextInteractionFlags(Qt.TextBrowserInteraction)
-        self.textBrowser_valid_pixels.setReadOnly(True)
-        self.textBrowser_valid_pixels.setTextInteractionFlags(
-            Qt.TextBrowserInteraction
-        )
-        self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
 
 
     def connect_signals(self):
@@ -407,6 +406,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Synchronize primary checkboxes based on secondary ones
         for primary, secondary in zip(self.primary_masks, self.secondary_masks):
             primary.setChecked(secondary.isChecked())
+
+
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -893,7 +894,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.label_buffer_2.setText(f"{self.horizontalSlider_buffer_2.value()}m")
         self.horizontalSlider_buffer.setValue(self.horizontalSlider_buffer_2.value())
 
-
     def custom_filter_clicked(self):
         """Slot method to handle the custom filter checkbox click event."""
         """Método slot para lidar com o evento de clique da checkbox de filtro
@@ -1031,7 +1031,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
-
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1488,13 +1487,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         msg.setStyleSheet("font-size: 10pt;")
         msg.exec_()
 
-
     def pop_warning_2(self, aviso):
         QApplication.restoreOverrideCursor()  # Restore the cursor if it was overridden
 
         # Create a custom dialog
         dialog = QDialog(self)
-        dialog.setWindowTitle("Warning!")
+        dialog.setWindowTitle("Search Results")
         
         # Set up the main layout
         layout = QVBoxLayout(dialog)
@@ -1533,7 +1531,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             return QMessageBox.Ok
         else:
             return QMessageBox.Cancel
-
 
     def update_vector_clicked(self):
         self.load_vector_layers()
@@ -2389,8 +2386,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.folder_set = False
             self.QPushButton_next_4.setEnabled(False)
 
-
-
     def index_explain(self):
         if self.language == "pt":
             explanation = vegetation_index_info.vegetation_indices_pt.get(
@@ -3137,6 +3132,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.dataunica.setCurrentIndex(self.dataunica.count() - 1)
 
     def add_dot_from_coordinates(self):
+
+
         """Adds a dot to the map from latitude and longitude values entered in QLineEdit widgets.
         Handles commas as decimal separators and validates input with regex.
         """
@@ -3169,3 +3166,5 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Call the method to add the point
         self.coordinate_capture_tool.add_dot_from_coordinates(longitude, latitude)
         self.process_coordinates(longitude, latitude)
+
+
