@@ -2841,7 +2841,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Preview (RGB)</string>
+       <string>Visualizar (RGB)</string>
       </property>
       <property name="icon">
        <iconset>
@@ -2948,7 +2948,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Preview</string>
+       <string>Visualizar</string>
       </property>
       <property name="icon">
        <iconset>
@@ -3187,7 +3187,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>320</x>
        <y>430</y>
-       <width>221</width>
+       <width>231</width>
        <height>151</height>
       </rect>
      </property>
@@ -3253,7 +3253,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>70</x>
         <y>30</y>
-        <width>141</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -3303,7 +3303,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>70</x>
         <y>70</y>
-        <width>141</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -3358,7 +3358,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>91</width>
+        <width>101</width>
         <height>31</height>
        </rect>
       </property>
@@ -3368,7 +3368,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Preview</string>
+       <string>Visualizar</string>
       </property>
       <property name="icon">
        <iconset>
@@ -3378,7 +3378,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>120</x>
         <y>110</y>
         <width>101</width>
         <height>31</height>
@@ -3423,9 +3423,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>550</x>
+       <x>560</x>
        <y>510</y>
-       <width>141</width>
+       <width>131</width>
        <height>71</height>
       </rect>
      </property>
@@ -3442,7 +3442,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>121</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>

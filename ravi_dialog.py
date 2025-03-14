@@ -1909,6 +1909,7 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def calculate_auc(self, index_collection):
         """Calculates the Area Under Curve (AUC) for the index collection."""
+        print("Calculating AUC...")
         count = index_collection.size().getInfo()
         if count < 2:
             raise ValueError("Número insuficiente de imagens para calcular a AUC.")
