@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -303,7 +303,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>510</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -358,7 +358,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>medias/refresh-3104.png</normaloff>medias/refresh-3104.png</iconset>
+        <normaloff>../medias/refresh-3104.png</normaloff>../medias/refresh-3104.png</iconset>
       </property>
      </widget>
      <widget class="QComboBox" name="vector_layer_combobox">
@@ -481,7 +481,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>620</x>
        <y>290</y>
        <width>111</width>
        <height>41</height>
@@ -2103,7 +2103,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>35</y>
         <width>1051</width>
         <height>21</height>
        </rect>
@@ -2140,7 +2140,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>33</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2192,7 +2192,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>32</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2213,7 +2213,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>34</y>
         <width>1051</width>
         <height>21</height>
        </rect>
@@ -2292,7 +2292,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>34</y>
         <width>1051</width>
         <height>21</height>
        </rect>
@@ -2329,7 +2329,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>32</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2405,7 +2405,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>28</y>
         <width>47</width>
         <height>21</height>
        </rect>
@@ -3187,7 +3187,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>320</x>
        <y>430</y>
-       <width>231</width>
+       <width>221</width>
        <height>151</height>
       </rect>
      </property>
@@ -3253,7 +3253,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>70</x>
         <y>30</y>
-        <width>151</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -3292,18 +3292,13 @@ p, li { white-space: pre-wrap; }
         <string>Desvio Padrão</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>Area Under Curve (AUC)</string>
-       </property>
-      </item>
      </widget>
      <widget class="QComboBox" name="indice_composicao">
       <property name="geometry">
        <rect>
         <x>70</x>
         <y>70</y>
-        <width>151</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -3358,7 +3353,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>101</width>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -3378,7 +3373,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="composicao">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>110</x>
         <y>110</y>
         <width>101</width>
         <height>31</height>
@@ -3423,9 +3418,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>560</x>
+       <x>550</x>
        <y>510</y>
-       <width>131</width>
+       <width>141</width>
        <height>71</height>
       </rect>
      </property>
@@ -3442,7 +3437,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>111</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -3601,9 +3596,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar_3">
       <property name="geometry">
        <rect>
-        <x>780</x>
+        <x>770</x>
         <y>10</y>
-        <width>171</width>
+        <width>181</width>
         <height>31</height>
        </rect>
       </property>
@@ -3672,7 +3667,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="navegador_3">
       <property name="geometry">
        <rect>
-        <x>610</x>
+        <x>600</x>
         <y>10</y>
         <width>161</width>
         <height>31</height>
@@ -3694,7 +3689,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="datasrecorte_3">
       <property name="geometry">
        <rect>
-        <x>420</x>
+        <x>410</x>
         <y>10</y>
         <width>181</width>
         <height>31</height>
@@ -3771,7 +3766,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="placeholderText">
-      <string>(decimal coordinate)</string>
+      <string>(coodenada decimal)</string>
      </property>
      <property name="defaultValue">
       <string/>
@@ -3832,7 +3827,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="placeholderText">
-      <string>(decimal coordinate)</string>
+      <string>(coodenada decimal)</string>
      </property>
      <property name="value">
       <string/>
@@ -3957,9 +3952,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="navegador_2">
       <property name="geometry">
        <rect>
-        <x>760</x>
+        <x>750</x>
         <y>10</y>
-        <width>161</width>
+        <width>171</width>
         <height>31</height>
        </rect>
       </property>
@@ -4034,7 +4029,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>570</x>
         <y>10</y>
-        <width>181</width>
+        <width>171</width>
         <height>31</height>
        </rect>
       </property>

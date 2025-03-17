@@ -494,9 +494,9 @@ VARI = (GREEN - RED) / (GREEN + RED - BLUE)
         </p>
     """,
     "TVI": """
-        <h3>Transformed Vegetation Index (TVI)</h3>
+        <h3>Triangular Vegetation Index (TVI)</h3>
         <p>
-            The Transformed Vegetation Index (TVI) is a transformation of the NDVI index.
+            The Triangular Vegetation Index (TVI) is a transformation of the NDVI index.
         </p>
         <p>
             The TVI formula is calculated as:
@@ -511,9 +511,6 @@ TVI = 0.5 * (120 * (NIR - GREEN) - 200 * (RED - GREEN))
                 <li><b>RED</b>: Reflectance in the red band</li>
                 <li><b>GREEN</b>: Reflectance in the green band</li>
             </ul>
-        </p>
-        <p>
-            TVI values will be different from NDVI.
         </p>
     """,
 }
@@ -984,10 +981,7 @@ VARI = (GREEN - RED) / (GREEN + RED - BLUE)
         </p>
     """,
     "TVI": """
-        <h3>Índice de Vegetação Transformado (TVI)</h3>
-        <p>
-            O Índice de Vegetação Transformado (TVI) é uma transformação do índice NDVI.
-        </p>
+        <h3>Índice de Vegetação Triangular (TVI)</h3>
         <p>
             A fórmula do TVI é calculada como:
         </p>

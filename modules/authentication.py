@@ -9,25 +9,25 @@ import ee
 from PyQt5.QtCore import Qt
 
 
-def loadProjectId(dialog):
+def loadProjectId(self):
     """Loads the saved project ID from QSettings and sets it in the widget."""
     """Carrega o ID do projeto salvo de QSettings e o define no widget."""
     settings = QSettings()
     saved_project_id = settings.value("MyPlugin/projectID", "", type=str)
-    dialog.project_QgsPasswordLineEdit.setText(saved_project_id)
+    self.project_QgsPasswordLineEdit.setText(saved_project_id)
     print("Loaded project ID:", saved_project_id)
-    dialog.autenticacao.setEnabled(bool(dialog.project_QgsPasswordLineEdit.text()))
+    self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
 
 
-def autoSaveProjectId(dialog, new_text):
+def autoSaveProjectId(self, new_text):
     """Automatically saves the project ID to QSettings whenever the text changes."""
     settings = QSettings()
     settings.setValue("MyPlugin/projectID", new_text)
     print("Project ID auto-saved:", new_text)
-    dialog.autenticacao.setEnabled(bool(dialog.project_QgsPasswordLineEdit.text()))
+    self.autenticacao.setEnabled(bool(self.project_QgsPasswordLineEdit.text()))
 
 
-def auth(dialog):
+def auth(self):
     """
     Authenticates Earth Engine and validates the default project. Warnings
     are displayed only if the default project is invalid.
@@ -42,7 +42,7 @@ def auth(dialog):
         print("Authenticating Earth Engine...")
         ee.Authenticate()
         project_id = re.sub(
-            r"[^a-zA-Z0-9_-]", "", dialog.project_QgsPasswordLineEdit.text()
+            r"[^a-zA-Z0-9_-]", "", self.project_QgsPasswordLineEdit.text()
         )
         ee.Initialize(project=project_id)
         print("Authentication successful!")
@@ -61,9 +61,12 @@ def auth(dialog):
 
             if assets.get("assets") is not None:  # Valid project detected
                 print("Default project is valid.")
-                dialog.pop_warning("Authentication successful!")
-                dialog.autentication = True
-                dialog.next_clicked()
+                if self.language == "pt":
+                    self.pop_warning("Autenticação bem-sucedida!")
+                else:  
+                    self.pop_warning("Authentication successful!")
+                self.autentication = True
+                self.next_clicked()
             else:
                 print(
                     "Default project is valid but contains no assets."
@@ -72,10 +75,10 @@ def auth(dialog):
             # Invalid project or access issue / Projeto inválido ou problema
             # de acesso
             print(f"Default project validation failed: {e}")
-            dialog.pop_warning(
+            self.pop_warning(
                 f"Default project validation failed: {e}\nFollow the instructions to have a valid Google Cloud project."
             )
-            auth_clear(dialog, True)
+            auth_clear(self, True)
 
     except ee.EEException as e:
         # Handle Earth Engine-specific errors / Lida com erros
@@ -84,23 +87,23 @@ def auth(dialog):
         if "Earth Engine client library not initialized" in str(e):
             message = "Authentication failed. Please authenticate again."
             print(message)
-            dialog.pop_warning(message)
+            self.pop_warning(message)
         else:
             message = (
                 f"An error occurred during authentication or initialization: {e}"
             )
             print(message)
-            dialog.pop_warning(message)
-            auth_clear(dialog, True)
+            self.pop_warning(message)
+            auth_clear(self, True)
 
     except Exception as e:
         # Handle unexpected errors / Lida com erros inesperados
         message = f"An unexpected error occurred: {e}"
         print(message)
-        dialog.pop_warning(message)
+        self.pop_warning(message)
 
 
-def auth_clear(dialog, silent=False):
+def auth_clear(self, silent=False):
     """
     Completely clears Earth Engine authentication by deleting the entire
     Earth Engine configuration directory, including credentials and cached
@@ -111,9 +114,9 @@ def auth_clear(dialog, silent=False):
     diretório de configuração do Earth Engine, incluindo credenciais e
     dados em cache.
     """
-    dialog.project_QgsPasswordLineEdit.clear()
-    dialog.autenticacao.setEnabled(False)
-    dialog.autentication = False
+    self.project_QgsPasswordLineEdit.clear()
+    self.autenticacao.setEnabled(False)
+    self.autentication = False
 
     system = platform.system()
 
@@ -136,12 +139,12 @@ def auth_clear(dialog, silent=False):
             if not silent:
                 message = "Earth Engine configuration cleared successfully (all files deleted)."
                 print(message)
-                dialog.pop_warning(message)
+                self.pop_warning(message)
         except Exception as e:
             message = f"Error clearing Earth Engine configuration: {e}"
             print(message)
-            dialog.pop_warning(message)
+            self.pop_warning(message)
     else:
         message = "No Earth Engine configuration found to clear."
         print(message)
-        dialog.pop_warning(message)
+        self.pop_warning(message)

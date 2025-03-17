@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>12</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -311,7 +311,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>510</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -489,7 +489,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>620</x>
        <y>290</y>
        <width>111</width>
        <height>41</height>
@@ -1906,7 +1906,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>AOI selection (Step 2 ) -  Time Range (yyyy/mm/dd) (Step3) - Vegetation index for the time series (Step 4)</string>
+      <string>AOI selection (Step 2 )                                                                                 Time Range (yyyy/mm/dd) (Step3)                      Vegetation index (Step 4)</string>
      </property>
      <widget class="QDateEdit" name="incioedit_2">
       <property name="geometry">
@@ -2726,7 +2726,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QCheckBox" name="mask_2">
      <property name="geometry">
       <rect>
-       <x>400</x>
+       <x>440</x>
        <y>530</y>
        <width>311</width>
        <height>31</height>
@@ -3339,11 +3339,6 @@ p, li { white-space: pre-wrap; }
       <item>
        <property name="text">
         <string>Standard Deviation</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Area Under Curve (AUC)</string>
        </property>
       </item>
      </widget>

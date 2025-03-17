@@ -118,6 +118,14 @@ from .modules import (
     save_utils,
     authentication,
 )
+
+from qgis.PyQt.QtCore import Qt, QEvent
+from qgis.PyQt.QtWidgets import QApplication
+
+# Your existing imports should include something like:
+from qgis.PyQt import QtWidgets, uic
+from qgis.PyQt.QtWidgets import QDialog
+
 from .modules.coordinate_capture import CoordinateCaptureTool
 
 try:
@@ -144,12 +152,13 @@ else:
     ui_file = os.path.join("ui", "ravi_dialog_base.ui")
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
-class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
-        """Constructor."""
+class RAVIDialog(QDialog, FORM_CLASS):
+    def __init__(self, parent=None, iface=None):
         super(RAVIDialog, self).__init__(parent)
-
-        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint | Qt.WindowMinimizeButtonHint)
+        self.setupUi(self)
+        self.iface = iface
+    
+        self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
                      
         self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
 
@@ -169,6 +178,12 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         self.resizeEvent("small")
         self.tabWidget.setCurrentIndex(0)
 
+    # def changeEvent(self, event):
+    #     """Override changeEvent to handle window state changes."""
+    #     if event.type() == event.WindowStateChange:
+    #         if self.windowState() & Qt.WindowMinimized:
+    #             self.hide()  # Hide the dialog when minimized
+    #     super().changeEvent(event)  # Call the base class implementation
 
     def inicialize_variables(self):
         """Initializes variables."""
@@ -397,6 +412,28 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         for secondary in self.secondary_masks:
             secondary.stateChanged.connect(self.update_masks_2)
 
+        self.mask.stateChanged.connect(self.mask_warning)
+        self.mask_2.stateChanged.connect(self.mask_warning)
+
+    def mask_warning(self):
+        if not hasattr(self, "_mask_warning_shown"):
+            if self.mask.isChecked() or self.mask_2.isChecked():
+                message = (
+                    "SCL mask activated. The effectiveness of this feature is"
+                    "uncertain and depends on validation. It is recommended to "
+                    "compare images without pixel removal to verify if the "
+                    "performance is appropriate for your purposes."
+                )
+                if language == "pt":
+                    message = (
+                        "Máscara SCL para remover pixels ativada. A eficácia desde recurso é incerta e "
+                        "depende de validação. É recomendado a comparação das imagens "
+                        "sem remoção de pixel para verificar se o desempenho obtido é "
+                        "apropriado para a sua finalidade."
+                    )
+                self.pop_warning(message)
+            self._mask_warning_shown = True
+
     def update_masks(self):
         # Synchronize secondary checkboxes based on primary ones
         for primary, secondary in zip(self.primary_masks, self.secondary_masks):
@@ -406,8 +443,6 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         # Synchronize primary checkboxes based on secondary ones
         for primary, secondary in zip(self.primary_masks, self.secondary_masks):
             primary.setChecked(secondary.isChecked())
-
-
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -1592,7 +1627,10 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             self.vector_layer_combobox.setCurrentIndex(index)
 
         if self.vector_layer_combobox.count() == 0:
-            self.pop_warning("No vector layers found in the project.")
+            if language == 'pt':
+                self.pop_warning("Nenhuma camada vetorial encontrada no projeto.")
+            else:
+                self.pop_warning("No vector layers found in the project.")
 
     def get_selected_layer_path(self):
         """
@@ -1651,9 +1689,13 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
                 self.QPushButton_skip.setEnabled(False)
-                self.pop_warning(
-                    f"Area too large ({area:.2f} km²). The limit is 100 km²."
-                )
+                if self.language == 'pt':
+                    self.pop_warning("Área muito grande ({:.2f} km²). O limite é de 100 km².".format(area))
+                else:
+                    self.pop_warning("Area too large ({:.2f} km²). The limit is 100 km².".format(area))
+                self.aio = None
+                self.on_tab_changed(2)
+
                 return None
             if area == 0:
                 self.pop_warning("Selected layer is not valid")
@@ -1688,6 +1730,9 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
         Raises:
             ValueError: If an unsupported vegetation index is specified.
         """
+
+        #EVI 
+
         def evi(image):
             nir = image.select("B8").divide(10000)
             red = image.select("B4").divide(10000)
@@ -1696,6 +1741,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
                 {"NIR": nir, "RED": red, "BLUE": blue},
             ).rename("index")
+
+
 
         def savi(image):
             nir = image.select("B8").divide(10000)
@@ -1794,6 +1841,8 @@ class RAVIDialog(QtWidgets.QDialog, FORM_CLASS):
                 {"GREEN": green, "RED": red, "BLUE": blue},
             ).rename("index")
         
+
+        #https://www.indexdatabase.de/db/i-single.php?id=99
         def tvi(image):
             nir = image.select("B8").divide(10000)
             red = image.select("B4").divide(10000)
