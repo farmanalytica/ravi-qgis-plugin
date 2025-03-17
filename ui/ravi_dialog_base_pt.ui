@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -545,7 +545,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Intervalo de tempo (aaaa/mm/dd):</string>
+      <string>Intervalo de tempo (ano/mês/dia):</string>
      </property>
      <widget class="QDateEdit" name="finaledit">
       <property name="geometry">
@@ -1870,7 +1870,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Área de interesse (Passo 3)  - Intervalo de tempo (ano/mês/dia) (Passo 4) - Indice da Série Temporal (Passo 5)</string>
+      <string>Área de interesse (Passo 3)                                                 Intervalo de tempo (ano/mês/dia) (Passo 4)                              Indice de vegetação (Passo 5)</string>
      </property>
      <widget class="QDateEdit" name="incioedit_2">
       <property name="geometry">
