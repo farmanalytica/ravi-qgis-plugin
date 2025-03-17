@@ -1430,6 +1430,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         if index >= 9:
             self.resizeEvent("big")
+            if not hasattr(self, "_centralized"):
+                self.centralizar()
+                self._centralized = True
 
         if index >= 10 and self.df is None:
             self.tabWidget.setCurrentIndex(9)
