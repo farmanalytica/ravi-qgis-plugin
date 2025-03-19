@@ -76,7 +76,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1870,7 +1870,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Área de interesse (Passo 3)                                                 Intervalo de tempo (ano/mês/dia) (Passo 4)                              Indice de vegetação (Passo 5)</string>
+      <string>Área de interesse - Passo 3                                                                           Intervalo de tempo (ano/mês/dia) - Passo 4     Indice de vegetação - Passo 5</string>
      </property>
      <widget class="QDateEdit" name="incioedit_2">
       <property name="geometry">
@@ -2359,7 +2359,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Percentual de Pixels Válidos dentro da AOI: (Valor mais alto aplica filtragem mais rigorosa) - Passo 9</string>
+      <string>Percentual de Pixels Válidos dentro da Área de Interesse: (Valor mais alto aplica filtragem mais rigorosa) - Passo 9</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_local_pixel_limit_2">
       <property name="enabled">
@@ -2668,6 +2668,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>Neve ou gelo</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

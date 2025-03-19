@@ -990,7 +990,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
         existing_layers = QgsProject.instance().mapLayers().values()
         layer_names = [layer.name() for layer in existing_layers]
         if "Google Hybrid" not in layer_names:
-            self.pop_warning("Please load the Google Hybrid layer first.")
+            if language == "pt":
+                self.pop_warning("Por favor, carregue a camada Google Maps primeiro.")
+            else:
+                self.pop_warning("Please load the Google Maps layer first.")
             return
 
         # Get the canvas and its CRS
@@ -1439,8 +1442,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
             return
 
         if index == 1 and not hasattr(self, "path_suggestion_loaded"):
-            self.load_path_sugestion()
-            self.path_suggestion_loaded = True
+            try:
+                self.load_last_output_folder()
+            except:
+                self.load_path_sugestion()
+                self.path_suggestion_loaded = True
 
         if index == 2 and not hasattr(self, "vector_layers_loaded"):
             self.load_vector_layers()
@@ -2392,7 +2398,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             output_file_clipped, layer_name, indice_vegetacao, self.metrica.currentText()
         )
 
-
     def clip_raster_by_vector(
         self, raster_path, shapefile_path, output_path, layer_name
     ):
@@ -2434,10 +2439,28 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.output_folder = file_path
             self.folder_set = True
             self.QPushButton_next_4.setEnabled(True)
+            
+            # Save the selected file path to QGIS settings for persistence
+            QSettings().setValue("ravi_plugin/last_output_folder", file_path)
+            print(f"Last output folder saved: {file_path}")
         else:
             print("No file selected.")
             self.folder_set = False
             self.QPushButton_next_4.setEnabled(False)
+
+    def load_last_output_folder(self):
+        """Loads the last selected output folder from QGIS settings."""
+        """Carrega a última pasta de saída selecionada das configurações do QGIS."""
+        
+        last_folder = QSettings().value("ravi_plugin/last_output_folder", "")
+        if last_folder:
+            self.mQgsFileWidget.setFilePath(last_folder)
+            self.output_folder = last_folder
+            self.folder_set = True
+            self.QPushButton_next_4.setEnabled(True)
+            print(f"Last output folder loaded: {last_folder}")
+        else:
+            print("No previously selected output folder found.")
 
     def index_explain(self):
         if self.language == "pt":
@@ -2757,7 +2780,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         return filtered_collection
 
-
     def AOI_coverage_filter(self, sentinel2, aoi, coverage_threshold):
         """Filters the image collection based on the coverage of the Area of
         Interest (AOI)."""
@@ -2901,41 +2923,35 @@ class RAVIDialog(QDialog, FORM_CLASS):
         return sentinel2
 
     def SCL_mask(self, sentinel2, aoi):
-        """Applies a Scene Classification Layer (SCL) mask
-        collection."""
-        """Aplica uma mascara de Camada de Classificação de Cena (SCL) à coleção
-        de imagens."""
+        """Applies a Scene Classification Layer (SCL) mask based on user selections."""
         print("Applying SCL MASK...")
-        scl_classes_behavior = {
-            0: self.mask_class0.isChecked(),  # No data
-            1: self.mask_class1.isChecked(),  # Saturated/defective
-            2: self.mask_class2.isChecked(),  # Dark features
-            3: self.mask_class3.isChecked(),  # Cloud shadows
-            4: self.mask_class4.isChecked(),  # Vegetation
-            5: self.mask_class5.isChecked(),  # Bare soils
-            6: self.mask_class6.isChecked(),  # Water
-            7: self.mask_class7.isChecked(),  # Cloud low probability
-            8: self.mask_class8.isChecked(),  # Cloud medium probability
-            9: self.mask_class9.isChecked(),  # Cloud high probability
-            10: self.mask_class10.isChecked(),  # Thin cirrus
-            11: self.mask_class11.isChecked(),  # Snow or ice
-        }
 
-        def mask_cloud_and_shadows(image):
+        # Get user-selected classes to mask
+        selected_classes = [class_value for class_value, include in {
+            0: self.mask_class0.isChecked(),   # No data
+            1: self.mask_class1.isChecked(),   # Saturated/defective
+            2: self.mask_class2.isChecked(),   # Dark features
+            3: self.mask_class3.isChecked(),   # Cloud shadows
+            4: self.mask_class4.isChecked(),   # Vegetation
+            5: self.mask_class5.isChecked(),   # Bare soils
+            6: self.mask_class6.isChecked(),   # Water
+            7: self.mask_class7.isChecked(),   # Cloud low probability
+            8: self.mask_class8.isChecked(),   # Cloud medium probability
+            9: self.mask_class9.isChecked(),   # Cloud high probability
+            10: self.mask_class10.isChecked(), # Thin cirrus
+            11: self.mask_class11.isChecked()  # Snow or ice
+        }.items() if include]
+
+        def mask_selected_classes(image):
             scl = image.select("SCL")
-            # Start with an all-inclusive mask
-            mask = ee.Image.constant(1)
-            # Apply exclusions
-            for class_value, include in scl_classes_behavior.items():
-                if include:
-                    mask = mask.And(scl.neq(class_value))
+            # Build mask efficiently using logical OR across selected classes
+            mask = scl.neq(selected_classes[0]) if selected_classes else ee.Image.constant(1)
+            for class_value in selected_classes[1:]:
+                mask = mask.And(scl.neq(class_value))  # Keep only allowed pixels
 
             return image.updateMask(mask)
 
-            # Apply the cloud and shadow mask function to the image collection
-
-        return sentinel2.map(mask_cloud_and_shadows)
-
+        return sentinel2.map(mask_selected_classes)
 
     def clear_all_raster_layers(self):
         """Removes all raster layers from the QGIS project, except for the
