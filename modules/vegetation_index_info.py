@@ -99,6 +99,31 @@ EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
             </ul>
         </p>
     """,
+    "EVI2": """
+        <h3>Enhanced Vegetation Index 2 (EVI2)</h3>
+        <p>
+            The Enhanced Vegetation Index 2 (EVI2) is a simplified version of the Enhanced Vegetation Index (EVI) 
+            that does not require the blue band. This makes it particularly useful for sensors that lack a blue band 
+            or in cases where the blue band data is unreliable.
+        </p>
+        <p>
+            The EVI2 formula is calculated as:
+        </p>
+        <pre>
+    EVI2 = 2.5 * ((NIR - RED) / (NIR + RED + 1))
+        </pre>
+        <p>
+            where:
+            <ul>
+            <li><b>NIR</b>: Reflectance in the near-infrared band</li>
+            <li><b>RED</b>: Reflectance in the red band</li>
+            </ul>
+        </p>
+        <p>
+            EVI2 retains many of the advantages of EVI, such as improved sensitivity in areas of high biomass, 
+            while being computationally simpler and more broadly applicable.
+        </p>
+        """,
     "SAVI": """
         <h3>Soil-Adjusted Vegetation Index (SAVI)</h3>
         <p>
@@ -589,6 +614,31 @@ EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))
             </ul>
         </p>
     """,
+    "EVI2": """
+        <h3>Índice de Vegetação Aprimorado 2 (EVI2)</h3>
+        <p>
+            O Índice de Vegetação Aprimorado 2 (EVI2) é uma versão simplificada do Índice de Vegetação Aprimorado (EVI) 
+            que não requer a banda azul. Isso o torna particularmente útil para sensores que não possuem uma banda azul 
+            ou em casos onde os dados da banda azul são pouco confiáveis.
+        </p>
+        <p>
+            A fórmula do EVI2 é calculada como:
+        </p>
+        <pre>
+    EVI2 = 2.5 * ((NIR - RED) / (NIR + RED + 1))
+        </pre>
+        <p>
+            onde:
+            <ul>
+            <li><b>NIR</b>: Reflectância na banda do infravermelho próximo</li>
+            <li><b>RED</b>: Reflectância na banda vermelha</li>
+            </ul>
+        </p>
+        <p>
+            O EVI2 mantém muitas das vantagens do EVI, como maior sensibilidade em áreas de alta biomassa, 
+            enquanto é computacionalmente mais simples e amplamente aplicável.
+        </p>
+        """,
     "SAVI": """
         <h3>Índice de Vegetação Ajustado ao Solo (SAVI)</h3>
         <p>

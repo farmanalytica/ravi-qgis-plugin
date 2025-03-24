@@ -243,6 +243,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         vegetation_index = [
             "NDVI",
             "EVI",
+            'EVI2'
             "SAVI",
             "GNDVI",
             "MSAVI",
@@ -1750,8 +1751,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
                 {"NIR": nir, "RED": red, "BLUE": blue},
             ).rename("index")
-
-
+        
+        def evi2(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            return image.expression(
+            "2.5 * ((NIR - RED) / (NIR + RED + 1))",
+            {"NIR": nir, "RED": red},
+            ).rename("index")
 
         def savi(image):
             nir = image.select("B8").divide(10000)
@@ -1864,6 +1871,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         index_functions = {
             "NDVI": lambda image: image.normalizedDifference(["B8", "B4"]).rename("index"),
             "EVI": evi,
+            "EVI2": evi2,
             "SAVI": savi,
             "GNDVI": lambda image: image.normalizedDifference(["B8", "B3"]).rename("index"),
             "MSAVI": msavi,
@@ -1966,44 +1974,62 @@ class RAVIDialog(QDialog, FORM_CLASS):
             raise ValueError(f"Invalid metric: {metrica}")
 
     def calculate_auc(self, index_collection):
-        """Calculates the Area Under Curve (AUC) for the index collection."""
+        """
+        Calculates the Area Under Curve (AUC) with proper spatial alignment.
+        """
         print("Calculating AUC...")
         count = index_collection.size().getInfo()
         if count < 2:
-            raise ValueError("Número insuficiente de imagens para calcular a AUC.")
-
-        indexStack = index_collection.toBands()
-        # Define a mask valid (minimum mask value of all bands)
-        validMask = indexStack.mask().reduce(ee.Reducer.min())
-
+            raise ValueError("Insufficient number of images to calculate AUC.")
+        
+        # Get the first image to use as a spatial reference
+        first_image = index_collection.first()
+        
+        # Convert collection to multi-band image while preserving projection
+        index_stack = index_collection.toBands()
+        
+        # Define a valid mask (minimum mask value of all bands)
+        valid_mask = index_stack.mask().reduce(ee.Reducer.min())
+        
         # Get the band names (each band corresponds to a date)
-        bands = indexStack.bandNames()
-
-        # Define the start date; ensure self.inicio is in "YYYY-MM-DD" format
+        bands = index_stack.bandNames()
+        
+        # Define the start date
         start_date = ee.Date(self.inicio)
+        
         # Create a list of timestamps in days relative to the start date
         timestamps = index_collection.aggregate_array("system:time_start").map(
             lambda date: ee.Number(ee.Date(date).difference(start_date, "day"))
         )
-
+        
         # Align timestamps with the number of bands
-        alignedTimestamps = ee.List(timestamps.slice(0, bands.size()))
+        aligned_timestamps = ee.List(timestamps.slice(0, bands.size()))
+        
         # Create an image with constants based on timestamps and rename to band names
-        timeImage = ee.Image.constant(alignedTimestamps).rename(bands).toArray()
-
+        time_image = ee.Image.constant(aligned_timestamps).rename(bands).toArray()
+        
         # Convert the index stack to an array
-        ndviArray = indexStack.toArray()
-
+        index_array = index_stack.toArray()
+        
         # Calculate differences between consecutive timestamps
-        diffs = timeImage.arraySlice(0, 1).subtract(timeImage.arraySlice(0, 0, -1))
-        # Sum the NDVI values of consecutive images
-        sums = ndviArray.arraySlice(0, 1).add(ndviArray.arraySlice(0, 0, -1))
-        # Apply the trapezoidal rule: (difference * sum) / 2 and reduce the array by the sum of intervals
+        diffs = time_image.arraySlice(0, 1).subtract(time_image.arraySlice(0, 0, -1))
+        
+        # Sum the index_array values of consecutive images
+        sums = index_array.arraySlice(0, 1).add(index_array.arraySlice(0, 0, -1))
+        
+        # Apply the trapezoidal rule: (difference * sum) / 2 and reduce the array
         auc = diffs.multiply(sums).divide(2).arrayReduce(ee.Reducer.sum(), [0])
-        # Extract the final result, apply the mask, and define as the final image
-        final_image = ee.Image(auc.arrayGet([0])).updateMask(validMask)
-
+        
+        # Extract result and apply mask
+        auc_image = ee.Image(auc.arrayGet([0])).updateMask(valid_mask)
+        
+        # Create a new image with the same footprint as the first image
+        # This step guarantees the same pixel grid alignment
+        final_image = first_image.select(0).multiply(0).add(auc_image)
+        
         return final_image
+
+
 
     def calculate_timeseries(self):
         """Calculates the time series of the selected vegetation index for the AOI."""
