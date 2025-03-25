@@ -237,7 +237,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         vegetation_index = [
             "NDVI",
             "EVI",
-            'EVI2'
+            'EVI2',
             "SAVI",
             "GNDVI",
             "MSAVI",
@@ -365,6 +365,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QTextBrowser.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
         self.series_indice.currentIndexChanged.connect(self.index_explain)
+        self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
@@ -1704,22 +1705,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
             if area > 100:
                 self.QPushButton_next.setEnabled(False)
                 self.QPushButton_skip.setEnabled(False)
+                self.loadtimeseries.setEnabled(False)
                 if self.language == 'pt':
                     self.pop_warning("Área muito grande ({:.2f} km²). O limite é de 100 km².".format(area))
                 else:
                     self.pop_warning("Area too large ({:.2f} km²). The limit is 100 km².".format(area))
                 self.aio = None
-                self.on_tab_changed(2)
-
-                return None
-            if area == 0:
-                self.pop_warning("Selected layer is not valid")
-                self.QPushButton_next.setEnabled(False)
-                self.QPushButton_skip.setEnabled(False)
+                #self.on_tab_changed(2)
                 return None
 
             self.QPushButton_next.setEnabled(True)
             self.QPushButton_skip.setEnabled(True)
+            self.loadtimeseries.setEnabled(True)
             # self.load_vector_function()
             return None
         else:
@@ -2233,7 +2230,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             # Add the raster layer to the QGIS project and insert it at the top
             # of the layer tree
-            QgsProject.instance().addMapLayer(layer, False)
+            QgsProject.instance().addMapLayer(layer, addToLegend=False)
             root = QgsProject.instance().layerTreeRoot()
             root.insertChildNode(0, QgsLayerTreeLayer(layer))
             iface.setActiveLayer(layer)
