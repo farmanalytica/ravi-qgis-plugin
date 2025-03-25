@@ -133,10 +133,10 @@ try:
 except:
     pass
 
-try:
-    import dash
-except:
-    pass    
+# try:
+#     import dash
+# except:
+#     pass    
 
 # =============================================================================
 # RAVIDialog Class Definition / Definição da Classe RAVIDialog
@@ -178,12 +178,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.resizeEvent("small")
         self.tabWidget.setCurrentIndex(0)
 
-    # def changeEvent(self, event):
-    #     """Override changeEvent to handle window state changes."""
-    #     if event.type() == event.WindowStateChange:
-    #         if self.windowState() & Qt.WindowMinimized:
-    #             self.hide()  # Hide the dialog when minimized
-    #     super().changeEvent(event)  # Call the base class implementation
 
     def inicialize_variables(self):
         """Initializes variables."""
@@ -420,7 +414,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if not hasattr(self, "_mask_warning_shown"):
             if self.mask.isChecked() or self.mask_2.isChecked():
                 message = (
-                    "SCL mask activated. The effectiveness of this feature is"
+                    "SCL mask activated. The effectiveness of this feature is "
                     "uncertain and depends on validation. It is recommended to "
                     "compare images without pixel removal to verify if the "
                     "performance is appropriate for your purposes."
@@ -1524,7 +1518,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def pop_warning(self, aviso):
         QApplication.restoreOverrideCursor()
         msg = QMessageBox(self)
-        msg.setWindowTitle("Warning!")
+        if self.language == "pt":
+            msg.setWindowTitle("Aviso!")  
+        else:
+            msg.setWindowTitle("Warning!")
+
         msg.setIcon(QMessageBox.Warning)
         msg.setText(aviso)
         msg.setStandardButtons(QMessageBox.Ok)
@@ -1537,7 +1535,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         # Create a custom dialog
         dialog = QDialog(self)
-        dialog.setWindowTitle("Search Results")
+        if self.language == "pt":
+            dialog.setWindowTitle("Resultados da busca")
+        else:
+            dialog.setWindowTitle("Search Results")
         
         # Set up the main layout
         layout = QVBoxLayout(dialog)
@@ -1550,8 +1551,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
         button_layout = QHBoxLayout()
         
         # Create buttons
-        cancel_button = QPushButton("Cancel")
-        ok_button = QPushButton("OK")
+        if self.language == "pt":
+            cancel_button = QPushButton("Cancelar (permanecer nesta aba)")
+            ok_button = QPushButton("OK (ir para a próxima aba)")
+        else:
+            cancel_button = QPushButton("Cancel (stay on this tab)")
+            ok_button = QPushButton("OK (go to the next tab)")
         
         # Add buttons to the horizontal layout
         button_layout.addWidget(cancel_button)

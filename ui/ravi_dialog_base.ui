@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -2178,7 +2178,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>33</y>
         <width>1051</width>
         <height>21</height>
        </rect>
@@ -2215,7 +2215,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>33</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2255,7 +2255,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>33</y>
-        <width>1041</width>
+        <width>1051</width>
         <height>21</height>
        </rect>
       </property>
@@ -2585,7 +2585,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>33</y>
         <width>1051</width>
         <height>21</height>
        </rect>
@@ -2622,7 +2622,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>33</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2674,7 +2674,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>1070</x>
-        <y>30</y>
+        <y>35</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -2695,7 +2695,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>35</y>
         <width>1051</width>
         <height>21</height>
        </rect>
