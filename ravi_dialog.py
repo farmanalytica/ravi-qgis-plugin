@@ -365,7 +365,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QTextBrowser.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
         self.series_indice.currentIndexChanged.connect(self.index_explain)
-        self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
@@ -455,6 +454,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.plot_timeseries()
 
     def toggle_coordinate_capture_tool(self, state):
+        print("toggle_coordinate_capture_tool called")
         """Toggles the coordinate capture tool based on the checkbox state."""
         """Ativa/desativa a ferramenta de captura de coordenadas com base no
         estado da checkbox."""
