@@ -14,11 +14,14 @@ import random
 class CoordinateCaptureTool(QgsMapToolEmitPoint):
     """
     A map tool for capturing coordinates from the map canvas and processing
-    them using a provided dialog.  It displays a colored dot at each captured
+    them using a provided dialog. It displays a colored dot at each captured
     coordinate.
     """
 
     WGS84_EPSG = "EPSG:4326"  # Constant for WGS84 CRS
+
+    # Global variable to store colors
+    DOT_COLORS = []
 
     def __init__(self, canvas, ravi_dialog):
         """
@@ -35,6 +38,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         self.latitude = None
         self.longitude = None
         self.dot_color = self.generate_bright_color()
+        # Don't add the color here - will add it when actually used
         self.wgs84_crs = QgsCoordinateReferenceSystem(
             self.WGS84_EPSG
         )  # Store CRS object
@@ -48,7 +52,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
 
     def canvasReleaseEvent(self, event):
         """
-        Handles the canvas release event (mouse click).  Transforms the clicked
+        Handles the canvas release event (mouse click). Transforms the clicked
         point to WGS84, displays a dot, and processes the coordinates.
 
         Args:
@@ -103,7 +107,7 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
 
         Args:
             point: The point (QgsPointXY) in the project's CRS where the dot
-                   should be displayed.
+                should be displayed.
         """
         rubber_band = QgsRubberBand(self.canvas, QgsWkbTypes.PointGeometry)
         rubber_band.setColor(self.dot_color)
@@ -113,12 +117,37 @@ class CoordinateCaptureTool(QgsMapToolEmitPoint):
         rubber_band.setToGeometry(QgsGeometry.fromPointXY(point), None)
         rubber_band.show()
 
+        # Add the current color to the list when it's actually used
+        CoordinateCaptureTool.DOT_COLORS.append(self.dot_color)
         self.rubber_bands.append(rubber_band)
+        
+        # Generate a new color for the next dot
         self.dot_color = self.generate_bright_color()
+
+    def add_dot_from_coordinates(self, longitude, latitude):
+        """
+        Adds a colored dot to the map canvas based on provided WGS84 coordinates.
+
+        Args:
+            longitude: The longitude of the point in WGS84.
+            latitude: The latitude of the point in WGS84.
+        """
+        # Create a QgsPointXY object from WGS84 coordinates
+        point_wgs84 = QgsPointXY(longitude, latitude)
+
+        # Transform the point from WGS84 to the project's CRS
+        project_crs = self.canvas.mapSettings().destinationCrs()
+        transformer = QgsCoordinateTransform(
+            self.wgs84_crs, project_crs, QgsProject.instance()
+        )
+        point_project = transformer.transform(point_wgs84)
+
+        # Display the dot on the canvas
+        self.display_dot(point_project)
 
     def deactivate(self):
         """
-        Deactivates the tool, clearing the stored coordinates.  It does NOT
+        Deactivates the tool, clearing the stored coordinates. It does NOT
         remove the dots from the canvas.
         """
         self.latitude = None

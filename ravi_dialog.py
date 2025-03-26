@@ -163,6 +163,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
 
         authentication.loadProjectId(self)
+
+        self.coordinate_capture_tool = None
+
+        
+
         self.inicialize_variables()
 
         # UI setup and signal connections / Configuração da UI e conexões de sinal
@@ -180,22 +185,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
 
     def inicialize_variables(self):
-        """Initializes variables."""
-        self.coordinate_capture_tool = None
-
-        # Find the checkbox in the UI / Encontra a checkbox na UI
-        self.checkBox_captureCoordinates = self.findChild(
-            QtWidgets.QCheckBox, "checkBox_captureCoordinates"
-        )
-
-        if self.checkBox_captureCoordinates:
-            self.checkBox_captureCoordinates.stateChanged.connect(
-                self.toggle_coordinate_capture_tool
-            )
-        else:
-            print("Error: Capture coordinates checkbox not found in the UI.")
-
-            
+        """Initializes variables."""          
 
         # Determine language for UI elements / Determina o idioma para os
         # elementos da UI
@@ -328,6 +318,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
+        
+        self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
@@ -492,6 +484,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print("Coordinate capture tool activated.")
         else:  # Button is unchecked (inactive)
             self.deactivate_coordinate_capture_tool()
+
             print("Coordinate capture tool deactivated.")
 
     def deactivate_coordinate_capture_tool(self):
@@ -510,6 +503,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
         else:
             print("No coordinate capture tool to deactivate.")
+
 
     def remove_all_dots(self):
         """Removes all dots from the map canvas."""
@@ -1423,7 +1417,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # print(f"Tab changed to index: {index}")
         if not self.autentication:
             self.tabWidget.setCurrentIndex(0)
-            return
         if index < 9:
             self.resizeEvent("small")
 
@@ -1435,7 +1428,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         if index >= 10 and self.df is None:
             self.tabWidget.setCurrentIndex(9)
-            return
 
         if index == 1 and not hasattr(self, "path_suggestion_loaded"):
             try:
@@ -1455,18 +1447,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         if index > 1 and not self.QPushButton_next_4.isEnabled():
             self.tabWidget.setCurrentIndex(1)
-            return
         
         if index > 2 and not self.QPushButton_next.isEnabled():
             self.tabWidget.setCurrentIndex(2)
-            return
 
         if index == 12 and self.plot1 is not None:
+            print('load_fields')
             self.load_fields()
 
         if index != 11:
+            
             try:
                 self.checkBox_captureCoordinates.setChecked(False)
+                print("Coordinate capture checkbox state changed.")
             except:
                 pass
 
@@ -3230,6 +3223,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
     def add_dot_from_coordinates(self):
 
+        print("Adding dot from coordinates...")
 
         """Adds a dot to the map from latitude and longitude values entered in QLineEdit widgets.
         Handles commas as decimal separators and validates input with regex.
