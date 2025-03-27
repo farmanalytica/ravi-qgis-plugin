@@ -48,6 +48,13 @@
     }
     QPushButton#clear_raster:hover, QPushButton#clear_button_points:hover {
         background-color: #f1b0b7; /* Slightly Darker Red */
+
+    QPushButton#clear_raster, QPushButton#desautenticacao {
+        background-color: #f8d7da; /* Soft Red */
+    }
+    QPushButton#clear_raster:hover, QPushButton#desautenticacao:hover {
+        background-color: #f1b0b7; /* Slightly Darker Red */
+
     }
 
   </string>
@@ -76,10 +83,10 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
