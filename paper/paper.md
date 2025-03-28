@@ -95,7 +95,10 @@ inicial no plugin conta com orientações iniciais para habilitar o acesso,
 inclusive um link para acesso ao website dedicado com guias em textos e
 vídeos explicativos. As configurações são resumidas na aba Overview (figura 2)
 
-Figure 1: Initial screen and subsequent steps
+
+![Initial screen and subsequent steps\label{fig:example}](paper_figures/fig1.png)
+
+
 
 Figure 2: Setting overview
 
