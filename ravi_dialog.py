@@ -244,6 +244,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "MCARI",
             "VARI",
             "TVI",
+            "DVI",
+            "LCI",
+            "DSI",
+            "BRPI",
+            "MBRI"
         ]
 
         self.imagem_unica_indice.addItems(vegetation_index)
@@ -1863,6 +1868,46 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 {"NIR": nir, "RED": red, "GREEN": green},
             ).rename("index")
 
+        def dvi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            return nir.subtract(red).rename("index")
+
+        def lci(image):
+            red = image.select("B4").divide(10000)
+            green = image.select("B3").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(RED - GREEN) / sqrt((RED * RED) + (GREEN * GREEN) + (BLUE * BLUE))",
+                {"RED": red, "GREEN": green, "BLUE": blue},
+            ).rename("index")
+
+        def dsi(image):
+            nir = image.select("B8").divide(10000)
+            red = image.select("B4").divide(10000)
+            rededge = image.select("B5").divide(10000)
+            return image.expression(
+                "((REDEDGE - RED) / (REDEDGE + RED)) / ((NIR - REDEDGE) / (NIR + REDEDGE))",
+                {"NIR": nir, "RED": red, "REDEDGE": rededge},
+            ).rename("index")
+
+        def brpi(image):
+            rededge = image.select("B5").divide(10000)
+            green = image.select("B3").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(REDEDGE - GREEN) / (REDEDGE + BLUE)",
+                {"REDEDGE": rededge, "GREEN": green, "BLUE": blue},
+            ).rename("index")
+
+        def mbri(image):
+            nir = image.select("B8").divide(10000)
+            blue = image.select("B2").divide(10000)
+            return image.expression(
+                "(NIR - BLUE) / (NIR + BLUE)",
+                {"NIR": nir, "BLUE": blue},
+            ).rename("index")
+
         index_functions = {
             "NDVI": lambda image: image.normalizedDifference(["B8", "B4"]).rename("index"),
             "EVI": evi,
@@ -1882,7 +1927,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "MTCI": mtci,
             "MCARI": mcari,
             "VARI": vari,
-            "TVI": tvi
+            "TVI": tvi,
+            "DVI": dvi,
+            "LCI": lci,
+            "DSI": dsi,
+            "BRPI": brpi,
+            "MBRI": mbri,
         }
 
         if index_name in index_functions:
