@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_SRI_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <head>
   <meta charset="UTF-8">
@@ -10,6 +12,7 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
     /* CSS Reset */
+    
     *,
     *::before,
     *::after {
@@ -126,6 +129,20 @@
       transition: background-color 0.2s, color 0.2s;
     }
 
+    .code-block button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em; /* Adjust the size as needed */
+      margin-left: 10px;
+      color: #555; /* Adjust color as needed */
+    }
+
+    .code-block button:hover {
+      color: #007bff; /* Change color on hover */
+    }
+
+    
     .lang-btn:hover,
     .lang-btn.active {
       background-color: var(--primary-color);
@@ -293,7 +310,7 @@
               <li><a href="#en-polyglon">MultiPolyglon Analysis</a></li>
               <li><a href="#en-troubleshooting">Troubleshooting</a></li>
               <li><a href="#en-reporting-issues">Reporting Issues</a></li>
-              <li><a href="#en-contribute">Contribute</a></li>
+              <li><a href="#en-contribute">Repositório</a></li>
               <li><a href="#en-license">License</a></li>
               <li><a href="#en-about">About the Author</a></li>
             </ul>
@@ -339,7 +356,7 @@
               <li><a href="#pt-polyglon">Análise de MultiPolígono</a></li>    
               <li><a href="#pt-troubleshooting">Solução de Problemas</a></li>
               <li><a href="#pt-reporting-issues">Relatar Problemas</a></li>
-              <li><a href="#pt-contribute">Contribuição</a></li>
+              <li><a href="#pt-contribute">Repositório</a></li>
               <li><a href="#pt-license">Licença</a></li>
               <li><a href="#pt-sobre">Sobre o Autor</a></li>                       
             </ul>
@@ -692,6 +709,20 @@
         <section>
           <h2 id="en-troubleshooting">Troubleshooting</h2>
           <ul>
+            <li>
+              <strong>Problem: Module 'ee' not found (Google Earth Engine Python API not installed)</strong>
+
+              <p><strong>Solution:</strong> Open the <strong>OSGeo4W Shell</strong> and run the following command:</p>
+
+              <div class="code-block">
+                <code id="copy-command">pip install earthengine-api</code>
+                <button onclick="copyToClipboard('pip install earthengine-api')" title="Copy to clipboard">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+
+              <p>After installation, <strong>restart QGIS</strong>.</p>
+            </li>
             <li><strong>Earth Engine Authentication Failed</strong>: Ensure you meet all requirements as explained in the
               authentication section.</li>
             <li><strong>AOI Errors</strong>: Verify the AOI file is valid and uses a proper CRS (EPSG:4326 is
@@ -709,11 +740,11 @@
         </section>
 
         <section>
-          <h2 id="en-contribute">Contribute to the Project</h2>
+          <h2 id="en-contribute">Repository</h2>
           <p>
-            Contributions are welcome! Please visit the <a
+            Visit the  <a
               href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">GitHub
-              repository</a> to get started.
+              repository.</a>
           </p>
         </section>
 
@@ -1115,15 +1146,55 @@
         </section>        
       </section>
 
-        <section>
-          <h2 id="pt-troubleshooting">Solução de Problemas</h2>
-          <ul>
-            <li><strong>Falha na Autenticação do Earth Engine</strong>: Certifique-se de que você atende aos requisitos
-              necessários, conforme explicado na aba de autenticação.</li>
-            <li><strong>Erros de AOI</strong>: Verifique se o arquivo da AOI é válido e possui um CRS adequado
-              (preferencialmente EPSG:4326).</li>
-          </ul>
-        </section>
+      <section>
+        <h2 id="pt-troubleshooting">Solução de Problemas</h2>
+
+      
+        <ul>
+          <li>
+            <strong>Problema: Erro módulo 'ee' não encontrado (Google Earth Engine Python API não instalado)</strong>
+      
+            <p><strong>Solução:</strong> Abra o <strong>OSGeo4W Shell</strong> (encontrado no menu Iniciar do Windows) e execute o seguinte comando:</p>
+      
+            <div class="code-block">
+              <code id="copy-command">pip install earthengine-api</code>
+              <button onclick="copyToClipboard('pip install earthengine-api')" title="Copiar para a área de transferência">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+      
+            <p>Após a instalação, <strong>reinicie o QGIS</strong>.</p>
+          </li>
+      
+          <li>
+            <strong>Problema: Falha na Autenticação do Earth Engine</strong>
+      
+            <p><strong>Solução:</strong> Verifique se você seguiu todos os passos e atende aos requisitos explicados na aba "Autenticação" do RAVIDialog.</p>
+          </li>
+      
+          <li>
+            <strong>Problema: Erros relacionados à Área de Interesse (AOI)</strong>
+      
+            <p><strong>Solução:</strong> Certifique-se de que:</p>
+            <ul>
+              <li>O arquivo da AOI é um arquivo vetorial válido (Shapefile, GeoJSON, etc.).</li>
+              <li>O arquivo da AOI não está corrompido.</li>
+              <li>O arquivo da AOI possui um Sistema de Referência de Coordenadas (CRS) adequado.  Recomendamos usar <strong>EPSG:4326</strong>.</li>
+            </ul>
+          </li>
+        </ul>
+      
+        <script>
+          function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+              alert('Comando copiado para a área de transferência!');
+            }).catch(err => {
+              console.error('Falha ao copiar: ', err);
+            });
+          }
+        </script>
+      </section>
+      
 
         <section>
           <h2 id="pt-reporting-issues">Relatar Problemas</h2>
@@ -1135,11 +1206,11 @@
         </section>
 
         <section>
-          <h2 id="pt-contribute">Contribuição</h2>
+          <h2 id="pt-contribute">Repositório</h2>
           <p>
-            Contribuições são bem-vindas! Visite o <a
+            Visite o <a
               href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">repositório do
-              GitHub</a> para começar.
+              GitHub</a>.
           </p>
         </section>
 

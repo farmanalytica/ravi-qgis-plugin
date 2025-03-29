@@ -2088,24 +2088,42 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
     def aggregate_index_collection(self, index_collection, metrica):
         """Aggregates the index collection based on the specified metric."""
-        if metrica in ["Mean", "Média"]:
-            return index_collection.mean()
-        elif metrica in ["Max", "Máximo"]:
-            return index_collection.max()
-        elif metrica in ["Min", "Mínimo"]:
-            return index_collection.min()
-        elif metrica in ["Median", "Mediana"]:
-            return index_collection.median()
-        elif metrica in ["Amplitude"]:
-            return index_collection.max().subtract(index_collection.min())
-        elif metrica in ["Standard Deviation", "Desvio Padrão"]:
-            return index_collection.reduce(ee.Reducer.stdDev())
-        elif metrica in ["Sum", "Soma"]:
-            return index_collection.sum()
-        elif metrica in ["Area Under Curve (AUC)"]:
-            return self.calculate_auc(index_collection)
-        else:
-            raise ValueError(f"Invalid metric: {metrica}")
+        # Obter a primeira imagem como referência espacial
+        first_image = index_collection.first()
+
+        # Dicionário para mapear métricas às funções correspondentes
+        metric_functions = {
+            "Mean": lambda: index_collection.mean(),
+            "Média": lambda: index_collection.mean(),
+            "Max": lambda: index_collection.max(),
+            "Máximo": lambda: index_collection.max(),
+            "Min": lambda: index_collection.min(),
+            "Mínimo": lambda: index_collection.min(),
+            "Median": lambda: index_collection.median(),
+            "Mediana": lambda: index_collection.median(),
+            "Amplitude": lambda: index_collection.max().subtract(index_collection.min()),
+            "Standard Deviation": lambda: index_collection.reduce(ee.Reducer.stdDev()),
+            "Desvio Padrão": lambda: index_collection.reduce(ee.Reducer.stdDev()),
+            "Sum": lambda: index_collection.sum(),
+            "Soma": lambda: index_collection.sum(),
+            "Area Under Curve (AUC)": lambda: self.calculate_auc(index_collection),
+        }
+
+        # Verificar se a métrica é válida
+        if metrica not in metric_functions:
+            valid_metrics = ", ".join(metric_functions.keys())
+            raise ValueError(f"Invalid metric: {metrica}. Valid metrics are: {valid_metrics}")
+
+        # Calcular a métrica
+        result_image = metric_functions[metrica]()
+
+        # Garantir que a imagem resultante tenha o mesmo alinhamento espacial da primeira imagem
+        aligned_image = result_image.setDefaultProjection(
+            first_image.projection()
+        ).clip(first_image.geometry())
+
+        return aligned_image
+
 
     def calculate_auc(self, index_collection):
         """
@@ -2133,36 +2151,32 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         # Create a list of timestamps in days relative to the start date
         timestamps = index_collection.aggregate_array("system:time_start").map(
-            lambda date: ee.Number(ee.Date(date).difference(start_date, "day"))
+            lambda date: ee.Date(date).difference(start_date, "day")
         )
         
-        # Align timestamps with the number of bands
-        aligned_timestamps = ee.List(timestamps.slice(0, bands.size()))
-        
-        # Create an image with constants based on timestamps and rename to band names
-        time_image = ee.Image.constant(aligned_timestamps).rename(bands).toArray()
+        # Ensure timestamps is a valid list and calculate time differences
+        time_diffs = ee.List(timestamps).slice(0, -1).zip(ee.List(timestamps).slice(1)).map(
+            lambda pair: ee.Number(ee.List(pair).get(1)).subtract(ee.Number(ee.List(pair).get(0)))
+        )
         
         # Convert the index stack to an array
         index_array = index_stack.toArray()
         
-        # Calculate differences between consecutive timestamps
-        diffs = time_image.arraySlice(0, 1).subtract(time_image.arraySlice(0, 0, -1))
-        
-        # Sum the index_array values of consecutive images
+        # Calculate the sums of index values for consecutive images
         sums = index_array.arraySlice(0, 1).add(index_array.arraySlice(0, 0, -1))
         
-        # Apply the trapezoidal rule: (difference * sum) / 2 and reduce the array
-        auc = diffs.multiply(sums).divide(2).arrayReduce(ee.Reducer.sum(), [0])
+        # Calculate the AUC using the trapezoidal rule
+        auc = ee.Image.constant(time_diffs).toArray().multiply(sums).divide(2).arrayReduce(
+            ee.Reducer.sum(), [0]
+        )
         
         # Extract result and apply mask
-        auc_image = ee.Image(auc.arrayGet([0])).updateMask(valid_mask)
+        auc_image = auc.arrayGet([0]).updateMask(valid_mask)
         
         # Create a new image with the same footprint as the first image
-        # This step guarantees the same pixel grid alignment
         final_image = first_image.select(0).multiply(0).add(auc_image)
         
         return final_image
-
 
 
     def calculate_timeseries(self):
