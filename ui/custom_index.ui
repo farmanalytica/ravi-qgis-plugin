@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1142</width>
+    <height>584</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string>
+    QPushButton {
+      background-color: #d1e7ff; /* Soft Blue */
+      color: black;
+      border-radius: 6px;
+      padding: 5px;
+    }
+
+    QPushButton:hover {
+      background-color: #b6d4fe; /* Slightly Darker Blue */
+    }
+
+    QPushButton:disabled {
+      background-color: #f0f0f0; /* Light Gray */
+      color: #a0a0a0;
+    }
+
+  </string>
+  </property>
+  <widget class="QPushButton" name="add_custom_index">
+   <property name="geometry">
+    <rect>
+     <x>960</x>
+     <y>500</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Add custom index</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser_index_explain">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>1121</width>
+     <height>441</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;How to Write Expressions in RAVI&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot; bgcolor=&quot;#f9f9f9&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This guide explains how to create mathematical expressions to calculate custom spectral indices in the RAVI plugin.It also provides practical examples and important tips to avoid common errors.&lt;/p&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Available Bands&lt;/span&gt;&lt;/h2&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Sentinel-2 offers the following bands that you can use in your expressions:&lt;br /&gt;&lt;/p&gt;
+&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; border-collapse:collapse;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; background-color:#f2f2f2;&quot;&gt;Band&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; background-color:#f2f2f2;&quot;&gt;Name&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; background-color:#f2f2f2;&quot;&gt;Description&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; background-color:#f2f2f2;&quot;&gt;Wavelength&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/thead&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B1&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Coastal aerosol&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Coastal Aerosol&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;443 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B2&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Blue&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Blue&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;490 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B3&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Green&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Green&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;560 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B4&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;665 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B5&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 1&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 1&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;705 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B6&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 2&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 2&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;740 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B7&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 3&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Red Edge 3&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;783 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B8&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;NIR&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Near Infrared&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;842 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B8A&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Narrow NIR&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Narrow Near Infrared&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;865 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B9&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Water vapor&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Water Vapor&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;940 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B11&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;SWIR 1&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Shortwave Infrared 1&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1610 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B12&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;SWIR 2&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Shortwave Infrared 2&lt;/p&gt;&lt;/td&gt;
+&lt;td style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2190 nm&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Supported Operators and Functions&lt;/span&gt;&lt;/h2&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Arithmetic Operators&lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;+ (addition)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;- (subtraction)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;* (multiplication)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;/ (division)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;^ (exponentiation - e.g., B4^2 for B4 squared)&lt;/li&gt;&lt;/ul&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Relational Operators&lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt; (greater than)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;= (greater than or equal to)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;== (equal to)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;!= (not equal to)&lt;/li&gt;&lt;/ul&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Logical Operators&lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;amp;&amp;amp; (Logical AND)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;|| (Logical OR)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;! (Logical NOT)&lt;/li&gt;&lt;/ul&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Mathematical Functions&lt;/span&gt;&lt;/h3&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;sqrt(x) - Square root of x&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;log(x) - Natural logarithm of x (base e)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;log10(x) - Base-10 logarithm of x&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;abs(x) - Absolute value of x&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;round(x) - Rounds x to the nearest integer&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;floor(x) - Rounds x down to the nearest integer&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ceil(x) - Rounds x up to the nearest integer&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;sin(x) - Sine of x (x in radians)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;cos(x) - Cosine of x (x in radians)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;tan(x) - Tangent of x (x in radians)&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;min(a, b) - Returns the smaller of a and b&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;max(a, b) - Returns the larger of a and b&lt;/li&gt;&lt;/ul&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Expression Examples&lt;/span&gt;&lt;/h2&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;NDVI (Normalized Difference Vegetation Index)&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(B8 - B4) / (B8 + B4)&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;EVI (Enhanced Vegetation Index)&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2.5 * ((B8 - B4) / (B8 + 6 * B4 - 7.5 * B2 + 1))&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;SAVI (Soil Adjusted Vegetation Index) with L=0.5&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(1 + 0.5) * ((B8 - B4) / (B8 + B4 + 0.5))&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;NDRE (Normalized Difference Red Edge)&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(B8 - B5) / (B8 + B5)&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;NDMI (Normalized Difference Moisture Index)&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(B8 - B11) / (B8 + B11)&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Conditional Expression&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This expression calculates NDVI only when the red band (B4) is greater than 0.2.Otherwise, it returns 0:&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(B4 &amp;gt; 0.2) ? ((B8 - B4) / (B8 + B4)) : 0&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Example using sqrt and log&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;sqrt(B8) + log(B4 + 1)&lt;/p&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Example using exponentiation and absolute value&lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;abs(B11 - B12) ^ 2&lt;/p&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Important Tips&lt;/span&gt;&lt;/h2&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Automatic Normalization:&lt;/span&gt; All bands are already divided by 10000 to convert from digital numbers to reflectance (0-1).&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Avoid Division by Zero:&lt;/span&gt; Make sure the denominator in your expressions cannot be zero.  Consider adding a small constant (e.g., 0.0001) to the denominator.&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Use Parentheses:&lt;/span&gt; To ensure that operations are performed in the correct order.&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Test Your Expression:&lt;/span&gt; Start with known indices and modify them to understand how they work.&lt;/li&gt;
+&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Function Arguments:&lt;/span&gt;  Make sure to provide the correct number of arguments to each function.&lt;/li&gt;&lt;/ul&gt;
+&lt;h2 style=&quot;-qt-paragraph-type:empty; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/h2&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Attention&lt;/span&gt;&lt;/h2&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;When creating complex expressions, test them incrementally to ensure they work as expected. Extreme values or division by zero can cause unexpected results.  Mathematical functions may also have domain restrictions (e.g., log of a negative number).  Be mindful of these limitations.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="expressionTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>500</y>
+     <width>781</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="plainText">
+    <string>((B1 + B2 + B3 + B4 + B5 + B6 + B7 + B8 + B8A + B9 + B11 + B12) / 12)</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="expression_nameTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>500</y>
+     <width>151</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="plainText">
+    <string>Average</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>470</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>470</y>
+     <width>291</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Expression (edit the example below)</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,6 +1,6 @@
 # RAVI - Remote Analysis of Vegetation Indices
 
-This repository contains the source code for the **RAVI** plugin for QGIS, which integrates with Google Earth Engine (GEE) Python API to process and visualize geospatial data using the Sentinel-2 harmonized surface reflectance catalog. RAVI is a viable tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
+This repository contains the source code for the **RAVI** plugin for QGIS, which integrates with Google Earth Engine (GEE) Python API to process and visualize geospatial data using the Copernicus mission Sentinel-2 harmonized surface reflectance catalog. RAVI is a viable tool for students, researchers, farmers, and GIS professionals working in agriculture, land monitoring, or environmental management.
 
 ## Tutorial
 An usage guide is available via GitHub Pages here:  

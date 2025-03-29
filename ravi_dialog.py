@@ -125,6 +125,23 @@ from qgis.PyQt.QtWidgets import QApplication
 # Your existing imports should include something like:
 from qgis.PyQt import QtWidgets, uic
 from qgis.PyQt.QtWidgets import QDialog
+from qgis.gui import QgsMapToolCapture, QgsMapToolExtent, QgsMapToolPan
+from qgis.core import (
+    QgsRectangle,
+    QgsFeature,
+    QgsGeometry,
+    QgsVectorLayer,
+    QgsField,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
+    QgsProject,
+    QgsVectorFileWriter,
+)
+from qgis.PyQt.QtCore import QVariant
+from qgis.utils import iface
+import processing
+
+
 
 from .modules.coordinate_capture import CoordinateCaptureTool
 
@@ -244,11 +261,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "MCARI",
             "VARI",
             "TVI",
-            "DVI",
-            "LCI",
-            "DSI",
-            "BRPI",
-            "MBRI"
         ]
 
         self.imagem_unica_indice.addItems(vegetation_index)
@@ -316,7 +328,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.salvar_2.clicked.connect(self.salvar_clicked_2)
         self.salvar_3.clicked.connect(self.salvar_clicked_3)
         self.salvar_nasa.clicked.connect(self.salvar_nasa_clicked)
-        self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
+        #self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
+        self.drawing.stateChanged.connect(self.drawing_clicked)
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
@@ -362,6 +375,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QTextBrowser.anchorClicked.connect(self.open_link)
         self.textBrowser_valid_pixels.anchorClicked.connect(self.open_link)
         self.series_indice.currentIndexChanged.connect(self.index_explain)
+
+        self.setup_custom.clicked.connect(self.setup_custom_clicked)
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
@@ -449,6 +464,103 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.df_aux.date.tolist()[-1],
         )
         self.plot_timeseries()
+
+    def setup_custom_clicked(self):
+        # Load the custom index UI
+        if self.language == "pt":
+            custom_index_ui_path = os.path.join(os.path.dirname(__file__), "ui", "custom_index_pt.ui")
+        else:
+            custom_index_ui_path = os.path.join(os.path.dirname(__file__), "ui", "custom_index.ui")
+        custom_index_dialog, _ = uic.loadUiType(custom_index_ui_path)
+
+        class CustomIndexDialog(QDialog, custom_index_dialog):
+            def __init__(self, parent=None):
+                super(CustomIndexDialog, self).__init__(parent)
+                self.setupUi(self)
+                self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+                self.add_custom_index.clicked.connect(self.add_custom_index_clicked)
+                
+                # Load previously saved expression and name from settings
+                settings = QSettings()
+                default_expression = "((B1 + B2 + B3 + B4 + B5 + B6 + B7 + B8 + B8A + B9 + B11 + B12) / 12)"
+                default_name = "Average"
+                
+                # Load and set values, use defaults if not found in settings
+                self.expressionTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression", default_expression))
+                self.expression_nameTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression_name", default_name))
+                
+                self.expression = None # add a variable
+                self.expression_name = None
+            def add_custom_index_clicked(self):
+                # Retrieve the custom expression and name from the dialog
+                expression = self.expressionTextEdit.toPlainText()
+                expression_name = self.expression_nameTextEdit.toPlainText()
+                    
+                self.expression = expression
+                self.expression_name = expression_name
+                    
+                self.accept() # close dialog
+        # Create and show the dialog
+        dialog = CustomIndexDialog(self)  # Pass RAVIDialog instance as parent
+        dialog.exec_() # Run and await
+
+        if dialog.result():
+        # Store expression and name in settings
+            settings = QSettings()
+            settings.setValue("ravi_plugin/custom_expression", dialog.expression)
+            settings.setValue("ravi_plugin/custom_expression_name",  dialog.expression_name)
+
+            # Add the custom name, avoid repeat custom indexes
+            custom_index_name = dialog.expression_name + " (custom)"
+            
+            # Check if the name already exists
+            vegetation_index = [
+                "NDVI",
+                "EVI",
+                'EVI2',
+                "SAVI",
+                "GNDVI",
+                "MSAVI",
+                "SFDVI",
+                "CIgreen",
+                "NDRE",
+                "ARVI",
+                "NDMI",
+                "NBR",
+                "SIPI",
+                "NDWI",
+                "ReCI",
+                "MTCI",
+                "MCARI",
+                "VARI",
+                "TVI",
+                custom_index_name
+                ]
+            self.imagem_unica_indice.clear()
+            self.indice_composicao.clear()
+            self.series_indice_2.clear()
+            self.series_indice.clear()
+
+            self.imagem_unica_indice.addItems(vegetation_index)
+            self.indice_composicao.addItems(vegetation_index)
+            self.series_indice_2.addItems(vegetation_index)
+            self.series_indice.addItems(vegetation_index)
+            # Add the custom index to all dropdowns
+            self.imagem_unica_indice.setCurrentIndex(self.imagem_unica_indice.count() - 1)
+            self.indice_composicao.setCurrentIndex(self.indice_composicao.count() - 1)
+            self.series_indice_2.setCurrentIndex(self.series_indice_2.count() - 1)
+            self.series_indice.setCurrentIndex(self.series_indice.count() - 1)
+
+            if self.language == "pt":
+                message = (
+                    "Índice personalizado adicionado com sucesso! - selecione-o na "
+                    "caixa de seleção de índice."
+                )
+            else:
+                self.pop_warning(f"Custom index '{custom_index_name}' added successfully! - select it in the index selection box.")
+                self.custom_expression = dialog.expression
+                self.custom_expression_name = dialog.expression_name
+
 
     def toggle_coordinate_capture_tool(self, state):
         print("toggle_coordinate_capture_tool called")
@@ -964,12 +1076,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.incioedit.setDate(QDate.fromString(start, "yyyy-MM-dd"))
         self.finaledit.setDate(QDate.fromString(end, "yyyy-MM-dd"))
 
-    def build_vector_layer_clicked(self):
-        self.vector_builder()
-        self.load_vector_layers()
-        self.get_selected_layer_path()
-        self.load_vector_function()
-        self.find_area()
+    def drawing_clicked(self):
+        if self.drawing.isChecked():
+            self.vector_builder()
+        else:
+            # Deactivate the extent tool if the checkbox is unchecked
+            iface.mapCanvas().setMapTool(QgsMapToolPan(iface.mapCanvas()))
 
     def crs_transform(self):
         project = QgsProject.instance()
@@ -979,42 +1091,30 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
         if self.output_folder is None:
-            self.pop_warning("Please select a output folder first.")
+            self.pop_warning("Please select an output folder first.")
             return
 
         existing_layers = QgsProject.instance().mapLayers().values()
         layer_names = [layer.name() for layer in existing_layers]
         if "Google Hybrid" not in layer_names:
-            if language == "pt":
-                self.pop_warning("Por favor, carregue a camada Google Maps primeiro.")
-            else:
-                self.pop_warning("Please load the Google Maps layer first.")
+            self.pop_warning("Please load the Google Maps layer first.")
             return
 
-        # Get the canvas and its CRS
-        canvas = iface.mapCanvas()
-        canvas_crs = canvas.mapSettings().destinationCrs()
-        target_crs = QgsCoordinateReferenceSystem("EPSG:4326")
-        
-        # Get the extent in canvas CRS
-        extent = canvas.extent()
-        
-        # Create transformer from canvas CRS to EPSG:4326
-        transform = QgsCoordinateTransform(
-            canvas_crs,
-            target_crs,
-            QgsProject.instance()
-        )
-        
+        # Activate the extent drawing tool
+        self.extent_tool = QgsMapToolExtent(iface.mapCanvas())
+        self.extent_tool.extentChanged.connect(self.process_extent)
+        iface.mapCanvas().setMapTool(self.extent_tool)
+
+    def process_extent(self, extent: QgsRectangle):
+        """Process the drawn extent and save it as a vector layer."""
         # Transform the extent to EPSG:4326
+        canvas_crs = iface.mapCanvas().mapSettings().destinationCrs()
+        target_crs = QgsCoordinateReferenceSystem("EPSG:4326")
+        transform = QgsCoordinateTransform(canvas_crs, target_crs, QgsProject.instance())
         extent_4326 = transform.transformBoundingBox(extent)
 
         # Create a vector layer in EPSG:4326
-        layer = QgsVectorLayer(
-            "Polygon?crs=EPSG:4326",
-            "canvas_extent",
-            "memory"
-        )
+        layer = QgsVectorLayer("Polygon?crs=EPSG:4326", "drawn_extent", "memory")
         pr = layer.dataProvider()
 
         # Add fields
@@ -1032,7 +1132,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         layer.updateExtents()
 
         # Generate unique filename and layer name with subdirectory
-        shp_path, shp_name = self.get_subdirectory_filename("canvas_extent")
+        shp_path, shp_name = self.get_subdirectory_filename("drawn_extent")
         print(f"Shapefile path: {shp_path}")
         print(f"Shapefile name: {shp_name}")
 
@@ -1040,11 +1140,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = "ESRI Shapefile"
         save_options.fileEncoding = "UTF-8"
-        
+
         QgsVectorFileWriter.writeAsVectorFormat(
-            layer,
-            shp_path,
-            save_options
+            layer, shp_path, save_options
         )
 
         # Load the shapefile
@@ -1064,6 +1162,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
+            self.load_vector_layers()
+            self.get_selected_layer_path()
+            self.load_vector_function()
+            self.find_area()
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1464,7 +1566,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             
             try:
                 self.checkBox_captureCoordinates.setChecked(False)
-                print("Coordinate capture checkbox state changed.")
+                #print("Coordinate capture checkbox state changed.")
             except:
                 pass
 
@@ -1856,7 +1958,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "(GREEN - RED) / (GREEN + RED - BLUE)",
                 {"GREEN": green, "RED": red, "BLUE": blue},
             ).rename("index")
-        
+         
 
         #https://www.indexdatabase.de/db/i-single.php?id=99
         def tvi(image):
@@ -1867,45 +1969,38 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "0.5 * (120 * (NIR - GREEN) - 200 * (RED - GREEN))",
                 {"NIR": nir, "RED": red, "GREEN": green},
             ).rename("index")
+        
+        def custom(image):
+            # Add all bands to the custom index calculation
+            band1 = image.select("B1").divide(10000)  # Coastal aerosol
+            band2 = image.select("B2").divide(10000)  # Blue
+            band3 = image.select("B3").divide(10000)  # Green
+            band4 = image.select("B4").divide(10000)  # Red
+            band5 = image.select("B5").divide(10000)  # Red Edge 1
+            band6 = image.select("B6").divide(10000)  # Red Edge 2
+            band7 = image.select("B7").divide(10000)  # Red Edge 3
+            band8 = image.select("B8").divide(10000)  # NIR
+            band8a = image.select("B8A").divide(10000)  # Narrow NIR
+            band9 = image.select("B9").divide(10000)  # Water vapor
+            band11 = image.select("B11").divide(10000)  # SWIR 1
+            band12 = image.select("B12").divide(10000)  # SWIR 2
 
-        def dvi(image):
-            nir = image.select("B8").divide(10000)
-            red = image.select("B4").divide(10000)
-            return nir.subtract(red).rename("index")
-
-        def lci(image):
-            red = image.select("B4").divide(10000)
-            green = image.select("B3").divide(10000)
-            blue = image.select("B2").divide(10000)
             return image.expression(
-                "(RED - GREEN) / sqrt((RED * RED) + (GREEN * GREEN) + (BLUE * BLUE))",
-                {"RED": red, "GREEN": green, "BLUE": blue},
-            ).rename("index")
-
-        def dsi(image):
-            nir = image.select("B8").divide(10000)
-            red = image.select("B4").divide(10000)
-            rededge = image.select("B5").divide(10000)
-            return image.expression(
-                "((REDEDGE - RED) / (REDEDGE + RED)) / ((NIR - REDEDGE) / (NIR + REDEDGE))",
-                {"NIR": nir, "RED": red, "REDEDGE": rededge},
-            ).rename("index")
-
-        def brpi(image):
-            rededge = image.select("B5").divide(10000)
-            green = image.select("B3").divide(10000)
-            blue = image.select("B2").divide(10000)
-            return image.expression(
-                "(REDEDGE - GREEN) / (REDEDGE + BLUE)",
-                {"REDEDGE": rededge, "GREEN": green, "BLUE": blue},
-            ).rename("index")
-
-        def mbri(image):
-            nir = image.select("B8").divide(10000)
-            blue = image.select("B2").divide(10000)
-            return image.expression(
-                "(NIR - BLUE) / (NIR + BLUE)",
-                {"NIR": nir, "BLUE": blue},
+                self.custom_expression,
+                {
+                    "B1": band1,
+                    "B2": band2,
+                    "B3": band3,
+                    "B4": band4,
+                    "B5": band5,
+                    "B6": band6,
+                    "B7": band7,
+                    "B8": band8,
+                    "B8A": band8a,
+                    "B9": band9,
+                    "B11": band11,
+                    "B12": band12,
+                },
             ).rename("index")
 
         index_functions = {
@@ -1928,11 +2023,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "MCARI": mcari,
             "VARI": vari,
             "TVI": tvi,
-            "DVI": dvi,
-            "LCI": lci,
-            "DSI": dsi,
-            "BRPI": brpi,
-            "MBRI": mbri,
+            self.custom_expression_name + " (custom)": custom,
         }
 
         if index_name in index_functions:
@@ -2282,7 +2373,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         finally:
             QApplication.restoreOverrideCursor()
 
-    def zoom_to_layer(self, layer_name, margin_ratio=0.1):
+    def zoom_to_layer(self, layer_name, margin_ratio=0.3):
         """
         Zoom to the specified layer with an optional margin.
 

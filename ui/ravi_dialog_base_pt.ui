@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1182</width>
-    <height>670</height>
+    <height>844</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,45 +16,37 @@
   <property name="styleSheet">
    <string>
     QPushButton {
-        background-color: #d1e7ff; /* Soft Blue */
-        color: black;
-        border-radius: 6px;
-        padding: 5px;
+      background-color: #d1e7ff; /* Soft Blue */
+      color: black;
+      border-radius: 6px;
+      padding: 5px;
     }
+
     QPushButton:hover {
-        background-color: #b6d4fe; /* Slightly Darker Blue */
+      background-color: #b6d4fe; /* Slightly Darker Blue */
     }
+
     QPushButton:disabled {
-        background-color: #f0f0f0; /* Light Gray */
-        color: #a0a0a0;
+      background-color: #f0f0f0; /* Light Gray */
+      color: #a0a0a0;
     }
 
-    QPushButton#clear_raster, QPushButton#clear_nasa {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#clear_nasa:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
-    }
-
-    QPushButton#clear_raster, QPushButton#clear_features {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#clear_features:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
+    /* Apply soft red to specific buttons */
+    QPushButton#clear_raster,
+    QPushButton#clear_nasa,
+    QPushButton#clear_features,
+    QPushButton#clear_button_points,
+    QPushButton#desautenticacao {
+      background-color: #f8d7da; /* Soft Red */
     }
 
-    QPushButton#clear_raster, QPushButton#clear_button_points {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#clear_button_points:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
-
-    QPushButton#clear_raster, QPushButton#desautenticacao {
-        background-color: #f8d7da; /* Soft Red */
-    }
-    QPushButton#clear_raster:hover, QPushButton#desautenticacao:hover {
-        background-color: #f1b0b7; /* Slightly Darker Red */
-
+    /* Hover effect for soft red buttons */
+    QPushButton#clear_raster:hover,
+    QPushButton#clear_nasa:hover,
+    QPushButton#clear_features:hover,
+    QPushButton#clear_button_points:hover,
+    QPushButton#desautenticacao:hover {
+      background-color: #f1b0b7; /* Slightly Darker Red */
     }
 
   </string>
@@ -83,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -400,27 +392,6 @@ p, li { white-space: pre-wrap; }
       <string>Carregar camada do Google Maps</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="build_vector_layer">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>240</y>
-       <width>441</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Construir área de interesse a partir da extensão do mapa</string>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="groupBox_5">
      <property name="geometry">
       <rect>
@@ -505,6 +476,24 @@ p, li { white-space: pre-wrap; }
      <property name="icon">
       <iconset>
        <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="drawing">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>250</y>
+       <width>411</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Ativar Desenhar no mapa para criar área de Interesse</string>
      </property>
     </widget>
    </widget>
@@ -907,6 +896,24 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="setup_custom">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>30</y>
+        <width>231</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Configurar indice personalizado</string>
       </property>
      </widget>
     </widget>

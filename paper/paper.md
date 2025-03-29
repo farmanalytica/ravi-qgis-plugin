@@ -52,8 +52,7 @@ Sistema de Informações Geográficas.
 
 A agricultura de Precisão (AP) emergiu como uma abordagem transformadora,
 permitindo que produtores gerenciarem o uso de insumos, como água,
-fertilizantes e defensivos, com base em dados geoespaciais e ambientais (ref
-1) (Gebbers & Adamchuk, 2010). Essa prática baseia-se no princípio de que a
+fertilizantes e defensivos, com base em dados geoespaciais e ambientais (Gebbers & Adamchuk, 2010). Essa prática baseia-se no princípio de que a
 variabilidade espacial e temporal das áreas agrícolas deve ser considerada
 para maximizar a produtividade e minimizar os impactos ambientais. Tecnologias
 como o sensoriamento remoto (SR), veículos aéreos não tripulados (VANTs) e
@@ -87,67 +86,84 @@ desenvolvido como uma solução prática e acessível para integrar recursos do
 Google Earth Engine ao ambiente do QGIS, uma plataforma amplamente utilizada
 por profissionais de geotecnologias.
 
-Graphical Interface and functionalities
+# Graphical Interface and functionalities
 
-Dividida em abas (figura 1), a interface segue uma sequência de passos, que
+- Dividida em abas (figura 1), a interface segue uma sequência de passos, que
 busca explicar o impacto de cada configuração na busca de imagens. A tela
 inicial no plugin conta com orientações iniciais para habilitar o acesso,
 inclusive um link para acesso ao website dedicado com guias em textos e
 vídeos explicativos. As configurações são resumidas na aba Overview (figura 2)
 
 
-![Initial screen and subsequent steps\label{fig:example}](paper_figures/fig1.png)
+![Initial screen and subsequent steps](paper_figures/fig1.png)
+
+**Figure 1**: Initial screen and subsequent steps
 
 
+<div align="center">
 
-Figure 2: Setting overview
+![overview](paper_figures/fig2.png)
 
-Seleção de áreas de interesse diretamente no QGIS, utilizando camadas
+**Figure 2**: Overview tab summarizing the configurations, providing users with a clear and concise summary of the selected settings for image retrieval and processing.
+
+</div>
+
+- Seleção de áreas de interesse diretamente no QGIS, utilizando camadas
 vetoriais existentes ou criando novas.
 
-Busca por imagens Sentinel-2 com filtros por data e cobertura de nuvens.
+- Busca por imagens Sentinel-2 com filtros por data e cobertura de nuvens.
 
-Download camada de índice de vegetação para a AOI especificada na data
+- Download camada de índice de vegetação para a AOI especificada na data
 selecionada (figura 3).
 
-Figure 3: Index time series and layer for selected date
 
-Gera gráficos de série temporal do índices de vegetação selecionado.
+![Index time series and layer for selected date](paper_figures/fig3.png)
 
-Exportação dos resultados em formatos CSV ou em imagem png (para séries
+**Figure 3**: Index time series and layer for the selected date, showcasing the vegetation index values over time and the corresponding raster layer for the specified date.
+
+- Gera gráficos de série temporal do índices de vegetação selecionado.
+
+- Exportação dos resultados em formatos CSV ou em imagem png (para séries
 temporais), e GeoTIFF (para camadas raster).
 
-Download e visualização e exiba uma camada em cor real para uma data
+- Download e visualização e exiba uma camada em cor real para uma data
 específica. Todas as bandas espectrais são baixadas, permitindo outras análises.
 Os números das bandas correspondem às bandas do Sentinel-2 conforme listado na
 documentação.
 
-Geração e Download de imagem sintética baseada no índice de vegetação
+- Geração e Download de imagem sintética baseada no índice de vegetação
 selecionado e na métrica definida pelo usuário. A imagem sintética é gerada
 com base em todas as imagens que compõem a série temporal.
 
-Ferramenta de remoção de data para filtrar e selecionar datas e períodos
+- Ferramenta de remoção de data para filtrar e selecionar datas e períodos
 específicos para análise.
 
-Filtro de Savitzky-Golay para suavizar os dados de séries temporais.
+- Filtro de Savitzky-Golay para suavizar os dados de séries temporais.
 
-A Figura 4 exibe uma camada em cor real para área especificada, obtida pelo
+- A Figura 4 exibe uma camada em cor real para área especificada, obtida pelo
 plugin, e a série temporal do índice NDVI um talhão agricultável, a série com
 filtro Savitzky-Golay e a precipitação mensal acumulada, obtida por meio da
 NASA POWER restful API.
 
-Figure 4: Setting overview
+![True color layer and NDVI time series](paper_figures/fig4.png)
 
-A Figura 5 apresenta um gráfico gerado pelo plugin, exibindo a evolução
+**Figure 4**: True color layer for the specified area obtained by the plugin, along with the NDVI time series for an agricultural plot, including the Savitzky-Golay filtered series and accumulated monthly precipitation retrieved via the NASA POWER RESTful API.
+
+- A Figura 5 apresenta um gráfico gerado pelo plugin, exibindo a evolução
 temporal do NDVI em uma área específica em comparação a pontos dentro da área.
-A figura 6 exibe a série temporal do índice de vegetação da área total em
+
+![NDVI Temporal Evolution](paper_figures/fig5.png)
+
+**Figure 5**: NDVI temporal evolution for a specific area compared to individual points within the area, highlighting spatial variability and trends over time.
+
+- A figura 6 exibe a série temporal do índice de vegetação da área total em
 comparação a áreas menores definidas por cada feição da mesma camada vetorial.
 
-Figure 5: Points Analysis
+![Multipolygon Analysis](paper_figures/fig6.png)
 
-Figure 6: Multipolygon Analysis
+**Figure 6**: Temporal evolution of vegetation indices for the total area compared to smaller areas defined by each feature of the same vector layer.
 
-Development Platform and tools
+# Development Platform and tools
 
 O QGIS foi escolhido como base para o desenvolvimento do RAVI devido à sua
 natureza de código aberto, suporte a múltiplos formatos de dados e capacidade
@@ -157,13 +173,12 @@ análise geoespacial e personalização por meio do desenvolvimento de plugins.
 O desenvolvimento foi realizado utilizando Python. Os principais recursos
 utilizadas foram:
 
-PyQt: Para o desenvolvimento da interface gráfica.
-PyQGIS: Para processamento de dados no QGIS.
-Google Earth Engine Python API: Para integração com o Google Earth Engine,
+- PyQt: Para o desenvolvimento da interface gráfica.
+- PyQGIS: Para processamento de dados no QGIS.
+- Google Earth Engine Python API: Para integração com o Google Earth Engine,
 possibilitando o acesso aos dados e processamento em nuvem.
-Pandas, SciPy, e NumPy: Para manipulação de dados tabulares e cálculos
+- Pandas, SciPy, e NumPy: Para manipulação de dados tabulares e cálculos
 numéricos.
-
 
 # Availability
 
