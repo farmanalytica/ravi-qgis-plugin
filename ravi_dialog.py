@@ -181,10 +181,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         authentication.loadProjectId(self)
 
-        self.coordinate_capture_tool = None
-
-        
-
         self.inicialize_variables()
 
         # UI setup and signal connections / Configuração da UI e conexões de sinal
@@ -195,7 +191,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Set default values / Define valores padrão
         self.last_clicked(3)
         self.index_explain()
-        
         
         self.resizeEvent("small")
         self.tabWidget.setCurrentIndex(0)
@@ -209,6 +204,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.language = QSettings().value("locale/userLocale", "en")[0:2]
 
         # Initialize variables / Inicializa variáveis
+        self.coordinate_capture_tool = None
         self.plot1 = None
         self.autentication = False
         self.folder_set = False
@@ -227,6 +223,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.df_points = None
         self.daily_precipitation = None
         self.selected_aio_layer_path = None
+        self.custom_expression_name = ""
 
 
     def setup_ui(self):
@@ -550,16 +547,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.indice_composicao.setCurrentIndex(self.indice_composicao.count() - 1)
             self.series_indice_2.setCurrentIndex(self.series_indice_2.count() - 1)
             self.series_indice.setCurrentIndex(self.series_indice.count() - 1)
-
+            self.custom_expression = dialog.expression
+            self.custom_expression_name = dialog.expression_name
             if self.language == "pt":
-                message = (
-                    "Índice personalizado adicionado com sucesso! - selecione-o na "
-                    "caixa de seleção de índice."
-                )
+                self.pop_warning("Índice personalizado adicionado com sucesso!")
             else:
-                self.pop_warning(f"Custom index '{custom_index_name}' added successfully! - select it in the index selection box.")
-                self.custom_expression = dialog.expression
-                self.custom_expression_name = dialog.expression_name
+                self.pop_warning(f"Custom index added successfully!")
+            
+
 
 
     def toggle_coordinate_capture_tool(self, state):
@@ -581,7 +576,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print("Coordinate capture tool activated.")
             print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
             self.sentinel2_selected_dates_update()
-            #self.crs_transform()
         else:  # Checkbox is unchecked (inactive) / Checkbox não está marcada
             # (inativa)
             self.deactivate_coordinate_capture_tool()
@@ -1077,16 +1071,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.finaledit.setDate(QDate.fromString(end, "yyyy-MM-dd"))
 
     def drawing_clicked(self):
+        print("Drawing clicked")
         if self.drawing.isChecked():
             self.vector_builder()
         else:
             # Deactivate the extent tool if the checkbox is unchecked
             iface.mapCanvas().setMapTool(QgsMapToolPan(iface.mapCanvas()))
-
-    def crs_transform(self):
-        project = QgsProject.instance()
-        project.setCrs(QgsCoordinateReferenceSystem("EPSG:4326"))
-        print("CRS set to EPSG:4326")
 
     def vector_builder(self):
         """Handles the event when the "Build Vector Layer" button is clicked."""
@@ -1094,16 +1084,24 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.pop_warning("Please select an output folder first.")
             return
 
-        existing_layers = QgsProject.instance().mapLayers().values()
-        layer_names = [layer.name() for layer in existing_layers]
-        if "Google Hybrid" not in layer_names:
-            self.pop_warning("Please load the Google Maps layer first.")
-            return
+        # existing_layers = QgsProject.instance().mapLayers().values()
+        # layer_names = [layer.name() for layer in existing_layers]
+        # if "Google Hybrid" not in layer_names:
+        #     if self.language == "pt":
+        #         self.pop_warning(
+        #             "Por favor, carregue a camada do Google Maps primeiro."
+        #         )
+        #     else:
+        #         # Show a warning message in English if the layer is not loaded
+        #         self.pop_warning("Please load the Google Maps layer first.")
+        #     self.drawing.setChecked(False)
+        #     return
 
         # Activate the extent drawing tool
         self.extent_tool = QgsMapToolExtent(iface.mapCanvas())
         self.extent_tool.extentChanged.connect(self.process_extent)
         iface.mapCanvas().setMapTool(self.extent_tool)
+        print("Extent tool activated.")
 
     def process_extent(self, extent: QgsRectangle):
         """Process the drawn extent and save it as a vector layer."""
@@ -3398,5 +3396,3 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Call the method to add the point
         self.coordinate_capture_tool.add_dot_from_coordinates(longitude, latitude)
         self.process_coordinates(longitude, latitude)
-
-

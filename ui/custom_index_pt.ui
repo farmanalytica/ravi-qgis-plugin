@@ -58,7 +58,7 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot; margin-top:20px; margin-bottom:20px; margin-left:0px; margin-right:0px; border-collapse:collapse;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;thead&gt;
 &lt;tr&gt;
 &lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-size:12px; font-weight:600; color:#333333; background-color:#f2f2f2;&quot;&gt;Banda&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-size:12px; font-weight:600; color:#333333; background-color:#f2f2f2;&quot;&gt;Banda (use na expressão)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
 &lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-size:12px; font-weight:600; color:#333333; background-color:#f2f2f2;&quot;&gt;Nome&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;
 &lt;td bgcolor=&quot;#f2f2f2&quot; style=&quot; padding-left:8; padding-right:8; padding-top:8; padding-bottom:8; border-top:1px; border-right:1px; border-bottom:1px; border-left:1px; border-top-color:#dddddd; border-right-color:#dddddd; border-bottom-color:#dddddd; border-left-color:#dddddd; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid;&quot;&gt;
@@ -245,24 +245,6 @@ p, li { white-space: pre-wrap; }
     <string>Average</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="add_custom_index">
-   <property name="geometry">
-    <rect>
-     <x>1260</x>
-     <y>560</y>
-     <width>171</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Add custom index</string>
-   </property>
-  </widget>
   <widget class="QPlainTextEdit" name="expressionTextEdit">
    <property name="geometry">
     <rect>
@@ -317,7 +299,7 @@ p, li { white-space: pre-wrap; }
     <string>Expressão (edite o exemplo abaixo):</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="add_custom_index_2">
+  <widget class="QPushButton" name="add_custom_index">
    <property name="geometry">
     <rect>
      <x>960</x>
@@ -332,7 +314,7 @@ p, li { white-space: pre-wrap; }
     </font>
    </property>
    <property name="text">
-    <string>Add custom index</string>
+    <string>Adicionar índice</string>
    </property>
   </widget>
  </widget>
