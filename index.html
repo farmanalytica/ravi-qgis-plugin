@@ -1186,9 +1186,7 @@
       
         <script>
           function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-              alert('Comando copiado para a área de transferência!');
-            }).catch(err => {
+            navigator.clipboard.writeText(text).catch(err => {
               console.error('Falha ao copiar: ', err);
             });
           }
