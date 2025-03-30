@@ -221,7 +221,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.output_folder = None
         self.df_nasa = None
         self.df_points = None
-        self.daily_precipitation = None
+        self.daily_data = None
         self.selected_aio_layer_path = None
         self.custom_expression_name = ""
 
@@ -454,7 +454,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Get the latitude and longitude from the UI / Obtém a latitude e
         # longitude da UI
         self.find_centroid()
-        self.df_nasa, self.daily_precipitation = nasa_power.open_nasapower(
+        self.df_nasa, self.daily_data = nasa_power.open_nasapower(
             str(self.lat),
             str(self.lon),
             self.df_aux.date.tolist()[0],
@@ -986,6 +986,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Clears the NASA data and updates the timeseries plot."""
         """Limpa os dados da NASA e atualiza o gráfico de séries temporais."""
         self.df_nasa = None
+        self.daily_data = None
         self.plot_timeseries()
 
     def update_labels(self):
@@ -1202,10 +1203,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.pop_warning("No NASA data to save.")
             return
         name = (
-            f"nasa_power_precipitation_{self.vector_layer_combobox.currentText()}.csv"
+            f"nasa_power_climate_{self.vector_layer_combobox.currentText()}.csv"
         )
 
-        save_utils.save(self.daily_precipitation, name, self)
+        save_utils.save(self.daily_data, name, self)
 
     def datasrecorte_clicked(self):
         """Opens a dialog for selecting specific dates for the time series."""
@@ -3217,6 +3218,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.plot_timeseries()
             return False
 
+
     def plot_timeseries(self):
         """Plots the time series data, optionally applying the Savitzky-Golay
         filter."""
@@ -3314,7 +3316,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.fig.add_trace(
                 go.Bar(
                     x=self.df_nasa.index,
-                    y=self.df_nasa["PRECTOTCORR"],
+                    y=self.df_nasa["Precipitation"],
                     name="Monthly Precipitation",
                     yaxis="y2",
                     marker_color="blue",
@@ -3341,6 +3343,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         )
 
         self.plot1 = True
+
 
     def open_browser(self):
         """Opens the plot in a web browser."""
