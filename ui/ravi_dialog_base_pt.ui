@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1167</width>
-    <height>659</height>
+    <width>1441</width>
+    <height>811</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -203,24 +203,6 @@ p, li { white-space: pre-wrap; }
       <string>ID do projeto (Google Cloud):</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="setup_custom">
-     <property name="geometry">
-      <rect>
-       <x>450</x>
-       <y>150</y>
-       <width>241</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Configurar indice personalizado</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
@@ -254,6 +236,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="font">
        <font>
+        <family>Arial</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -389,6 +372,11 @@ p, li { white-space: pre-wrap; }
         <width>591</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
      </widget>
     </widget>
@@ -917,6 +905,29 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="setup_custom">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>30</y>
+        <width>241</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Configurar indice personalizado</string>
       </property>
      </widget>
     </widget>
@@ -1767,6 +1778,9 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Neve ou gelo</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_valid_pixels">
@@ -1877,7 +1891,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>1121</width>
+       <width>541</width>
        <height>71</height>
       </rect>
      </property>
@@ -1887,114 +1901,14 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Área de interesse - Passo 3                                                                           Intervalo de tempo (ano/mês/dia) - Passo 4     Indice de vegetação - Passo 5</string>
+      <string>Área de interesse - Passo 3</string>
      </property>
-     <widget class="QDateEdit" name="incioedit_2">
-      <property name="geometry">
-       <rect>
-        <x>610</x>
-        <y>30</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="dateTime">
-       <datetime>
-        <hour>0</hour>
-        <minute>0</minute>
-        <second>0</second>
-        <year>2022</year>
-        <month>1</month>
-        <day>1</day>
-       </datetime>
-      </property>
-      <property name="displayFormat">
-       <string>yyyy/M/d</string>
-      </property>
-      <property name="calendarPopup">
-       <bool>true</bool>
-      </property>
-      <property name="date">
-       <date>
-        <year>2022</year>
-        <month>1</month>
-        <day>1</day>
-       </date>
-      </property>
-     </widget>
-     <widget class="QDateEdit" name="finaledit_2">
-      <property name="geometry">
-       <rect>
-        <x>770</x>
-        <y>30</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="dateTime">
-       <datetime>
-        <hour>0</hour>
-        <minute>0</minute>
-        <second>0</second>
-        <year>2022</year>
-        <month>3</month>
-        <day>1</day>
-       </datetime>
-      </property>
-      <property name="currentSection">
-       <enum>QDateTimeEdit::YearSection</enum>
-      </property>
-      <property name="displayFormat">
-       <string>yyyy/M/d</string>
-      </property>
-      <property name="calendarPopup">
-       <bool>true</bool>
-      </property>
-      <property name="timeSpec">
-       <enum>Qt::LocalTime</enum>
-      </property>
-      <property name="date">
-       <date>
-        <year>2022</year>
-        <month>3</month>
-        <day>1</day>
-       </date>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>740</x>
-        <y>35</y>
-        <width>41</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>até:</string>
-      </property>
-     </widget>
      <widget class="QComboBox" name="vector_layer_combobox_2">
       <property name="geometry">
        <rect>
         <x>60</x>
         <y>30</y>
-        <width>381</width>
+        <width>371</width>
         <height>31</height>
        </rect>
       </property>
@@ -2007,7 +1921,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector_2">
       <property name="geometry">
        <rect>
-        <x>450</x>
+        <x>440</x>
         <y>30</y>
         <width>91</width>
         <height>31</height>
@@ -2042,57 +1956,6 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>AOI:</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>580</x>
-        <y>29</y>
-        <width>31</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>De:</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="series_indice_2">
-      <property name="geometry">
-       <rect>
-        <x>990</x>
-        <y>30</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>930</x>
-        <y>30</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Índice:</string>
       </property>
      </widget>
     </widget>
@@ -2738,6 +2601,193 @@ p, li { white-space: pre-wrap; }
       <iconset>
        <normaloff>../medias/icons8-back-button-50.png</normaloff>../medias/icons8-back-button-50.png</iconset>
      </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_21">
+     <property name="geometry">
+      <rect>
+       <x>900</x>
+       <y>10</y>
+       <width>231</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Indice de vegetação - Passo 5</string>
+     </property>
+     <widget class="QComboBox" name="series_indice_2">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>13</x>
+        <y>30</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Índice:</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_22">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>10</y>
+       <width>331</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Intervalo de tempo (ano/mês/dia) - Passo 4</string>
+     </property>
+     <widget class="QDateEdit" name="finaledit_2">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>30</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="dateTime">
+       <datetime>
+        <hour>0</hour>
+        <minute>0</minute>
+        <second>0</second>
+        <year>2022</year>
+        <month>3</month>
+        <day>1</day>
+       </datetime>
+      </property>
+      <property name="currentSection">
+       <enum>QDateTimeEdit::YearSection</enum>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy/M/d</string>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="timeSpec">
+       <enum>Qt::LocalTime</enum>
+      </property>
+      <property name="date">
+       <date>
+        <year>2022</year>
+        <month>3</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>35</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>até:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>29</y>
+        <width>31</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>De:</string>
+      </property>
+     </widget>
+     <widget class="QDateEdit" name="incioedit_2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>30</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="dateTime">
+       <datetime>
+        <hour>0</hour>
+        <minute>0</minute>
+        <second>0</second>
+        <year>2022</year>
+        <month>1</month>
+        <day>1</day>
+       </datetime>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy/M/d</string>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="date">
+       <date>
+        <year>2022</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_3">
