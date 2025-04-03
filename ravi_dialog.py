@@ -176,8 +176,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.iface = iface
     
         self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
-                     
-        self.setupUi(self)  # #widgets-and-dialogs-with-auto-connect
+
 
         authentication.loadProjectId(self)
 

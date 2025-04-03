@@ -1,0 +1,250 @@
+<html>
+<head>
+    <meta name="qrichtext" content="1" />
+    <title>Como Escrever Expressões no RAVI</title>
+    <style type="text/css">
+        body {
+            font-family: 'MS Shell Dlg 2';
+            font-size: 12pt;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #f9f9f9;
+        }
+        p, li {
+            white-space: pre-wrap;
+            line-height: 160%;
+        }
+        table {
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table td, table th {
+            padding: 8px;
+            border: 1px solid #dddddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        h2 {
+            margin: 20px 0 10px;
+            font-family: 'Arial', 'sans-serif';
+            font-size: x-large;
+            font-weight: 600;
+            color: #2c5aa0;
+        }
+        h3 {
+            margin: 20px 0 10px;
+            font-family: 'Arial', 'sans-serif';
+            font-size: large;
+            font-weight: 600;
+            color: #2c5aa0;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        ul li {
+            margin: 5px 0;
+            font-family: 'Arial', 'sans-serif';
+            font-size: 14px;
+            color: #333333;
+        }
+        code {
+            font-family: 'Consolas', 'monospace';
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+        }
+        .highlight {
+            background-color: #e6f7ff;
+        }
+        .warning {
+            background-color: #fff7e6;
+        }
+    </style>
+</head>
+<body>
+    <p>Este guia explica como criar expressões matemáticas para calcular índices espectrais personalizados no plugin RAVI. Ele também fornece exemplos práticos e dicas importantes para evitar erros comuns.</p>
+
+    <h2>Bandas Disponíveis</h2>
+    <p>O Sentinel-2 fornece as seguintes bandas que você pode usar em suas expressões:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Banda (use na expressão)</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Comprimento de Onda</th>
+                <th>Resolução Espacial</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>B1</td>
+                <td>Aerossol Costeiro</td>
+                <td>Aerossol Costeiro</td>
+                <td>443 nm</td>
+                <td>60 m</td>
+            </tr>
+            <tr>
+                <td>B2</td>
+                <td>Azul</td>
+                <td>Azul</td>
+                <td>490 nm</td>
+                <td>10 m</td>
+            </tr>
+            <tr>
+                <td>B3</td>
+                <td>Verde</td>
+                <td>Verde</td>
+                <td>560 nm</td>
+                <td>10 m</td>
+            </tr>
+            <tr>
+                <td>B4</td>
+                <td>Vermelho</td>
+                <td>Vermelho</td>
+                <td>665 nm</td>
+                <td>10 m</td>
+            </tr>
+            <tr>
+                <td>B5</td>
+                <td>Borda Vermelha 1</td>
+                <td>Borda Vermelha 1</td>
+                <td>705 nm</td>
+                <td>20 m</td>
+            </tr>
+            <tr>
+                <td>B6</td>
+                <td>Borda Vermelha 2</td>
+                <td>Borda Vermelha 2</td>
+                <td>740 nm</td>
+                <td>20 m</td>
+            </tr>
+            <tr>
+                <td>B7</td>
+                <td>Borda Vermelha 3</td>
+                <td>Borda Vermelha 3</td>
+                <td>783 nm</td>
+                <td>20 m</td>
+            </tr>
+            <tr>
+                <td>B8</td>
+                <td>NIR</td>
+                <td>Infravermelho Próximo</td>
+                <td>842 nm</td>
+                <td>10 m</td>
+            </tr>
+            <tr>
+                <td>B8A</td>
+                <td>NIR Estreito</td>
+                <td>Infravermelho Próximo Estreito</td>
+                <td>865 nm</td>
+                <td>20 m</td>
+            </tr>
+            <tr>
+                <td>B9</td>
+                <td>Vapor d'Água</td>
+                <td>Vapor d'Água</td>
+                <td>940 nm</td>
+                <td>60 m</td>
+            </tr>
+            <tr>
+                <td>B11</td>
+                <td>SWIR 1</td>
+                <td>Infravermelho de Ondas Curtas 1</td>
+                <td>1610 nm</td>
+                <td>20 m</td>
+            </tr>
+            <tr>
+                <td>B12</td>
+                <td>SWIR 2</td>
+                <td>Infravermelho de Ondas Curtas 2</td>
+                <td>2190 nm</td>
+                <td>20 m</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Operadores Suportados</h2>
+    <h3>Operadores Aritméticos</h3>
+    <ul>
+        <li><code>+</code> (adição)</li>
+        <li><code>-</code> (subtração)</li>
+        <li><code>*</code> (multiplicação)</li>
+        <li><code>/</code> (divisão)</li>
+        <li><code>**</code> (exponenciação)</li>
+    </ul>
+
+    <h3>Operadores Relacionais</h3>
+    <ul>
+        <li><code>&gt;</code> (maior que)</li>
+        <li><code>&lt;</code> (menor que)</li>
+        <li><code>&gt;=</code> (maior ou igual a)</li>
+        <li><code>&lt;=</code> (menor ou igual a)</li>
+        <li><code>==</code> (igual a)</li>
+        <li><code>!=</code> (diferente de)</li>
+    </ul>
+
+    <h3>Operadores Lógicos</h3>
+    <ul>
+        <li><code>&amp;&amp;</code> (E lógico)</li>
+        <li><code>||</code> (OU lógico)</li>
+        <li><code>!</code> (NÃO lógico)</li>
+    </ul>
+
+    <h2>Funções Matemáticas Disponíveis</h2>
+    <ul>
+        <li><code>sqrt(x)</code> - Raiz quadrada de x</li>
+        <li><code>abs(x)</code> - Valor absoluto de x</li>
+        <li><code>min(x, y)</code> - Valor mínimo entre x e y</li>
+        <li><code>max(x, y)</code> - Valor máximo entre x e y</li>
+        <li><code>log(x)</code> - Logaritmo natural de x</li>
+        <li><code>exp(x)</code> - Função exponencial \( e^x \)</li>
+        <li><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code> - Funções trigonométricas</li>
+        <li><code>round(x)</code> - Arredonda x para o inteiro mais próximo</li>
+        <li><code>floor(x)</code> - Arredonda x para baixo</li>
+        <li><code>ceil(x)</code> - Arredonda x para cima</li>
+        <li><code>pow(x, y)</code> - Eleva x à potência de y</li>
+    </ul>
+
+    <h2>Exemplos de Expressões</h2>
+    <h3>NDVI (Índice de Vegetação por Diferença Normalizada)</h3>
+    <p><code>(B8 - B4) / (B8 + B4)</code></p>
+
+    <h3>EVI (Índice de Vegetação Melhorado)</h3>
+    <p><code>2.5 * ((B8 - B4) / (B8 + 6 * B4 - 7.5 * B2 + 1))</code></p>
+
+    <h3>SAVI (Índice de Vegetação Ajustado ao Solo) com L=0.5</h3>
+    <p><code>(1 + 0.5) * ((B8 - B4) / (B8 + B4 + 0.5))</code></p>
+
+    <h3>NDRE (Índice de Diferença Normalizada da Borda Vermelha)</h3>
+    <p><code>(B8 - B5) / (B8 + B5)</code></p>
+
+    <h3>NDMI (Índice de Diferença Normalizada de Umidade)</h3>
+    <p><code>(B8 - B11) / (B8 + B11)</code></p>
+
+    <h3>Expressão Condicional</h3>
+    <p>Esta expressão calcula o NDVI apenas quando a banda vermelha (B4) for maior que 0.2. Caso contrário, retorna 0:</p>
+    <p><code>(B4 &gt; 0.2) ? ((B8 - B4) / (B8 + B4)) : 0</code></p>
+
+    <p>Esta expressão calcula o NDMI apenas quando a banda SWIR1 (B11) for maior que 0.1. Caso contrário, retorna -1:</p>
+    <p><code>(B11 &gt; 0.1) ? ((B8 - B11) / (B8 + B11)) : -1</code></p>
+
+    <h3>Expressão Condicional com Operadores Lógicos</h3>
+    <p>Esta expressão calcula o NDVI apenas quando tanto a banda vermelha (B4) for maior que 0.2 quanto a banda NIR (B8) for maior que 0.3. Caso contrário, retorna 0:</p>
+    <p><code>(B4 &gt; 0.2 &amp;&amp; B8 &gt; 0.3) ? ((B8 - B4) / (B8 + B4)) : 0</code></p>
+
+    <h2>Dicas Importantes</h2>
+    <ul>
+        <li class="highlight"><strong>Normalização automática:</strong> Todas as bandas já são divididas por 10000 para converter de valores digitais para reflectância (0-1).</li>
+        <li><strong>Evite divisão por zero:</strong> Certifique-se de que o denominador em suas expressões não possa ser zero.</li>
+        <li><strong>Use parênteses:</strong> Para garantir que as operações sejam executadas na ordem correta.</li>
+        <li><strong>Teste sua expressão:</strong> Comece com índices conhecidos e modifique-os para entender como funcionam.</li>
+        <li><strong>Siga as convenções do Python:</strong> As expressões devem seguir a sintaxe do Python, incluindo o uso de operadores como <code>**</code> para exponenciação.</li>
+    </ul>
+
+    <h2>Atenção</h2>
+    <p class="warning">Ao criar expressões complexas, teste-as incrementalmente para garantir que funcionem como esperado. Valores extremos ou divisão por zero podem causar resultados inesperados.</p>
+</body>
+</html>
