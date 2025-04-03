@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -2168,6 +2168,10 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>Run</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+     </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_18">
      <property name="geometry">
@@ -3482,9 +3486,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>520</x>
+       <x>510</x>
        <y>510</y>
-       <width>171</width>
+       <width>181</width>
        <height>71</height>
       </rect>
      </property>
@@ -3501,7 +3505,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>151</width>
+        <width>161</width>
         <height>31</height>
        </rect>
       </property>
@@ -3511,7 +3515,11 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Open date selection</string>
+       <string>Open selection</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
       </property>
      </widget>
     </widget>

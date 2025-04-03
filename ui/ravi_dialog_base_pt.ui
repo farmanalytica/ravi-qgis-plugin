@@ -203,6 +203,24 @@ p, li { white-space: pre-wrap; }
       <string>ID do projeto (Google Cloud):</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="setup_custom">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>150</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Configurar indice personalizado</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
@@ -899,24 +917,6 @@ p, li { white-space: pre-wrap; }
         <width>701</width>
         <height>181</height>
        </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_custom">
-      <property name="geometry">
-       <rect>
-        <x>470</x>
-        <y>30</y>
-        <width>241</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Configurar indice personalizado</string>
       </property>
      </widget>
     </widget>
@@ -2284,6 +2284,10 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>Executar</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+     </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_18">
      <property name="geometry">
@@ -3474,6 +3478,10 @@ p, li { white-space: pre-wrap; }
       <property name="text">
        <string>Abrir seleção</string>
       </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
+      </property>
      </widget>
     </widget>
     <widget class="QPushButton" name="clear_raster">
@@ -3544,7 +3552,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Remover precipitação</string>
+       <string>Remover</string>
       </property>
      </widget>
      <widget class="QPushButton" name="salvar_nasa">

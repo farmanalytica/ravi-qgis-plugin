@@ -463,58 +463,112 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.plot_timeseries()
 
     def setup_custom_clicked(self):
+        # Check if the custom index UI is already loaded
+        if hasattr(self, '_custom_index_dialog') and self._custom_index_dialog:
+            # If the dialog exists, restore it to normal state and bring it to the front
+            self._custom_index_dialog.setWindowState(Qt.WindowNoState)  # Restore to normal state
+            self._custom_index_dialog.show()
+            self._custom_index_dialog.activateWindow()  # Bring to front on some systems
+            return
+
         # Load the custom index UI
         if self.language == "pt":
-            custom_index_ui_path = os.path.join(os.path.dirname(__file__), "ui", "custom_index_pt.ui")
+            custom_index_ui_path = os.path.join(
+                os.path.dirname(__file__), "ui", "custom_index_pt.ui"
+            )
         else:
-            custom_index_ui_path = os.path.join(os.path.dirname(__file__), "ui", "custom_index.ui")
+            custom_index_ui_path = os.path.join(
+                os.path.dirname(__file__), "ui", "custom_index.ui"
+            )
         custom_index_dialog, _ = uic.loadUiType(custom_index_ui_path)
 
         class CustomIndexDialog(QDialog, custom_index_dialog):
             def __init__(self, parent=None):
                 super(CustomIndexDialog, self).__init__(parent)
                 self.setupUi(self)
-                self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
                 self.add_custom_index.clicked.connect(self.add_custom_index_clicked)
-                
+
                 # Load previously saved expression and name from settings
                 settings = QSettings()
-                default_expression = "((B1 + B2 + B3 + B4 + B5 + B6 + B7 + B8 + B8A + B9 + B11 + B12) / 12)"
+                default_expression = (
+                    "((B1 + B2 + B3 + B4 + B5 + B6 + B7 + B8 + B8A + B9 + B11 + B12) / 12)"
+                )
                 default_name = "Average"
-                
+
                 # Load and set values, use defaults if not found in settings
-                self.expressionTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression", default_expression))
-                self.expression_nameTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression_name", default_name))
-                
-                self.expression = None # add a variable
+                self.expressionTextEdit.setPlainText(
+                    settings.value("ravi_plugin/custom_expression", default_expression)
+                )
+                self.expression_nameTextEdit.setPlainText(
+                    settings.value("ravi_plugin/custom_expression_name", default_name)
+                )
+
+                self.expression = None  # Add a variable
                 self.expression_name = None
+
             def add_custom_index_clicked(self):
                 # Retrieve the custom expression and name from the dialog
                 expression = self.expressionTextEdit.toPlainText()
                 expression_name = self.expression_nameTextEdit.toPlainText()
-                    
+
                 self.expression = expression
                 self.expression_name = expression_name
-                    
-                self.accept() # close dialog
-        # Create and show the dialog
-        dialog = CustomIndexDialog(self)  # Pass RAVIDialog instance as parent
-        dialog.exec_() # Run and await
 
-        if dialog.result():
-        # Store expression and name in settings
+                self.accept()  # Close dialog
+
+            def closeEvent(self, event):
+                # Override closeEvent to "hide" instead of actually closing
+                self.hide()
+                event.ignore()  # Prevents the dialog from closing
+
+            def changeEvent(self, event):
+                if event.type() == QEvent.WindowStateChange:
+                    if self.windowState() & Qt.WindowMinimized:
+                        self.hide()
+                        event.ignore()
+
+        # Create and show the dialog
+        self._custom_index_dialog = CustomIndexDialog(None)  # No parent window
+
+        # Set window flags: Make it a standalone window with minimize and close buttons
+        self._custom_index_dialog.setWindowFlags(
+            Qt.Window
+            | Qt.WindowTitleHint
+            | Qt.WindowCloseButtonHint
+            | Qt.WindowMinimizeButtonHint
+            | Qt.WindowStaysOnTopHint  # Initially show on top
+        )
+
+        self._custom_index_dialog.show()  # Show the dialog as an independent window
+
+        # Remove the "always on top" flag after showing the dialog
+        self._custom_index_dialog.setWindowFlags(
+            Qt.Window
+            | Qt.WindowTitleHint
+            | Qt.WindowCloseButtonHint
+            | Qt.WindowMinimizeButtonHint
+        )
+        self._custom_index_dialog.show()  # Re-show the dialog to apply the new flags
+
+        if self._custom_index_dialog.result():
+            # Store expression and name in settings
             settings = QSettings()
-            settings.setValue("ravi_plugin/custom_expression", dialog.expression)
-            settings.setValue("ravi_plugin/custom_expression_name",  dialog.expression_name)
+            settings.setValue(
+                "ravi_plugin/custom_expression", self._custom_index_dialog.expression
+            )
+            settings.setValue(
+                "ravi_plugin/custom_expression_name",
+                self._custom_index_dialog.expression_name,
+            )
 
             # Add the custom name, avoid repeat custom indexes
-            custom_index_name = dialog.expression_name + " (custom)"
-            
+            custom_index_name = self._custom_index_dialog.expression_name + " (custom)"
+
             # Check if the name already exists
             vegetation_index = [
                 "NDVI",
                 "EVI",
-                'EVI2',
+                "EVI2",
                 "SAVI",
                 "GNDVI",
                 "MSAVI",
@@ -531,8 +585,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "MCARI",
                 "VARI",
                 "TVI",
-                custom_index_name
-                ]
+                custom_index_name,
+            ]
             self.imagem_unica_indice.clear()
             self.indice_composicao.clear()
             self.series_indice_2.clear()
@@ -543,17 +597,22 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.series_indice_2.addItems(vegetation_index)
             self.series_indice.addItems(vegetation_index)
             # Add the custom index to all dropdowns
-            self.imagem_unica_indice.setCurrentIndex(self.imagem_unica_indice.count() - 1)
-            self.indice_composicao.setCurrentIndex(self.indice_composicao.count() - 1)
-            self.series_indice_2.setCurrentIndex(self.series_indice_2.count() - 1)
+            self.imagem_unica_indice.setCurrentIndex(
+                self.imagem_unica_indice.count() - 1
+            )
+            self.indice_composicao.setCurrentIndex(
+                self.indice_composicao.count() - 1
+            )
+            self.series_indice_2.setCurrentIndex(
+                self.series_indice_2.count() - 1
+            )
             self.series_indice.setCurrentIndex(self.series_indice.count() - 1)
-            self.custom_expression = dialog.expression
-            self.custom_expression_name = dialog.expression_name
+            self.custom_expression = self._custom_index_dialog.expression
+            self.custom_expression_name = self._custom_index_dialog.expression_name
             if self.language == "pt":
                 self.pop_warning("Índice personalizado adicionado com sucesso!")
             else:
                 self.pop_warning(f"Custom index added successfully!")
-            
 
 
 
