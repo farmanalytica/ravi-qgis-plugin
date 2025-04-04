@@ -32,6 +32,8 @@ import sys
 import importlib
 import platform
 import subprocess
+import traceback
+from osgeo import gdal
 import zipfile
 import json
 import webbrowser
@@ -2247,7 +2249,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         print(f"Creating DataFrame for {name}")
         return pd.DataFrame({"date": dates, name: mean_indices})
 
-    def load_rgb(self, temporary=False):
+
+    def load_rgb(self, temporary=False, min_val=200, max_val=2300):
+        """
+        Loads Sentinel-2 RGB image into QGIS with proper band names.
+        """
         # Set the cursor to indicate processing
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
@@ -2262,19 +2268,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # Clip image to AOI
             first_image = first_image.clip(self.aoi)
 
+            # Select the bands we want
             bands = [
-                "B1",  # Coastal aerosol
-                "B2",  # Blue
-                "B3",  # Green
-                "B4",  # Red
-                "B5",  # Vegetation Red Edge 1
-                "B6",  # Vegetation Red Edge 2
-                "B7",  # Vegetation Red Edge 3
-                "B8",  # NIR (Broad)
-                "B8A", # NIR (Narrow)
-                "B9",  # Water Vapour
-                "B11", # SWIR 1
-                "B12", # SWIR 2
+                "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B8A", "B9", "B11", "B12"
             ]
             first_image = first_image.select(bands)
 
@@ -2297,6 +2293,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # Define output file
             base_output_file = f"Sentinel2_AllBands_{date[0]}.tiff"
             output_file = self.get_unique_filename(base_output_file, temporary)
+            temp_file = output_file + "_temp.tiff"
 
             # Download the image
             try:
@@ -2311,17 +2308,65 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.pop_warning(f"Error downloading image: {e}")
                 return
 
+            # Define descriptive band names
+            band_names = [
+                "Coastal aerosol (B1)",
+                "Blue (B2)",
+                "Green (B3)",
+                "Red (B4)",
+                "Vegetation Red Edge 1 (B5)",
+                "Vegetation Red Edge 2 (B6)",
+                "Vegetation Red Edge 3 (B7)",
+                "NIR (Broad) (B8)",
+                "NIR (Narrow) (B8A)",
+                "Water Vapour (B9)",
+                "SWIR 1 (B11)",
+                "SWIR 2 (B12)",
+            ]
+
+            # Modify the GeoTIFF to include band names
+            try:
+                # Open the source dataset
+                src_ds = gdal.Open(output_file)
+                if not src_ds:
+                    self.pop_warning(f"Failed to open the downloaded file: {output_file}")
+                    return
+
+                # Get band count and GeoTIFF properties
+                band_count = src_ds.RasterCount
+                print(f"Downloaded image has {band_count} bands")
+                
+                # Create a copy with the same properties
+                driver = gdal.GetDriverByName("GTiff")
+                dst_ds = driver.CreateCopy(temp_file, src_ds, strict=1)
+                
+                # Set band names in the new file
+                for i in range(min(band_count, len(band_names))):
+                    band = dst_ds.GetRasterBand(i + 1)  # 1-based indexing
+                    band.SetDescription(band_names[i])
+                
+                # Close datasets to flush to disk
+                dst_ds = None
+                src_ds = None
+                
+                # Replace original file with the modified one
+                os.remove(output_file)
+                os.rename(temp_file, output_file)
+                
+                print(f"Created GeoTIFF with named bands: {output_file}")
+            except Exception as e:
+                self.pop_warning(f"Error modifying GeoTIFF: {e}")
+                print(traceback.format_exc())
+                # If an error occurred during modification, we might still have the original file
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
+
             # Add the image as a raster layer in QGIS
             layer_name = f"Sentinel-2 RGB {date[0]}"
-            existing_layers = QgsProject.instance().mapLayersByName(layer_name)
-
             layer = QgsRasterLayer(output_file, layer_name)
             if not layer.isValid():
                 self.pop_warning(f"Failed to load the layer: {output_file}")
                 return
-
-            # Set min and max values for each band (Red, Green, Blue)
-            min_val, max_val = 200, 2300
 
             # Create a new MultiBandColorRenderer for RGB
             renderer = QgsMultiBandColorRenderer(
@@ -2357,26 +2402,25 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 renderer.setRedContrastEnhancement(red_ce)
                 renderer.setGreenContrastEnhancement(green_ce)
                 renderer.setBlueContrastEnhancement(blue_ce)
-            except AttributeError as ae:
-                print(f"Error configuring renderer: {ae}")
-                return
             except Exception as e:
-                print(f"Unexpected error configuring renderer: {e}")
+                print(f"Error configuring renderer: {e}")
                 return
 
             # Set the renderer to the layer
             layer.setRenderer(renderer)
 
-            # Add the raster layer to the QGIS project and insert it at the top
-            # of the layer tree
+            # Add the raster layer to the QGIS project
             QgsProject.instance().addMapLayer(layer, addToLegend=False)
             root = QgsProject.instance().layerTreeRoot()
             root.insertChildNode(0, QgsLayerTreeLayer(layer))
             iface.setActiveLayer(layer)
+
         except Exception as e:
             self.pop_warning(f"An error occurred: {e}")
+            print(traceback.format_exc())
         finally:
             QApplication.restoreOverrideCursor()
+
 
     def zoom_to_layer(self, layer_name, margin_ratio=0.3):
         """
