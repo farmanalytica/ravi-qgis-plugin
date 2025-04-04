@@ -2262,23 +2262,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # Clip image to AOI
             first_image = first_image.clip(self.aoi)
 
-            # Available bands: [B1, B2, B3, B4, B5, B6, B7, B8, B8A, B9, B11,
-            # B12, AOT, WVP, SCL, TCI_R, TCI_G, TCI_B, MSK_CLDPRB, MSK_SNWPRB,
-            # QA10, QA20, QA60, MSK_CLASSI_OPAQUE, MSK_CLASSI_CIRRUS,
-            # MSK_CLASSI_SNOW_ICE]
             bands = [
-                "B1",
-                "B2",
-                "B3",
-                "B4",
-                "B5",
-                "B6",
-                "B7",
-                "B8",
-                "B8A",
-                "B9",
-                "B11",
-                "B12",
+                "B1",  # Coastal aerosol
+                "B2",  # Blue
+                "B3",  # Green
+                "B4",  # Red
+                "B5",  # Vegetation Red Edge 1
+                "B6",  # Vegetation Red Edge 2
+                "B7",  # Vegetation Red Edge 3
+                "B8",  # NIR (Broad)
+                "B8A", # NIR (Narrow)
+                "B9",  # Water Vapour
+                "B11", # SWIR 1
+                "B12", # SWIR 2
             ]
             first_image = first_image.select(bands)
 
