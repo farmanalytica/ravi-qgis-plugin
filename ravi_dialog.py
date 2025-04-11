@@ -143,8 +143,6 @@ from qgis.PyQt.QtCore import QVariant
 from qgis.utils import iface
 import processing
 
-
-
 from .modules.coordinate_capture import CoordinateCaptureTool
 
 try:
@@ -1740,6 +1738,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.vector_layer_combobox.setCurrentIndex(index)
 
         if self.vector_layer_combobox.count() == 0:
+            self.aoi = None
+            self.tabWidget.setCurrentIndex(2)
+            
             if language == 'pt':
                 self.pop_warning("Nenhuma camada vetorial encontrada no projeto.")
             else:
@@ -2314,9 +2315,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "Blue (B2)",
                 "Green (B3)",
                 "Red (B4)",
-                "Vegetation Red Edge 1 (B5)",
-                "Vegetation Red Edge 2 (B6)",
-                "Vegetation Red Edge 3 (B7)",
+                "Red Edge 1 (B5)",
+                "Red Edge 2 (B6)",
+                "Red Edge 3 (B7)",
                 "NIR (Broad) (B8)",
                 "NIR (Narrow) (B8A)",
                 "Water Vapour (B9)",

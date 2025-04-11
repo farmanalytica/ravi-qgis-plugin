@@ -49,79 +49,73 @@ def load_raster_layer_colorful(raster_file_path, layer_name, index, metrica):
     raster_layer = QgsRasterLayer(raster_file_path, layer_name)
     if not raster_layer.isValid():
         print("Failed to load raster layer!")
+        return
+    
+    # Get min and max values from the raster
+    min_val = raster_layer.dataProvider().bandStatistics(1).minimumValue
+    max_val = raster_layer.dataProvider().bandStatistics(1).maximumValue
+    
+    # # For NDVI that's not AUC, use 0-1 range instead
+    # use_ndvi_range = (index == 'NDVI' and metrica != 'Area Under Curve (AUC)')
+    
+    # # If it's NDVI (not AUC), override the min/max values
+    # if use_ndvi_range:
+    #     display_min = 0
+    #     display_max = 1
+    #     print('Using NDVI range 0-1')
+    # else:
+    #     display_min = min_val
+    #     display_max = max_val
+    #     print(f'Using data range {min_val} to {max_val}')
+
+
+    display_min = min_val
+    display_max = max_val
+
+    QgsProject.instance().addMapLayer(raster_layer, False)
+    root = QgsProject.instance().layerTreeRoot()
+    root.insertChildNode(0, QgsLayerTreeLayer(raster_layer))
+    print("Raster layer loaded successfully!")
+
+    # Create a color ramp shader
+    color_ramp_shader = QgsColorRampShader()
+    color_ramp_shader.setColorRampType(QgsColorRampShader.Interpolated)
+
+    # Load the predefined color ramp (e.g., RdYlGn) from the QGIS style manager
+    style = QgsStyle().defaultStyle()
+    color_ramp = style.colorRamp('RdYlGn')
+
+    # Check if the color ramp is successfully loaded
+    if color_ramp:
+        # Define the number of color stops
+        num_stops = 5
+        step = (display_max - display_min) / (num_stops - 1)
+
+        # Create color ramp items using the display range
+        color_ramp_items = []
+        for i in range(num_stops):
+            value = display_min + i * step
+            color = color_ramp.color(i / (num_stops - 1))  # Interpolates color along the ramp
+            color_ramp_items.append(QgsColorRampShader.ColorRampItem(value, color))
+
+        # Set the color ramp items to the color ramp shader
+        color_ramp_shader.setColorRampItemList(color_ramp_items)
     else:
-        QgsProject.instance().addMapLayer(raster_layer, False)
-        root = QgsProject.instance().layerTreeRoot()
-        root.insertChildNode(0, QgsLayerTreeLayer(raster_layer))
-        print("Raster layer loaded successfully!")
+        print("Color ramp 'RdYlGn' not found in the QGIS style library.")
 
-        # Create a color ramp shader
-        color_ramp_shader = QgsColorRampShader()
-        color_ramp_shader.setColorRampType(QgsColorRampShader.Interpolated)
+    # Create a raster shader and set it to use the color ramp shader
+    raster_shader = QgsRasterShader()
+    raster_shader.setRasterShaderFunction(color_ramp_shader)
 
-        # Load the predefined color ramp (e.g., RdYlGn) from the QGIS style manager
-        style = QgsStyle().defaultStyle()
-        color_ramp = style.colorRamp('RdYlGn')
+    # Apply the raster shader to the raster layer renderer
+    renderer = QgsSingleBandPseudoColorRenderer(raster_layer.dataProvider(), 1, raster_shader)
+    
+    # Set the classification range to match the display range
+    renderer.setClassificationMin(display_min)
+    renderer.setClassificationMax(display_max)
+    
+    raster_layer.setRenderer(renderer)
 
-        # Check if the color ramp is successfully loaded
-        if color_ramp:
-            # Define the number of color stops
-            num_stops = 5
-            min_val = raster_layer.dataProvider().bandStatistics(1).minimumValue
-            max_val = raster_layer.dataProvider().bandStatistics(1).maximumValue
-            step = (max_val - min_val) / (num_stops - 1)
-
-            # Create color ramp items by interpolating the color ramp
-            color_ramp_items = []
-            for i in range(num_stops):
-                value = min_val + i * step
-                color = color_ramp.color(i / (num_stops - 1))  # Interpolates color along the ramp
-                color_ramp_items.append(QgsColorRampShader.ColorRampItem(value, color))
-
-            # Set the color ramp items to the color ramp shader
-            color_ramp_shader.setColorRampItemList(color_ramp_items)
-        else:
-            print("Color ramp 'RdYlGn' not found in the QGIS style library.")
-
-        # Create a raster shader and set it to use the color ramp shader
-        raster_shader = QgsRasterShader()
-        raster_shader.setRasterShaderFunction(color_ramp_shader)
-
-        # Apply the raster shader to the raster layer renderer
-        renderer = QgsSingleBandPseudoColorRenderer(raster_layer.dataProvider(), 1, raster_shader)
-        raster_layer.setRenderer(renderer)
-
-        # Refresh the layer to update the visualization
-        raster_layer.triggerRepaint()
-
-    print(index, metrica)
-
-    if index == 'NDVI' and metrica != 'Area Under Curve (AUC)':
-        print('Rendering NDVI 0-1')
-        # Clone the current renderer
-        newrend = raster_layer.renderer().clone()
-
-        # Set the classification range (min and max values)
-        # newrend.setClassificationMin(min_val)
-        # newrend.setClassificationMax(max_val)
-        newrend.setClassificationMin(0)
-        newrend.setClassificationMax(1)
-
-        # Apply the new renderer to the layer
-        raster_layer.setRenderer(newrend)
-        # Refresh the map canvas to reflect the changes
-        iface.mapCanvas().refresh()
-    else:
-        # Clone the current renderer
-        newrend = raster_layer.renderer().clone()
-
-        # Set the classification range (min and max values)
-        newrend.setClassificationMin(min_val)
-        newrend.setClassificationMax(max_val)
-        # newrend.setClassificationMin(0)
-        # newrend.setClassificationMax(1)
-
-        # Apply the new renderer to the layer
-        raster_layer.setRenderer(newrend)
-        # Refresh the map canvas to reflect the changes
-        iface.mapCanvas().refresh()
+    # Refresh the layer to update the visualization
+    raster_layer.triggerRepaint()
+    iface.mapCanvas().refresh()
