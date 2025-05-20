@@ -1957,8 +1957,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 {"GREEN": green, "RED": red, "BLUE": blue},
             ).rename("index")
          
-
-        #https://www.indexdatabase.de/db/i-single.php?id=99
         def tvi(image):
             nir = image.select("B8").divide(10000)
             red = image.select("B4").divide(10000)
@@ -2034,6 +2032,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Calculates a vegetation index, downloads the GeoTIFF, and adds it to
         the QGIS project as a styled raster layer, ensuring unique names for
         each layer."""
+        aoi = self.apply_buffer(self.aoi)
         try:
             print("First index clicked")
             QApplication.setOverrideCursor(Qt.WaitCursor)
@@ -2042,7 +2041,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             date = [self.dataunica.currentText()]
 
             first_image = self.sentinel2.filter(ee.Filter.inList("date", date)).first()
-            first_image = first_image.clip(self.aoi)
+            first_image = first_image.clip(aoi)
 
             index_image = self.calculate_vegetation_index(first_image, vegetation_index)
 
@@ -2050,7 +2049,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             url = index_image.getDownloadUrl(
                 {
                     "scale": 10,
-                    "region": self.aoi.geometry().bounds().getInfo(),
+                    "region": aoi.geometry().bounds().getInfo(),
                     "format": "GeoTIFF",
                 }
             )
@@ -2206,7 +2205,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         buffer_distance = self.horizontalSlider_buffer.value()
         if buffer_distance != 0:
             print(f"Buffer distance: {buffer_distance} meters")
-            return aoi.map(lambda feature: feature.buffer(buffer_distance))
+            aoi = aoi.map(lambda feature: feature.buffer(buffer_distance))
+            #self.aoi = aoi
+            return aoi
         else:
             print("No buffer applied")
             return aoi
@@ -2254,7 +2255,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def load_rgb(self, temporary=False, min_val=200, max_val=2300):
         """
         Loads Sentinel-2 RGB image into QGIS with proper band names.
+
+        
         """
+        aoi = self.apply_buffer(self.aoi)
         # Set the cursor to indicate processing
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
@@ -2267,7 +2271,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             ).first()
 
             # Clip image to AOI
-            first_image = first_image.clip(self.aoi)
+            first_image = first_image.clip(aoi)
 
             # Select the bands we want
             bands = [
@@ -2276,7 +2280,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             first_image = first_image.select(bands)
 
             # Get the acquisition date and define download region
-            region = self.aoi.geometry().bounds().getInfo()["coordinates"]
+            region = aoi.geometry().bounds().getInfo()["coordinates"]
 
             # Generate download URL
             try:
@@ -2578,14 +2582,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Aggregate the index collection based on the selected metric
         final_image = self.aggregate_index_collection(index_collection, metrica)
 
-        # Optional: Further processing of final_image can be added here
-        # For example, you might want to download the final image or add it to the QGIS project
-
         # Prepare download URL and output filename for the final image
         url = final_image.getDownloadUrl(
             {
                 "scale": 10,
-                "region": self.aoi.geometry().bounds().getInfo(),
+                "region": self.aoi.geometry().bounds().getInfo()["coordinates"],
                 "format": "GeoTIFF",
             }
         )
@@ -2618,6 +2619,22 @@ class RAVIDialog(QDialog, FORM_CLASS):
         )
         # Load layers
         shapefile_layer = QgsVectorLayer(shapefile_path, "Clip Layer", "ogr")
+        # Apply buffer to the shapefile layer before clipping
+        # buffer_distance = self.horizontalSlider_buffer.value()
+        # if buffer_distance != 0:
+        #     # Create a temporary buffered layer
+        #     processing_params = {
+        #         "INPUT": shapefile_layer,
+        #         "DISTANCE": buffer_distance,
+        #         "SEGMENTS": 5,
+        #         "DISSOLVE": True,
+        #         "END_CAP_STYLE": 0,
+        #         "JOIN_STYLE": 0,
+        #         "MITER_LIMIT": 2,
+        #         "OUTPUT": "memory:"
+        #     }
+        #     buffered_layer = processing.run("native:buffer", processing_params, feedback=QgsProcessingFeedback())["OUTPUT"]
+        #     shapefile_layer = buffered_layer
         raster_layer = QgsRasterLayer(raster_path, "Raster Layer")
 
         # Check if layers loaded successfully
@@ -2873,7 +2890,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         inicio = self.inicio
         final = self.final
         nuvem = self.nuvem
-        aoi = self.aoi
+        aoi = self.apply_buffer(self.aoi)
         coverage_threshold = self.horizontalSlider_aio_cover.value() / 100
         local_pixel_limit = self.horizontalSlider_local_pixel_limit.value()
         print(f"Coverage threshold: {coverage_threshold}")
