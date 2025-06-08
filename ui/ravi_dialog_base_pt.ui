@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -2798,9 +2798,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
+       <y>50</y>
        <width>1131</width>
-       <height>441</height>
+       <height>391</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -3628,6 +3628,104 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QGroupBox" name="groupBox_23">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>741</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QComboBox" name="vector_layer_combobox_3">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>10</y>
+        <width>251</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="update_vector_3">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>10</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Atualizar</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/refresh-3104.png</normaloff>../medias/refresh-3104.png</iconset>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>15</y>
+        <width>261</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Focar em uma região dentro da AOI:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadtimeseries_2">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>10</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Executar</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+      </property>
+     </widget>
+    </widget>
     <zorder>webView</zorder>
     <zorder>groupBox</zorder>
     <zorder>groupBox_2</zorder>
@@ -3636,6 +3734,7 @@ p, li { white-space: pre-wrap; }
     <zorder>clear_raster</zorder>
     <zorder>groupBox_29</zorder>
     <zorder>groupBox_7</zorder>
+    <zorder>groupBox_23</zorder>
    </widget>
    <widget class="QWidget" name="tab_12">
     <attribute name="title">

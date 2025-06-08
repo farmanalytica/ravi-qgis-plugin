@@ -27,7 +27,6 @@ import requests
 import concurrent.futures
 from functools import partial
 import re
-import os
 import sys
 import importlib
 import platform
@@ -284,6 +283,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_features.clicked.connect(self.QPushButton_features_clicked)
         self.update_vector.clicked.connect(self.update_vector_clicked)
         self.update_vector_2.clicked.connect(self.update_vector_clicked)
+        self.update_vector_3.clicked.connect(self.update_vector_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
         self.load_1index.clicked.connect(self.load_index)
         self.load_1rgb.clicked.connect(self.load_rgb)
@@ -311,6 +311,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_back_8.clicked.connect(self.back_clicked)
         self.QPushButton_back_9.clicked.connect(self.back_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
+        self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked_2)
         self.navegador.clicked.connect(self.open_browser)
         self.navegador_2.clicked.connect(self.open_browser_2)
         self.navegador_3.clicked.connect(self.open_browser_3)
@@ -332,6 +333,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
         self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
+        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_3_update)
+        self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_3_update)
+        self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_2_update)
+
         
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
@@ -966,6 +971,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def combobox_2_update(self):
         self.vector_layer_combobox.setCurrentIndex(
             self.vector_layer_combobox_2.currentIndex()
+        )
+
+    def combobox_3_update(self):
+        self.vector_layer_combobox.setCurrentIndex(
+            self.vector_layer_combobox_3.currentIndex()
         )
 
     def reload_update2(self):
@@ -1728,6 +1738,17 @@ class RAVIDialog(QDialog, FORM_CLASS):
             for i in range(self.vector_layer_combobox.count())
         )
         self.vector_layer_combobox_2.setCurrentIndex(
+            self.vector_layer_combobox.currentIndex()
+        )
+
+        # Update the third combobox / Atualiza a terceira combobox
+        self.vector_layer_combobox_3.clear()
+        self.vector_layer_combobox_3.addItems(
+            self.vector_layer_combobox.itemText(i)
+            for i in range(self.vector_layer_combobox.count())
+        )
+
+        self.vector_layer_combobox_3.setCurrentIndex(
             self.vector_layer_combobox.currentIndex()
         )
 
@@ -2778,6 +2799,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.vector_layer_combobox_2.setCurrentIndex(
                 self.vector_layer_combobox.currentIndex()
             )
+
+            self.vector_layer_combobox_3.setCurrentIndex(
+                self.vector_layer_combobox.currentIndex()
+            )
             # self.next_clicked()
 
             self.aoi_ckecked = True
@@ -2865,8 +2890,25 @@ class RAVIDialog(QDialog, FORM_CLASS):
             else:
                 print("User clicked Cancel")
 
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            QApplication.restoreOverrideCursor()
+            self.pop_warning(f"An error occurred: {e}")
+        QApplication.restoreOverrideCursor()
+
+    def loadtimeseries_clicked_2(self):
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            self.calculate_timeseries()
+
+            self.df_ajust()
+            self.plot_timeseries()
+
+            #self.centralizar()
+            self.webView_2.setHtml("")
+            self.webView_3.setHtml("")
+            print("Time series loaded successfully.")
             
-        
         except Exception as e:
             print(f"An error occurred: {e}")
             QApplication.restoreOverrideCursor()
