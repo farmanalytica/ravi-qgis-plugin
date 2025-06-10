@@ -15,7 +15,7 @@ RAVI is licensed under the GNU General Public License v2.0 or later. Refer to th
 
 ## TEXTO DO TCC (VERSÂO PRELIMINAR NÂO REVISADA POR ORIENTADORES)
 
-1.	INTRODUÇÃO
+# 1. INTRODUÇÃO
 
 A Agricultura de Precisão (AP) é uma abordagem de gestão agrícola que visa considerar a variabilidade espacial das lavouras nas práticas de manejo, buscando otimizar o uso de recursos e elevar a produtividade sem a necessidade de expandir a área cultivada. Parte-se do princípio de que as condições do solo — tanto químicas quanto físicas — apresentam variabilidade ao longo da propriedade, o que influencia diretamente o desenvolvimento das culturas e as demandas locais por insumos, como fertilizantes e defensivos.
 
@@ -30,12 +30,12 @@ Os complementos para QGIS são desenvolvidos em linguagem de programação Pytho
 
 Diante da constatação dos gargalos para a adoção de dados Sentinel-2 na AP, principalmente devido à curva de aprendizado em programação, e da disponibilidade de ferramentas que viabilizam a integração dos recursos de acesso e processamento de dados por computação em nuvem (a API Python do GEE e a capacidade de implementá-la no QGIS via complemento), este trabalho foi proposto, com foco no desenvolvimento de um complemento para o QGIS que integra as rotinas GEE comumente usadas no acesso e processamento de dados Sentinel-2 para as finalidades de AP, a uma interface gráfica. Assim, usuários da ferramenta poderão aplicar as rotinas desenvolvidas por meio de uma interface gráfica, agilizando o fluxo de trabalho necessário para obter esses resultados.
  
-1.1	JUSTIFICATIVA
+
+# 1.1	JUSTIFICATIVA
 
 A crescente demanda por sustentabilidade e eficiência na produção agrícola impulsiona a adoção da Agricultura de Precisão (AP), que se beneficia da análise de dados geoespaciais de sensoriamento remoto orbital, como os fornecidos pelos satélites Sentinel-2. No entanto, o acesso e processamento desses dados, especialmente através de plataformas como o Google Earth Engine (GEE), exigem proficiência em programação e conhecimentos técnicos avançados, criando uma barreira para a sua ampla utilização por agrônomos, pesquisadores e produtores. Diante desse cenário, a ausência de ferramentas que facilitem o uso de SR orbital em ambientes SIG familiares como o QGIS sem a necessidade de codificação, justifica o desenvolvimento deste trabalho como uma solução prática para impulsionar a utilização deste tipo de dado.
 
  
-1.2	OBJETIVOS
+# 1.2	OBJETIVOS
 
 O objetivo deste trabalho é desenvolver e disponibilizar publicamente um complemento para o software QGIS, denominado RAVI (Análise Remota de Índices de Vegetação). Através deste complemento, capacidades de acesso e processamento de dados em nuvem do Google Earth Engine (GEE), de imagens da missão Copernicus Sentinel-2, serão disponibilizadas e poderão ser utilizadas sem necessidade de conhecimentos em programação e manipulação de linhas de código. Funcionalidades como seleção de área de interesse, filtragem de nuvens, geração de séries temporais de índices de vegetação, a visualização e download de imagens em cor natural e de índices para datas selecionadas ou em composições sintéticas serão oferecidas. 
-
