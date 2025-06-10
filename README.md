@@ -29,7 +29,8 @@ If you encounter any issues or have suggestions for improvements, please open an
 RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the [LICENSE](https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE) file for details.
 
 
-## TEXTO DO TCC (VERSÃO PRELIMINAR - NÃO REVISADA POR ORIENTADORES)
+## TEXTO DO TCC
+## (VERSÃO PRELIMINAR - NÃO REVISADA POR ORIENTADORES)
 
 ### RESUMO:
 
