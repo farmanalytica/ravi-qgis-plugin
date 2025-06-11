@@ -80,12 +80,11 @@ O desenvolvimento do complemento também fez uso extensivo do pacote `pandas` pa
 
 A comunicação com o Google Earth Engine (GEE) foi realizada por meio da API Python do GEE, que permite o acesso aos dados e o processamento em nuvem, dependendo da autenticação do usuário.
 
-
 ### 3.2	Desenvolvimento de software
 
-O desenvolvimento de software do projeto adotou uma metodologia de desenvolvimento de software iterativa e incremental. Essa abordagem foi escolhida por sua flexibilidade e eficiência, permitindo que o projeto evoluísse de forma controlada e adaptativa.
+O desenvolvimento de software do projeto adotou uma metodologia de desenvolvimento de software com duas frentes complementares (iterativa e incremental). Essa abordagem foi escolhida por sua flexibilidade e eficiência, permitindo que o projeto evoluísse de forma controlada e adaptativa.
 
-A metodologia pode ser compreendida em duas frentes complementares:
+A metodologia pode ser compreendida da seguinte forma:
 
 Incremental: O desenvolvimento foi dividido em partes funcionais e autônomas, chamadas de "incrementos". Em vez de tentar construir todo o complemento de uma só vez, o foco foi entregar funcionalidades utilizáveis em etapas. Por exemplo, o primeiro incremento focou exclusivamente na autenticação com o Google Earth Engine. Uma vez validado, o ciclo seguinte adicionou a funcionalidade de seleção de área de interesse, e um ciclo posterior a geração do gráfico de série temporal. Cada incremento adicionava ao objetivo do projeto.
 
@@ -98,9 +97,24 @@ Figura 1: Fluxograma de desenvolvimento
 
 ### 3.3	Viabilidade técnica e levantamento de requisitos 
 
-Foi desenvolvido um complemento protótipo para testar a viabilidade técnica na fase preliminar do projeto. Nesta fasse foi validado a viabilide da autenticação dor serviões do GEE para sua API Python dentro do ambiente QGIS e seleção de área de interesse com base em arquivo local, como shapefiles (.shp)
+Foi desenvolvido um complemento protótipo denominado IndiceVerde (Figura 2) para testar a viabilidade técnica na fase preliminar do projeto. Nesta fasse foi validado a viabilide da autenticação dor serviões do GEE para sua API Python dentro do ambiente QGIS e seleção de área de interesse com base em arquivo local, como shapefiles (.shp) 
 
-O levantamento de requitsitos, termo utulizado no desenvolvimento de projetos de sofware, busca listas as funcionalidades essenciais do complemento, que foram definidas como:
+![Figura2](.\medias\tcc\prototipo.png)
+Figura 2: Fluxograma de desenvolvimento
+
+Os blocos ilustrados dividem a interface em etapas de uso:
+
+A – Autenticação: para acesso ao GEE, é preciso uma conta google. 1 - Ao clicar uma em Autenticar, abre- se uma janela no navegador padrão para autenticação da conta. 2 -Verificação se autenticação foi bem sucedida. A autenticação fica armazenada na máquina local mesmo após reiniciação da máquina, por isso foi incluído um botão para limpar a autenticação caso seja necessário trocar de usuário.
+
+B – Parâmetros de filtragem e opções, como o período de coleção de imagens, índice vegetativo de escolha e camada vetorial escolhia (área de interesse).
+
+C – Processamento internos, exportação de dados e resultados. Diversos botões foram criados com a
+finalidade de dividir etapas do processamento interno do complemento e facilitar o desenvolvimento, e não
+representaram a interface gráfica final. Inclui: botão para carregar a primeira imagem do índice
+selecionado do período selecionado sob área de interesse; botão para carregar a imagem sintética de
+média de índice vegetativo que abrange todo o período sob área de interesse.
+
+O levantamento de requisitos, termo frequentemento utilizado no desenvolvimento de projetos de sofware, busca listar as funcionalidades essenciais do complemento deve entregar, e foram definidas como:
 
 •	Seleção de Área de Interesse (AOI) por arquivos locais.
 •	Filtragem de imagens Sentinel-2 por periodo e nuvem.
@@ -116,12 +130,11 @@ Devido à sua utilidade prática, o EasyDEM foi publicado  nos canais oficiais d
 
 ### 3.4	 Entrada de dados e configuações de usuário
 
-A entrada de dados foi dividida por etapas em uma interface com abas, ilustrada na Figura 2. Cada aba corresponde a uma fase do fluxo de trabalho, guiando o usuário desde a autenticação inicial até a configuração dos parâmetros de análise, seleção da área de interesse, definição do período temporal, escolha do índice de vegetação, aplicação de filtros e, por fim, a a visualização e exportação dos resultados (Apresentados em Resultados E Discussões). Esse formato sequencial facilita o uso do complemento, tornando o processo mais didático e reduzindo a possibilidade de erros durante a configuração das análises.
+A entrada de dados foi dividida por etapas em uma interface com abas, ilustrada na Figura 3. Cada aba corresponde a uma fase do fluxo de trabalho, guiando o usuário desde a autenticação inicial até a configuração dos parâmetros de análise, seleção da área de interesse, definição do período temporal, escolha do índice de vegetação, aplicação de filtros e, por fim, a a visualização e exportação dos resultados (Apresentados em Resultados E Discussões). Esse formato sequencial facilita o uso do complemento, tornando o processo mais didático e reduzindo a possibilidade de erros durante a configuração das análises.
 
 
-![Figura1](.\medias\tcc\figura2.png)
-Figura 2: Fluxograma de funcionamento geral
-
+![](.\medias\tcc\figura2.png)
+Figura 3: Fluxograma de funcionamento geral
 
 
 #### 3.4.1	 Autenticação
@@ -134,98 +147,160 @@ A Figura 3 apresenta a primeira etapa da interface gráfica do complemento RAVI,
 - **Segurança:** O uso de contas e projetos separados aumenta a segurança, permitindo isolar dados e permissões conforme a necessidade do usuário ou da organização.
 
 
-![](.\medias\tcc\step0.png)
+![](.\medias\tcc\step1.png)
 Figura 3:  Autenticação  
 
 
 #### 3.4.1	 Pasta de saída  
 
-A segunda etapa da interface, ilustrada na figura 4 direciona o usuário para a definição do diretório de saída. Aqui, o usuário especifica a pasta local onde os resultados do processamento, como gráficos, imagens e dados tabulares, serão salvos.
+A figura 4 aprensa a interface de definição do diretório de saída. Aqui, o usuário especifica a pasta local onde os resultados do processamento, como gráficos, imagens e dados tabulares, serão salvos.
 
-
-![](.\medias\tcc\step1.png)
-Figura 4:  Pasta de saída  
-
- 
+![](.\medias\tcc\step2.png)
+Figura 4:  Pasta de saída
 
 #### 3.4.2	 Seleção da Área de Interesse
 
-Esta figura demonstra as diversas opções para delimitar a Área de Interesse (AOI) dentro do complemento RAVI. O usuário pode desenhar geometrias diretamente no mapa do QGIS ou selecionar camadas vetoriais já carregadas.
+A figura 5 demonstra as diversas opções para delimitar a Área de Interesse (AOI) dentro do complemento RAVI. O usuário pode desenhar geometrias diretamente no mapa do QGIS ou selecionar camadas vetoriais já carregadas.
 
-
-![](.\medias\tcc\step2.png)
-Figura 3:  Seleção da Área de Interesse  
- 
+![](.\medias\tcc\step3.png)
+Figura 5:  Seleção da Área de Interesse  
  
  
 #### 3.4.3	 Seleção do intervalo de tempo
 
-A quarta etapa da interface, apresentada nesta figura, permite ao usuário definir o período de tempo para a análise das imagens Sentinel-2. Estão disponíveis opções para seleção manual de datas ou atalhos para intervalos predefinidos (últimos 3, 6, 12 meses, etc.).
+A quarta etapa da interface, apresentada na figura 6, permite ao usuário definir o período de tempo para a análise das imagens Sentinel-2. Estão disponíveis opções para seleção manual de datas ou atalhos para intervalos predefinidos (últimos 3, 6, 12 meses, etc.).
 
-Figura 9:  Passo 4
+![](.\medias\tcc\step4.png)
+Figura 6:  Seleção do intervalo de tempo
  
-
-
 #### 3.4.4 Seleção do Índice de Vegetação
 
-Esta figura ilustra a etapa de seleção do índice de vegetação a ser calculado. O complemento RAVI oferece uma variedade de índices predefinidos (NDVI, EVI, SAVI, GNDVI, etc.), além da opção de definir um índice personalizado.
+A figura 7 ilustra a etapa de seleção do índice de vegetação a ser calculado. O complemento RAVI oferece uma variedade de índices predefinidos (NDVI, EVI, SAVI, GNDVI, etc.), além da opção de definir um índice personalizado.
 
-Figura 10:  Passo 5 
+![](.\medias\tcc\step5.png)
+Figura 7:  Seleção do índice de vegetação
  
-
- 
 #### 3.4.5 Filtro de sobreposição de imagens
 
-Nesta etapa da interface, o usuário pode configurar filtros para otimizar a seleção de imagens, como definir uma porcentagem mínima de sobreposição desejada entre as imagens que cobrem a AOI.
+Nesta etapa da interface, na figura 8, o usuário pode configurar filtros para otimizar a seleção de imagens, como definir uma porcentagem mínima de sobreposição desejada entre as imagens que cobrem a AOI.
 
-Figura 11:  Passo 6
- 
-
+![](.\medias\tcc\step6.png)
+Figura 8:  Filtro de sobreposição de imagens
 
 #### 3.4.6	 Opções de Buffer
 
-Esta figura apresenta as opções para aplicar um buffer ao redor da Área de Interesse selecionada. Essa funcionalidade pode ser útil para incluir ou excluir áreas adjacentes na análise, ou para mitigar efeitos de borda.
+A figura 9 apresenta a interface com as opções para aplicar um buffer ao redor da Área de Interesse selecionada. Essa funcionalidade pode ser útil para incluir ou excluir áreas adjacentes na análise, ou para mitigar efeitos de borda.
 
-Figura 12:  Passo 7  
+![](.\medias\tcc\step7.png)
+Figura 9:  Opções de Buffer
  
- 
-#### 3.4.7	 Filtro de nuvem
+ #### 3.4.7	 Filtro de nuvem
 
-A oitava etapa da interface permite ao usuário definir um limiar máximo de cobertura de nuvens aceitável nas imagens Sentinel-2 a serem processadas, utilizando um controle deslizante (slider).
 
-Figura 13:  Passo 8  
- 
+A oitava etapa da interface, figura 10, permite ao usuário definir um limiar máximo de cobertura de nuvens nas imagens Sentinel-2 a serem processadas, utilizando um controle deslizante (slider).
 
+![](.\medias\tcc\step8.png)
+Figura 10:  Filtro de nuvem
 
 #### 3.4.8	 Filtro de Classificação de Cena
 
 Esta figura demonstra as opções de filtragem baseadas na Classificação de Cena (SCL) das imagens Sentinel-2. O usuário pode selecionar as classes de pixels (nuvens, sombras, neve, etc.) que deseja mascarar ou remover da análise através de caixas de seleção (checkboxes).
 
-Figura 14:  Passo 9  
- 
+![](.\medias\tcc\step9.png)
+Figura 11:  Filtro de Classificação de Cena 
  
 #### 3.4.9	 Visão geral
 
 Esta figura oferece uma visão geral da interface principal do complemento RAVI, consolidando as diversas etapas e opções apresentadas nas figuras anteriores em um único painel para resumir o conjunto de confugurações .
 
-
-
-Figura 15:  Visão geral  
- 
-
+![](.\medias\tcc\step10.png)
+Figura 12:  Visão geral  
 
 ## 4. RESULTADOS E DISCUSSÃO
 
+Para ilustrar os resultados obtidos, foi utilizado o cortorno da Fazenda São João localizada em Paulínia-SP.
+
+Após o usuário definir os dados de entrada e configurações, o resultado da busca de imagens primeiro indica a quantidade total de imagens encontradas para a AOI, e a quantidade de imagens que premanece no conjunto de imagens após a aplicação de cada parametro de filtragem (figura 13), e após selecionano a opção de ir para próxima aba, outros resultados são exibidos.
+
+![](.\medias\tcc\step11.png)
+Figura 13:  Visão geral
+
+### 4.1  Gráfico de Séries Temporais
+
+A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo. Valores e datas específicos para uma análise detalhada podem ser observados ao posicionar o cursor sobre o gráfico.
+
+![](.\medias\tcc\results1.png)
+Figura 13:  Séries Temporais
+
+### 4.2 Carregar Camada RGB (Foco em um Dia)
+
+A visualização da camada RGB no QGIS é realizada ao se carregar e exibir uma camada RGB para uma data específica, permitindo que a aparência visual da área seja analisada. Todas as bandas espectrais são baixadas, sendo os números das bandas correspondentes às bandas do Sentinel-2, conforme listado abaixo:
+
+| Nome da Banda Sentinel-2                | Número da Banda no QGIS | Comprimento de Onda (nm) | Resolução Espacial (m) |
+|------------------------------------------|------------------------|--------------------------|------------------------|
+| Banda 1 (Aerossol Costeiro)              | 1                      | 443                      | 60                     |
+| Banda 2 (Azul)                           | 2                      | 490                      | 10                     |
+| Banda 3 (Verde)                          | 3                      | 560                      | 10                     |
+| Banda 4 (Vermelho)                       | 4                      | 665                      | 10                     |
+| Banda 5 (Borda Vermelha da Vegetação)    | 5                      | 705                      | 20                     |
+| Banda 6 (Borda Vermelha da Vegetação)    | 6                      | 740                      | 20                     |
+| Banda 7 (Borda Vermelha da Vegetação)    | 7                      | 783                      | 20                     |
+| Banda 8 (NIR)                            | 8                      | 842                      | 10                     |
+| Banda 8A (Borda Vermelha da Vegetação)   | 9                      | 865                      | 20                     |
+| Banda 9 (Vapor d'água)                   | 10                     | 945                      | 60                     |
+| Banda 11 (SWIR)                          | 11                     | 1610                     | 20                     |
+| Banda 12 (SWIR)                          | 12                     | 2190                     | 20                     |
+Tabela 1: Informações das Bandas do Sentinel-2
+
+Nota sobre a Banda 10: Observe que a Banda 10 (SWIR - Cirrus) não está disponível no catálogo de Reflectância de Superfície (SR) harmonizada do Sentinel-2. Esta banda é usada principalmente para detecção de nuvens cirrus e é excluída do conjunto de dados SR devido à sua aplicabilidade limitada na análise de superfície.
+
+![](.\medias\tcc\results2.png)
+Figura 13:  Séries Temporais
+
+### 4.3 Carregar Camada de Índice (Foco em um Dia)
+
+A camada de índice de vegetação é exibida no QGIS para uma data específica, sendo possível selecionar entre diversos índices disponíveis para visualização.
+
+![](.\medias\tcc\results3.png)
+Figura 14:  Carregar Camada de Índice (Foco em um Dia)
+
+### 4.4 Carregar Camada de Índice (Sintética)
+
+A visualização da camada de índice de vegetação composta é realizada por meio da geração e exibição de uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário. A imagem sintética é produzida a partir de todas as imagens que compõem a série temporal, sendo as imagens sobrepostas e cada pixel resultante representando a métrica definida para o índice de vegetação escolhido. Recomenda-se que a ferramenta de remoção de data seja utilizada para que datas indesejadas ou períodos específicos sejam filtrados antes da geração da imagem sintética.
+
+![](.\medias\tcc\results4.png)
+Figura 15: Carregar Camada de Índice (Sintética)
+
+###  4.5 Ferramenta de Remoção de Data
+
+A interface da ferramenta de seleção de data deve ser utilizada para que datas e períodos específicos sejam filtrados e selecionados para análise. O gráfico de séries temporais é atualizado automaticamente pela ferramenta. IMPORTANTE: As imagens sintéticas são geradas com base em todas as datas que estiverem selecionadas no momento.
+
+![](.\medias\tcc\results5.png)
+Figura 16: Ferramenta de Remoção de Data
+
+###  4.6. Opções de exportaçao de dados
+
+Opções de salvamento para download de imagem e planilha são disponibilizadas na interface. Os dados da série temporal podem ser salvos em formato CSV. Para que a série seja salva como imagem, recomenda-se que ela seja aberta no navegador, onde a opção de download será habilitada.
+
+![](.\medias\tcc\results7.png)
+Figura 17: Opções de exportaçao de dados
+
+###  4.7 Análise de multifeição
+
+A análise de séries temporais de multifeição pode ser realizada para avaliar o comportamento de índices de vegetação em diferentes áreas de interesse simultaneamente. Essa funcionalidade permite que múltiplos feiçõs (poligonos) sejam selecionados possibilitando a extração e comparação automática das séries temporais de cada área. Dessa forma, torna-se possível identificar padrões espaciais, comparar diferentes talhões ou regiões e obter insights sobre a variabilidade temporal da vegetação em múltiplas localidades, facilitando análises comparativas, por exemplo de diferentez zonas de manejo e compara o desempenho de diferentes trabamentos agronômicos.
+
+![](.\medias\tcc\results12.png)
+Figura 18: Análise de multifeição
 
 ### 4.4 Publicação e divulgação
 
-Em dezembro de 2024, o complemento RAVI foi  disponibilizado no repositório oficial de complementos experimentais do QGIS. Esta liberação precoce permitiu obter feedback de usuários entusiastas, permitindoavaliar a usabilidade, funcionalidades e identificar problemas.
+Em dezembro de 2024, o complemento RAVI foi disponibilizado no repositório oficial de complementos experimentais do QGIS, possibilitando o acesso antecipado por usuários interessados em testar novas ferramentas. Essa liberação inicial teve como objetivo principal coletar feedback direto da comunidade, permitindo avaliar a usabilidade, identificar eventuais problemas e aprimorar as funcionalidades com base nas sugestões recebidas.
 
-A primeira versão de produção (versão 1.0) foi então lançada em fevereiro de 2025, sendo acessível através do repositório oficial do QGIS. Atualizações subsequentes da versão de produção foram implementadas com base no feedback contínuo dos usuários e em testes internos, focando em melhorias na estabilidade, desempenho, experiência do usuário e a adição de novas funcionalidades.
+A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial do QGIS, tornando o complemento amplamente acessível a todos os usuários da plataforma. Desde então, o desenvolvimento seguiu um ciclo contínuo de melhorias, incorporando atualizações baseadas tanto em testes internos quanto no retorno dos usuários, com foco em estabilidade, desempenho, experiência do usuário e expansão das funcionalidades.
 
-A divulgação adicional do projeto em redes sociais foi importante para expandir a base de usuários.
+Além da publicação nos canais oficiais do QGIS, a divulgação do projeto em redes sociais e fóruns especializados contribuiu  para ampliar a base de usuários, promover o engajamento da comunidade e estimular o compartilhamento de experiências e casos de uso do complemento RAVI.
 
-
+Sobre o uso do RAVI, já relatos privados e em redes sociais de estudantes de graduação que pretendem citar o complemento como ferramenta utilizada em suas iniciações científicas e trabalhos de conclusão de curso (TCC). Profissionais de diferentes áreas também têm adotado o complemento em seus fluxos de trabalho por razões profissionais, demonstrando a aplicabilidade prática e a aceitação da ferramenta por parte do meio acadêmico e profissional.
 
 ## 5. CONCLUSÕES
 
