@@ -316,7 +316,7 @@ A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial
 
 ![](./medias/tcc/edicoes.png)
 
-Figura 21: Captura de tela realizada em 4 maio 2025 da página  descritiva no repositório oficial do QGIS com o registro das versões do RAVI publicadas.
+Figura 21: Captura de tela realizada em 12 de Junho de 2025, da página  descritiva no repositório oficial do QGIS com o registro das versões do RAVI publicadas.
 
 
 Além da publicação nos canais oficiais do QGIS, a divulgação do projeto em redes sociais e fóruns especializados contribuiu  para ampliar a base de usuários, promover o engajamento da comunidade e estimular o compartilhamento de experiências e casos de uso do complemento RAVI.
