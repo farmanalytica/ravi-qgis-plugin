@@ -60,10 +60,6 @@ A explosão no volume de dados geoespaciais gerados por satélites e outras font
 
 Os Sistemas de Informações Geográficas (SIG) são ferramentas computacionais que permitem a captura, armazenamento, manipulação, análise e visualização de dados referenciados espacialmente. No contexto da Agricultura de Precisão, os SIG desempenham um papel central, sendo utilizados para integrar informações de diversas fontes – como mapas de solo, dados de produtividade, informações de sensoriamento remoto e pontos de amostragem – auxiliando no planejamento, execução e avaliação das práticas de manejo. Dentre as opções de software SIG, o QGIS (Quantum GIS) consolidou-se como uma escolha preferencial para muitos profissionais e acadêmicos, devido à sua natureza de código aberto, gratuidade e uma vasta gama de ferramentas nativas. Além disso, a arquitetura extensível do QGIS, que permite o desenvolvimento de complementos (complementos) em Python (através da biblioteca PyQGIS), oferece uma oportunidade única para personalizar funcionalidades e integrar recursos externos, como APIs de processamento em nuvem, diretamente no ambiente do usuário.
 
-###  2.6 Lacunas da Literatura e a Contribuição do Presente Trabalho
-
-Apesar do avanço significativo nas tecnologias de sensoriamento remoto e nas plataformas de processamento geoespacial em nuvem, como o Google Earth Engine, uma lacuna persistente na literatura e na prática da Agricultura de Precisão reside na acessibilidade e facilidade de uso dessas ferramentas para usuários que não possuem proficiência em linguagens de programação. Embora o GEE ofereça capacidade computacional e um catálogo de dados amplo, sua interface de programação exige conhecimentos específicos que demandam tempo e dedicação para serem adquiridos. Paralelamente, os Sistemas de Informações Geográficas, notadamente o QGIS, são amplamente utilizados por agrônomos e pesquisadores e representam o ambiente de trabalho preferencial para a análise espacial. Contudo, a integração fluida entre o ambiente SIG e o poder de processamento em nuvem do GEE ainda é subexplorada de forma simplificada. Diante dessa constatação, o presente trabalho se propõe a contribuir para a área ao desenvolver o complemento RAVI para o QGIS, preenchendo essa lacuna ao oferecer uma interface gráfica para o acesso, processamento e visualização de dados Sentinel-2 via GEE, eliminando a barreira da programação e facilitando a incorporação de análises de sensoriamento remoto avançadas no dia a dia da Agricultura de Precisão.
-
 ## 3. METODOLOGIA
 
 ### 3.1 Base tecnológica
@@ -74,7 +70,7 @@ A interface gráfica do complemento foi criada com o framework Qt Designer, que 
 
 O desenvolvimento do complemento também fez uso extensivo do pacote `pandas` para manipulação e análise de dados tabulares, além de diversas bibliotecas Python relacionadas à manipulação de arquivos locais (como `os`, `shutil` e `pathlib`) e ao envio de requisições web (como `requests`). Essas bibliotecas foram fundamentais para o processamento eficiente dos dados, integração com APIs externas e gerenciamento dos arquivos gerados e baixados durante o uso do complemento.
 
-A comunicação com o Google Earth Engine (GEE) foi realizada por meio da API Python do GEE, que permite o acesso aos dados e o processamento em nuvem, dependendo da autenticação do usuário.
+A comunicação com o Google Earth Engine (GEE) foi feita por meio da API Python, que permite autenticação, acesso, filtragem e processamento de dados geoespaciais na nuvem. O desenvolvimento das rotinas utilizou o Jupyter Notebook para prototipação, testes e validação incremental do código, que depois foi integrado ao complemento QGIS, facilitando o desenvolvimento e a reprodutibilidade do processo.
 
 ### 3.2	Desenvolvimento de software
 
