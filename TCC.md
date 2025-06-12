@@ -286,7 +286,7 @@ Figura 17: Carregar Camada de Índice (Sintética)
 
 ###  4.5 Ferramenta de Remoção de Data
 
-A interface da ferramenta de seleção de data deve ser utilizada para que datas e períodos específicos sejam filtrados e selecionados para análise. O gráfico de séries temporais é atualizado automaticamente pela ferramenta. IMPORTANTE: As imagens sintéticas são geradas com base em todas as datas que estiverem selecionadas no momento.
+A interface da ferramenta de seleção de data permite ao usuário filtrar e selecionar datas ou intervalos temporais específicos para análise, utilizando controles interativos como listas de datas, caixas de seleção (checkboxes) e atalhos para seleção em lote. Ao remover ou adicionar datas, o gráfico de séries temporais é atualizado automaticamente, refletindo apenas os dados correspondentes ao conjunto de datas atualmente selecionado. Tecnicamente, a filtragem é realizada por meio da atualização dinâmica de um dataframe auxiliar do pandas, que armazena as informações das imagens de datas e indice de vegetação em memória local. As operações de exclusão ou inclusão de datas são processadas em tempo real sobre esse dataframe, e os resultados filtrados são então utilizados para atualizar a visualização. As imagens sintéticas são geradas exclusivamente com base nas datas selecionadas no momento, ou seja, qualquer alteração na seleção de datas impacta diretamente a composição e os resultados das imagens sintéticas produzidas.
 
 ![](./medias/tcc/results5.png)
 
@@ -294,7 +294,15 @@ Figura 18: Ferramenta de Remoção de Data
 
 ###  4.6. Opções de exportaçao de dados
 
-Opções de salvamento para download de imagem e planilha são disponibilizadas na interface. Os dados da série temporal podem ser salvos em formato CSV. Para que a série seja salva como imagem, recomenda-se que ela seja aberta no navegador, onde a opção de download será habilitada.
+#### 4.6.1 Opções de Exportação de Dados
+
+A interface do complemento RAVI oferece múltiplas opções para exportação dos resultados gerados (figura 19):
+
+- **Exportação de Séries Temporais:** Os dados das séries temporais de índices de vegetação podem ser exportados em formato CSV. O arquivo CSV contém colunas para data, valor do índice, área de interesse e demais parâmetros selecionados. A exportação é realizada utilizando a biblioteca `pandas`, que converte o dataframe em memória para um arquivo CSV salvo no diretório de saída definido pelo usuário.
+
+- **Exportação de Gráficos:** Os gráficos interativos gerados com a biblioteca `plotly` podem ser exportados como imagens (PNG, JPEG) ou como arquivos HTML interativos. Para exportar como imagem, o gráfico deve ser aberto em uma janela do navegador, onde as opções de download são habilitadas. O arquivo HTML pode também pode ser salvo na janela do navegador e permite a visualização interativa do gráfico fora do QGIS.
+
+- **Exportação de Imagens Georreferenciadas:** As imagens de índices de vegetação ou de cor natural podem ser exportadas em formato GeoTIFF, mantendo as informações de georreferenciamento (sistema de referência espacial, extensão, resolução). O download é realizado por meio das rotinas da API Python do Google Earth Engine, que exporta o raster para o diretório local definido na interface.
 
 ![](./medias/tcc/results7.png)
 
