@@ -227,14 +227,14 @@ Figura 13:  Visão geral
 
 ### 4.1  Gráfico de Séries Temporais
 
-A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo. Valores e datas específicos para uma análise detalhada podem ser observados ao posicionar o cursor sobre o gráfico.
+A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo (figura 14). Valores e datas específicos para uma análise detalhada podem ser observados ao posicionar o cursor sobre o gráfico.
 
 ![](.\medias\tcc\results1.png)
-Figura 13:  Séries Temporais
+Figura 14:  Séries Temporais
 
-### 4.2 Carregar Camada RGB (Foco em um Dia)
+### 4.2 Carregar Camada Cor Natural  (Foco em um Dia)
 
-A visualização da camada RGB no QGIS é realizada ao se carregar e exibir uma camada RGB para uma data específica, permitindo que a aparência visual da área seja analisada. Todas as bandas espectrais são baixadas, sendo os números das bandas correspondentes às bandas do Sentinel-2, conforme listado abaixo:
+A visualização da camada em cor natural (RGB) no QGIS é realizada ao se selecioar visualizar ou download para uma data específica (figura 14), permitindo que a aparência visual da área seja analisada. Todas as bandas espectrais são baixadas, sendo os números das bandas correspondentes às bandas do Sentinel-2, conforme listado abaixo:
 
 | Nome da Banda Sentinel-2                | Número da Banda no QGIS | Comprimento de Onda (nm) | Resolução Espacial (m) |
 |------------------------------------------|------------------------|--------------------------|------------------------|
@@ -250,61 +250,68 @@ A visualização da camada RGB no QGIS é realizada ao se carregar e exibir uma 
 | Banda 9 (Vapor d'água)                   | 10                     | 945                      | 60                     |
 | Banda 11 (SWIR)                          | 11                     | 1610                     | 20                     |
 | Banda 12 (SWIR)                          | 12                     | 2190                     | 20                     |
+
 Tabela 1: Informações das Bandas do Sentinel-2
 
 Nota sobre a Banda 10: Observe que a Banda 10 (SWIR - Cirrus) não está disponível no catálogo de Reflectância de Superfície (SR) harmonizada do Sentinel-2. Esta banda é usada principalmente para detecção de nuvens cirrus e é excluída do conjunto de dados SR devido à sua aplicabilidade limitada na análise de superfície.
 
 ![](.\medias\tcc\results2.png)
-Figura 13:  Séries Temporais
+Figura 15:  Carregar Camada Cor Natural (Foco em um Dia)
 
 ### 4.3 Carregar Camada de Índice (Foco em um Dia)
 
-A camada de índice de vegetação é exibida no QGIS para uma data específica, sendo possível selecionar entre diversos índices disponíveis para visualização.
+A camada de índice de vegetação é exibida no QGIS para uma data específica, sendo possível selecionar entre diversos índices disponíveis para visualização (figura 14).
 
 ![](.\medias\tcc\results3.png)
-Figura 14:  Carregar Camada de Índice (Foco em um Dia)
+Figura 16:  Carregar Camada de Índice (Foco em um Dia)
 
 ### 4.4 Carregar Camada de Índice (Sintética)
 
 A visualização da camada de índice de vegetação composta é realizada por meio da geração e exibição de uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário. A imagem sintética é produzida a partir de todas as imagens que compõem a série temporal, sendo as imagens sobrepostas e cada pixel resultante representando a métrica definida para o índice de vegetação escolhido. Recomenda-se que a ferramenta de remoção de data seja utilizada para que datas indesejadas ou períodos específicos sejam filtrados antes da geração da imagem sintética.
 
 ![](.\medias\tcc\results4.png)
-Figura 15: Carregar Camada de Índice (Sintética)
+Figura 17: Carregar Camada de Índice (Sintética)
 
 ###  4.5 Ferramenta de Remoção de Data
 
 A interface da ferramenta de seleção de data deve ser utilizada para que datas e períodos específicos sejam filtrados e selecionados para análise. O gráfico de séries temporais é atualizado automaticamente pela ferramenta. IMPORTANTE: As imagens sintéticas são geradas com base em todas as datas que estiverem selecionadas no momento.
 
 ![](.\medias\tcc\results5.png)
-Figura 16: Ferramenta de Remoção de Data
+Figura 18: Ferramenta de Remoção de Data
 
 ###  4.6. Opções de exportaçao de dados
 
 Opções de salvamento para download de imagem e planilha são disponibilizadas na interface. Os dados da série temporal podem ser salvos em formato CSV. Para que a série seja salva como imagem, recomenda-se que ela seja aberta no navegador, onde a opção de download será habilitada.
 
 ![](.\medias\tcc\results7.png)
-Figura 17: Opções de exportaçao de dados
+Figura 19: Opções de exportaçao de dados
 
 ###  4.7 Análise de multifeição
 
 A análise de séries temporais de multifeição pode ser realizada para avaliar o comportamento de índices de vegetação em diferentes áreas de interesse simultaneamente. Essa funcionalidade permite que múltiplos feiçõs (poligonos) sejam selecionados possibilitando a extração e comparação automática das séries temporais de cada área. Dessa forma, torna-se possível identificar padrões espaciais, comparar diferentes talhões ou regiões e obter insights sobre a variabilidade temporal da vegetação em múltiplas localidades, facilitando análises comparativas, por exemplo de diferentez zonas de manejo e compara o desempenho de diferentes trabamentos agronômicos.
 
 ![](.\medias\tcc\results12.png)
-Figura 18: Análise de multifeição
+Figura 20: Análise de multifeição
 
 ### 4.4 Publicação e divulgação
 
 Em dezembro de 2024, o complemento RAVI foi disponibilizado no repositório oficial de complementos experimentais do QGIS, possibilitando o acesso antecipado por usuários interessados em testar novas ferramentas. Essa liberação inicial teve como objetivo principal coletar feedback direto da comunidade, permitindo avaliar a usabilidade, identificar eventuais problemas e aprimorar as funcionalidades com base nas sugestões recebidas.
 
-A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial do QGIS, tornando o complemento amplamente acessível a todos os usuários da plataforma. Desde então, o desenvolvimento seguiu um ciclo contínuo de melhorias, incorporando atualizações baseadas tanto em testes internos quanto no retorno dos usuários, com foco em estabilidade, desempenho, experiência do usuário e expansão das funcionalidades.
+A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial do QGIS, tornando o complemento acessível a todos os usuários da plataforma. Desde então, o desenvolvimento seguiu um ciclo contínuo de melhorias, incorporando atualizações baseadas tanto em testes internos quanto no retorno dos usuários, com foco em estabilidade, desempenho, experiência do usuário e expansão das funcionalidades.
 
 Além da publicação nos canais oficiais do QGIS, a divulgação do projeto em redes sociais e fóruns especializados contribuiu  para ampliar a base de usuários, promover o engajamento da comunidade e estimular o compartilhamento de experiências e casos de uso do complemento RAVI.
 
 Sobre o uso do RAVI, já relatos privados e em redes sociais de estudantes de graduação que pretendem citar o complemento como ferramenta utilizada em suas iniciações científicas e trabalhos de conclusão de curso (TCC). Profissionais de diferentes áreas também têm adotado o complemento em seus fluxos de trabalho por razões profissionais, demonstrando a aplicabilidade prática e a aceitação da ferramenta por parte do meio acadêmico e profissional.
 
+Foi criado um site oficial com tutoriais em vídeo para auxiliar os usuários na instalação e utilização do complemento RAVI. O site pode ser acessado em: [https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/). Os vídeos abordam desde a configuração inicial até exemplos práticos de uso das principais funcionalidades, facilitando o a introdução a novos usuários
+
+![](.\medias\tcc\site.png)
+
+Figura 21: site criado com infomações e tutoriais em vídeo
+
 ## 5. CONCLUSÕES
 
-O complemento RAVI para a plataforma QGIS dé uma ferramenta para o monitoramento agrícola, ambiental e a pesquisa científica. Sua compatibilidade com fluxos de trabalho existentes permite a integração com outras ferramentas de análise. Sua principal contribuição é a simplificação do acesso e processamento de daos sensoriamento remoto orbital, eliminando a necessidade de aprender linguagem de programação para utilizar o Google Earth Engine Code Editor (para as funcionalidades que o complemento oferece). Os resultados obtidos reforçam o potencial do complemento como uma ferramenta prática e eficiente para análise de índices de vegetação ao longo do tempo e acesso a imagens multiespectrais da Missão Copernicus Sentinel-2. A interface gráfica de usuário e as funcionalidades oferecidas atendem a uma base de usuários pouco atendida por outras ferramentas. Ao permitir que usuários sem experiência em programação acessem dados complexos, a ferramenta impulsiona o uso de geotecnologias e fortalece a integração entre inovação tecnológica e práticas agrícolas e de gerenciamento ambiental baseadas em dados. A capacidade da ferramenta em oferecer dados e insights visuais a tornam um recurso para estudantes, pesquisadores e profissionais interessados em compreender e gerir a saúde da vegetação e do solo de forma baseada em dados. A utilização do projeto por usurários indica que o objetivo de desevolver e disponibilizar uma ferrameta de suporte a AP foi satisfeito.
+O complemento RAVI para a plataforma QGIS é uma ferramenta para o monitoramento agrícola, ambiental e a pesquisa científica. Sua compatibilidade com fluxos de trabalho existentes permite a integração com outras ferramentas de análise. Sua principal contribuição é a simplificação do acesso e processamento de daos sensoriamento remoto orbital, eliminando a necessidade de aprender linguagem de programação para utilizar o Google Earth Engine Code Editor (para as funcionalidades que o complemento oferece). Os resultados obtidos reforçam o potencial do complemento como uma ferramenta prática e eficiente para análise de índices de vegetação ao longo do tempo e acesso a imagens multiespectrais da Missão Copernicus Sentinel-2. A interface gráfica de usuário e as funcionalidades oferecidas atendem a uma base de usuários pouco atendida por outras ferramentas. Ao permitir que usuários sem experiência em programação acessem dados complexos, a ferramenta impulsiona o uso de geotecnologias e fortalece a integração entre inovação tecnológica e práticas agrícolas e de gerenciamento ambiental baseadas em dados. A capacidade da ferramenta em oferecer dados e insights visuais a tornam um recurso para estudantes, pesquisadores e profissionais interessados em compreender e gerir a saúde da vegetação e do solo de forma baseada em dados. A utilização do projeto por usurários indica que o objetivo de desevolver e disponibilizar uma ferrameta de suporte a AP foi satisfeito.
 
 ## REFERÊNCIAS
 
