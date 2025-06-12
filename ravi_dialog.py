@@ -24,7 +24,6 @@ import os
 import tempfile
 import datetime
 import requests
-import concurrent.futures
 from functools import partial
 import re
 import sys
@@ -43,7 +42,6 @@ from dateutil.relativedelta import relativedelta
 from qgis.core import QgsWkbTypes
 import geopandas as gpd
 from shapely.geometry import shape
-import tempfile
 from qgis.core import (
     QgsVectorLayer,
     QgsVectorFileWriter,
@@ -105,7 +103,6 @@ import pandas as pd
 import numpy as np
 from scipy.signal import savgol_filter
 import requests
-import shutil
 import processing
 import plotly.express as px
 import plotly.graph_objects as go

@@ -68,7 +68,7 @@ Para auxiliar no processo de desenvolvimento, foram utilizados os complementos P
 
 A interface gráfica do complemento foi criada com o framework Qt Designer, que oferece um ambiente visual para a criação de interfaces personalizadas. Os elementos da interface (botões, caixas de texto, menus, comboboxes, sliders, checkboxes, visualizadores de texto e web) foram organizados em um fluxo de trabalho passo a passo, facilitado por um sistema de abas para guiar o usuário através das funcionalidades do complemento. 
 
-O desenvolvimento do complemento também fez uso extensivo do pacote `pandas` para manipulação e análise de dados tabulares, além de diversas bibliotecas Python relacionadas à manipulação de arquivos locais (como `os`, `shutil` e `pathlib`) e ao envio de requisições web (como `requests`). Essas bibliotecas foram fundamentais para o processamento eficiente dos dados, integração com APIs externas e gerenciamento dos arquivos gerados e baixados durante o uso do complemento.
+O desenvolvimento do complemento também fez uso extensivo do pacote `pandas` para manipulação e análise de dados tabulares, além de diversas bibliotecas Python relacionadas à manipulação de arquivos locais (como `os` e `tempfile`) e ao envio de requisições web (como `requests`). Essas bibliotecas foram fundamentais para o processamento eficiente dos dados, integração com APIs externas e gerenciamento dos arquivos gerados e baixados durante o uso do complemento.
 
 A comunicação com o Google Earth Engine (GEE) foi feita por meio da API Python, que permite autenticação, acesso, filtragem e processamento de dados geoespaciais na nuvem. O desenvolvimento das rotinas utilizou o Jupyter Notebook para prototipação, testes e validação incremental do código, que depois foi integrado ao complemento QGIS, facilitando o desenvolvimento e a reprodutibilidade do processo.
 
@@ -82,7 +82,7 @@ Incremental: O desenvolvimento foi dividido em partes funcionais e autônomas, c
 
 Iterativa: O processo foi organizado em ciclos de desenvolvimento curtos e repetidos, ou "iterações". Ao final de cada ciclo, uma nova versão do complemento era gerada, não apenas incorporando novas funcionalidades (o incremento), mas também permitindo a revisão e o aprimoramento das funcionalidades já existentes com base em testes e feedback. Se um teste revelasse uma falha na interface do usuário desenvolvida no ciclo anterior, a correção seria planejada para o ciclo seguinte.
 
-A combinação dessas duas abordagens permitiu a adaptação contínua do complemento. A figura 1 ilustra o fluxo de desenvolvido,  nota que o cliclo fechado do fluxo indica o processo iterativo mencionaado.
+A combinação dessas duas abordagens permitiu a adaptação contínua do complemento. O desenvolvimento contou com o uso dos complementos Plugin Builder e Plugin Reloader: o Plugin Builder foi utilizado para gerar a estrutura básica do plugin, facilitando a criação dos arquivos e pastas necessários e agilizando o início do projeto, enquanto o Plugin Reloader permitiu recarregar rapidamente o complemento no QGIS após cada alteração no código, acelerando o ciclo de testes e depuração. A interface gráfica do complemento foi projetada utilizando o Qt Designer, que possibilitou a criação visual e organizada dos elementos gráficos da interface. Além disso, a manipulação da base de código foi realizada em uma IDE (VS Code), proporcionando recursos avançados de edição, controle de versão e depuração. O terminal Python integrado ao QGIS também foi utilizado para testes rápidos de comandos e rotinas durante o desenvolvimento. A figura 1 ilustra o fluxo de desenvolvimento; note que o ciclo fechado do fluxo indica o processo iterativo mencionado.
 
 ![Figura1](./medias/tcc/figura1.png)
 
@@ -90,11 +90,11 @@ Figura 1: Fluxograma de desenvolvimento
 
 ### 3.3	Viabilidade técnica e levantamento de requisitos 
 
-Foi desenvolvido um complemento protótipo denominado IndiceVerde (Figura 2) para testar a viabilidade técnica na fase preliminar do projeto. Nesta fasse foi validado a viabilide da autenticação dor serviões do GEE para sua API Python dentro do ambiente QGIS e seleção de área de interesse com base em arquivo local, como shapefiles (.shp) 
+Foi desenvolvido um complemento protótipo denominado IndiceVerde (Figura 2) para testar a viabilidade técnica na fase preliminar do projeto. Nesta fasse foi validado a viabilide da autenticação dor serviões do GEE para sua API Python dentro do ambiente QGIS e seleção de área de interesse com base em arquivo local, como shapefiles (.shp).
 
 ![Figura2](./medias/tcc/prototipo.png)
 
-Figura 2: Fluxograma de desenvolvimento
+Figura 2: Protótipo desenvolvido
 
 Os blocos ilustrados dividem a interface em etapas de uso:
 
@@ -108,12 +108,12 @@ representaram a interface gráfica final. Inclui: botão para carregar a primeir
 selecionado do período selecionado sob área de interesse; botão para carregar a imagem sintética de
 média de índice vegetativo que abrange todo o período sob área de interesse.
 
-O levantamento de requisitos, termo frequentemento utilizado no desenvolvimento de projetos de sofware, busca listar as funcionalidades essenciais do complemento deve entregar, e foram definidas como:
+O levantamento de requisitos, conceito do desenvolvimento de projetos de software, consiste em identificar e documentar as funcionalidades essenciais que o sistema deve oferecer para atender às necessidades dos usuários. No caso do complemento RAVI, os requisitos foram definidos como:
 
-•	Seleção de Área de Interesse (AOI) por arquivos locais.
-•	Filtragem de imagens Sentinel-2 por periodo e nuvem.
-•	Cálculo e download de imagens multiespectrais e de índices de vegetação.
-•	Gerar de séries temporais de índice de vegetação para a AOI.
+- Seleção de Área de Interesse (AOI) a partir de arquivos locais.
+- Filtragem de imagens Sentinel-2 por período e cobertura de nuvens.
+- Cálculo e download de imagens multiespectrais e índices de vegetação.
+- Geração de séries temporais de índices de vegetação para a AOI.
 
 
 ### 3.3 Validação da Arquitetura
@@ -125,7 +125,6 @@ Devido à sua utilidade prática, o EasyDEM foi publicado  nos canais oficiais d
 ### 3.4	 Entrada de dados e configuações de usuário
 
 A entrada de dados foi dividida por etapas em uma interface com abas, ilustrada na Figura 3. Cada aba corresponde a uma fase do fluxo de trabalho, guiando o usuário desde a autenticação inicial até a configuração dos parâmetros de análise, seleção da área de interesse, definição do período temporal, escolha do índice de vegetação, aplicação de filtros e, por fim, a a visualização e exportação dos resultados (Apresentados em Resultados E Discussões). Esse formato sequencial facilita o uso do complemento, tornando o processo mais didático e reduzindo a possibilidade de erros durante a configuração das análises.
-
 
 ![](./medias/tcc/figura2.png)
 
@@ -149,7 +148,7 @@ Figura 3:  Autenticação
 
 #### 3.4.1	 Pasta de saída  
 
-A figura 4 aprensa a interface de definição do diretório de saída. Aqui, o usuário especifica a pasta local onde os resultados do processamento, como gráficos, imagens e dados tabulares, serão salvos.
+A Figura 4 apresenta a interface de definição do diretório de saída, desenvolvida utilizando o Qt Designer para a criação visual da interface e a biblioteca PyQt para sua implementação no QGIS. Nessa etapa, o usuário especifica a pasta local onde os resultados do processamento — como gráficos, imagens e dados tabulares — serão salvos. O gerenciamento do caminho e a validação da seleção do diretório são realizados por meio de rotinas em Python integradas ao complemento.
 
 ![](./medias/tcc/step2.png)
 
@@ -157,7 +156,7 @@ Figura 4:  Pasta de saída
 
 #### 3.4.2	 Seleção da Área de Interesse
 
-A figura 5 demonstra as diversas opções para delimitar a Área de Interesse (AOI) dentro do complemento RAVI. O usuário pode desenhar geometrias diretamente no mapa do QGIS ou selecionar camadas vetoriais já carregadas.
+A figura 5 demonstra as opções para delimitar a Área de Interesse (AOI) dentro do complemento RAVI. O usuário pode desenhar geometrias diretamente no mapa do QGIS utilizando as ferramentas de edição vetorial do próprio software, e depois selecion-la na interface do RAVI, após atualizar a lista de camadas vetoriais já carregadas no projeto, como arquivos shapefile (.shp), GeoJSON ou outros formatos suportados pelo QGIS. O complemento RAVI integra-se a essas funcionalidades nativas do QGIS.
 
 ![](./medias/tcc/step3.png)
 
@@ -174,7 +173,7 @@ Figura 6:  Seleção do intervalo de tempo
  
 #### 3.4.4 Seleção do Índice de Vegetação
 
-A figura 7 ilustra a etapa de seleção do índice de vegetação a ser calculado. O complemento RAVI oferece uma variedade de índices predefinidos (NDVI, EVI, SAVI, GNDVI, etc.), além da opção de definir um índice personalizado.
+A figura 7 ilustra a etapa de seleção do índice de vegetação a ser calculado. O complemento RAVI oferece uma variedade de índices predefinidos (NDVI, EVI, SAVI, GNDVI, etc.).
 
 ![](./medias/tcc/step5.png)
 
@@ -184,22 +183,25 @@ Figura 7:  Seleção do índice de vegetação
 
 Nesta etapa da interface, na figura 8, o usuário pode configurar filtros para otimizar a seleção de imagens, como definir uma porcentagem mínima de sobreposição desejada entre as imagens que cobrem a AOI.
 
+As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 100 km² (10 km x 10 km). Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.
+
+O cálculo da sobreposição é realizado utilizando operações geométricas entre a geometria da AOI e a extensão espacial de cada imagem Sentinel-2. Para cada imagem candidata, calcula-se a interseção (área comum) entre o polígono da AOI e a  imagem. A porcentagem de sobreposição é obtida pela razão entre a área da interseção e a área total da AOI, multiplicada por 100. Apenas imagens cuja porcentagem de sobreposição seja igual ou superior ao limiar definido pelo usuário são mantidas para análise. Esse processo é implementado utilizando funções de geoprocessamento em processado na nuvem, por meio das funções geométricas da API Python do Google Earth Engine.
+
 ![](./medias/tcc/step6.png)
 
 Figura 8:  Filtro de sobreposição de imagens
 
 #### 3.4.6	 Opções de Buffer
 
-A figura 9 apresenta a interface com as opções para aplicar um buffer ao redor da Área de Interesse selecionada. Essa funcionalidade pode ser útil para incluir ou excluir áreas adjacentes na análise, ou para mitigar efeitos de borda.
+A figura 9 apresenta a interface com as opções para aplicar um buffer ao redor da Área de Interesse selecionada. Esse recurso permite ao usuário especificar uma distância de buffer em metros, possibilitando tanto a expansão (buffer positivo) quanto a contração (buffer negativo) da AOI. O buffer negativo elimina as bordas externas da área, concentrando a análise na região central e reduzindo efeitos de borda, enquanto o buffer positivo expande a AOI para incluir áreas adicionais ao redor, útil para capturar informações contextuais ou compensar pequenas imprecisões na delimitação. A operação é realizada no lado servidor do Google Earth Engine (GEE), utilizando funções geométricas da API Python do GEE, garantindo precisão espacial e compatibilidade com os dados processados na nuvem. O valor do buffer, informado pelo usuário, é aplicado à geometria da AOI após conversão para o sistema de referência espacial adequado, e a geometria ajustada é utilizada em todas as etapas subsequentes do processamento, incluindo as opções de download de imagem, assegurando que as análises e exportações considerem a AOI modificada conforme a configuração definida.
 
 ![](./medias/tcc/step7.png)
 
 Figura 9:  Opções de Buffer
  
- #### 3.4.7	 Filtro de nuvem
+#### 3.4.7	 Filtro de nuvem
 
-
-A oitava etapa da interface, figura 10, permite ao usuário definir um limiar máximo de cobertura de nuvens nas imagens Sentinel-2 a serem processadas, utilizando um controle deslizante (slider).
+A oitava etapa da interface, figura 10, permite ao usuário definir um limiar máximo de cobertura de nuvens nas imagens Sentinel-2 a serem processadas, utilizando um controle deslizante (slider). O valor selecionado, expresso em porcentagem, determina o percentual máximo de nuvem permitido em cada imagem considerada para análise. O controle é implementado com um widget `QSlider` do Qt, que envia o valor selecionado para as rotinas de filtragem do complemento. No backend, a filtragem é realizada utilizando o atributo `CLOUDY_PIXEL_PERCENTAGE` presente nos metadados de cada imagem Sentinel-2 no catálogo do Google Earth Engine (GEE). Apenas imagens cuja porcentagem de pixels classificados como nuvem seja igual ou inferior ao limiar definido pelo usuário são mantidas para as etapas seguintes do processamento. 
 
 ![](./medias/tcc/step8.png)
 
@@ -207,15 +209,15 @@ Figura 10:  Filtro de nuvem
 
 #### 3.4.8	 Filtro de Classificação de Cena
 
-Esta figura demonstra as opções de filtragem baseadas na Classificação de Cena (SCL) das imagens Sentinel-2. O usuário pode selecionar as classes de pixels (nuvens, sombras, neve, etc.) que deseja mascarar ou remover da análise através de caixas de seleção (checkboxes).
+Esta etapa da interface permite ao usuário configurar filtros baseados na Classificação de Cena (Scene Classification Layer, SCL) das imagens Sentinel-2, utilizando caixas de seleção (checkboxes) para escolher quais classes de pixels (como nuvens, sombras, vegetação, solo exposto, água, neve, entre outras) devem ser mascaradas ou excluídas da análise. O filtro opera avaliando a camada SCL de cada imagem dentro da Área de Interesse (AOI), calculando a porcentagem de pixels considerados válidos conforme as classes selecionadas pelo usuário. Um limiar percentual pode ser definido para garantir que apenas imagens com uma proporção mínima de pixels válidos sejam mantidas para análise, aumentando a confiabilidade dos resultados ao descartar imagens excessivamente afetadas por nuvens ou outros artefatos. Opcionalmente, ao ativar a opção "Aplicar máscara SCL para remover pixels", o complemento aplica uma máscara diretamente sobre os dados da imagem, tornando nulos (NoData) os pixels classificados como inválidos segundo a SCL. Essa operação é realizada utilizando funções de mascaramento da API Python do Google Earth Engine, afetando tanto o cálculo das séries temporais quanto a geração de imagens diárias e sintéticas, pois apenas os pixels válidos definidos pela SCL são considerados em todas as etapas subsequentes do processamento.
 
 ![](./medias/tcc/step9.png)
 
 Figura 11:  Filtro de Classificação de Cena 
- 
+
 #### 3.4.9	 Visão geral
 
-Esta figura oferece uma visão geral da interface principal do complemento RAVI, consolidando as diversas etapas e opções apresentadas nas figuras anteriores em um único painel para resumir o conjunto de confugurações .
+Esta figura oferece uma visão geral da interface principal do complemento RAVI, consolidando as diversas etapas e opções apresentadas nas figuras anteriores em um único painel para resumir o conjunto de confugurações.
 
 ![](./medias/tcc/step10.png)
 
@@ -223,7 +225,7 @@ Figura 12:  Visão geral
 
 ## 4. RESULTADOS E DISCUSSÃO
 
-Para ilustrar os resultados obtidos, foi utilizado o cortorno da Fazenda São João localizada em Paulínia-SP.
+Para ilustrar os resultados obtidos, foi utilizado o cortorno da Fazenda São José localizada em Cosmópolis-SP.
 
 Após o usuário definir os dados de entrada e configurações, o resultado da busca de imagens primeiro indica a quantidade total de imagens encontradas para a AOI, e a quantidade de imagens que premanece no conjunto de imagens após a aplicação de cada parametro de filtragem (figura 13), e após selecionano a opção de ir para próxima aba, outros resultados são exibidos.
 
@@ -233,7 +235,7 @@ Figura 13:  Visão geral
 
 ### 4.1  Gráfico de Séries Temporais
 
-A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo (figura 14). Valores e datas específicos para uma análise detalhada podem ser observados ao posicionar o cursor sobre o gráfico.
+A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo (figura 14). A visualização do gráfico foi implementada com a biblioteca `plotly`, que possibilita a criação de gráficos interativos diretamente na interface do complemento. Dessa forma, valores e datas específicos podem ser inspecionados ao posicionar o cursor sobre os pontos do gráfico, facilitando a análise da variação temporal dos índices de vegetação.
 
 ![](./medias/tcc/results1.png)
 
@@ -276,7 +278,7 @@ Figura 16:  Carregar Camada de Índice (Foco em um Dia)
 
 ### 4.4 Carregar Camada de Índice (Sintética)
 
-A visualização da camada de índice de vegetação composta é realizada por meio da geração e exibição de uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário. A imagem sintética é produzida a partir de todas as imagens que compõem a série temporal, sendo as imagens sobrepostas e cada pixel resultante representando a métrica definida para o índice de vegetação escolhido. Recomenda-se que a ferramenta de remoção de data seja utilizada para que datas indesejadas ou períodos específicos sejam filtrados antes da geração da imagem sintética.
+A visualização da camada de índice de vegetação composta é realizada por meio da geração e exibição de uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário. A imagem sintética é produzida a partir de todas as imagens que compõem a série temporal, sendo as imagens sobrepostas e cada pixel resultante representando a métrica definida para o índice de vegetação escolhido. Recomenda-se que a ferramenta de remoção de data seja utilizada para que datas indesejadas ou períodos específicos sejam filtrados antes da geração da imagem sintética. Parte das rotinas para geração da imagem sintética foram adaptadas de rotinas compartilhadas por Bruna da Silva Brito Ribeiro.
 
 ![](./medias/tcc/results4.png)
 
@@ -310,7 +312,12 @@ Figura 20: Análise de multifeição
 
 Em dezembro de 2024, o complemento RAVI foi disponibilizado no repositório oficial de complementos experimentais do QGIS, possibilitando o acesso antecipado por usuários interessados em testar novas ferramentas. Essa liberação inicial teve como objetivo principal coletar feedback direto da comunidade, permitindo avaliar a usabilidade, identificar eventuais problemas e aprimorar as funcionalidades com base nas sugestões recebidas.
 
-A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial do QGIS, tornando o complemento acessível a todos os usuários da plataforma. Desde então, o desenvolvimento seguiu um ciclo contínuo de melhorias, incorporando atualizações baseadas tanto em testes internos quanto no retorno dos usuários, com foco em estabilidade, desempenho, experiência do usuário e expansão das funcionalidades.
+A versão estável 1.0 foi lançada em fevereiro de 2025 no repositório oficial do QGIS, tornando o complemento acessível a todos os usuários da plataforma. Desde então, o desenvolvimento seguiu um ciclo contínuo de melhorias, incorporando atualizações baseadas tanto em testes internos quanto no retorno dos usuários, com sucessivas versões publicadas (figura 21) , com foco em estabilidade, desempenho, experiência do usuário e expansão das funcionalidades.
+
+![](./medias/tcc/edicoes.png)
+
+Figura 21: Captura de tela realizada em 4 maio 2025 da página  descritiva no repositório oficial do QGIS com o registro das versões do RAVI publicadas.
+
 
 Além da publicação nos canais oficiais do QGIS, a divulgação do projeto em redes sociais e fóruns especializados contribuiu  para ampliar a base de usuários, promover o engajamento da comunidade e estimular o compartilhamento de experiências e casos de uso do complemento RAVI.
 
@@ -327,6 +334,8 @@ Figura 21: site criado com infomações e tutoriais em vídeo
 O complemento RAVI para a plataforma QGIS é uma ferramenta para o monitoramento agrícola, ambiental e a pesquisa científica. Sua compatibilidade com fluxos de trabalho existentes permite a integração com outras ferramentas de análise. Sua principal contribuição é a simplificação do acesso e processamento de daos sensoriamento remoto orbital, eliminando a necessidade de aprender linguagem de programação para utilizar o Google Earth Engine Code Editor (para as funcionalidades que o complemento oferece). Os resultados obtidos reforçam o potencial do complemento como uma ferramenta prática e eficiente para análise de índices de vegetação ao longo do tempo e acesso a imagens multiespectrais da Missão Copernicus Sentinel-2. A interface gráfica de usuário e as funcionalidades oferecidas atendem a uma base de usuários pouco atendida por outras ferramentas. Ao permitir que usuários sem experiência em programação acessem dados complexos, a ferramenta impulsiona o uso de geotecnologias e fortalece a integração entre inovação tecnológica e práticas agrícolas e de gerenciamento ambiental baseadas em dados. A capacidade da ferramenta em oferecer dados e insights visuais a tornam um recurso para estudantes, pesquisadores e profissionais interessados em compreender e gerir a saúde da vegetação e do solo de forma baseada em dados. A utilização do projeto por usurários indica que o objetivo de desevolver e disponibilizar uma ferrameta de suporte a AP foi satisfeito.
 
 ## REFERÊNCIAS
+
+GOOGLE EARTH ENGINE. Google Earth Engine Python API. Disponível em: https://developers.google.com/earth-engine/guides/python_install. Acesso em: 4 maio 2025.
 
 QGIS Development Team. (2025). QGIS Geographic Information System. QGIS Association. https://www.qgis.org Acesso em: 4 maio 2025.
 
