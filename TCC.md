@@ -7,14 +7,11 @@ O complemento RAVI (Remote Analysis of Vegetation Indices), desenvolvido para a 
 
 Palavras chave: Índices vegetativos, Agricultura de Precisão, Sensoriamento Remoto, Sistema de Informações Geográficas.
 
-
 ### ABSTRACT:
-
 
 The RAVI (Remote Analysis of Vegetation Indices) plugin, developed for the QGIS platform, publicly available, and the focus of this work, is a tool for Precision Agriculture (PA), environmental monitoring, and academic research. Its objective is to provide a user-friendly graphical interface for accessing, processing, and visualizing images from the Copernicus Sentinel-2 mission using Google Earth Engine resources. It offers a step-by-step workflow with options for selecting an area of interest, time range, cloud filtering and masking, visualization, and data export. As a functionality, RAVI delivers the time series of selected vegetation indices for the area of interest, allows for the creation of synthetic images, visualization and download of natural color images or vegetation indices on a selected date. The plugin was published through an official distribution channel and has active users, which demonstrates its potential as a practical tool for the proposed functionalities, especially for users without programming experience. By simplifying the access and processing of orbital remote sensing data, the tool strengthens the integration of technological innovation in vegetation and soil management, offering another resource for students, researchers, and professionals interested in understanding and managing vegetation and soil health in a data-driven manner.
 
 Keywords: Vegetation Indices, Precision Agriculture, Remote Sensing, Geographic Information System.
-
 
 ## 1. INTRODUÇÃO
 
@@ -29,7 +26,6 @@ Softwares focados em processar, analisar e visualizar dados geográficos, conhec
 
 Diante da constatação dos gargalos para a adoção de dados Sentinel-2 na AP, principalmente devido à curva de aprendizado em programação, e da disponibilidade de ferramentas que viabilizam a integração dos recursos de acesso e processamento de dados por computação em nuvem (a API Python do GEE e a capacidade de implementá-la no QGIS via complemento), este trabalho foi proposto, com foco no desenvolvimento de um complemento para o QGIS que integra as rotinas GEE comumente usadas no acesso e processamento de dados Sentinel-2 para as finalidades de AP, a uma interface gráfica. Assim, usuários da ferramenta poderão aplicar as rotinas desenvolvidas por meio de uma interface gráfica, agilizando o fluxo de trabalho necessário para obter esses resultados.
  
-
 ### 1.1	JUSTIFICATIVA
 
 A crescente demanda por sustentabilidade e eficiência na produção agrícola impulsiona a adoção da Agricultura de Precisão (AP), que se beneficia da análise de dados geoespaciais de sensoriamento remoto orbital, como os fornecidos pelos satélites Sentinel-2. No entanto, o acesso e o processamento desses dados, especialmente por meio de plataformas como o Google Earth Engine (GEE), exigem proficiência em programação e conhecimentos técnicos avançados, criando uma barreira para sua ampla utilização por agrônomos, pesquisadores e produtores rurais. Diante desse cenário, a ausência de ferramentas que facilitem o uso de sensoriamento remoto orbital em ambientes SIG familiares, como o QGIS, sem a necessidade de codificação, justifica o desenvolvimento deste trabalho como uma solução prática para impulsionar a utilização desse tipo de dado para finalidades como monitoramento agrícola e Agricultura de Precisão.
@@ -93,6 +89,7 @@ Iterativa: O processo foi organizado em ciclos de desenvolvimento curtos e repet
 A combinação dessas duas abordagens permitiu a adaptação contínua do complemento. A figura 1 ilustra o fluxo de desenvolvido,  nota que o cliclo fechado do fluxo indica o processo iterativo mencionaado.
 
 ![Figura1](./medias/tcc/figura1.png)
+
 Figura 1: Fluxograma de desenvolvimento
 
 ### 3.3	Viabilidade técnica e levantamento de requisitos 
@@ -100,6 +97,7 @@ Figura 1: Fluxograma de desenvolvimento
 Foi desenvolvido um complemento protótipo denominado IndiceVerde (Figura 2) para testar a viabilidade técnica na fase preliminar do projeto. Nesta fasse foi validado a viabilide da autenticação dor serviões do GEE para sua API Python dentro do ambiente QGIS e seleção de área de interesse com base em arquivo local, como shapefiles (.shp) 
 
 ![Figura2](./medias/tcc/prototipo.png)
+
 Figura 2: Fluxograma de desenvolvimento
 
 Os blocos ilustrados dividem a interface em etapas de uso:
@@ -134,6 +132,7 @@ A entrada de dados foi dividida por etapas em uma interface com abas, ilustrada 
 
 
 ![](./medias/tcc/figura2.png)
+
 Figura 3: Fluxograma de funcionamento geral
 
 
@@ -148,6 +147,7 @@ A Figura 3 apresenta a primeira etapa da interface gráfica do complemento RAVI,
 
 
 ![](./medias/tcc/step1.png)
+
 Figura 3:  Autenticação  
 
 
@@ -156,6 +156,7 @@ Figura 3:  Autenticação
 A figura 4 aprensa a interface de definição do diretório de saída. Aqui, o usuário especifica a pasta local onde os resultados do processamento, como gráficos, imagens e dados tabulares, serão salvos.
 
 ![](./medias/tcc/step2.png)
+
 Figura 4:  Pasta de saída
 
 #### 3.4.2	 Seleção da Área de Interesse
@@ -163,6 +164,7 @@ Figura 4:  Pasta de saída
 A figura 5 demonstra as diversas opções para delimitar a Área de Interesse (AOI) dentro do complemento RAVI. O usuário pode desenhar geometrias diretamente no mapa do QGIS ou selecionar camadas vetoriais já carregadas.
 
 ![](./medias/tcc/step3.png)
+
 Figura 5:  Seleção da Área de Interesse  
  
  
@@ -171,6 +173,7 @@ Figura 5:  Seleção da Área de Interesse
 A quarta etapa da interface, apresentada na figura 6, permite ao usuário definir o período de tempo para a análise das imagens Sentinel-2. Estão disponíveis opções para seleção manual de datas ou atalhos para intervalos predefinidos (últimos 3, 6, 12 meses, etc.).
 
 ![](./medias/tcc/step4.png)
+
 Figura 6:  Seleção do intervalo de tempo
  
 #### 3.4.4 Seleção do Índice de Vegetação
@@ -178,6 +181,7 @@ Figura 6:  Seleção do intervalo de tempo
 A figura 7 ilustra a etapa de seleção do índice de vegetação a ser calculado. O complemento RAVI oferece uma variedade de índices predefinidos (NDVI, EVI, SAVI, GNDVI, etc.), além da opção de definir um índice personalizado.
 
 ![](./medias/tcc/step5.png)
+
 Figura 7:  Seleção do índice de vegetação
  
 #### 3.4.5 Filtro de sobreposição de imagens
@@ -185,6 +189,7 @@ Figura 7:  Seleção do índice de vegetação
 Nesta etapa da interface, na figura 8, o usuário pode configurar filtros para otimizar a seleção de imagens, como definir uma porcentagem mínima de sobreposição desejada entre as imagens que cobrem a AOI.
 
 ![](./medias/tcc/step6.png)
+
 Figura 8:  Filtro de sobreposição de imagens
 
 #### 3.4.6	 Opções de Buffer
@@ -192,6 +197,7 @@ Figura 8:  Filtro de sobreposição de imagens
 A figura 9 apresenta a interface com as opções para aplicar um buffer ao redor da Área de Interesse selecionada. Essa funcionalidade pode ser útil para incluir ou excluir áreas adjacentes na análise, ou para mitigar efeitos de borda.
 
 ![](./medias/tcc/step7.png)
+
 Figura 9:  Opções de Buffer
  
  #### 3.4.7	 Filtro de nuvem
@@ -200,6 +206,7 @@ Figura 9:  Opções de Buffer
 A oitava etapa da interface, figura 10, permite ao usuário definir um limiar máximo de cobertura de nuvens nas imagens Sentinel-2 a serem processadas, utilizando um controle deslizante (slider).
 
 ![](./medias/tcc/step8.png)
+
 Figura 10:  Filtro de nuvem
 
 #### 3.4.8	 Filtro de Classificação de Cena
@@ -207,6 +214,7 @@ Figura 10:  Filtro de nuvem
 Esta figura demonstra as opções de filtragem baseadas na Classificação de Cena (SCL) das imagens Sentinel-2. O usuário pode selecionar as classes de pixels (nuvens, sombras, neve, etc.) que deseja mascarar ou remover da análise através de caixas de seleção (checkboxes).
 
 ![](./medias/tcc/step9.png)
+
 Figura 11:  Filtro de Classificação de Cena 
  
 #### 3.4.9	 Visão geral
@@ -214,6 +222,7 @@ Figura 11:  Filtro de Classificação de Cena
 Esta figura oferece uma visão geral da interface principal do complemento RAVI, consolidando as diversas etapas e opções apresentadas nas figuras anteriores em um único painel para resumir o conjunto de confugurações .
 
 ![](./medias/tcc/step10.png)
+
 Figura 12:  Visão geral  
 
 ## 4. RESULTADOS E DISCUSSÃO
@@ -223,6 +232,7 @@ Para ilustrar os resultados obtidos, foi utilizado o cortorno da Fazenda São Jo
 Após o usuário definir os dados de entrada e configurações, o resultado da busca de imagens primeiro indica a quantidade total de imagens encontradas para a AOI, e a quantidade de imagens que premanece no conjunto de imagens após a aplicação de cada parametro de filtragem (figura 13), e após selecionano a opção de ir para próxima aba, outros resultados são exibidos.
 
 ![](./medias/tcc/step11.png)
+
 Figura 13:  Visão geral
 
 ### 4.1  Gráfico de Séries Temporais
@@ -230,6 +240,7 @@ Figura 13:  Visão geral
 A série temporal do índice de vegetação sobre a AOI definida pode ser visualizada em um gráfico interativo (figura 14). Valores e datas específicos para uma análise detalhada podem ser observados ao posicionar o cursor sobre o gráfico.
 
 ![](./medias/tcc/results1.png)
+
 Figura 14:  Séries Temporais
 
 ### 4.2 Carregar Camada Cor Natural  (Foco em um Dia)
@@ -256,6 +267,7 @@ Tabela 1: Informações das Bandas do Sentinel-2
 Nota sobre a Banda 10: Observe que a Banda 10 (SWIR - Cirrus) não está disponível no catálogo de Reflectância de Superfície (SR) harmonizada do Sentinel-2. Esta banda é usada principalmente para detecção de nuvens cirrus e é excluída do conjunto de dados SR devido à sua aplicabilidade limitada na análise de superfície.
 
 ![](./medias/tcc/results2.png)
+
 Figura 15:  Carregar Camada Cor Natural (Foco em um Dia)
 
 ### 4.3 Carregar Camada de Índice (Foco em um Dia)
@@ -263,6 +275,7 @@ Figura 15:  Carregar Camada Cor Natural (Foco em um Dia)
 A camada de índice de vegetação é exibida no QGIS para uma data específica, sendo possível selecionar entre diversos índices disponíveis para visualização (figura 14).
 
 ![](./medias/tcc/results3.png)
+
 Figura 16:  Carregar Camada de Índice (Foco em um Dia)
 
 ### 4.4 Carregar Camada de Índice (Sintética)
@@ -270,6 +283,7 @@ Figura 16:  Carregar Camada de Índice (Foco em um Dia)
 A visualização da camada de índice de vegetação composta é realizada por meio da geração e exibição de uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo usuário. A imagem sintética é produzida a partir de todas as imagens que compõem a série temporal, sendo as imagens sobrepostas e cada pixel resultante representando a métrica definida para o índice de vegetação escolhido. Recomenda-se que a ferramenta de remoção de data seja utilizada para que datas indesejadas ou períodos específicos sejam filtrados antes da geração da imagem sintética.
 
 ![](./medias/tcc/results4.png)
+
 Figura 17: Carregar Camada de Índice (Sintética)
 
 ###  4.5 Ferramenta de Remoção de Data
@@ -277,6 +291,7 @@ Figura 17: Carregar Camada de Índice (Sintética)
 A interface da ferramenta de seleção de data deve ser utilizada para que datas e períodos específicos sejam filtrados e selecionados para análise. O gráfico de séries temporais é atualizado automaticamente pela ferramenta. IMPORTANTE: As imagens sintéticas são geradas com base em todas as datas que estiverem selecionadas no momento.
 
 ![](./medias/tcc/results5.png)
+
 Figura 18: Ferramenta de Remoção de Data
 
 ###  4.6. Opções de exportaçao de dados
@@ -284,6 +299,7 @@ Figura 18: Ferramenta de Remoção de Data
 Opções de salvamento para download de imagem e planilha são disponibilizadas na interface. Os dados da série temporal podem ser salvos em formato CSV. Para que a série seja salva como imagem, recomenda-se que ela seja aberta no navegador, onde a opção de download será habilitada.
 
 ![](./medias/tcc/results7.png)
+
 Figura 19: Opções de exportaçao de dados
 
 ###  4.7 Análise de multifeição
@@ -291,6 +307,7 @@ Figura 19: Opções de exportaçao de dados
 A análise de séries temporais de multifeição pode ser realizada para avaliar o comportamento de índices de vegetação em diferentes áreas de interesse simultaneamente. Essa funcionalidade permite que múltiplos feiçõs (poligonos) sejam selecionados possibilitando a extração e comparação automática das séries temporais de cada área. Dessa forma, torna-se possível identificar padrões espaciais, comparar diferentes talhões ou regiões e obter insights sobre a variabilidade temporal da vegetação em múltiplas localidades, facilitando análises comparativas, por exemplo de diferentez zonas de manejo e compara o desempenho de diferentes trabamentos agronômicos.
 
 ![](./medias/tcc/results12.png)
+
 Figura 20: Análise de multifeição
 
 ### 4.4 Publicação e divulgação
