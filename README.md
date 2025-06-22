@@ -7,7 +7,7 @@ Um guia de uso está disponível via GitHub Pages em:
 [https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
 
 ## Relato de Problemas
-Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) ou entre em contato diretamente.
+Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) ou entre em contato direto, envie um e-mail para [caiosimplicioarantes@gmail.com](mailto:contato@caioarantes.com.br).
 
 ## Licença
 O RAVI está licenciado sob a GNU General Public License v2.0 ou posterior. Consulte o arquivo [LICENSE](https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE) para mais detalhes.
@@ -23,7 +23,7 @@ An usage guide is available via GitHub Pages here:
 [https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
 
 ## Reporting Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section or contact me directly.
+If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section or contact me directly [caiosimplicioarantes@gmail.com](mailto:caiosimplicioarantes@gmail.com).
 
 ## License
 RAVI is licensed under the GNU General Public License v2.0 or later. Refer to the [LICENSE](https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE) file for details.

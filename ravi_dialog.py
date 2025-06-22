@@ -258,6 +258,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
         self.series_indice_2.addItems(vegetation_index)
+        self.series_indice_3.addItems(vegetation_index)
         self.series_indice.addItems(vegetation_index)
         self.combo_year.addItems(
             [str(year) for year in range(2017, datetime.now().year + 1)]
@@ -360,6 +361,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
    
         self.series_indice.currentIndexChanged.connect(self.reload_update)
         self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
+        self.series_indice_3.currentIndexChanged.connect(self.reload_update3)
+
 
         self.incioedit.dateChanged.connect(self.reload_update)
         self.incioedit_2.dateChanged.connect(self.reload_update2)
@@ -537,16 +540,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.imagem_unica_indice.clear()
             self.indice_composicao.clear()
             self.series_indice_2.clear()
+            self.series_indice_3.clear()
             self.series_indice.clear()
 
             self.imagem_unica_indice.addItems(vegetation_index)
             self.indice_composicao.addItems(vegetation_index)
             self.series_indice_2.addItems(vegetation_index)
+            self.series_indice_3.addItems(vegetation_index)
             self.series_indice.addItems(vegetation_index)
             # Add the custom index to all dropdowns
             self.imagem_unica_indice.setCurrentIndex(self.imagem_unica_indice.count() - 1)
             self.indice_composicao.setCurrentIndex(self.indice_composicao.count() - 1)
             self.series_indice_2.setCurrentIndex(self.series_indice_2.count() - 1)
+            self.series_indice_3.setCurrentIndex(self.series_indice_3.count() - 1)
             self.series_indice.setCurrentIndex(self.series_indice.count() - 1)
             self.custom_expression = dialog.expression
             self.custom_expression_name = dialog.expression_name
@@ -980,10 +986,17 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.incioedit.setDate(self.incioedit_2.date())
         self.series_indice.setCurrentIndex(self.series_indice_2.currentIndex())
 
+    def reload_update3(self):
+        self.finaledit.setDate(self.finaledit_2.date())
+        self.incioedit.setDate(self.incioedit_2.date())
+        self.series_indice.setCurrentIndex(self.series_indice_3.currentIndex())
+
     def reload_update(self):
         self.finaledit_2.setDate(self.finaledit.date())
         self.incioedit_2.setDate(self.incioedit.date())
         self.series_indice_2.setCurrentIndex(self.series_indice.currentIndex())
+        self.series_indice_3.setCurrentIndex(self.series_indice.currentIndex())
+
 
     def clear_nasa_clicked(self):
         """Clears the NASA data and updates the timeseries plot."""
@@ -2986,7 +2999,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         if local_pixel_limit > 0:
             # Apply local pixel limit filter to the image collection
-            sentinel2 = self.SCL_filter(sentinel2, aoi, local_pixel_limit)
+
+            aoi_SCL = aoi.map(lambda feature: feature.buffer(300))
+            sentinel2 = self.SCL_filter(sentinel2, aoi_SCL, local_pixel_limit)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
                 self.pop_warning(
