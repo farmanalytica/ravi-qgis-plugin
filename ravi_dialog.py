@@ -48,6 +48,7 @@ from qgis.core import (
     QgsFeatureRequest,
     QgsProject,
 )
+from qgis.PyQt.QtGui import QFont
 from PyQt5.QtGui import QColor
 from PyQt5.QtCore import QDate, Qt, QVariant, QSettings
 from PyQt5.QtWidgets import (
@@ -96,6 +97,8 @@ from qgis.core import (
     QgsField,
     QgsVectorFileWriter,
 )
+
+from qgis.PyQt.QtCore import Qt, QTimer
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
 from qgis.utils import iface
 import qgis
@@ -139,6 +142,10 @@ from qgis.PyQt.QtCore import QVariant
 from qgis.utils import iface
 import processing
 
+from qgis.PyQt.QtWidgets import QApplication
+
+from qgis.PyQt.QtCore import Qt, QEvent
+
 from .modules.coordinate_capture import CoordinateCaptureTool
 
 try:
@@ -170,9 +177,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
         super(RAVIDialog, self).__init__(parent)
         self.setupUi(self)
         self.iface = iface
-    
-        self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
-
+        
+        self.setWindowFlags(
+            Qt.Window |
+            Qt.WindowCloseButtonHint |
+            Qt.WindowMinimizeButtonHint |
+            Qt.WindowMaximizeButtonHint
+        )
+        
+        self.setModal(False)
+        
+        # Initialize timer but don't start it yet
+        self.focus_timer = QTimer()
+        self.focus_timer.timeout.connect(self.check_focus)
 
         authentication.loadProjectId(self)
 
@@ -181,7 +198,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # UI setup and signal connections / Configuração da UI e conexões de sinal
         self.setup_ui()
         self.connect_signals()
-        authentication.loadProjectId(self)
+
         
         # Set default values / Define valores padrão
         self.last_clicked(3)
@@ -189,6 +206,47 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         self.resizeEvent("small")
         self.tabWidget.setCurrentIndex(0)
+
+    def showEvent(self, event):
+        """Start timer when dialog is shown"""
+        super().showEvent(event)
+        if hasattr(self, 'focus_timer'):
+            self.focus_timer.start(100)
+
+    def hideEvent(self, event):
+        """Stop timer when dialog is hidden"""
+        super().hideEvent(event)
+        if hasattr(self, 'focus_timer'):
+            try:
+                self.focus_timer.stop()
+            except RuntimeError:
+                pass
+
+    def check_focus(self):
+        """Check if we should bring the plugin to front - less aggressive"""
+        if not self.isVisible() or self.isMinimized():
+            return
+            
+        # Only act if clicking on map canvas specifically
+        active_window = QApplication.activeWindow()
+        if (active_window == self.iface.mainWindow() and 
+            not QApplication.activeModalWidget() and
+            not self.isActiveWindow()):
+            
+            # Only raise, don't activate to avoid interfering with internal events
+            self.raise_()
+
+    def closeEvent(self, event):
+        """Handle close event"""
+        if hasattr(self, 'focus_timer'):
+            try:
+                self.focus_timer.stop()
+            except RuntimeError:
+                pass
+        
+        # Hide instead of close to preserve state
+        self.hide()
+        event.ignore()
 
 
     def inicialize_variables(self):
@@ -2290,6 +2348,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         """
         aoi = self.apply_buffer(self.aoi)
+
+            
         # Set the cursor to indicate processing
         QApplication.setOverrideCursor(Qt.WaitCursor)
 
@@ -2302,13 +2362,15 @@ class RAVIDialog(QDialog, FORM_CLASS):
             ).first()
 
             # Clip image to AOI
-            first_image = first_image.clip(aoi)
+            
 
             # Select the bands we want
             bands = [
                 "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B8A", "B9", "B11", "B12"
             ]
+            
             first_image = first_image.select(bands)
+            first_image = first_image.clip(aoi)
 
             # Get the acquisition date and define download region
             region = aoi.geometry().bounds().getInfo()["coordinates"]
@@ -2613,11 +2675,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Aggregate the index collection based on the selected metric
         final_image = self.aggregate_index_collection(index_collection, metrica)
 
+        aoi = self.apply_buffer(self.aoi)
+        final_image = final_image.clip(aoi)
+        region = aoi.geometry().bounds().getInfo()["coordinates"]
         # Prepare download URL and output filename for the final image
         url = final_image.getDownloadUrl(
             {
                 "scale": 10,
-                "region": self.aoi.geometry().bounds().getInfo()["coordinates"],
+                "region": region,
                 "format": "GeoTIFF",
             }
         )
@@ -3263,6 +3328,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Adjusts the main DataFrame based on the selected dates."""
         """Ajusta o DataFrame principal com base nas datas selecionadas."""
         df = self.df.copy()
+        df.to_csv("df.csv", index=False)
         if self.recorte_datas:
             df = df[df["date"].isin(self.recorte_datas)]
             self.df_aux = df.copy()

@@ -1307,16 +1307,16 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
       <property name="minimum">
-       <number>-100</number>
+       <number>-300</number>
       </property>
       <property name="maximum">
-       <number>100</number>
+       <number>300</number>
       </property>
       <property name="singleStep">
-       <number>5</number>
+       <number>10</number>
       </property>
       <property name="pageStep">
-       <number>5</number>
+       <number>10</number>
       </property>
       <property name="value">
        <number>0</number>
@@ -1929,7 +1929,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>AOI selection - Step 2</string>
+      <string>AOI selection - Step 3</string>
      </property>
      <widget class="QComboBox" name="vector_layer_combobox_2">
       <property name="geometry">
@@ -2027,7 +2027,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Cloudy Pixel Percentage Limit: (Lower value applies stricter filtering): - Step 7</string>
+      <string>Cloudy Pixel Percentage Limit: (Lower value applies stricter filtering): - Step 8</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_total_pixel_limit_2">
       <property name="enabled">
@@ -2103,7 +2103,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering) - Step 8</string>
+      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering)</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_local_pixel_limit_2">
       <property name="enabled">
@@ -2434,7 +2434,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Minimum Imagery Overlap with AOI : (Higher value, stricter filtering) - Step 5</string>
+      <string>Minimum Imagery Overlap with AOI : (Higher value, stricter filtering) - Step 6</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_aio_cover_2">
       <property name="enabled">
@@ -2526,7 +2526,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>AOI Buffer (meters). Negative Buffer: the external edges of the AOI are trimmed. Positive Buffer: the AOI is expanded - Step 6</string>
+      <string>AOI Buffer (meters). Negative Buffer: the external edges of the AOI are trimmed. Positive Buffer: the AOI is expanded - Step 7</string>
      </property>
      <widget class="QLabel" name="label_buffer_2">
       <property name="geometry">
@@ -2562,16 +2562,16 @@ p, li { white-space: pre-wrap; }
        <bool>true</bool>
       </property>
       <property name="minimum">
-       <number>-100</number>
+       <number>-300</number>
       </property>
       <property name="maximum">
-       <number>100</number>
+       <number>300</number>
       </property>
       <property name="singleStep">
-       <number>5</number>
+       <number>10</number>
       </property>
       <property name="pageStep">
-       <number>5</number>
+       <number>10</number>
       </property>
       <property name="value">
        <number>0</number>
@@ -2645,7 +2645,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Vegetation index - Step 4</string>
+      <string>Vegetation index - Step 5</string>
      </property>
      <widget class="QLabel" name="label_7">
       <property name="geometry">
@@ -2716,7 +2716,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string> Time Range (yyyy/mm/dd) - Step 3</string>
+      <string> Time Range (yyyy/mm/dd) - Step 4</string>
      </property>
      <widget class="QDateEdit" name="finaledit_2">
       <property name="geometry">
@@ -4093,7 +4093,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QWidget" name="tab_11">
     <attribute name="title">
-     <string>MultiPolygon Analysis</string>
+     <string>MultiFeature Analysis</string>
     </attribute>
     <widget class="QGroupBox" name="groupBox_16">
      <property name="geometry">

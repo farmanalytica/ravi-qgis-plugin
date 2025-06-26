@@ -38,6 +38,8 @@ class RAVI:
     def __init__(self, iface):
         """Constructor.
 
+
+
         :param iface: An interface instance that will be passed to this class
             which provides the hook by which you can manipulate the QGIS
             application at run time.
@@ -66,6 +68,7 @@ class RAVI:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
+        self.dlg = None  # Initialize dialog reference
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -82,7 +85,6 @@ class RAVI:
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('RAVI', message)
 
-
     def add_action(
         self,
         icon_path,
@@ -94,44 +96,7 @@ class RAVI:
         status_tip=None,
         whats_this=None,
         parent=None):
-        """Add a toolbar icon to the toolbar.
-
-        :param icon_path: Path to the icon for this action. Can be a resource
-            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
-        :type icon_path: str
-
-        :param text: Text that should be shown in menu items for this action.
-        :type text: str
-
-        :param callback: Function to be called when the action is triggered.
-        :type callback: function
-
-        :param enabled_flag: A flag indicating if the action should be enabled
-            by default. Defaults to True.
-        :type enabled_flag: bool
-
-        :param add_to_menu: Flag indicating whether the action should also
-            be added to the menu. Defaults to True.
-        :type add_to_menu: bool
-
-        :param add_to_toolbar: Flag indicating whether the action should also
-            be added to the toolbar. Defaults to True.
-        :type add_to_toolbar: bool
-
-        :param status_tip: Optional text to show in a popup when mouse pointer
-            hovers over the action.
-        :type status_tip: str
-
-        :param parent: Parent widget for the new action. Defaults None.
-        :type parent: QWidget
-
-        :param whats_this: Optional text to show in the status bar when the
-            mouse pointer hovers over the action.
-
-        :returns: The action that was created. Note that the action is also
-            added to self.actions list.
-        :rtype: QAction
-        """
+        """Add a toolbar icon to the toolbar."""
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -170,6 +135,41 @@ class RAVI:
         # will be set False in run()
         self.first_start = True
 
+    def unload(self):
+        """Removes the plugin menu item and icon from QGIS GUI."""
+        for action in self.actions:
+            self.iface.removePluginMenu(
+                self.tr(u'&RAVI'),
+                action)
+            self.iface.removeToolBarIcon(action)
+        
+        # Close dialog if it exists
+        if self.dlg:
+            self.dlg.close()
+
+    # In your main plugin class (ravi.py)
+    def run(self):
+        """Run method that shows the modeless dialog"""
+        
+        # Create dialog only if it doesn't exist
+        if not hasattr(self, 'dlg') or self.dlg is None:
+            self.dlg = RAVIDialog(parent=None, iface=self.iface)
+        
+        # Check if dialog exists but is minimized or hidden
+        if self.dlg.isMinimized():
+            # Restore from minimized state
+            self.dlg.showNormal()
+            self.dlg.raise_()
+            self.dlg.activateWindow()
+        elif not self.dlg.isVisible():
+            # Show if hidden
+            self.dlg.show()
+            self.dlg.raise_()
+            self.dlg.activateWindow()
+        else:
+            # Already visible, just bring to front
+            self.dlg.raise_()
+            self.dlg.activateWindow()
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -178,23 +178,10 @@ class RAVI:
                 self.tr(u'&RAVI'),
                 action)
             self.iface.removeToolBarIcon(action)
-
-
-    def run(self):
-        """Run method that performs all the real work"""
-
-        # Create the dialog with elements (after translation) and keep reference
-        # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        if self.first_start == True:
-            self.first_start = False
-            self.dlg = RAVIDialog()
-
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+        
+        # Clean close of dialog
+        if hasattr(self, 'dlg') and self.dlg:
+            try:
+                self.dlg.close()
+            except RuntimeError:
+                pass
