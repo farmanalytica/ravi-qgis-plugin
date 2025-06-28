@@ -437,6 +437,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.setup_custom.clicked.connect(self.setup_custom_clicked)
 
+
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
             self.mask,
@@ -1594,54 +1595,180 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.setFixedSize(self.width(), self.height())  # Lock to big size
 
     def on_tab_changed(self, index):
-        # print(f"Tab changed to index: {index}")
-        if not self.autentication:
-            self.tabWidget.setCurrentIndex(0)
+        # CRITICAL: Get the recursion guard flag safely.
+        # If '_programmatic_tab_change' hasn't been set, default to False.
+        _programmatic_tab_change = getattr(self, '_programmatic_tab_change', False)
+
+        if _programmatic_tab_change:
+            return
+
+        # Helper function for safe programmatic tab changes
+        # This also needs to set the attribute on 'self' if it's missing,
+        # then manage it for the duration of the set.
+        def _safe_set_current_index(target_index):
+            # Ensure self.tabWidget exists before proceeding
+            _tabWidget = getattr(self, 'tabWidget', None)
+            if not _tabWidget:
+                print("Warning: tabWidget not found, cannot set current index safely.")
+                return False
+
+            if _tabWidget.currentIndex() != target_index:
+                # Set the flag on 'self'
+                setattr(self, '_programmatic_tab_change', True)
+                try:
+                    _tabWidget.setCurrentIndex(target_index)
+                finally:
+                    # Reset the flag on 'self'
+                    setattr(self, '_programmatic_tab_change', False)
+                return True # Indicates tab was changed
+            return False # Indicates no change was necessary or possible
+
+        # --- Authentication Check ---
+        # Get 'autentication' safely; if not set, default to False
+        autentication = getattr(self, 'autentication', False)
+        if not autentication:
+            if index != 0:
+                if self.language == "pt":
+                    QMessageBox.warning(self, "Acesso Negado", "Por favor, autentique-se primeiro!")
+                else:
+                    QMessageBox.warning(self, "Access Denied", "Please authenticate first!")
+                if _safe_set_current_index(0):
+                    return # Stop processing this event as tab was reverted
+
+        # --- UI Resizing Logic ---
+        # Get 'resizeEvent' safely
+        _resizeEvent = getattr(self, 'resizeEvent', None)
         if index < 9:
-            self.resizeEvent("small")
+            if _resizeEvent and callable(_resizeEvent):
+                _resizeEvent("small")
+            # else: print("Warning: resizeEvent method not found or not callable for 'small'.")
+        elif index >= 9:
+            if _resizeEvent and callable(_resizeEvent):
+                _resizeEvent("big")
+            # else: print("Warning: resizeEvent method not found or not callable for 'big'.")
 
-        if index >= 9:
-            self.resizeEvent("big")
-            if not hasattr(self, "_centralized"):
-                self.centralizar()
-                self._centralized = True
+            # Centralization logic
+            _centralized = getattr(self, '_centralized', False)
+            if not _centralized:
+                _centralizar = getattr(self, 'centralizar', None)
+                if _centralizar and callable(_centralizar):
+                    _centralizar()
+                    setattr(self, '_centralized', True) # Update the attribute on 'self'
+                else:
+                    print("Warning: centralizar method not found or not callable.")
 
-        if index >= 10 and self.df is None:
-            self.tabWidget.setCurrentIndex(9)
+        # --- Tab 10: Data Frame (DF) Check ---
+        # Get 'df' safely; if not set, default to None
+        _df = getattr(self, 'df', None)
+        if index >= 10:
+            if _df is None:
+                if self.language == "pt":
+                    QMessageBox.warning(self, "Dados Ausentes", "Por favor, processe os dados nas abas anteriores primeiro.")
+                else:
+                    QMessageBox.warning(self, "Data Missing", "Please process data on previous tabs first.")
+                if _safe_set_current_index(9):
+                    return
 
-        if index == 1 and not hasattr(self, "path_suggestion_loaded"):
+        # --- Tab 1: Load Path Suggestion ---
+        # Get 'path_suggestion_loaded' safely; if not set, default to False
+        _path_suggestion_loaded = getattr(self, 'path_suggestion_loaded', False)
+        if index == 1 and not _path_suggestion_loaded:
             try:
-                self.load_last_output_folder()
-            except:
-                self.load_path_sugestion()
-                self.path_suggestion_loaded = True
+                _load_last_output_folder = getattr(self, 'load_last_output_folder', None)
+                if _load_last_output_folder and callable(_load_last_output_folder):
+                    _load_last_output_folder()
+                    setattr(self, 'path_suggestion_loaded', True)
+                else:
+                    print("Warning: load_last_output_folder method not found or not callable.")
+                    raise AttributeError("Method not found for fallback") # Force fallback if method doesn't exist
+            except Exception as e:
+                print(f"Error loading last output folder: {e}. Falling back to suggestion.")
+                _load_path_sugestion = getattr(self, 'load_path_sugestion', None)
+                if _load_path_sugestion and callable(_load_path_sugestion):
+                    _load_path_sugestion()
+                    setattr(self, 'path_suggestion_loaded', True) # Still set to True to prevent re-running on next visit
+                else:
+                    print("Warning: load_path_sugestion method not found or not callable.")
 
-        if index == 2 and not hasattr(self, "vector_layers_loaded"):
-            self.load_vector_layers()
-            self.vector_layers_loaded = True
+        # --- Tab 2: Load Vector Layers ---
+        # Get 'vector_layers_loaded' safely; if not set, default to False
+        _vector_layers_loaded = getattr(self, 'vector_layers_loaded', False)
+        if index == 2 and not _vector_layers_loaded:
             try:
-                self.load_vector_layers()
-                self.get_selected_layer_path()
-            except:
-                pass
+                _load_vector_layers = getattr(self, 'load_vector_layers', None)
+                if _load_vector_layers and callable(_load_vector_layers):
+                    _load_vector_layers()
+                    _get_selected_layer_path = getattr(self, 'get_selected_layer_path', None)
+                    if _get_selected_layer_path and callable(_get_selected_layer_path):
+                        _get_selected_layer_path()
+                    else:
+                        print("Warning: get_selected_layer_path method not found or not callable.")
+                    setattr(self, 'vector_layers_loaded', True)
+                else:
+                    print("Warning: load_vector_layers method not found or not callable.")
+            except Exception as e:
+                print(f"Error loading vector layers or getting path: {e}")
+                # If it fails, keep vector_layers_loaded as False so it retries
 
-        if index > 1 and not self.QPushButton_next_4.isEnabled():
-            self.tabWidget.setCurrentIndex(1)
-        
-        if index > 2 and not self.QPushButton_next.isEnabled():
-            self.tabWidget.setCurrentIndex(2)
+        # --- Progression Checks (using QPushButton_next states) ---
+        # Retrieve QPushButton objects safely. Assumes they might be assigned to 'self'
+        # or you'd use self.findChild() in __init__ (preferred).
+        # If they are not found in self.__dict__, getattr will return None.
+        _QPushButton_next_4 = getattr(self, 'QPushButton_next_4', None)
+        _QPushButton_next = getattr(self, 'QPushButton_next', None)
 
-        if index == 12 and self.plot1 is not None:
-            print('load_fields')
-            self.load_fields()
+        if index > 1:
+            if _QPushButton_next_4 and not _QPushButton_next_4.isEnabled():
+                if self.language == 'pt':
+                    QMessageBox.warning(self, "Proceed Step-by-Step", "Por favor, complete a Passo 2 antes de prosseguir.")
+                else:
+                    QMessageBox.warning(self, "Proceed Step-by-Step", "Please complete Step 2 before proceeding.")
+                if _safe_set_current_index(1):
+                    return
 
+        if index > 2:
+            if _QPushButton_next and not _QPushButton_next.isEnabled():
+                if self.language == 'pt':
+                    QMessageBox.warning(self, "Proceed Step-by-Step", "Por favor, complete a Passo 3 antes de prosseguir.")
+                else:
+                    QMessageBox.warning(self, "Proceed Step-by-Step", "Please complete Step 3 before proceeding.")
+                if _safe_set_current_index(2):
+                    _resizeEvent("small")
+                    return
+
+        # --- Tab 12: Load Fields ---
+        # Get 'plot1' safely; if not set, default to None
+        _plot1 = getattr(self, 'plot1', None)
+        if index == 12:
+            if _plot1 is not None:
+                print('load_fields')
+                _load_fields = getattr(self, 'load_fields', None)
+                if _load_fields and callable(_load_fields):
+                    _load_fields()
+                else:
+                    print("Warning: load_fields method not found or not callable.")
+
+        # --- Checkbox Capture Coordinates ---
+        # Get 'checkBox_captureCoordinates' safely
+        _checkBox_captureCoordinates = getattr(self, 'checkBox_captureCoordinates', None)
         if index != 11:
-            
-            try:
-                self.checkBox_captureCoordinates.setChecked(False)
-                #print("Coordinate capture checkbox state changed.")
-            except:
-                pass
+            if _checkBox_captureCoordinates:
+                try:
+                    _checkBox_captureCoordinates.setChecked(False)
+                except Exception as e:
+                    print(f"Error unchecking coordinate capture checkbox: {e}")
+            else:
+                print("Warning: checkBox_captureCoordinates not found or accessible.")
+
+        _drawing = getattr(self, 'drawing', None)
+        if index != 2:
+            if _drawing:
+                try:
+                    _drawing.setChecked(False)
+                except Exception as e:
+                    print(f"Error unchecking coordinate capture checkbox: {e}")
+            else:
+                print("Warning: checkBox_captureCoordinates not found or accessible.")
 
     def next_clicked(self):
         self.tabWidget.setCurrentIndex(
@@ -1653,21 +1780,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             (self.tabWidget.currentIndex() - 1) % self.tabWidget.count()
         )
 
-    def get_dates(self):
-        # Get the date from the QDateEdit widget / Obtém a data do widget
-        # QDateEdit
-        self.inicio = self.incioedit.date().toString("yyyy-MM-dd")
-
-        self.final = self.finaledit.date().toString("yyyy-MM-dd")
-        # print(f"Selected date: {self.inicio} to {self.final}")
-
-        # Get the date from the QDateEdit widget / Obtém a data do widget
-        # QDateEdit
-
-        # Get the selected text from the combobox / Obtém o texto selecionado
-        # da combobox
-        self.nuvem = self.horizontalSlider_total_pixel_limit.value()
-        # print(f"Nuvem limit: {self.nuvem}")
 
     def load_path_sugestion(self):
         """
@@ -2931,9 +3043,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def resetting(self):
         self.recorte_datas = None
         self.aoi = self.load_vector_function()
-        self.get_dates()
-        # self.customfilter.setChecked(False)
-        # self.remove_cloudy.setChecked(False)
+        self.inicio = self.incioedit.date().toString("yyyy-MM-dd")
+        self.final = self.finaledit.date().toString("yyyy-MM-dd")
+        self.nuvem = self.horizontalSlider_total_pixel_limit.value()
         self.QCheckBox_sav_filter.setChecked(False)
         self.filtro_grau.setCurrentIndex(0)
         self.window_len.setCurrentIndex(0)
@@ -3327,8 +3439,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def df_ajust(self):
         """Adjusts the main DataFrame based on the selected dates."""
         """Ajusta o DataFrame principal com base nas datas selecionadas."""
-        df = self.df.copy()
-        df.to_csv("df.csv", index=False)
+        #df = self.df.copy()
+        #df.to_csv("df.csv", index=False)
         if self.recorte_datas:
             df = df[df["date"].isin(self.recorte_datas)]
             self.df_aux = df.copy()
