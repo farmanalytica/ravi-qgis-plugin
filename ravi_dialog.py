@@ -24,6 +24,7 @@ import os
 import tempfile
 import datetime
 import requests
+from qgis.core import QgsMessageLog, Qgis
 from functools import partial
 import re
 import sys
@@ -2251,6 +2252,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     "scale": 10,
                     "region": aoi.geometry().bounds().getInfo(),
                     "format": "GeoTIFF",
+                    "crs": "EPSG:4326",  # Use WGS84 for compatibility
                 }
             )
             base_output_file = f"{vegetation_index}_{date[0]}.tiff"
@@ -2493,6 +2495,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         "scale": 10,
                         "region": region,
                         "format": "GeoTIFF",
+                        "crs": "EPSG:4326"# Use WGS84 for compatibility
                     }
                 )
             except Exception as e:
@@ -2766,105 +2769,86 @@ class RAVIDialog(QDialog, FORM_CLASS):
         QApplication.restoreOverrideCursor()
 
     def composite(self, temporary):
-        """Calculates a composite of the selected vegetation index over the selected dates."""
-        print("Composição de índices vegetativos")
-        
-        # Get the selected vegetation index and metric for aggregation
-        indice_vegetacao = self.indice_composicao.currentText()
-        metrica = self.metrica.currentText()
+        """
+        Calculates a composite of a vegetation index, downloads it clipped to the
+        precise AOI using an explicit mask, and loads it into QGIS.
+        NOTE: For a real plugin, this entire logic should be moved into a QgsTask
+        to avoid freezing the QGIS UI.
+        """
+        try:
+            QgsMessageLog.logMessage("Starting vegetation index composite process.", "MyPlugin", Qgis.Info)
 
-        # Function to calculate the desired vegetation index and preserve the date
-        def calculate_index(image):
-            # Calculate the vegetation index using the existing method
-            index_image = self.calculate_vegetation_index(image, indice_vegetacao)
-            # Preserve the original image's time property
-            return index_image.copyProperties(image, ["system:time_start"])
+            # Get the selected vegetation index and metric for aggregation
+            indice_vegetacao = self.indice_composicao.currentText()
+            metrica = self.metrica.currentText()
 
-        # Apply the index calculation to the filtered collection
-        index_collection = self.sentinel2_selected_dates.map(calculate_index)
+            # Function to calculate the desired vegetation index and preserve the date
+            def calculate_index(image):
+                # Ensure the image has the necessary bands before calculating the index.
+                # It's good practice to add checks or handle missing bands gracefully.
+                index_image = self.calculate_vegetation_index(image, indice_vegetacao)
+                # copyProperties is good for retaining metadata like system:time_start
+                return index_image.copyProperties(image, ["system:time_start"])
 
-        # Aggregate the index collection based on the selected metric
-        final_image = self.aggregate_index_collection(index_collection, metrica)
+            # Apply the index calculation to the filtered collection
+            index_collection = self.sentinel2_selected_dates.map(calculate_index)
 
-        aoi = self.apply_buffer(self.aoi)
-        final_image = final_image.clip(aoi)
-        region = aoi.geometry().bounds().getInfo()["coordinates"]
-        # Prepare download URL and output filename for the final image
-        url = final_image.getDownloadUrl(
-            {
-                "scale": 10,
-                "region": region,
-                "format": "GeoTIFF",
-            }
-        )
+            # Aggregate the index collection based on the selected metric
+            final_image = self.aggregate_index_collection(index_collection, metrica)
 
-        base_output_file = f"{metrica}_{indice_vegetacao}.tiff"
-        output_file = self.get_unique_filename(base_output_file, True)
-        response = requests.get(url)
-        with open(output_file, "wb") as f:
-            f.write(response.content)
-        print(f"{indice_vegetacao} image downloaded as {output_file}")
+            # --- IMPORTANT: Cast to float before masking for robust NoData handling ---
+            # This ensures that the image data type can correctly represent the NoData value.
+            final_image = final_image.toFloat()
 
-        # Recorta a imagem raster usando a camada vetorial (normalmente a AOI)
-        layer_name = f"{indice_vegetacao} {metrica}"
-        base_output_file = f"{metrica}_{indice_vegetacao}_clipped.tiff"
-        output_file_clipped = self.get_unique_filename(base_output_file, temporary)
-        self.clip_raster_by_vector(
-            output_file, self.selected_aio_layer_path, output_file_clipped, layer_name
-        )
+            # --- KEY CHANGE: Use updateMask for more reliable clipping ---
+            # Apply buffer if needed. Ensure self.aoi is an ee.Geometry object.
+            aoi = self.apply_buffer(self.aoi)
 
-        # Carrega a camada raster com estilo colorido no QGIS
-        map_tools.load_raster_layer_colorful(
-            output_file_clipped, layer_name, indice_vegetacao, self.metrica.currentText()
-        )
+            # 1. Create an explicit mask from the AOI geometry.
+            # ee.Image(1).clip(aoi) creates an image where the AOI is 1 and outside is 0.
+            # .mask() converts this to a mask where 1 is valid data and 0 is NoData.
+            mask = ee.Image(1).clip(aoi).mask()
 
-    def clip_raster_by_vector(
-        self, raster_path, shapefile_path, output_path, layer_name
-    ):
-        print(
-            f"Clipping raster {raster_path} by vector {shapefile_path} to {output_path}"
-        )
-        # Load layers
-        shapefile_layer = QgsVectorLayer(shapefile_path, "Clip Layer", "ogr")
-        # Apply buffer to the shapefile layer before clipping
-        # buffer_distance = self.horizontalSlider_buffer.value()
-        # if buffer_distance != 0:
-        #     # Create a temporary buffered layer
-        #     processing_params = {
-        #         "INPUT": shapefile_layer,
-        #         "DISTANCE": buffer_distance,
-        #         "SEGMENTS": 5,
-        #         "DISSOLVE": True,
-        #         "END_CAP_STYLE": 0,
-        #         "JOIN_STYLE": 0,
-        #         "MITER_LIMIT": 2,
-        #         "OUTPUT": "memory:"
-        #     }
-        #     buffered_layer = processing.run("native:buffer", processing_params, feedback=QgsProcessingFeedback())["OUTPUT"]
-        #     shapefile_layer = buffered_layer
-        raster_layer = QgsRasterLayer(raster_path, "Raster Layer")
+            # 2. Apply this mask to the final composite image.
+            # This operation sets pixels outside the mask to NoData (transparent).
+            final_image_masked = final_image.updateMask(mask)
 
-        # Check if layers loaded successfully
-        if not shapefile_layer.isValid():
-            print("Failed to load shapefile.")
-        if not raster_layer.isValid():
-            print("Failed to load raster.")
+            # 3. Define the download region using the BOUNDING BOX of the AOI.
+            # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
+            # The actual clipping to the irregular shape is handled by updateMask.
+            download_region = aoi.geometry().bounds().getInfo()
 
-        # Clip raster using the shapefile
-        result = processing.run(
-            "gdal:cliprasterbymasklayer",
-            {
-                "INPUT": raster_layer,
-                "MASK": shapefile_layer,
-                "NODATA": -9999,  # Change to appropriate NoData value if needed
-                "CROP_TO_CUTLINE": True,
-                "KEEP_RESOLUTION": True,
-                "OUTPUT": output_path,
-            },
-            feedback=QgsProcessingFeedback(),
-        )
+            url = final_image_masked.getDownloadUrl(
+                {
+                    "scale": 10,
+                    "region": download_region,
+                    "format": "GeoTIFF",
+                    'crs': 'EPSG:4326',  # Optional: specify CRS if needed
+                }
+            )
 
-        print(f"Clipping result: {result}")
+            base_output_file = f"{metrica}_{indice_vegetacao}.tiff"
+            output_file = self.get_unique_filename(base_output_file, True)
+            response = requests.get(url)
+            with open(output_file, "wb") as f:
+                f.write(response.content)
+            print(f"{indice_vegetacao} image downloaded as {output_file}")
+
+            layer_name = f"{indice_vegetacao} {metrica}"
+            # Carrega a camada raster com estilo colorido no QGIS
+            map_tools.load_raster_layer_colorful(
+                output_file, layer_name, indice_vegetacao, self.metrica.currentText()
+            )
+
+
+        except requests.exceptions.RequestException as e:
+            # Catches network-related errors (e.g., connection refused, DNS error, timeout)
+            # and HTTP errors (4xx, 5xx) caught by response.raise_for_status().
+            QgsMessageLog.logMessage(f"Network error or error from GEE server: {e}", "MyPlugin", Qgis.Critical)
+        except Exception as e:
+            # It's good practice to log the full traceback for debugging complex errors from GEE
+            import traceback
+            QgsMessageLog.logMessage(f"An unexpected error occurred: {e}\n{traceback.format_exc()}", "MyPlugin", Qgis.Critical)
 
     def on_file_changed(self, file_path):
         """Slot called when the selected file changes."""
