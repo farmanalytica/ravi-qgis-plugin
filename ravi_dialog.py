@@ -393,7 +393,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_3_update)
         self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_2_update)
 
-        
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
@@ -3088,6 +3087,28 @@ class RAVIDialog(QDialog, FORM_CLASS):
         try:
             self.calculate_timeseries()
 
+            if self.df is None or self.df.empty:
+
+                if self.language == "pt":
+                    self.pop_warning(
+                        "Nenhum dado disponível para os critérios selecionados. "
+                        "O foco na região dentro da área de interesse (AOI) deve ser usado com um vetor "
+                        "que esteja realmente contido pela AOI original, ou altere o índice de vegetação "
+                        "selecionado para a série temporal mantendo a seleção atual de datas "
+                        "(mesma coleção de imagens)."
+                    )
+                else:
+                    self.pop_warning(
+                        "No data available for the selected criteria. "
+                        "Focus on region within area of interest (AOI) is to be used with a vector "
+                        "that is actually contained by the original AOI, or change the selected "
+                        "vegetation index for the time series while maintaining the current date "
+                        "selection (same image collection)."
+                    )
+                QApplication.restoreOverrideCursor()
+                return
+            
+            
             self.df_ajust()
             self.plot_timeseries()
 
@@ -3177,8 +3198,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if local_pixel_limit > 0:
             # Apply local pixel limit filter to the image collection
 
-            aoi_SCL = aoi.map(lambda feature: feature.buffer(300))
-            sentinel2 = self.SCL_filter(sentinel2, aoi_SCL, local_pixel_limit)
+            #aoi_SCL = aoi.map(lambda feature: feature.buffer(300))
+            sentinel2 = self.SCL_filter(sentinel2, aoi, local_pixel_limit)
             if sentinel2.size().getInfo() == 0:
                 QApplication.restoreOverrideCursor()
                 self.pop_warning(
@@ -3439,7 +3460,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def df_ajust(self):
         """Adjusts the main DataFrame based on the selected dates."""
         """Ajusta o DataFrame principal com base nas datas selecionadas."""
-        #df = self.df.copy()
+        df = self.df.copy()
         #df.to_csv("df.csv", index=False)
         if self.recorte_datas:
             df = df[df["date"].isin(self.recorte_datas)]
