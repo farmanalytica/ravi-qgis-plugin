@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -3950,6 +3950,10 @@ p, li { white-space: pre-wrap; }
       <property name="text">
        <string>Open date selection tool</string>
       </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
+      </property>
      </widget>
     </widget>
     <widget class="QWebView" name="webView_3" native="true">
@@ -4169,7 +4173,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="navegador_2">
       <property name="geometry">
        <rect>
-        <x>760</x>
+        <x>750</x>
         <y>10</y>
         <width>181</width>
         <height>31</height>
@@ -4191,9 +4195,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar_2">
       <property name="geometry">
        <rect>
-        <x>950</x>
+        <x>940</x>
         <y>10</y>
-        <width>161</width>
+        <width>171</width>
         <height>31</height>
        </rect>
       </property>
@@ -4244,9 +4248,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="datasrecorte_2">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>530</x>
         <y>10</y>
-        <width>191</width>
+        <width>211</width>
         <height>31</height>
        </rect>
       </property>
@@ -4257,6 +4261,10 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Open date selection tool</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
       </property>
      </widget>
     </widget>
