@@ -3698,7 +3698,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>701</width>
+       <width>691</width>
        <height>51</height>
       </rect>
      </property>
@@ -3715,7 +3715,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>260</x>
         <y>10</y>
-        <width>271</width>
+        <width>201</width>
         <height>31</height>
        </rect>
       </property>
@@ -3728,9 +3728,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector_3">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>470</x>
         <y>10</y>
-        <width>81</width>
+        <width>31</width>
         <height>31</height>
        </rect>
       </property>
@@ -3740,7 +3740,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Update</string>
+       <string/>
       </property>
       <property name="icon">
        <iconset>
@@ -3771,7 +3771,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>630</x>
+        <x>620</x>
         <y>10</y>
         <width>61</width>
         <height>31</height>
@@ -3788,6 +3788,21 @@ p, li { white-space: pre-wrap; }
       <property name="icon">
        <iconset>
         <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="series_indice_3">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>10</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
      </widget>
     </widget>
@@ -4068,9 +4083,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="datasrecorte_3">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>430</x>
        <y>170</y>
-       <width>191</width>
+       <width>211</width>
        <height>31</height>
       </rect>
      </property>
@@ -4204,28 +4219,6 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="datasrecorte_2">
-      <property name="geometry">
-       <rect>
-        <x>900</x>
-        <y>10</y>
-        <width>211</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Open date selection tool</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
-      </property>
-     </widget>
     </widget>
     <widget class="QWebView" name="webView_2" native="true">
      <property name="geometry">
@@ -4301,10 +4294,33 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
      </property>
     </widget>
+    <widget class="QPushButton" name="datasrecorte_2">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>170</y>
+       <width>211</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Open date selection tool</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
+     </property>
+    </widget>
     <zorder>webView_2</zorder>
     <zorder>groupBox_16</zorder>
     <zorder>salvar_2</zorder>
     <zorder>navegador_2</zorder>
+    <zorder>datasrecorte_2</zorder>
    </widget>
   </widget>
  </widget>

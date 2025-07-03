@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>11</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -3657,7 +3657,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>280</x>
         <y>10</y>
-        <width>151</width>
+        <width>191</width>
         <height>31</height>
        </rect>
       </property>
@@ -3670,9 +3670,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector_3">
       <property name="geometry">
        <rect>
-        <x>530</x>
+        <x>480</x>
         <y>10</y>
-        <width>91</width>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3682,7 +3682,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Atualizar</string>
+       <string/>
       </property>
       <property name="icon">
        <iconset>
@@ -3735,7 +3735,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="series_indice_3">
       <property name="geometry">
        <rect>
-        <x>430</x>
+        <x>530</x>
         <y>10</y>
         <width>91</width>
         <height>31</height>
@@ -4025,7 +4025,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="datasrecorte_3">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>410</x>
        <y>170</y>
        <width>191</width>
        <height>31</height>
@@ -4125,7 +4125,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>180</x>
         <y>10</y>
-        <width>201</width>
+        <width>271</width>
         <height>31</height>
        </rect>
       </property>
@@ -4141,7 +4141,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>460</x>
         <y>10</y>
         <width>151</width>
         <height>31</height>
@@ -4191,28 +4191,6 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="datasrecorte_2">
-      <property name="geometry">
-       <rect>
-        <x>920</x>
-        <y>10</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Abrir seleção de datas</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
-      </property>
-     </widget>
     </widget>
     <widget class="QPushButton" name="salvar_2">
      <property name="geometry">
@@ -4256,6 +4234,28 @@ p, li { white-space: pre-wrap; }
      <property name="icon">
       <iconset>
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="datasrecorte_2">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>170</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Abrir seleção de datas</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
      </property>
     </widget>
    </widget>
