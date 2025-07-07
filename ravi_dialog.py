@@ -24,34 +24,64 @@ import os
 import tempfile
 import datetime
 import requests
-from qgis.core import QgsMessageLog, Qgis
-from functools import partial
 import re
 import sys
 import importlib
 import platform
 import subprocess
 import traceback
-from osgeo import gdal
 import zipfile
 import json
 import webbrowser
 import io
 import array
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from qgis.core import QgsWkbTypes
+import qgis
+import pandas as pd
+import numpy as np
 import geopandas as gpd
+import processing
+import plotly.express as px
+import plotly.graph_objects as go
+import urllib.request
+import ee
+
+from functools import partial
+from datetime import timedelta .
+from dateutil.relativedelta import relativedelta
 from shapely.geometry import shape
+from scipy.signal import savgol_filter
+from osgeo import gdal
+
 from qgis.core import (
+    QgsMessageLog,
+    Qgis,
+    QgsWkbTypes,
     QgsVectorLayer,
     QgsVectorFileWriter,
     QgsFeatureRequest,
     QgsProject,
+    QgsRasterLayer,
+    QgsRasterShader,
+    QgsColorRampShader,
+    QgsSingleBandPseudoColorRenderer,
+    QgsStyle,
+    QgsRasterBandStats,
+    QgsMapLayer,
+    QgsColorRamp,
+    QgsLayerTreeLayer,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
+    QgsMultiBandColorRenderer,
+    QgsContrastEnhancement,
+    QgsProcessingFeedback,
+    QgsApplication,
+    QgsRectangle,
+    QgsFeature,
+    QgsGeometry,
+    QgsField,
 )
-from qgis.PyQt.QtGui import QFont
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import QDate, Qt, QVariant, QSettings
+from qgis.PyQt.QtGui import QFont, QColor
+from PyQt5.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -74,90 +104,27 @@ from PyQt5.QtWidgets import (
     QSizePolicy,
 )
 from qgis.PyQt import uic, QtWidgets
-from qgis.core import (
-    QgsProject,
-    QgsRasterLayer,
-    QgsRasterShader,
-    QgsColorRampShader,
-    QgsSingleBandPseudoColorRenderer,
-    QgsStyle,
-    QgsRasterBandStats,
-    QgsMapLayer,
-    QgsVectorLayer,
-    QgsColorRamp,
-    QgsLayerTreeLayer,
-    QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform,
-    QgsMultiBandColorRenderer,
-    QgsContrastEnhancement,
-    QgsProcessingFeedback,
-    QgsApplication,
-    QgsRectangle,
-    QgsFeature,
-    QgsGeometry,
-    QgsField,
-    QgsVectorFileWriter,
+from qgis.PyQt.QtCore import Qt, QEvent # This specific import was duplicated multiple times, consolidating here.
+from qgis.gui import (
+    QgsMapToolEmitPoint,
+    QgsRubberBand,
+    QgsMapToolCapture,
+    QgsMapToolExtent,
+    QgsMapToolPan,
 )
-
-from qgis.PyQt.QtCore import Qt, QTimer
-from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
 from qgis.utils import iface
-import qgis
-import pandas as pd
-import numpy as np
-from scipy.signal import savgol_filter
-import requests
-import processing
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import urllib.request
+
 from .modules import (
-    ee_utils,
     map_tools,
     nasa_power,
     vegetation_index_info,
     save_utils,
     authentication,
+    coordinate_capture,
 )
 
-from qgis.PyQt.QtCore import Qt, QEvent
-from qgis.PyQt.QtWidgets import QApplication
 
-# Your existing imports should include something like:
-from qgis.PyQt import QtWidgets, uic
-from qgis.PyQt.QtWidgets import QDialog
-from qgis.gui import QgsMapToolCapture, QgsMapToolExtent, QgsMapToolPan
-from qgis.core import (
-    QgsRectangle,
-    QgsFeature,
-    QgsGeometry,
-    QgsVectorLayer,
-    QgsField,
-    QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform,
-    QgsProject,
-    QgsVectorFileWriter,
-)
-from qgis.PyQt.QtCore import QVariant
-from qgis.utils import iface
-import processing
 
-from qgis.PyQt.QtWidgets import QApplication
-
-from qgis.PyQt.QtCore import Qt, QEvent
-
-from .modules.coordinate_capture import CoordinateCaptureTool
-
-try:
-    import ee
-except:
-    pass
-
-# try:
-#     import dash
-# except:
-#     pass    
 
 # =============================================================================
 # RAVIDialog Class Definition / Definição da Classe RAVIDialog
@@ -320,7 +287,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.series_indice_3.addItems(vegetation_index)
         self.series_indice.addItems(vegetation_index)
         self.combo_year.addItems(
-            [str(year) for year in range(2017, datetime.now().year + 1)]
+            [str(year) for year in range(2017, datetime.datetime.now().year + 1)]
         )
 
 
@@ -1122,15 +1089,15 @@ class RAVIDialog(QDialog, FORM_CLASS):
         webbrowser.open(url.toString())
 
     def last_clicked(self, months):
-        today = datetime.today().strftime("%Y-%m-%d")
-        one_month_ago = (datetime.today() - relativedelta(months=months)).strftime(
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        one_month_ago = (datetime.datetime.today() - relativedelta(months=months)).strftime(
             "%Y-%m-%d"
         )
         self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
         self.incioedit.setDate(QDate.fromString(one_month_ago, "yyyy-MM-dd"))
 
     def all_clicked(self):
-        today = datetime.today().strftime("%Y-%m-%d")
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
         since = "2017-03-28"
         self.finaledit.setDate(QDate.fromString(today, "yyyy-MM-dd"))
         self.incioedit.setDate(QDate.fromString(since, "yyyy-MM-dd"))
