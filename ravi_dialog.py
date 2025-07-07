@@ -46,7 +46,7 @@ import urllib.request
 import ee
 
 from functools import partial
-from datetime import timedelta .
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from shapely.geometry import shape
 from scipy.signal import savgol_filter
