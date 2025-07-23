@@ -62,7 +62,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="contextMenuPolicy">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>12</number>
+    <number>8</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -92,7 +92,7 @@
       <rect>
        <x>360</x>
        <y>290</y>
-       <width>371</width>
+       <width>391</width>
        <height>41</height>
       </rect>
      </property>
@@ -128,7 +128,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>221</height>
       </rect>
      </property>
@@ -166,7 +166,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>210</x>
        <y>240</y>
-       <width>521</width>
+       <width>541</width>
        <height>41</height>
       </rect>
      </property>
@@ -213,7 +213,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>90</y>
-       <width>721</width>
+       <width>741</width>
        <height>91</height>
       </rect>
      </property>
@@ -230,7 +230,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>701</width>
+        <width>721</width>
         <height>31</height>
        </rect>
       </property>
@@ -281,7 +281,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -311,7 +311,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>530</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -335,7 +335,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>101</height>
       </rect>
      </property>
@@ -352,7 +352,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>630</x>
         <y>40</y>
-        <width>81</width>
+        <width>101</width>
         <height>41</height>
        </rect>
       </property>
@@ -411,7 +411,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>120</y>
-       <width>721</width>
+       <width>741</width>
        <height>111</height>
       </rect>
      </property>
@@ -473,7 +473,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>620</x>
+       <x>640</x>
        <y>290</y>
        <width>111</width>
        <height>41</height>
@@ -545,7 +545,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -851,7 +851,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_2">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -880,7 +880,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -932,7 +932,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>701</width>
+        <width>721</width>
         <height>181</height>
        </rect>
       </property>
@@ -947,7 +947,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>540</x>
         <y>30</y>
-        <width>171</width>
+        <width>191</width>
         <height>41</height>
        </rect>
       </property>
@@ -964,7 +964,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_5">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -1018,7 +1018,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -1038,7 +1038,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>651</width>
+        <width>671</width>
         <height>21</height>
        </rect>
       </property>
@@ -1073,7 +1073,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_coverage">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>690</x>
         <y>40</y>
         <width>51</width>
         <height>21</height>
@@ -1106,7 +1106,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>701</width>
+        <width>721</width>
         <height>181</height>
        </rect>
       </property>
@@ -1123,7 +1123,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_3">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -3112,9 +3112,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="filtro_grau">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>180</x>
         <y>70</y>
-        <width>41</width>
+        <width>51</width>
         <height>22</height>
        </rect>
       </property>
@@ -3164,7 +3164,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Order of the polynomial:</string>
+       <string>Polynomial Order:</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -3224,9 +3224,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="window_len">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>180</x>
         <y>110</y>
-        <width>41</width>
+        <width>51</width>
         <height>22</height>
        </rect>
       </property>
@@ -3698,7 +3698,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>691</width>
+       <width>751</width>
        <height>51</height>
       </rect>
      </property>
@@ -3715,7 +3715,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>260</x>
         <y>10</y>
-        <width>201</width>
+        <width>241</width>
         <height>31</height>
        </rect>
       </property>
@@ -3728,9 +3728,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="update_vector_3">
       <property name="geometry">
        <rect>
-        <x>470</x>
+        <x>510</x>
         <y>10</y>
-        <width>31</width>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3771,9 +3771,9 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>620</x>
+        <x>670</x>
         <y>10</y>
-        <width>61</width>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -3793,7 +3793,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="series_indice_3">
       <property name="geometry">
        <rect>
-        <x>510</x>
+        <x>560</x>
         <y>10</y>
         <width>101</width>
         <height>31</height>
@@ -3889,7 +3889,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>470</x>
+        <x>370</x>
         <y>20</y>
         <width>61</width>
         <height>16</height>
@@ -3907,7 +3907,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>720</x>
+        <x>620</x>
         <y>15</y>
         <width>81</width>
         <height>21</height>
@@ -3925,7 +3925,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QgsFilterLineEdit" name="mLineEdit_longitude">
       <property name="geometry">
        <rect>
-        <x>800</x>
+        <x>700</x>
         <y>9</y>
         <width>171</width>
         <height>31</height>
@@ -3947,9 +3947,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="add_dot">
       <property name="geometry">
        <rect>
-        <x>980</x>
+        <x>880</x>
         <y>10</y>
-        <width>131</width>
+        <width>101</width>
         <height>31</height>
        </rect>
       </property>
@@ -3965,7 +3965,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QgsFilterLineEdit" name="mLineEdit_latitude">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>440</x>
         <y>10</y>
         <width>171</width>
         <height>31</height>
@@ -3987,8 +3987,26 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
      </widget>
+     <widget class="QPushButton" name="clear_button_points">
+      <property name="geometry">
+       <rect>
+        <x>990</x>
+        <y>10</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clear Analysis</string>
+      </property>
+     </widget>
     </widget>
-    <widget class="QWebView" name="webView_3" native="true">
+    <widget class="QWebView" name="webView_2" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -4018,28 +4036,10 @@ p, li { white-space: pre-wrap; }
       </url>
      </property>
     </widget>
-    <widget class="QPushButton" name="clear_button_points">
-     <property name="geometry">
-      <rect>
-       <x>1010</x>
-       <y>170</y>
-       <width>121</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Clear Analysis</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="salvar_3">
      <property name="geometry">
       <rect>
-       <x>830</x>
+       <x>960</x>
        <y>170</y>
        <width>171</width>
        <height>31</height>
@@ -4061,7 +4061,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="navegador_3">
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>780</x>
        <y>170</y>
        <width>171</width>
        <height>31</height>
@@ -4083,7 +4083,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="datasrecorte_3">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>560</x>
        <y>170</y>
        <width>211</width>
        <height>31</height>
@@ -4102,9 +4102,8 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
      </property>
     </widget>
-    <zorder>webView_3</zorder>
+    <zorder>webView_2</zorder>
     <zorder>groupBox_13</zorder>
-    <zorder>clear_button_points</zorder>
     <zorder>salvar_3</zorder>
     <zorder>navegador_3</zorder>
     <zorder>datasrecorte_3</zorder>
@@ -4220,7 +4219,7 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QWebView" name="webView_2" native="true">
+    <widget class="QWebView" name="webView_3" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -4316,7 +4315,7 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/icons8-calendário-50.png</normaloff>../medias/icons8-calendário-50.png</iconset>
      </property>
     </widget>
-    <zorder>webView_2</zorder>
+    <zorder>webView_3</zorder>
     <zorder>groupBox_16</zorder>
     <zorder>salvar_2</zorder>
     <zorder>navegador_2</zorder>

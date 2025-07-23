@@ -20,6 +20,7 @@ email                : caiosimplicioarante@gmail.com
 *                                                                         *
 ***************************************************************************/
 """
+
 import os
 import tempfile
 import datetime
@@ -81,8 +82,8 @@ from qgis.core import (
     QgsField,
 )
 from qgis.PyQt.QtGui import QFont, QColor
-from PyQt5.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
+from qgis.PyQt.QtWidgets import (
     QApplication,
     QMainWindow,
     QLabel,
@@ -90,7 +91,6 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QGridLayout,
     QWidget,
-    QDesktopWidget,
     QDialog,
     QVBoxLayout,
     QCheckBox,
@@ -103,6 +103,8 @@ from PyQt5.QtWidgets import (
     QTextBrowser,
     QSizePolicy,
 )
+
+
 from qgis.PyQt import uic, QtWidgets
 from qgis.PyQt.QtCore import Qt, QEvent # This specific import was duplicated multiple times, consolidating here.
 from qgis.gui import (
@@ -123,8 +125,7 @@ from .modules import (
     coordinate_capture,
 )
 
-
-
+from .modules.coordinate_capture import CoordinateCaptureTool
 
 # =============================================================================
 # RAVIDialog Class Definition / Definição da Classe RAVIDialog
@@ -140,6 +141,7 @@ else:
     ui_file = os.path.join("ui", "ravi_dialog_base.ui")
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
+
 class RAVIDialog(QDialog, FORM_CLASS):
     def __init__(self, parent=None, iface=None):
         super(RAVIDialog, self).__init__(parent)
@@ -147,10 +149,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.iface = iface
         
         self.setWindowFlags(
-            Qt.Window |
-            Qt.WindowCloseButtonHint |
-            Qt.WindowMinimizeButtonHint |
-            Qt.WindowMaximizeButtonHint
+            Qt.WindowType.Window |
+            Qt.WindowType.WindowCloseButtonHint |
+            Qt.WindowType.WindowMinimizeButtonHint |
+            Qt.WindowType.WindowMaximizeButtonHint
         )
         
         self.setModal(False)
@@ -171,13 +173,36 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Set default values / Define valores padrão
         self.last_clicked(3)
         self.index_explain()
-        
-        self.resizeEvent("small")
+        self.load_intro()
+       
         self.tabWidget.setCurrentIndex(0)
+        
+        # Lock window size immediately after initialization
+        # Use QTimer to ensure the window is fully initialized
+        QTimer.singleShot(0, lambda: self.resizeEvent("small"))
+
+    def load_intro(self):
+        # Load intro.html into QTextBrowser
+
+        if self.language == "pt":
+            intro_path = os.path.join(os.path.dirname(__file__), "ui", "intro_pt.html")
+        else:
+            intro_path = os.path.join(os.path.dirname(__file__), "ui", "intro.html")
+
+        with open(intro_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        
+        self.QTextBrowser.setHtml(html_content)
 
     def showEvent(self, event):
         """Start timer when dialog is shown"""
         super().showEvent(event)
+        
+        # Ensure window is locked when first shown
+        if not hasattr(self, '_size_locked'):
+            self.resizeEvent("small")
+            self._size_locked = True
+            
         if hasattr(self, 'focus_timer'):
             self.focus_timer.start(100)
 
@@ -252,12 +277,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Initial UI setup."""
         """Configuração inicial da UI."""
         self.QTextBrowser.setReadOnly(True)  # Prevent editing / Impede a edição
-        self.QTextBrowser.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.QTextBrowser.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         self.textBrowser_valid_pixels.setReadOnly(True)
         self.textBrowser_valid_pixels.setTextInteractionFlags(
-            Qt.TextBrowserInteraction
+            Qt.TextInteractionFlag.TextBrowserInteraction
         )
-        self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+        self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Normal)
 
         vegetation_index = [
             "NDVI",
@@ -294,6 +319,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
         """Conecta os sinais da UI aos seus respectivos slots."""
+        
 
         self.autenticacao.clicked.connect(lambda: authentication.auth(self))
         self.desautenticacao.clicked.connect(lambda: authentication.auth_clear(self))
@@ -356,10 +382,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
 
         self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
+
         self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
-        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_3_update)
+        #self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_3_update)
         self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_3_update)
-        self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_2_update)
+        #self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_2_update)
 
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
 
@@ -403,7 +430,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.series_indice.currentIndexChanged.connect(self.index_explain)
 
         self.setup_custom.clicked.connect(self.setup_custom_clicked)
-
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
@@ -529,7 +555,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.accept() # close dialog
         # Create and show the dialog
         dialog = CustomIndexDialog(self)  # Pass RAVIDialog instance as parent
-        dialog.exec_() # Run and await
+        dialog.exec() # Run and await
 
         if dialog.result():
         # Store expression and name in settings
@@ -672,7 +698,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Clear dataframes and web view
         self.df_points = None
         self.df_aux_points = None
-        self.webView_3.setHtml("")
+        self.webView_2.setHtml("")
 
         print("All dots removed.")
         CoordinateCaptureTool.DOT_COLORS = []
@@ -690,7 +716,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def process_coordinates(self, longitude, latitude):
         """Processes the captured coordinates with Earth Engine."""
         """Processa as coordenadas capturadas com o Earth Engine."""
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
             # 1. Define the point (longitude, latitude) / Define o ponto
             # (longitude, latitude)
@@ -783,9 +809,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         )
         
         self.fig_3 = fig
-        # fig.show()
+        #fig.show()
 
-        self.webView_3.setHtml(
+        self.webView_2.setHtml(
             fig.to_html(include_plotlyjs="cdn", config=self.config)
         )
         
@@ -820,7 +846,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.attributes_id.addItems(sorted(unique_fields))
 
     def QPushButton_features_clicked(self):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.sentinel2_selected_dates_update()
         feature_info = self.split_features(self.attributes_id.currentText())
         self.feature_info(feature_info)
@@ -925,7 +951,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         print("\nFinished processing all features.")
         return feature_info
 
-
     def feature_info(self, feature_info):
         features = []
 
@@ -992,18 +1017,26 @@ class RAVIDialog(QDialog, FORM_CLASS):
         )
         self.fig_2 = fig
 
-        self.webView_2.setHtml(
+        self.webView_3.setHtml(
             fig.to_html(include_plotlyjs="cdn", config=self.config)
         )
         print("Feature info calculated and plotted.")
 
     def combobox_2_update(self):
+        print("combobox_2_update called")
         self.vector_layer_combobox.setCurrentIndex(
+            self.vector_layer_combobox_2.currentIndex()
+        )
+        self.vector_layer_combobox_3.setCurrentIndex(
             self.vector_layer_combobox_2.currentIndex()
         )
 
     def combobox_3_update(self):
+        print("combobox_3_update called")
         self.vector_layer_combobox.setCurrentIndex(
+            self.vector_layer_combobox_3.currentIndex()
+        )
+        self.vector_layer_combobox_2.setCurrentIndex(
             self.vector_layer_combobox_3.currentIndex()
         )
 
@@ -1022,7 +1055,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.incioedit_2.setDate(self.incioedit.date())
         self.series_indice_2.setCurrentIndex(self.series_indice.currentIndex())
         self.series_indice_3.setCurrentIndex(self.series_indice.currentIndex())
-
 
     def clear_nasa_clicked(self):
         """Clears the NASA data and updates the timeseries plot."""
@@ -1375,8 +1407,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         layout.addWidget(scroll_area)
 
         # Buttons / Botões
+        # Use QDialogButtonBox.StandardButton for Qt6 compatibility
         button_box = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel, dialog
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, dialog
         )
         button_layout = QHBoxLayout()
         apply_button = QPushButton("Apply", dialog)
@@ -1397,7 +1430,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         select_button.clicked.connect(self.select_all_checkboxes)
         deselect_button.clicked.connect(self.deselect_all_checkboxes)
 
-        if dialog.exec_() == QDialog.Accepted:
+        if dialog.exec() == QDialog.DialogCode.Accepted:
             self.apply_changes()  # Ensure changes are applied before closing
         else:
             print("Time series dialog canceled. No changes made.")
@@ -1542,8 +1575,13 @@ class RAVIDialog(QDialog, FORM_CLASS):
         qtRectangle = self.frameGeometry()
         # 2. Determine the center point of the available screen space on the
         # current screen.
-        screen = QDesktopWidget().screenNumber(self)
-        centerPoint = QDesktopWidget().availableGeometry(screen).center()
+        # screen = QDesktopWidget().screenNumber(self)
+        # centerPoint = QDesktopWidget().availableGeometry(screen).center()
+        # Replacement for QDesktopWidget using QApplication.primaryScreen()
+        screen = QApplication.screenAt(self.frameGeometry().center())
+        if screen is None:
+            screen = QApplication.primaryScreen()
+        centerPoint = screen.availableGeometry().center()
         # 3. Move the center of the window frame to the center point of the
         # screen.
         qtRectangle.moveCenter(centerPoint)
@@ -1551,15 +1589,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.move(qtRectangle.topLeft())
 
     def resizeEvent(self, size):
-        self.setMinimumSize(0, 0)  # Remove minimum size constraint
-        self.setMaximumSize(16777215, 16777215)  # Rem
+        # Remove size constraints first
+        self.setMinimumSize(0, 0)
+        self.setMaximumSize(16777215, 16777215)
 
         if size == "small":
-            self.resize(743, 373)
-            self.setFixedSize(self.width(), self.height())  # Lock to small size
+            self.resize(765, 370)
+            # Lock to small size - this prevents resizing
+            self.setFixedSize(self.width(), self.height())
         elif size == "big":
             self.resize(1145, 620)
-            self.setFixedSize(self.width(), self.height())  # Lock to big size
+            # Lock to big size - this prevents resizing
+            self.setFixedSize(self.width(), self.height())
 
     def on_tab_changed(self, index):
         # CRITICAL: Get the recursion guard flag safely.
@@ -1776,12 +1817,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
         else:
             msg.setWindowTitle("Warning!")
 
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText(aviso)
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.button(QMessageBox.Ok).setText("OK")
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.button(QMessageBox.StandardButton.Ok).setText("OK")
         msg.setStyleSheet("font-size: 10pt;")
-        msg.exec_()
+        msg.exec()
 
     def pop_warning_2(self, aviso):
         QApplication.restoreOverrideCursor()  # Restore the cursor if it was overridden
@@ -1827,13 +1868,13 @@ class RAVIDialog(QDialog, FORM_CLASS):
         dialog.setStyleSheet("font-size: 10pt;")
         
         # Execute the dialog and return the result
-        result = dialog.exec_()
+        result = dialog.exec()
         
         # Return which button was pressed
-        if result == QDialog.Accepted:
-            return QMessageBox.Ok
+        if result == QDialog.DialogCode.Accepted:
+            return QMessageBox.StandardButton.Ok
         else:
-            return QMessageBox.Cancel
+            return QMessageBox.StandardButton.Cancel
 
     def update_vector_clicked(self):
         self.load_vector_layers()
@@ -1983,7 +2024,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.QPushButton_next.setEnabled(True)
             self.QPushButton_skip.setEnabled(True)
             self.loadtimeseries.setEnabled(True)
-            # self.load_vector_function()
+
             return None
         else:
             print(
@@ -2203,7 +2244,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         aoi = self.apply_buffer(self.aoi)
         try:
             print("First index clicked")
-            QApplication.setOverrideCursor(Qt.WaitCursor)
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
             vegetation_index = self.imagem_unica_indice.currentText()
             date = [self.dataunica.currentText()]
@@ -2214,7 +2255,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             index_image = self.calculate_vegetation_index(first_image, vegetation_index)
 
             # Prepare download URL and output filename
-            url = index_image.getDownloadUrl(
+            url = index_image.getDownloadURL(
                 {
                     "scale": 10,
                     "region": aoi.geometry().bounds().getInfo(),
@@ -2431,7 +2472,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             
         # Set the cursor to indicate processing
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
         try:
             date = [self.dataunica.currentText()]
@@ -2457,7 +2498,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             # Generate download URL
             try:
-                url = first_image.getDownloadUrl(
+                url = first_image.getDownloadURL(
                     {
                         "scale": 10,
                         "region": region,
@@ -2683,7 +2724,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         return file_path, layer_name
 
-
     def get_unique_filename(self, base_file_name, temporary=False):
         name, extension = os.path.splitext(base_file_name)
         if temporary:
@@ -2730,7 +2770,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.sentinel2_selected_dates = sentinel2_selected_dates
 
     def composite_clicked(self, temporary=False):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.sentinel2_selected_dates_update()
         self.composite(temporary)
         QApplication.restoreOverrideCursor()
@@ -2785,7 +2825,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # The actual clipping to the irregular shape is handled by updateMask.
             download_region = aoi.geometry().bounds().getInfo()
 
-            url = final_image_masked.getDownloadUrl(
+            url = final_image_masked.getDownloadURL(
                 {
                     "scale": 10,
                     "region": download_region,
@@ -2795,7 +2835,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             )
 
             base_output_file = f"{metrica}_{indice_vegetacao}.tiff"
-            output_file = self.get_unique_filename(base_output_file, True)
+            output_file = self.get_unique_filename(base_output_file, temporary)
             response = requests.get(url)
             with open(output_file, "wb") as f:
                 f.write(response.content)
@@ -3004,16 +3044,16 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.df_points = None
 
     def loadtimeseries_clicked(self):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
             self.resetting()
             self.ee_load_collection()
             self.calculate_timeseries()
             self.plot_timeseries()
             
-            #self.centralizar()
-            self.webView_2.setHtml("")
+            self.centralizar()
             self.webView_3.setHtml("")
+            self.webView_2.setHtml("")
             print("Time series loaded successfully.")
             
             if self.language == "pt":
@@ -3021,7 +3061,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             else:
                 response = self.pop_warning_2("\n".join(self.collection_info))
 
-            if response == QMessageBox.Ok:
+            if response == QMessageBox.StandardButton.Ok:
                 print("User clicked OK")
                 self.tabWidget.setCurrentIndex(10)
             else:
@@ -3034,7 +3074,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         QApplication.restoreOverrideCursor()
 
     def loadtimeseries_clicked_2(self):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
             self.calculate_timeseries()
 
@@ -3063,9 +3103,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.df_ajust()
             self.plot_timeseries()
 
-            #self.centralizar()
-            self.webView_2.setHtml("")
+            self.centralizar()
             self.webView_3.setHtml("")
+            self.webView_2.setHtml("")
             print("Time series loaded successfully.")
             
         except Exception as e:
@@ -3412,9 +3452,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Adjusts the main DataFrame based on the selected dates."""
         """Ajusta o DataFrame principal com base nas datas selecionadas."""
         df = self.df.copy()
-        #df.to_csv("df.csv", index=False)
         if self.recorte_datas:
-            df = df[df["date"].isin(self.recorte_datas)]
+            # Ensure both sides are strings for comparison
+            df = df[df["date"].astype(str).isin([str(d) for d in self.recorte_datas])]
             self.df_aux = df.copy()
         else:
             self.df_aux = df.copy()
@@ -3424,7 +3464,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Ajusta o DataFrame de feições com base nas datas selecionadas."""
         df = self.df_features.copy()
         if self.recorte_datas:
-            df = df[df["date"].isin(self.recorte_datas)]
+            df = df[df["date"].astype(str).isin([str(d) for d in self.recorte_datas])]
             self.df_aux_features = df.copy()
         else:
             self.df_aux_features = df.copy()
@@ -3434,7 +3474,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Ajusta o DataFrame de pontos com base nas datas selecionadas."""
         df = self.df_points.copy()
         if self.recorte_datas:
-            df = df[df["date"].isin(self.recorte_datas)]
+            df = df[df["date"].astype(str).isin([str(d) for d in self.recorte_datas])]
             self.df_aux_points = df.copy()
         else:
             self.df_aux_points = df.copy()

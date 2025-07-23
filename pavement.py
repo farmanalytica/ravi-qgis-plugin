@@ -119,5 +119,5 @@ def make_zip(zipFile, options):
     for root, dirs, files in os.walk(src_dir):
         for f in filter_excludes(files):
             relpath = os.path.relpath(root, '.')
-            zipFile.write(path(root) / f, path('ee_plugin') / path(relpath) / f)
+            zipFile.write(path(root) / f, path('ravi') / path(relpath) / f)
         filter_excludes(dirs)

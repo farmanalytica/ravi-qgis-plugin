@@ -3,10 +3,9 @@ import os
 import platform
 import shutil
 import re
-from PyQt5.QtCore import QSettings
-from PyQt5.QtWidgets import QMessageBox, QApplication
+from qgis.PyQt.QtCore import QSettings, Qt
+from qgis.PyQt.QtWidgets import QMessageBox, QApplication
 import ee
-from PyQt5.QtCore import Qt
 
 
 def loadProjectId(self):

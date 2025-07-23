@@ -2,7 +2,7 @@ import os
 import platform
 import subprocess
 import pandas as pd
-from PyQt5.QtWidgets import QFileDialog
+from qgis.PyQt.QtWidgets import QFileDialog
 
 
 def save(df, name, parent_widget=None):
