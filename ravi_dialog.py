@@ -1594,7 +1594,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.setMaximumSize(16777215, 16777215)
 
         if size == "small":
-            self.resize(765, 370)
+            self.resize(765, 371)
             # Lock to small size - this prevents resizing
             self.setFixedSize(self.width(), self.height())
         elif size == "big":

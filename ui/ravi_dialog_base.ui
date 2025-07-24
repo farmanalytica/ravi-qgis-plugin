@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1201,7 +1201,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_6">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -1225,7 +1225,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -1242,7 +1242,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>701</width>
+        <width>721</width>
         <height>181</height>
        </rect>
       </property>
@@ -1264,7 +1264,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_buffer">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>690</x>
         <y>40</y>
         <width>51</width>
         <height>21</height>
@@ -1287,7 +1287,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>651</width>
+        <width>671</width>
         <height>21</height>
        </rect>
       </property>
@@ -1333,7 +1333,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -1353,7 +1353,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>651</width>
+        <width>671</width>
         <height>21</height>
        </rect>
       </property>
@@ -1388,7 +1388,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>690</x>
         <y>40</y>
         <width>41</width>
         <height>21</height>
@@ -1408,7 +1408,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>701</width>
+        <width>721</width>
         <height>181</height>
        </rect>
       </property>
@@ -1450,7 +1450,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_7">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
@@ -1479,7 +1479,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>721</width>
+       <width>741</width>
        <height>271</height>
       </rect>
      </property>
@@ -1499,7 +1499,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>651</width>
+        <width>671</width>
         <height>21</height>
        </rect>
       </property>
@@ -1534,7 +1534,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_cloud_aoi">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>690</x>
         <y>30</y>
         <width>51</width>
         <height>21</height>
@@ -1554,7 +1554,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>150</y>
-        <width>701</width>
+        <width>721</width>
         <height>121</height>
        </rect>
       </property>
@@ -1809,7 +1809,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>701</width>
+        <width>721</width>
         <height>81</height>
        </rect>
       </property>
@@ -1878,7 +1878,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_8">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>
