@@ -1,5 +1,5 @@
 ---
-title: "ravi-qgis-plugin: Ferramentas integradas de sensoriamento remoto e dados ambientais para o QGIS"
+title: "RAVI: Plugin para acesso e processamentos dados Sentinel-2 no QGIS"
 tags:
     - QGIS
     - SIG
