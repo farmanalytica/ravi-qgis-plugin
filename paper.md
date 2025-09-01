@@ -29,7 +29,9 @@ date: 2025-08-31
 bibliography: paper.bib
 ---
 
-RAVI é um plugin para QGIS que integra, em uma interface gráfica unificada, (i) cálculo de índices de vegetação amplamente utilizados (ex.: NDVI, EVI) [@huete2002], (ii) consulta a séries temporais via Google Earth Engine (GEE), aproveitando recursos de computação em nuvem [@gorelick2017], (iii) aquisição de dados meteorológicos da API NASA POWER [@nasapower2023], (iv) captura e gestão de coordenadas para comparações de séries temporais, e (v) utilidades de exportação e organização de resultados. O foco principal do plugin é o catálogo de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2] , facilitando o acesso e processamento desses dados para análises ambientais. O objetivo é reduzir a complexidade das análises ambientais reprodutíveis, fornecendo fluxos de trabalho simplificados e documentação acessível. O projeto é distribuído sob licença livre e visa apoiar pesquisas em monitoramento ambiental, agricultura de precisão e ecologia da vegetação.
+# Resumo
+
+RAVI é um plugin para QGIS que integra, em uma interface gráfica unificada, (i) cálculo de índices de vegetação amplamente utilizados (ex.: NDVI, EVI) [@huete2002], (ii) consulta a séries temporais via Google Earth Engine (GEE), aproveitando recursos de computação em nuvem [@gorelick2017], (iii) aquisição de dados meteorológicos da API NASA POWER [@nasapower2025], (iv) captura e gestão de coordenadas para comparações de séries temporais, e (v) utilidades de exportação e organização de resultados. O foco principal do plugin é o catálogo de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2] , facilitando o acesso e processamento desses dados para análises ambientais. O objetivo é reduzir a complexidade das análises ambientais reprodutíveis, fornecendo fluxos de trabalho simplificados e documentação acessível. O projeto é distribuído sob licença livre e visa apoiar pesquisas em monitoramento ambiental, agricultura de precisão e ecologia da vegetação.
 
 # Declaração de Necessidade
 
