@@ -33,29 +33,29 @@ RAVI é um plugin para QGIS que integra, em uma interface gráfica unificada, (i
 
 # Declaração de Necessidade
 
-A análise de imagens Sentinel-2 frequentemente depende do uso do Google Earth Engine Code Editor, que exige conhecimento em programação e familiaridade com a API JavaScript do GEE. Essa abordagem, embora robusta, pode ser um desafio para pesquisadores sem experiência em programação. Apesar da existência de plugins que abordam aspectos específicos desse fluxo, ainda falta uma solução integrada que ofereça: (a) geração automatizada de séries temporais de índices de vegetação, (b) download e visualização local dos resultados, e (c) interface gráfica intuitiva para acesso aos recursos do GEE. O RAVI atende a essa demanda ao reunir funcionalidades essenciais para o processamento de dados Sentinel-2 diretamente no ambiente QGIS [@qgis2024], tornando certos tipos de análises mais acessíveis.
+A análise de imagens Sentinel-2 frequentemente depende do uso do Google Earth Engine Code Editor, que exige conhecimento em programação e familiaridade com a API JavaScript do GEE. Essa abordagem, embora robusta, pode ser um desafio para pesquisadores sem experiência em programação. Apesar da existência de plugins que abordam aspectos específicos desse fluxo, ainda falta uma solução integrada que ofereça: (a) geração automatizada de séries temporais de índices de vegetação, (b) download e visualização local dos resultados, e (c) interface gráfica para acesso aos recursos do GEE. O RAVI atende a essa demanda ao reunir funcionalidades essenciais para o processamento de dados Sentinel-2 diretamente no ambiente QGIS [@qgis2024], tornando certos tipos de análises mais acessíveis.
 
 # Funcionalidades Principais
 
-- Definição de área de interesse com camada vetorial no projeto QGIS.
-- Consulta a coleções GEE com filtros personalizáveis por data e cobertura de nuvens.
+- Definição de área de interesse com camada vetorial do projeto QGIS.
+- Consulta a coleções GEE com filtros personalizáveis por data, cobertura geométrica e cobertura de nuvens.
 - Cálculo e visualização de séries temporais de índices vegetativos (NDVI, EVI, SAVI, NDWI, entre outros) diretamente no QGIS.
+- Suavização de séries temporais com filtro Savitzky-Golay para redução de ruído [@savitzky1964].
 - Exportação de resultados em formato CSV.
 - Geração de gráficos comparativos entre diferentes áreas ou coordenadas.
 - Download direto de imagens multiespectrais ou camadas de índice para datas selecionadas, recortadas na área de interesse e adicionadas ao projeto QGIS como camada raster.
-- Geração de imagens compostas geradas a partir da combinação de múltiplas imagens de diferentes datas.
+- Geração de imagens compostas geradas a partir da combinação de múltiplas imagens de diferentes datas e métricas definidas pelo usuário.
 
 # Exemplos de Uso
 
-1. Monitoramento agrícola: detecção de falhas de plantio e estresses em culturas (por motivos diversos, como déficit hídrico, pragas ou manejo inadequado) por meio da análise integrada de séries temporais de NDVI, comparação entre áreas e avaliação de imagens recentes, permitindo identificar rapidamente alterações e padrões espaciais de vigor das plantas.
+1. Monitoramento agrícola: detecção de falhas de plantio e estresses em culturas (por motivos diversos, como déficit hídrico, pragas ou manejo inadequado) por meio da análise integrada de séries temporais de NDVI, comparação entre áreas e avaliação de imagens recentes, permitindo identificar alterações e padrões espaciais de vigor das plantas.
 2. Avaliação do impacto de eventos climáticos extremos (ex.: seca ou geada) sobre áreas de vegetação nativa utilizando séries históricas de NDVI e dados meteorológicos.
 3. Mapeamento de áreas com potencial para restauração ecológica, combinando índices de vegetação e variáveis climáticas para priorização espacial.
-4. Suporte à tomada de decisão em manejo agrícola, identificando períodos ótimos para irrigação ou aplicação de insumos com base em tendências espectrais e dados climáticos.
-5. Monitoramento de áreas protegidas, detectando alterações anômalas na vegetação por meio de séries temporais de índices.
+4. Monitoramento de áreas protegidas, detectando alterações anômalas na vegetação por meio de séries temporais de índices.
 
 # Impacto Potencial
 
-Ao simplificar o acesso a dados processados e permitir a execução de rotinas complexas com poucos cliques, o RAVI apoia estudos em monitoramento agrícola e conservação. A integração simultânea de clima e reflectância encoraja abordagens eco-hidrológicas integradas. Além disso, ao oferecer uma interface gráfica, o plugin pode servir como porta de entrada para novos usuários interessados em explorar dados da coleção de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2].
+Ao simplificar o acesso a dados processados e permitir a execução de rotinas complexas com poucos cliques, o RAVI apoia estudos em monitoramento agrícola e conservação. Ao oferecer uma interface gráfica, o plugin pode servir como porta de entrada para novos usuários interessados em explorar dados da coleção de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2].
 
 # Disponibilidade do Código
 
