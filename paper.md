@@ -29,7 +29,7 @@ date: 2025-08-31
 bibliography: paper.bib
 ---
 
-RAVI é um plugin para QGIS que integra, em uma interface gráfica unificada, (i) cálculo de índices de vegetação amplamente utilizados (ex.: NDVI, EVI) [@rouse1974; @huete2002], (ii) consulta a séries temporais via Google Earth Engine (GEE), aproveitando recursos de computação em nuvem [@gorelick2017], (iii) aquisição de dados meteorológicos da API NASA POWER [@nasapower2023], (iv) captura e gestão de coordenadas para comparações de séries temporais, e (v) utilidades de exportação e organização de resultados. O foco principal do plugin é o catálogo de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2] , facilitando o acesso e processamento desses dados para análises ambientais. O objetivo é reduzir a complexidade das análises ambientais reprodutíveis, fornecendo fluxos de trabalho simplificados e documentação acessível. O projeto é distribuído sob licença livre e visa apoiar pesquisas em monitoramento ambiental, agricultura de precisão e ecologia da vegetação.
+RAVI é um plugin para QGIS que integra, em uma interface gráfica unificada, (i) cálculo de índices de vegetação amplamente utilizados (ex.: NDVI, EVI) [@huete2002], (ii) consulta a séries temporais via Google Earth Engine (GEE), aproveitando recursos de computação em nuvem [@gorelick2017], (iii) aquisição de dados meteorológicos da API NASA POWER [@nasapower2023], (iv) captura e gestão de coordenadas para comparações de séries temporais, e (v) utilidades de exportação e organização de resultados. O foco principal do plugin é o catálogo de refletância de superfície harmonizada Sentinel-2 [@esa_sentinel2] , facilitando o acesso e processamento desses dados para análises ambientais. O objetivo é reduzir a complexidade das análises ambientais reprodutíveis, fornecendo fluxos de trabalho simplificados e documentação acessível. O projeto é distribuído sob licença livre e visa apoiar pesquisas em monitoramento ambiental, agricultura de precisão e ecologia da vegetação.
 
 # Declaração de Necessidade
 
@@ -52,6 +52,8 @@ A análise de imagens Sentinel-2 frequentemente depende do uso do Google Earth E
 2. Avaliação do impacto de eventos climáticos extremos (ex.: seca ou geada) sobre áreas de vegetação nativa utilizando séries históricas de NDVI e dados meteorológicos.
 3. Mapeamento de áreas com potencial para restauração ecológica, combinando índices de vegetação e variáveis climáticas para priorização espacial.
 4. Monitoramento de áreas protegidas, detectando alterações anômalas na vegetação por meio de séries temporais de índices.
+5. Obtenção de dados para treinamento de modelos de aprendizado de máquina e outros tipos de análises e processamentos no ambiente QGIS.
+
 
 # Impacto Potencial
 
