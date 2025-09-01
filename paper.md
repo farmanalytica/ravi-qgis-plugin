@@ -11,11 +11,11 @@ tags:
     - Sentinel-2
 authors:
     - name: Caio Arantes
-        orcid: 0009-0006-6926-9368
-        affiliation: 1
+      orcid: 0009-0006-6926-9368
+      affiliation: 1
 affiliations:
     - name: Universidade Estadual de Campinas (UNICAMP)
-        index: 1
+      index: 1
 date: 2025-08-31
 bibliography: paper.bib
 ---
