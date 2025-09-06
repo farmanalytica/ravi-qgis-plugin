@@ -6,7 +6,7 @@
 name=RAVI
 qgisMinimumVersion=3.0
 description=Remote Analysis of Vegetation Indices and download of multispectral imagery
-version=3.1
+version=3.2
 author=Caio Arantes
 email=caiosimplicioarantes@gmail.com
 
@@ -20,7 +20,8 @@ repository=https://github.com/caioarantes/ravi-qgis-plugin
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=
+    3.2 - Batch download feature added
 
 # Tags are comma separated with spaces allowed
 tags=python
@@ -45,6 +46,6 @@ Category of the plugin: Raster, Vector, Database or Web
 # If the plugin can run on QGIS Server.
 server=False
 
-#QT5 support comming soon
+#QT6 support is comming soon
 #supportsQt6=True
 

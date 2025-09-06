@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -2823,9 +2823,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>430</y>
+       <y>390</y>
        <width>301</width>
-       <height>151</height>
+       <height>191</height>
       </rect>
      </property>
      <property name="font">
@@ -2960,7 +2960,7 @@ p, li { white-space: pre-wrap; }
         <x>76</x>
         <y>50</y>
         <width>31</width>
-        <height>81</height>
+        <height>101</height>
        </rect>
       </property>
       <property name="orientation">
@@ -2972,8 +2972,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>229</x>
         <y>50</y>
-        <width>10</width>
-        <height>91</height>
+        <width>16</width>
+        <height>101</height>
        </rect>
       </property>
       <property name="orientation">
@@ -3037,6 +3037,50 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
+     <widget class="QPushButton" name="rgb_batch">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(lote)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1index_batch">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>150</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(lote)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
      <zorder>line_3</zorder>
      <zorder>label_23</zorder>
      <zorder>label_26</zorder>
@@ -3048,6 +3092,8 @@ p, li { white-space: pre-wrap; }
      <zorder>line_2</zorder>
      <zorder>imagem_unica_indice</zorder>
      <zorder>dataunica</zorder>
+     <zorder>rgb_batch</zorder>
+     <zorder>load_1index_batch</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">

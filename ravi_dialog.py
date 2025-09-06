@@ -22,6 +22,7 @@ email                : caiosimplicioarante@gmail.com
 """
 
 import os
+import time
 import tempfile
 import datetime
 import requests
@@ -336,7 +337,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.update_vector_3.clicked.connect(self.update_vector_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
         self.load_1index.clicked.connect(self.load_index)
+        self.load_1index_batch.clicked.connect(self.index_batch_clicked)
         self.load_1rgb.clicked.connect(self.load_rgb)
+        self.rgb_batch.clicked.connect(self.rgb_batch_clicked)
         self.composicao.clicked.connect(self.composite_clicked)
         self.load_1index_preview.clicked.connect(lambda: self.load_index(True))
         self.load_1rgb_preview.clicked.connect(lambda: self.load_rgb(True))
@@ -503,6 +506,61 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Synchronize primary checkboxes based on secondary ones
         for primary, secondary in zip(self.primary_masks, self.secondary_masks):
             primary.setChecked(secondary.isChecked())
+
+    def index_batch_clicked(self):
+        if self.language == "pt":
+            if self.pop_warning_3(
+                "Download em lote inclui todas as datas selecionadas e pode demorar um pouco...\n"
+                "O tempo de processamento depende do tamanho da área de interesse e da quantidade de imagens selecionadas.\n"
+                "O QGIS ficará travado até que o processo seja finalizado."
+            ) == QMessageBox.StandardButton.Cancel:
+                return
+        else:
+            if self.pop_warning_3(
+                "Batch download includes all selected dates and may take a while...\n"
+                "Processing time depends on the size of the area of interest and the number of selected images.\n"
+                "QGIS will be unresponsive until the process is complete."
+            ) == QMessageBox.StandardButton.Cancel:
+                return
+
+        if self.recorte_datas is None:
+            dates = self.df_aux.date.tolist()
+        else:
+            dates = self.recorte_datas
+
+        for data in dates:
+            index = self.dataunica.findText(str(data))
+            self.dataunica.setCurrentIndex(index)
+            print(f"Loading index for date: {data}, index: {index}")
+            self.load_index()        
+
+    def rgb_batch_clicked(self):
+        if self.language == "pt":
+            if self.pop_warning_3(
+                "Download em lote inclui todas as datas selecionadas e pode demorar um pouco...\n"
+                "O tempo de processamento depende do tamanho da área de interesse e da quantidade de imagens selecionadas.\n"
+                "O QGIS ficará travado até que o processo seja finalizado."
+            ) == QMessageBox.StandardButton.Cancel:
+                return
+        else:
+            if self.pop_warning_3(
+                "Batch download includes all selected dates and may take a while...\n"
+                "Processing time depends on the size of the area of interest and the number of selected images.\n"
+                "QGIS will be unresponsive until the process is complete."
+            ) == QMessageBox.StandardButton.Cancel:
+                return
+
+        if self.recorte_datas is None:
+            dates = self.df_aux.date.tolist()
+        else:
+            dates = self.recorte_datas
+
+        for data in dates:
+            index = self.dataunica.findText(str(data))
+            self.dataunica.setCurrentIndex(index)
+            print(f"Loading index for date: {data}, index: {index}")
+            self.load_rgb()  
+
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -1851,6 +1909,57 @@ class RAVIDialog(QDialog, FORM_CLASS):
         else:
             cancel_button = QPushButton("Cancel (stay on this tab)")
             ok_button = QPushButton("OK (go to the next tab)")
+        
+        # Add buttons to the horizontal layout
+        button_layout.addWidget(cancel_button)
+        button_layout.addStretch()  # This will push the OK button to the right
+        button_layout.addWidget(ok_button)
+        
+        # Add the button layout to the main layout
+        layout.addLayout(button_layout)
+        
+        # Connect button signals
+        ok_button.clicked.connect(dialog.accept)
+        cancel_button.clicked.connect(dialog.reject)
+        
+        # Set the stylesheet for the dialog
+        dialog.setStyleSheet("font-size: 10pt;")
+        
+        # Execute the dialog and return the result
+        result = dialog.exec()
+        
+        # Return which button was pressed
+        if result == QDialog.DialogCode.Accepted:
+            return QMessageBox.StandardButton.Ok
+        else:
+            return QMessageBox.StandardButton.Cancel
+        
+    def pop_warning_3(self, aviso):
+
+        # Create a custom dialog
+        dialog = QDialog(self)
+        if self.language == "pt":
+            dialog.setWindowTitle("Aviso!")
+        else:
+            dialog.setWindowTitle("Warning!")
+
+        # Set up the main layout
+        layout = QVBoxLayout(dialog)
+        
+        # Add the warning message
+        message_label = QLabel(aviso)
+        layout.addWidget(message_label)
+        
+        # Create a horizontal layout for the buttons
+        button_layout = QHBoxLayout()
+        
+        # Create buttons
+        if self.language == "pt":
+            cancel_button = QPushButton("Cancelar")
+            ok_button = QPushButton("OK (proceder com download em lote)")
+        else:
+            cancel_button = QPushButton("Cancel")
+            ok_button = QPushButton("OK (proceed with batch download)")
         
         # Add buttons to the horizontal layout
         button_layout.addWidget(cancel_button)

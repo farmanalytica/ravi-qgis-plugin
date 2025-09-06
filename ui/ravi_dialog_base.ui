@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1166</width>
-    <height>763</height>
+    <height>756</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -2834,9 +2834,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>430</y>
+       <y>390</y>
        <width>271</width>
-       <height>151</height>
+       <height>191</height>
       </rect>
      </property>
      <property name="font">
@@ -2991,7 +2991,7 @@ p, li { white-space: pre-wrap; }
         <x>204</x>
         <y>50</y>
         <width>21</width>
-        <height>61</height>
+        <height>131</height>
        </rect>
       </property>
       <property name="orientation">
@@ -3004,7 +3004,7 @@ p, li { white-space: pre-wrap; }
         <x>75</x>
         <y>60</y>
         <width>21</width>
-        <height>51</height>
+        <height>91</height>
        </rect>
       </property>
       <property name="orientation">
@@ -3068,17 +3068,63 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
+     <widget class="QPushButton" name="rgb_batch">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(batch)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1index_batch">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>150</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(batch)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <zorder>line_6</zorder>
      <zorder>line_4</zorder>
      <zorder>label_23</zorder>
      <zorder>label_26</zorder>
      <zorder>load_1rgb</zorder>
      <zorder>load_1index</zorder>
-     <zorder>line_6</zorder>
      <zorder>load_1rgb_preview</zorder>
      <zorder>load_1index_preview</zorder>
      <zorder>line_2</zorder>
      <zorder>dataunica</zorder>
      <zorder>imagem_unica_indice</zorder>
+     <zorder>rgb_batch</zorder>
+     <zorder>load_1index_batch</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
