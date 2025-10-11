@@ -4,10 +4,10 @@ Este repositório contém o código-fonte do complemento **RAVI** para QGIS, que
 
 ## Tutorial
 Um guia de uso está disponível via GitHub Pages em:  
-[https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
+[https://raviqgis.org/](https://raviqgis.org/)  
 
 ## Relato de Problemas
-Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) ou entre em contato direto, envie um e-mail para [caiosimplicioarantes@gmail.com](mailto:contato@caioarantes.com.br).
+Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) ou entre em contato direto, envie um e-mail para [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
 
 
 ## Instalação de Dependências

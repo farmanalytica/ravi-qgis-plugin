@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1255</width>
+    <width>1256</width>
     <height>664</height>
    </rect>
   </property>
@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -189,6 +189,25 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>ID do projeto (Google Cloud):</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>81</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../icon.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -2129,7 +2148,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>1030</x>
-       <y>530</y>
+       <y>540</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -2229,7 +2248,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>330</y>
        <width>1121</width>
-       <height>191</height>
+       <height>201</height>
       </rect>
      </property>
      <property name="font">
@@ -2302,7 +2321,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>70</y>
         <width>1101</width>
         <height>121</height>
        </rect>
@@ -2558,7 +2577,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>410</x>
-       <y>530</y>
+       <y>540</y>
        <width>321</width>
        <height>31</height>
       </rect>
@@ -2579,7 +2598,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>530</y>
+       <y>540</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -3615,7 +3634,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>71</width>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
@@ -3625,7 +3644,11 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Carregar</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="clear_nasa">
@@ -3649,9 +3672,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="salvar_nasa">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>120</x>
         <y>30</y>
-        <width>81</width>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
@@ -3661,11 +3684,33 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Salvar</string>
+       <string/>
       </property>
       <property name="icon">
        <iconset>
         <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="proxy">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/network-settings-2.svg</normaloff>../medias/network-settings-2.svg</iconset>
       </property>
      </widget>
     </widget>

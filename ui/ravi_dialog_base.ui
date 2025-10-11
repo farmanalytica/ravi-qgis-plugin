@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -3638,24 +3638,6 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>NasaPower Precipitation</string>
      </property>
-     <widget class="QPushButton" name="nasapower">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="clear_nasa">
       <property name="geometry">
        <rect>
@@ -3674,12 +3656,12 @@ p, li { white-space: pre-wrap; }
        <string>Clear</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="salvar_nasa">
+     <widget class="QPushButton" name="nasapower">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>10</x>
         <y>30</y>
-        <width>71</width>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
@@ -3689,11 +3671,55 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Save</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_nasa">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>30</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
       </property>
       <property name="icon">
        <iconset>
         <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="proxy">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/network-settings-2.svg</normaloff>../medias/network-settings-2.svg</iconset>
       </property>
      </widget>
     </widget>
