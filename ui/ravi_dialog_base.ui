@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1166</width>
-    <height>756</height>
+    <width>1145</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -409,7 +409,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Keep total area smaller than 100 km² (10,000 hectares)</string>
+      <string>Keep total area smaller than 120  km² (12,000 hectares)</string>
      </property>
      <widget class="QLabel" name="aoi_area">
       <property name="geometry">
@@ -496,6 +496,31 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Enable Draw on Map to build area of Interest</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_fast">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>290</y>
+       <width>371</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Load most recent image available</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1104,7 +1129,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="plainText">
-       <string>Sentinel-2 imagery is captured in tiles, each covering an area of 100 km² (10 km x 10 km). This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high overlap threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
+       <string>Sentinel-2 imagery is captured in tiles, each covering an area of 10,000 km² (100 km x 100 km). This filter evaluates whether each image sufficiently covers your Area of Interest (AOI) by calculating the percentage of overlap. A high overlap threshold (e.g., 90%) ensures that selected images provide comprehensive data for your AOI, improving the accuracy of your analysis. However, for large or irregularly shaped AOIs, it may be challenging to find images that meet such a high threshold, as they typically do not perfectly cover extensive or complex areas. Setting the threshold appropriately allows you to balance data quality and the number of images available, tailoring the selection to your AOI's size and shape.</string>
       </property>
      </widget>
     </widget>

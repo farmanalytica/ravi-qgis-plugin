@@ -101,6 +101,7 @@ from qgis.PyQt.QtWidgets import (
     QPushButton,
     QHBoxLayout,
     QToolButton,
+    QLineEdit,
     QTextBrowser,
     QSizePolicy,
 )
@@ -364,6 +365,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_back_8.clicked.connect(self.back_clicked)
         self.QPushButton_back_9.clicked.connect(self.back_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
+        self.QPushButton_fast.clicked.connect(self.fast_clicked)
         self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked_2)
         self.navegador.clicked.connect(self.open_browser)
         self.navegador_2.clicked.connect(self.open_browser_2)
@@ -425,6 +427,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.finaledit.dateChanged.connect(self.reload_update)
         self.finaledit_2.dateChanged.connect(self.reload_update2)
 
+        self.proxy.clicked.connect(self.open_proxy_dialog)
         
         self.nasapower.clicked.connect(self.nasapower_clicked)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
@@ -2118,7 +2121,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # processamento
             self.aoi = self.load_vector_function()
             area = self.find_area()
-            if area > 100:
+            if area > 120:
                 self.QPushButton_next.setEnabled(False)
                 self.QPushButton_skip.setEnabled(False)
                 self.loadtimeseries.setEnabled(False)
@@ -3081,6 +3084,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print("AOI defined successfully.")
             self.QPushButton_next.setEnabled(True)
             self.QPushButton_skip.setEnabled(True)
+            self.QPushButton_fast.setEnabled(True)
+
             self.aio_set = True
             self.vector_layer_combobox_2.setCurrentIndex(
                 self.vector_layer_combobox.currentIndex()
@@ -3135,9 +3140,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if self.aoi_ckecked and self.folder_set:
             self.QPushButton_next.setEnabled(True)
             self.QPushButton_skip.setEnabled(True)
+            self.QPushButton_fast.setEnabled(True)
         else:
             self.QPushButton_next.setEnabled(False)
             self.QPushButton_skip.setEnabled(False)
+            self.QPushButton_fast.setEnabled(True)
 
     def resetting(self):
         self.recorte_datas = None
@@ -3820,3 +3827,78 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Call the method to add the point
         self.coordinate_capture_tool.add_dot_from_coordinates(longitude, latitude)
         self.process_coordinates(longitude, latitude)
+
+    def fast_clicked(self):
+        """Handles the 'Fast' button click event to quickly load time series data and load first image."""
+        print("Fast button clicked.")
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            self.resetting()
+            self.ee_load_collection()
+            self.calculate_timeseries()
+            self.plot_timeseries()
+            
+            self.centralizar()
+            self.webView_3.setHtml("")
+            self.webView_2.setHtml("")
+            print("Time series loaded successfully.")
+            self.load_rgb(True)
+            self.load_index(True)
+            self.tabWidget.setCurrentIndex(10)
+
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            QApplication.restoreOverrideCursor()
+            self.pop_warning(f"An error occurred: {e}")
+        QApplication.restoreOverrideCursor()
+
+    def open_proxy_dialog(self):
+        """Open a dialog to configure HTTP/HTTPS proxy and persist it in QSettings.
+
+        Behavior:
+        - On first use (no saved value), preload the field with the example
+          'http://user:pass@host:port'.
+        - When confirming, save only if the value is not empty and not equal to
+          the example placeholder. Otherwise, clear the saved proxy.
+        """
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Proxy Settings")
+        dialog.setModal(True)
+
+        layout = QVBoxLayout(dialog)
+
+        label = QLabel(
+            "Enter proxy settings (only if required by your network provider)\n"
+            "Example: http://user:pass@host:port"
+        )
+        layout.addWidget(label)
+
+        proxy_edit = QLineEdit(dialog)
+        # Load existing proxy from QSettings if available
+        example = "http://user:pass@host:port"
+        existing = QSettings().value("ravi/proxy", None)
+        if existing:
+            proxy_edit.setText(str(existing))
+        else:
+            # First use: preload with example
+            proxy_edit.setText(example)
+        layout.addWidget(proxy_edit)
+
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, dialog)
+        layout.addWidget(button_box)
+
+        def accept():
+            value = proxy_edit.text().strip()
+            # Save only real values (not empty and not placeholder example)
+            if value and value != example:
+                QSettings().setValue("ravi/proxy", value)
+            else:
+                # Clear saved proxy if user left it empty or as example
+                QSettings().setValue("ravi/proxy", "")
+            dialog.accept()
+
+        button_box.accepted.connect(accept)
+        button_box.rejected.connect(dialog.reject)
+
+        dialog.exec_()

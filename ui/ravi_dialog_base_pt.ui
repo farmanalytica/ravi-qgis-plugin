@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1256</width>
-    <height>664</height>
+    <width>903</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -78,7 +78,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -189,25 +189,6 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>ID do projeto (Google Cloud):</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_14">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>81</width>
-       <height>81</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>../icon.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -430,7 +411,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Mantenha a área total menor que 100 km² (10.000 hectares)</string>
+      <string>Mantenha a área total menor que 120 km² (12.000 hectares)</string>
      </property>
      <widget class="QLabel" name="aoi_area">
       <property name="geometry">
@@ -517,6 +498,31 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Ativar Desenhar no mapa para criar área de Interesse</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_fast">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>290</y>
+       <width>371</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Caregar imagem mais recente disponível</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
      </property>
     </widget>
    </widget>
@@ -1100,7 +1106,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="plainText">
-       <string>As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 100 km² (10 km x 10 km). Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
+       <string>As imagens do Sentinel-2 são capturadas em blocos, cada um cobrindo uma área de 10.000 km² (100 km x 100 km). Este filtro avalia se cada imagem cobre suficientemente sua Área de Interesse (AOI) ao calcular a porcentagem de sobreposição. Um limiar de sobreposição alto (por exemplo, 90%) garante que as imagens selecionadas forneçam dados abrangentes para sua AOI, melhorando a precisão da sua análise. No entanto, para AOIs grandes ou com formas irregulares, pode ser desafiador encontrar imagens que atendam a um limiar tão alto, pois elas geralmente não cobrem perfeitamente áreas extensas ou complexas. Definir o limiar de forma apropriada permite equilibrar a qualidade dos dados e o número de imagens disponíveis, ajustando a seleção ao tamanho e forma da sua AOI.</string>
       </property>
      </widget>
     </widget>
@@ -1443,7 +1449,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="QPushButton_next_7">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>290</y>
        <width>101</width>
        <height>41</height>

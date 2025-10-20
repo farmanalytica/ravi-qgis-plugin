@@ -2,6 +2,7 @@ import requests
 import json
 import pandas as pd
 from datetime import datetime, timedelta
+from qgis.PyQt.QtCore import QSettings
 
 def open_nasapower(latitude, longitude, start, end):
 
@@ -25,7 +26,16 @@ def open_nasapower(latitude, longitude, start, end):
     # Request precipitation, minimum temperature, and maximum temperature
     base_url = (f"https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR,T2M_MIN,T2M_MAX&community=RE&longitude={longitude}&latitude={latitude}&start={new_start}&end={new_end}&format=JSON")
     api_request_url = base_url.format(longitude=longitude, latitude=latitude)
-    response = requests.get(url=api_request_url, verify=True, timeout=1000)
+    # Retrieve proxy setting stored by the plugin (if any)
+    proxy_value = QSettings().value("ravi/proxy", "")
+    proxies = None
+    if proxy_value:
+        proxies = {
+            "http": proxy_value,
+            "https": proxy_value,
+        }
+
+    response = requests.get(url=api_request_url, verify=True, timeout=1000, proxies=proxies)
     content = json.loads(response.content.decode('utf-8'))
     data = content['properties']['parameter']
 
