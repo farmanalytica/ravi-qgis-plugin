@@ -263,7 +263,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.nuvem = None
         self.vector_path = None
         self.aoi = None
-        self.aoi_ckecked = False
+        self.aoi_checked = False
         self.df = None
         self.recorte_datas = None
         self.df_aux = None
@@ -2149,8 +2149,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
                 return None
 
-            # self.QPushButton_next.setEnabled(True)
-            # self.QPushButton_skip.setEnabled(True)
             self.loadtimeseries.setEnabled(True)
 
             return None
@@ -3294,9 +3292,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         self.vector_layer_combobox.currentIndex()
                     )
 
-                self.aoi_ckecked = True
-                # if hasattr(self, "aoi_ckecked_function"):
-                #     self.aoi_ckecked_function()
+                self.aoi_checked = True
+
             except Exception as e:
                 print(f"UI update warning: {e}")
 
