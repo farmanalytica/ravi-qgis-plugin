@@ -9081,7 +9081,7 @@
 }
 }
 },
-"revision": "20250729",
+"revision": "20250925",
 "rootUrl": "https://displayvideo.googleapis.com/",
 "schemas": {
 "ActivateManualTriggerRequest": {
@@ -9282,6 +9282,20 @@
 "description": "Output only. The unique ID of the advertiser. Assigned by the system.",
 "format": "int64",
 "readOnly": true,
+"type": "string"
+},
+"containsEuPoliticalAds": {
+"description": "Optional. Whether this advertiser contains line items that serve European Union political ads. If this field is set to `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING`, then the following will happen: * Any new line items created under this advertiser will be assigned `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` if not otherwise specified. * Any existing line items under this advertiser that do not have a set value be updated to `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` within a day.",
+"enum": [
+"EU_POLITICAL_ADVERTISING_STATUS_UNKNOWN",
+"CONTAINS_EU_POLITICAL_ADVERTISING",
+"DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING"
+],
+"enumDescriptions": [
+"Unknown.",
+"Contains EU political advertising.",
+"Does not contain EU political advertising."
+],
 "type": "string"
 },
 "creativeConfig": {
@@ -9573,7 +9587,8 @@
 "APP_PLATFORM_ANDROID_TV",
 "APP_PLATFORM_GENERIC_CTV",
 "APP_PLATFORM_LG_TV",
-"APP_PLATFORM_VIZIO_TV"
+"APP_PLATFORM_VIZIO_TV",
+"APP_PLATFORM_VIDAA"
 ],
 "enumDescriptions": [
 "Default value when app platform is not specified in this version. This enum is a placeholder for default value and does not represent a real platform option.",
@@ -9588,7 +9603,8 @@
 "The app platform is Android TV.",
 "The app platform is a CTV platform that is not explicitly listed elsewhere.",
 "The app platform is LG TV.",
-"The app platform is VIZIO TV."
+"The app platform is VIZIO TV.",
+"The app platform is Vidaa."
 ],
 "type": "string"
 },
@@ -10866,7 +10882,7 @@
 "description": "Required. A line item object containing the fields to be updated and the new values to assign to all line items specified in line_item_ids.\""
 },
 "updateMask": {
-"description": "Required. A field mask identifying which fields to update. Only the following fields are currently supported: * entityStatus",
+"description": "Required. A field mask identifying which fields to update. Only the following fields are currently supported: * entityStatus * containsEuPoliticalAds",
 "format": "google-fieldmask",
 "type": "string"
 }
@@ -12056,7 +12072,9 @@
 "SDF_VERSION_7",
 "SDF_VERSION_7_1",
 "SDF_VERSION_8",
-"SDF_VERSION_8_1"
+"SDF_VERSION_8_1",
+"SDF_VERSION_9",
+"SDF_VERSION_9_1"
 ],
 "enumDeprecated": [
 false,
@@ -12071,6 +12089,8 @@ true,
 true,
 true,
 true,
+false,
+false,
 false,
 false,
 false,
@@ -12092,7 +12112,9 @@ false
 "SDF version 7. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 7.1. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 8. Read the [v8 migration guide](/display-video/api/structured-data-file/v8-migration-guide) before migrating to this version.",
-"SDF version 8.1."
+"SDF version 8.1.",
+"SDF version 9. Read the [v9 migration guide](/display-video/api/structured-data-file/v9-migration-guide) before migrating to this version.",
+"SDF version 9.1."
 ],
 "type": "string"
 }
@@ -13545,6 +13567,20 @@ false
 "description": "Request message for LineItemService.DuplicateLineItem.",
 "id": "DuplicateLineItemRequest",
 "properties": {
+"containsEuPoliticalAds": {
+"description": "Whether this line item will serve European Union political ads. If contains_eu_political_ads has been set to `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` in the parent advertiser, then this field will be assigned `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` if not otherwise specified. This field can then be updated using the UI, API, or Structured Data Files. This field must be assigned when creating a new line item. Otherwise, **the `advertisers.lineItems.create` request will fail**.",
+"enum": [
+"EU_POLITICAL_ADVERTISING_STATUS_UNKNOWN",
+"CONTAINS_EU_POLITICAL_ADVERTISING",
+"DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING"
+],
+"enumDescriptions": [
+"Unknown.",
+"Contains EU political advertising.",
+"Does not contain EU political advertising."
+],
+"type": "string"
+},
 "targetDisplayName": {
 "description": "The display name of the new line item. Must be UTF-8 encoded with a maximum size of 240 bytes.",
 "type": "string"
@@ -13802,7 +13838,8 @@ false
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -13891,7 +13928,8 @@ false
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "type": "string"
 }
@@ -14005,7 +14043,8 @@ false
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -14094,7 +14133,8 @@ false
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "type": "string"
 },
@@ -14209,7 +14249,8 @@ false
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -14298,7 +14339,8 @@ false
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "type": "string"
 },
@@ -14414,7 +14456,8 @@ false
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -14503,7 +14546,8 @@ false
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "readOnly": true,
 "type": "string"
@@ -14781,6 +14825,20 @@ false
 "description": "Request message for LineItemService.GenerateDefaultLineItem.",
 "id": "GenerateDefaultLineItemRequest",
 "properties": {
+"containsEuPoliticalAds": {
+"description": "Whether this line item will serve European Union political ads. If contains_eu_political_ads has been set to `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` in the parent advertiser, then this field will be assigned `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` if not otherwise specified. This field can then be updated using the UI, API, or Structured Data Files. This field must be assigned when creating a new line item. Otherwise, **the `advertisers.lineItems.create` request will fail**.",
+"enum": [
+"EU_POLITICAL_ADVERTISING_STATUS_UNKNOWN",
+"CONTAINS_EU_POLITICAL_ADVERTISING",
+"DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING"
+],
+"enumDescriptions": [
+"Unknown.",
+"Contains EU political advertising.",
+"Does not contain EU political advertising."
+],
+"type": "string"
+},
 "displayName": {
 "description": "Required. The display name of the line item. Must be UTF-8 encoded with a maximum size of 240 bytes.",
 "type": "string"
@@ -15262,7 +15320,8 @@ false
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -15351,7 +15410,8 @@ false
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "type": "string"
 },
@@ -16183,7 +16243,8 @@ true
 "EXCHANGE_CORE",
 "EXCHANGE_COMMERCE_GRID",
 "EXCHANGE_SPOTIFY",
-"EXCHANGE_TUBI"
+"EXCHANGE_TUBI",
+"EXCHANGE_SNAP"
 ],
 "enumDescriptions": [
 "Exchange is not specified or is unknown in this version.",
@@ -16272,7 +16333,8 @@ true
 "Core.",
 "Commerce Grid.",
 "Spotify.",
-"Tubi."
+"Tubi.",
+"Snap."
 ],
 "type": "string"
 },
@@ -16755,6 +16817,20 @@ true
 "description": "Output only. The unique ID of the campaign that the line item belongs to.",
 "format": "int64",
 "readOnly": true,
+"type": "string"
+},
+"containsEuPoliticalAds": {
+"description": "Whether this line item will serve European Union political ads. If contains_eu_political_ads has been set to `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` in the parent advertiser, then this field will be assigned `DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING` if not otherwise specified. This field can then be updated using the UI, API, or Structured Data Files. This field must be assigned when creating a new line item. Otherwise, **the `advertisers.lineItems.create` request will fail**.",
+"enum": [
+"EU_POLITICAL_ADVERTISING_STATUS_UNKNOWN",
+"CONTAINS_EU_POLITICAL_ADVERTISING",
+"DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING"
+],
+"enumDescriptions": [
+"Unknown.",
+"Contains EU political advertising.",
+"Does not contain EU political advertising."
+],
 "type": "string"
 },
 "conversionCounting": {
@@ -19342,7 +19418,9 @@ false
 "SDF_VERSION_7",
 "SDF_VERSION_7_1",
 "SDF_VERSION_8",
-"SDF_VERSION_8_1"
+"SDF_VERSION_8_1",
+"SDF_VERSION_9",
+"SDF_VERSION_9_1"
 ],
 "enumDeprecated": [
 false,
@@ -19357,6 +19435,8 @@ true,
 true,
 true,
 true,
+false,
+false,
 false,
 false,
 false,
@@ -19378,7 +19458,9 @@ false
 "SDF version 7. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 7.1. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 8. Read the [v8 migration guide](/display-video/api/structured-data-file/v8-migration-guide) before migrating to this version.",
-"SDF version 8.1."
+"SDF version 8.1.",
+"SDF version 9. Read the [v9 migration guide](/display-video/api/structured-data-file/v9-migration-guide) before migrating to this version.",
+"SDF version 9.1."
 ],
 "type": "string"
 }
@@ -19428,7 +19510,9 @@ false
 "SDF_VERSION_7",
 "SDF_VERSION_7_1",
 "SDF_VERSION_8",
-"SDF_VERSION_8_1"
+"SDF_VERSION_8_1",
+"SDF_VERSION_9",
+"SDF_VERSION_9_1"
 ],
 "enumDeprecated": [
 false,
@@ -19443,6 +19527,8 @@ true,
 true,
 true,
 true,
+false,
+false,
 false,
 false,
 false,
@@ -19464,7 +19550,9 @@ false
 "SDF version 7. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 7.1. Read the [v7 migration guide](/display-video/api/structured-data-file/v7-migration-guide) before migrating to this version.",
 "SDF version 8. Read the [v8 migration guide](/display-video/api/structured-data-file/v8-migration-guide) before migrating to this version.",
-"SDF version 8.1."
+"SDF version 8.1.",
+"SDF version 9. Read the [v9 migration guide](/display-video/api/structured-data-file/v9-migration-guide) before migrating to this version.",
+"SDF version 9.1."
 ],
 "type": "string"
 }
@@ -21007,7 +21095,7 @@ true
 "type": "string"
 },
 "value": {
-"description": "The value used by the bidding strategy. When the bidding strategy is assigned at the line item level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` When the bidding strategy is assigned at the ad group level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPV` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` If not using an applicable strategy, the value of this field will be 0.",
+"description": "The value used by the bidding strategy. When the bidding strategy is assigned at the line item level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_SHARE_OF_VOICE` When the bidding strategy is assigned at the ad group level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPV` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` If not using an applicable strategy, the value of this field will be 0.",
 "format": "int64",
 "type": "string"
 }
@@ -21135,7 +21223,7 @@ true
 "type": "array"
 },
 "brandSafetyVendorConfigs": {
-"description": "The third-party vendors measuring brand safety. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_ZERF` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE`",
+"description": "The third-party vendors measuring brand safety. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_ZEFR` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE`",
 "items": {
 "$ref": "ThirdPartyVendorConfig"
 },

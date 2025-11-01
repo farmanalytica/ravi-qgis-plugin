@@ -786,7 +786,7 @@
 }
 }
 },
-"revision": "20250706",
+"revision": "20251006",
 "rootUrl": "https://recaptchaenterprise.googleapis.com/",
 "schemas": {
 "GoogleCloudRecaptchaenterpriseV1AccountDefenderAssessment": {
@@ -946,6 +946,10 @@ true
 "description": "Optional. A stable hashed account identifier to apply to the assessment. This is an alternative to setting `hashed_account_id` in `CreateAssessment`, for example when a stable account identifier is not yet known in the initial request.",
 "format": "byte",
 "type": "string"
+},
+"phoneAuthenticationEvent": {
+"$ref": "GoogleCloudRecaptchaenterpriseV1PhoneAuthenticationEvent",
+"description": "Optional. If using an external multi-factor authentication provider, provide phone authentication details for fraud detection purposes."
 },
 "reasons": {
 "description": "Optional. Reasons for the annotation that are assigned to the event.",
@@ -1258,7 +1262,7 @@ true
 "type": "string"
 },
 "wafTokenAssessment": {
-"description": "Optional. Flag for running WAF token assessment. If enabled, the token must be specified, and have been created by a WAF-enabled key.",
+"description": "Optional. Flag for running Web Application Firewall (WAF) token assessment. If enabled, the token must be specified, and have been created by a WAF-enabled key.",
 "type": "boolean"
 }
 },
@@ -1652,7 +1656,7 @@ true
 },
 "wafSettings": {
 "$ref": "GoogleCloudRecaptchaenterpriseV1WafSettings",
-"description": "Optional. Settings for WAF"
+"description": "Optional. Settings for Web Application Firewall (WAF)."
 },
 "webSettings": {
 "$ref": "GoogleCloudRecaptchaenterpriseV1WebKeySettings",
@@ -1793,6 +1797,22 @@ true
 },
 "type": "object"
 },
+"GoogleCloudRecaptchaenterpriseV1PhoneAuthenticationEvent": {
+"description": "Details on a phone authentication event",
+"id": "GoogleCloudRecaptchaenterpriseV1PhoneAuthenticationEvent",
+"properties": {
+"eventTime": {
+"description": "Optional. The time at which the multi-factor authentication event (challenge or verification) occurred.",
+"format": "google-datetime",
+"type": "string"
+},
+"phoneNumber": {
+"description": "Required. Phone number in E.164 format for which a multi-factor authentication challenge was initiated, succeeded, or failed.",
+"type": "string"
+}
+},
+"type": "object"
+},
 "GoogleCloudRecaptchaenterpriseV1PhoneFraudAssessment": {
 "description": "Assessment for Phone Fraud",
 "id": "GoogleCloudRecaptchaenterpriseV1PhoneFraudAssessment",
@@ -1922,7 +1942,7 @@ true
 "id": "GoogleCloudRecaptchaenterpriseV1RiskAnalysis",
 "properties": {
 "challenge": {
-"description": "Output only. Challenge information for POLICY_BASED_CHALLENGE and INVISIBLE keys",
+"description": "Output only. Challenge information for POLICY_BASED_CHALLENGE and INVISIBLE keys.",
 "enum": [
 "CHALLENGE_UNSPECIFIED",
 "NOCAPTCHA",
@@ -2479,7 +2499,7 @@ true
 "id": "GoogleCloudRecaptchaenterpriseV1WafSettings",
 "properties": {
 "wafFeature": {
-"description": "Required. The WAF feature for which this key is enabled.",
+"description": "Required. The Web Application Firewall (WAF) feature for which this key is enabled.",
 "enum": [
 "WAF_FEATURE_UNSPECIFIED",
 "CHALLENGE_PAGE",
@@ -2504,7 +2524,7 @@ true
 "type": "string"
 },
 "wafService": {
-"description": "Required. The WAF service that uses this key.",
+"description": "Required. The Web Application Firewall (WAF) service that uses this key.",
 "enum": [
 "WAF_SERVICE_UNSPECIFIED",
 "CA",

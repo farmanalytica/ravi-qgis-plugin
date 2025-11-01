@@ -68,6 +68,11 @@
 },
 {
 "description": "Regional Endpoint",
+"endpointUrl": "https://dataplex.asia-southeast3.rep.googleapis.com/",
+"location": "asia-southeast3"
+},
+{
+"description": "Regional Endpoint",
 "endpointUrl": "https://dataplex.australia-southeast1.rep.googleapis.com/",
 "location": "australia-southeast1"
 },
@@ -110,6 +115,11 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://dataplex.europe-west12.rep.googleapis.com/",
 "location": "europe-west12"
+},
+{
+"description": "Regional Endpoint",
+"endpointUrl": "https://dataplex.europe-west15.rep.googleapis.com/",
+"location": "europe-west15"
 },
 {
 "description": "Regional Endpoint",
@@ -716,6 +726,11 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
+},
+"returnPartialSuccess": {
+"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections e.g. when parent is set to \"projects/example/locations/-\".This field is not by default supported and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
+"location": "query",
+"type": "boolean"
 }
 },
 "path": "v1/{+name}/operations",
@@ -771,7 +786,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. A list of extra location types that should be used as conditions for controlling the visibility of the locations.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -809,7 +824,7 @@
 ]
 },
 "lookupEntry": {
-"description": "Looks up an entry by name using the permission on the source system.",
+"description": "Looks up an entry by name using the permission on the source system. Caution: The Vertex AI, Bigtable, Spanner, Pub/Sub, Dataform, and Dataproc Metastore metadata that is stored in Dataplex Universal Catalog is changing. For more information, see Changes to metadata stored in Dataplex Universal Catalog (https://cloud.google.com/dataplex/docs/metadata-changes).",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}:lookupEntry",
 "httpMethod": "GET",
 "id": "dataplex.projects.locations.lookupEntry",
@@ -855,7 +870,7 @@
 "Returns entry only, without aspects.",
 "Returns all required aspects as well as the keys of all non-required aspects.",
 "Returns aspects matching custom fields in GetEntryRequest. If the number of aspects exceeds 100, the first 100 will be returned.",
-"Returns all aspects. If the number of aspects exceeds 100, the first 100 will be returned."
+""
 ],
 "location": "query",
 "type": "string"
@@ -886,7 +901,7 @@
 "type": "string"
 },
 "orderBy": {
-"description": "Optional. Specifies the ordering of results. Supported values are: relevance (default) last_modified_timestamp last_modified_timestamp asc",
+"description": "Optional. Specifies the ordering of results. Supported values are: relevance last_modified_timestamp last_modified_timestamp asc",
 "location": "query",
 "type": "string"
 },
@@ -1196,6 +1211,97 @@
 }
 }
 },
+"changeRequests": {
+"methods": {
+"getIamPolicy": {
+"description": "Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.",
+"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/changeRequests/{changeRequestsId}:getIamPolicy",
+"httpMethod": "GET",
+"id": "dataplex.projects.locations.changeRequests.getIamPolicy",
+"parameterOrder": [
+"resource"
+],
+"parameters": {
+"options.requestedPolicyVersion": {
+"description": "Optional. The maximum policy version that will be used to format the policy.Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected.Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset.The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1.To learn which resources support conditions in their IAM policies, see the IAM documentation (https://cloud.google.com/iam/help/conditions/resource-policies).",
+"format": "int32",
+"location": "query",
+"type": "integer"
+},
+"resource": {
+"description": "REQUIRED: The resource for which the policy is being requested. See Resource names (https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.",
+"location": "path",
+"pattern": "^projects/[^/]+/locations/[^/]+/changeRequests/[^/]+$",
+"required": true,
+"type": "string"
+}
+},
+"path": "v1/{+resource}:getIamPolicy",
+"response": {
+"$ref": "GoogleIamV1Policy"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform"
+]
+},
+"setIamPolicy": {
+"description": "Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.",
+"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/changeRequests/{changeRequestsId}:setIamPolicy",
+"httpMethod": "POST",
+"id": "dataplex.projects.locations.changeRequests.setIamPolicy",
+"parameterOrder": [
+"resource"
+],
+"parameters": {
+"resource": {
+"description": "REQUIRED: The resource for which the policy is being specified. See Resource names (https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.",
+"location": "path",
+"pattern": "^projects/[^/]+/locations/[^/]+/changeRequests/[^/]+$",
+"required": true,
+"type": "string"
+}
+},
+"path": "v1/{+resource}:setIamPolicy",
+"request": {
+"$ref": "GoogleIamV1SetIamPolicyRequest"
+},
+"response": {
+"$ref": "GoogleIamV1Policy"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform"
+]
+},
+"testIamPermissions": {
+"description": "Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning.",
+"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/changeRequests/{changeRequestsId}:testIamPermissions",
+"httpMethod": "POST",
+"id": "dataplex.projects.locations.changeRequests.testIamPermissions",
+"parameterOrder": [
+"resource"
+],
+"parameters": {
+"resource": {
+"description": "REQUIRED: The resource for which the policy detail is being requested. See Resource names (https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.",
+"location": "path",
+"pattern": "^projects/[^/]+/locations/[^/]+/changeRequests/[^/]+$",
+"required": true,
+"type": "string"
+}
+},
+"path": "v1/{+resource}:testIamPermissions",
+"request": {
+"$ref": "GoogleIamV1TestIamPermissionsRequest"
+},
+"response": {
+"$ref": "GoogleIamV1TestIamPermissionsResponse"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform"
+]
+}
+}
+},
 "dataAttributeBindings": {
 "methods": {
 "create": {
@@ -1472,37 +1578,6 @@
 },
 "dataProducts": {
 "methods": {
-"getIamPolicy": {
-"description": "Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.",
-"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/dataProducts/{dataProductsId}:getIamPolicy",
-"httpMethod": "GET",
-"id": "dataplex.projects.locations.dataProducts.getIamPolicy",
-"parameterOrder": [
-"resource"
-],
-"parameters": {
-"options.requestedPolicyVersion": {
-"description": "Optional. The maximum policy version that will be used to format the policy.Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected.Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset.The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1.To learn which resources support conditions in their IAM policies, see the IAM documentation (https://cloud.google.com/iam/help/conditions/resource-policies).",
-"format": "int32",
-"location": "query",
-"type": "integer"
-},
-"resource": {
-"description": "REQUIRED: The resource for which the policy is being requested. See Resource names (https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.",
-"location": "path",
-"pattern": "^projects/[^/]+/locations/[^/]+/dataProducts/[^/]+$",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1/{+resource}:getIamPolicy",
-"response": {
-"$ref": "GoogleIamV1Policy"
-},
-"scopes": [
-"https://www.googleapis.com/auth/cloud-platform"
-]
-},
 "setIamPolicy": {
 "description": "Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}/dataProducts/{dataProductsId}:setIamPolicy",
@@ -1563,37 +1638,6 @@
 "resources": {
 "dataAssets": {
 "methods": {
-"getIamPolicy": {
-"description": "Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.",
-"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/dataProducts/{dataProductsId}/dataAssets/{dataAssetsId}:getIamPolicy",
-"httpMethod": "GET",
-"id": "dataplex.projects.locations.dataProducts.dataAssets.getIamPolicy",
-"parameterOrder": [
-"resource"
-],
-"parameters": {
-"options.requestedPolicyVersion": {
-"description": "Optional. The maximum policy version that will be used to format the policy.Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected.Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset.The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1.To learn which resources support conditions in their IAM policies, see the IAM documentation (https://cloud.google.com/iam/help/conditions/resource-policies).",
-"format": "int32",
-"location": "query",
-"type": "integer"
-},
-"resource": {
-"description": "REQUIRED: The resource for which the policy is being requested. See Resource names (https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.",
-"location": "path",
-"pattern": "^projects/[^/]+/locations/[^/]+/dataProducts/[^/]+/dataAssets/[^/]+$",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1/{+resource}:getIamPolicy",
-"response": {
-"$ref": "GoogleIamV1Policy"
-},
-"scopes": [
-"https://www.googleapis.com/auth/cloud-platform"
-]
-},
 "setIamPolicy": {
 "description": "Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}/dataProducts/{dataProductsId}/dataAssets/{dataAssetsId}:setIamPolicy",
@@ -2987,7 +3031,7 @@
 ]
 },
 "get": {
-"description": "Gets an Entry.",
+"description": "Gets an Entry. Caution: The Vertex AI, Bigtable, Spanner, Pub/Sub, Dataform, and Dataproc Metastore metadata that is stored in Dataplex Universal Catalog is changing. For more information, see Changes to metadata stored in Dataplex Universal Catalog (https://cloud.google.com/dataplex/docs/metadata-changes).",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}/entryGroups/{entryGroupsId}/entries/{entriesId}",
 "httpMethod": "GET",
 "id": "dataplex.projects.locations.entryGroups.entries.get",
@@ -3028,7 +3072,7 @@
 "Returns entry only, without aspects.",
 "Returns all required aspects as well as the keys of all non-required aspects.",
 "Returns aspects matching custom fields in GetEntryRequest. If the number of aspects exceeds 100, the first 100 will be returned.",
-"Returns all aspects. If the number of aspects exceeds 100, the first 100 will be returned."
+""
 ],
 "location": "query",
 "type": "string"
@@ -3043,7 +3087,7 @@
 ]
 },
 "list": {
-"description": "Lists Entries within an EntryGroup.",
+"description": "Lists Entries within an EntryGroup. Caution: The Vertex AI, Bigtable, Spanner, Pub/Sub, Dataform, and Dataproc Metastore metadata that is stored in Dataplex Universal Catalog is changing. For more information, see Changes to metadata stored in Dataplex Universal Catalog (https://cloud.google.com/dataplex/docs/metadata-changes).",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}/entryGroups/{entryGroupsId}/entries",
 "httpMethod": "GET",
 "id": "dataplex.projects.locations.entryGroups.entries.list",
@@ -7194,6 +7238,11 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
+},
+"returnPartialSuccess": {
+"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections e.g. when parent is set to \"projects/example/locations/-\".This field is not by default supported and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
+"location": "query",
+"type": "boolean"
 }
 },
 "path": "v1/{+name}/operations",
@@ -7211,7 +7260,7 @@
 }
 }
 },
-"revision": "20250805",
+"revision": "20251012",
 "rootUrl": "https://dataplex.googleapis.com/",
 "schemas": {
 "Empty": {
@@ -7503,6 +7552,18 @@
 "description": "Output only. The time when the AspectType was created.",
 "format": "google-datetime",
 "readOnly": true,
+"type": "string"
+},
+"dataClassification": {
+"description": "Optional. Immutable. Stores data classification of the aspect.",
+"enum": [
+"DATA_CLASSIFICATION_UNSPECIFIED",
+"METADATA_AND_DATA"
+],
+"enumDescriptions": [
+"Denotes that the aspect contains only metadata.",
+"Metadata and data classification."
+],
 "type": "string"
 },
 "description": {
@@ -8583,6 +8644,111 @@
 },
 "type": "object"
 },
+"GoogleCloudDataplexV1DataDocumentationResult": {
+"description": "The output of a DataDocumentation scan.",
+"id": "GoogleCloudDataplexV1DataDocumentationResult",
+"properties": {
+"tableResult": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResultTableResult",
+"description": "Output only. Table result for insights.",
+"readOnly": true
+}
+},
+"type": "object"
+},
+"GoogleCloudDataplexV1DataDocumentationResultField": {
+"description": "Column of a table with generated metadata and nested fields.",
+"id": "GoogleCloudDataplexV1DataDocumentationResultField",
+"properties": {
+"description": {
+"description": "Output only. Generated description for columns and fields.",
+"readOnly": true,
+"type": "string"
+},
+"fields": {
+"description": "Output only. Nested fields.",
+"items": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResultField"
+},
+"readOnly": true,
+"type": "array"
+},
+"name": {
+"description": "Output only. The name of the column.",
+"readOnly": true,
+"type": "string"
+}
+},
+"type": "object"
+},
+"GoogleCloudDataplexV1DataDocumentationResultQuery": {
+"description": "A sample SQL query in data documentation.",
+"id": "GoogleCloudDataplexV1DataDocumentationResultQuery",
+"properties": {
+"description": {
+"description": "Output only. The description for the query.",
+"readOnly": true,
+"type": "string"
+},
+"sql": {
+"description": "Output only. The SQL query string which can be executed.",
+"readOnly": true,
+"type": "string"
+}
+},
+"type": "object"
+},
+"GoogleCloudDataplexV1DataDocumentationResultSchema": {
+"description": "Schema of the table with generated metadata of columns.",
+"id": "GoogleCloudDataplexV1DataDocumentationResultSchema",
+"properties": {
+"fields": {
+"description": "Output only. The list of columns.",
+"items": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResultField"
+},
+"readOnly": true,
+"type": "array"
+}
+},
+"type": "object"
+},
+"GoogleCloudDataplexV1DataDocumentationResultTableResult": {
+"description": "Generated metadata about the table.",
+"id": "GoogleCloudDataplexV1DataDocumentationResultTableResult",
+"properties": {
+"name": {
+"description": "Output only. The service-qualified full resource name of the cloud resource. Ex: //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID",
+"readOnly": true,
+"type": "string"
+},
+"overview": {
+"description": "Output only. Generated description of the table.",
+"readOnly": true,
+"type": "string"
+},
+"queries": {
+"description": "Output only. Sample SQL queries for the table.",
+"items": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResultQuery"
+},
+"readOnly": true,
+"type": "array"
+},
+"schema": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResultSchema",
+"description": "Output only. Schema of the table with generated metadata of the columns in the schema.",
+"readOnly": true
+}
+},
+"type": "object"
+},
+"GoogleCloudDataplexV1DataDocumentationSpec": {
+"description": "DataDocumentation scan related spec.",
+"id": "GoogleCloudDataplexV1DataDocumentationSpec",
+"properties": {},
+"type": "object"
+},
 "GoogleCloudDataplexV1DataProfileResult": {
 "description": "DataProfileResult defines the output of DataProfileScan. Each field of the table will have field type specific profile result.",
 "id": "GoogleCloudDataplexV1DataProfileResult",
@@ -8594,16 +8760,19 @@
 },
 "profile": {
 "$ref": "GoogleCloudDataplexV1DataProfileResultProfile",
-"description": "The profile information per field."
+"description": "Output only. The profile information per field.",
+"readOnly": true
 },
 "rowCount": {
-"description": "The count of rows scanned.",
+"description": "Output only. The count of rows scanned.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 },
 "scannedData": {
 "$ref": "GoogleCloudDataplexV1ScannedData",
-"description": "The data scanned for this result."
+"description": "Output only. The data scanned for this result.",
+"readOnly": true
 }
 },
 "type": "object"
@@ -8654,10 +8823,11 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfile",
 "properties": {
 "fields": {
-"description": "List of fields with structural and profile information for each field.",
+"description": "Output only. List of fields with structural and profile information for each field.",
 "items": {
 "$ref": "GoogleCloudDataplexV1DataProfileResultProfileField"
 },
+"readOnly": true,
 "type": "array"
 }
 },
@@ -8668,19 +8838,23 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileField",
 "properties": {
 "mode": {
-"description": "The mode of the field. Possible values include: REQUIRED, if it is a required field. NULLABLE, if it is an optional field. REPEATED, if it is a repeated field.",
+"description": "Output only. The mode of the field. Possible values include: REQUIRED, if it is a required field. NULLABLE, if it is an optional field. REPEATED, if it is a repeated field.",
+"readOnly": true,
 "type": "string"
 },
 "name": {
-"description": "The name of the field.",
+"description": "Output only. The name of the field.",
+"readOnly": true,
 "type": "string"
 },
 "profile": {
 "$ref": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfo",
-"description": "Profile information for the corresponding field."
+"description": "Output only. Profile information for the corresponding field.",
+"readOnly": true
 },
 "type": {
-"description": "The data type retrieved from the schema of the data source. For instance, for a BigQuery native table, it is the BigQuery Table Schema (https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#tablefieldschema). For a Dataplex Universal Catalog Entity, it is the Entity Schema (https://cloud.google.com/dataplex/docs/reference/rpc/google.cloud.dataplex.v1#type_3).",
+"description": "Output only. The data type retrieved from the schema of the data source. For instance, for a BigQuery native table, it is the BigQuery Table Schema (https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#tablefieldschema). For a Dataplex Universal Catalog Entity, it is the Entity Schema (https://cloud.google.com/dataplex/docs/reference/rpc/google.cloud.dataplex.v1#type_3).",
+"readOnly": true,
 "type": "string"
 }
 },
@@ -8691,8 +8865,9 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfo",
 "properties": {
 "distinctRatio": {
-"description": "Ratio of rows with distinct values against total scanned rows. Not available for complex non-groupable field type, including RECORD, ARRAY, GEOGRAPHY, and JSON, as well as fields with REPEATABLE mode.",
+"description": "Output only. Ratio of rows with distinct values against total scanned rows. Not available for complex non-groupable field type, including RECORD, ARRAY, GEOGRAPHY, and JSON, as well as fields with REPEATABLE mode.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "doubleProfile": {
@@ -8704,8 +8879,9 @@
 "description": "Integer type field information."
 },
 "nullRatio": {
-"description": "Ratio of rows with null value against total scanned rows.",
+"description": "Output only. Ratio of rows with null value against total scanned rows.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "stringProfile": {
@@ -8713,10 +8889,11 @@
 "description": "String type field information."
 },
 "topNValues": {
-"description": "The list of top N non-null values, frequency and ratio with which they occur in the scanned data. N is 10 or equal to the number of distinct values in the field, whichever is smaller. Not available for complex non-groupable field type, including RECORD, ARRAY, GEOGRAPHY, and JSON, as well as fields with REPEATABLE mode.",
+"description": "Output only. The list of top N non-null values, frequency and ratio with which they occur in the scanned data. N is 10 or equal to the number of distinct values in the field, whichever is smaller. Not available for complex non-groupable field type, including RECORD, ARRAY, GEOGRAPHY, and JSON, as well as fields with REPEATABLE mode.",
 "items": {
 "$ref": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfoTopNValue"
 },
+"readOnly": true,
 "type": "array"
 }
 },
@@ -8727,31 +8904,36 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfoDoubleFieldInfo",
 "properties": {
 "average": {
-"description": "Average of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Average of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "max": {
-"description": "Maximum of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Maximum of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "min": {
-"description": "Minimum of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Minimum of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "quartiles": {
-"description": "A quartile divides the number of data points into four parts, or quarters, of more-or-less equal size. Three main quartiles used are: The first quartile (Q1) splits off the lowest 25% of data from the highest 75%. It is also known as the lower or 25th empirical quartile, as 25% of the data is below this point. The second quartile (Q2) is the median of a data set. So, 50% of the data lies below this point. The third quartile (Q3) splits off the highest 25% of data from the lowest 75%. It is known as the upper or 75th empirical quartile, as 75% of the data lies below this point. Here, the quartiles is provided as an ordered list of quartile values for the scanned data, occurring in order Q1, median, Q3.",
+"description": "Output only. A quartile divides the number of data points into four parts, or quarters, of more-or-less equal size. Three main quartiles used are: The first quartile (Q1) splits off the lowest 25% of data from the highest 75%. It is also known as the lower or 25th empirical quartile, as 25% of the data is below this point. The second quartile (Q2) is the median of a data set. So, 50% of the data lies below this point. The third quartile (Q3) splits off the highest 25% of data from the lowest 75%. It is known as the upper or 75th empirical quartile, as 75% of the data lies below this point. Here, the quartiles is provided as an ordered list of quartile values for the scanned data, occurring in order Q1, median, Q3.",
 "items": {
 "format": "double",
 "type": "number"
 },
+"readOnly": true,
 "type": "array"
 },
 "standardDeviation": {
-"description": "Standard deviation of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Standard deviation of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 }
 },
@@ -8762,31 +8944,36 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfoIntegerFieldInfo",
 "properties": {
 "average": {
-"description": "Average of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Average of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "max": {
-"description": "Maximum of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Maximum of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 },
 "min": {
-"description": "Minimum of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Minimum of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 },
 "quartiles": {
-"description": "A quartile divides the number of data points into four parts, or quarters, of more-or-less equal size. Three main quartiles used are: The first quartile (Q1) splits off the lowest 25% of data from the highest 75%. It is also known as the lower or 25th empirical quartile, as 25% of the data is below this point. The second quartile (Q2) is the median of a data set. So, 50% of the data lies below this point. The third quartile (Q3) splits off the highest 25% of data from the lowest 75%. It is known as the upper or 75th empirical quartile, as 75% of the data lies below this point. Here, the quartiles is provided as an ordered list of approximate quartile values for the scanned data, occurring in order Q1, median, Q3.",
+"description": "Output only. A quartile divides the number of data points into four parts, or quarters, of more-or-less equal size. Three main quartiles used are: The first quartile (Q1) splits off the lowest 25% of data from the highest 75%. It is also known as the lower or 25th empirical quartile, as 25% of the data is below this point. The second quartile (Q2) is the median of a data set. So, 50% of the data lies below this point. The third quartile (Q3) splits off the highest 25% of data from the lowest 75%. It is known as the upper or 75th empirical quartile, as 75% of the data lies below this point. Here, the quartiles is provided as an ordered list of approximate quartile values for the scanned data, occurring in order Q1, median, Q3.",
 "items": {
 "format": "int64",
 "type": "string"
 },
+"readOnly": true,
 "type": "array"
 },
 "standardDeviation": {
-"description": "Standard deviation of non-null values in the scanned data. NaN, if the field has a NaN.",
+"description": "Output only. Standard deviation of non-null values in the scanned data. NaN, if the field has a NaN.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 }
 },
@@ -8797,18 +8984,21 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfoStringFieldInfo",
 "properties": {
 "averageLength": {
-"description": "Average length of non-null values in the scanned data.",
+"description": "Output only. Average length of non-null values in the scanned data.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "maxLength": {
-"description": "Maximum length of non-null values in the scanned data.",
+"description": "Output only. Maximum length of non-null values in the scanned data.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 },
 "minLength": {
-"description": "Minimum length of non-null values in the scanned data.",
+"description": "Output only. Minimum length of non-null values in the scanned data.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 }
 },
@@ -8819,17 +9009,20 @@
 "id": "GoogleCloudDataplexV1DataProfileResultProfileFieldProfileInfoTopNValue",
 "properties": {
 "count": {
-"description": "Count of the corresponding value in the scanned data.",
+"description": "Output only. Count of the corresponding value in the scanned data.",
 "format": "int64",
+"readOnly": true,
 "type": "string"
 },
 "ratio": {
-"description": "Ratio of the corresponding value in the field against the total number of rows in the scanned data.",
+"description": "Output only. Ratio of the corresponding value in the field against the total number of rows in the scanned data.",
 "format": "double",
+"readOnly": true,
 "type": "number"
 },
 "value": {
-"description": "String value of a top N non-null value.",
+"description": "Output only. String value of a top N non-null value.",
+"readOnly": true,
 "type": "string"
 }
 },
@@ -8852,7 +9045,7 @@
 "description": "Optional. Actions to take upon job completion.."
 },
 "rowFilter": {
-"description": "Optional. A filter applied to all rows in a single DataScan job. The filter needs to be a valid SQL expression for a WHERE clause in GoogleSQL syntax (https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#where_clause).Example: col1 >= 0 AND col2 < 10",
+"description": "Optional. A filter applied to all rows in a single DataScan job. The filter needs to be a valid SQL expression for a WHERE clause in BigQuery standard SQL syntax. Example: col1 >= 0 AND col2 < 10",
 "type": "string"
 },
 "samplingPercent": {
@@ -8879,7 +9072,7 @@
 "id": "GoogleCloudDataplexV1DataProfileSpecPostScanActionsBigQueryExport",
 "properties": {
 "resultsTable": {
-"description": "Optional. The BigQuery table to export DataProfileScan results to. Format: //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID or projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID",
+"description": "Optional. The BigQuery table to export DataProfileScan results to. Format: //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID",
 "type": "string"
 }
 },
@@ -8935,7 +9128,8 @@
 "id": "GoogleCloudDataplexV1DataQualityDimension",
 "properties": {
 "name": {
-"description": "Optional. The dimension name a rule belongs to. Custom dimension name is supported with all uppercase letters and maximum length of 30 characters.",
+"description": "Output only. The dimension name a rule belongs to. Custom dimension name is supported with all uppercase letters and maximum length of 30 characters.",
+"readOnly": true,
 "type": "string"
 }
 },
@@ -9551,7 +9745,7 @@
 "type": "object"
 },
 "GoogleCloudDataplexV1DataScan": {
-"description": "Represents a user-visible job which provides the insights for the related data source.For example: Data quality: generates queries based on the rules and runs against the data to get data quality check results. For more information, see Auto data quality overview (https://cloud.google.com/dataplex/docs/auto-data-quality-overview). Data profile: analyzes the data in tables and generates insights about the structure, content and relationships (such as null percent, cardinality, min/max/mean, etc). For more information, see About data profiling (https://cloud.google.com/dataplex/docs/data-profiling-overview). Data discovery: scans data in Cloud Storage buckets to extract and then catalog metadata. For more information, see Discover and catalog Cloud Storage data (https://cloud.google.com/bigquery/docs/automatic-discovery).",
+"description": "Represents a user-visible job which provides the insights for the related data source.For example: Data quality: generates queries based on the rules and runs against the data to get data quality check results. For more information, see Auto data quality overview (https://cloud.google.com/dataplex/docs/auto-data-quality-overview). Data profile: analyzes the data in tables and generates insights about the structure, content and relationships (such as null percent, cardinality, min/max/mean, etc). For more information, see About data profiling (https://cloud.google.com/dataplex/docs/data-profiling-overview). Data discovery: scans data in Cloud Storage buckets to extract and then catalog metadata. For more information, see Discover and catalog Cloud Storage data (https://cloud.google.com/bigquery/docs/automatic-discovery). Data documentation: analyzes the table details and generates insights including descriptions and sample SQL queries for the table. For more information, see Generate data insights in BigQuery (https://cloud.google.com/bigquery/docs/data-insights).",
 "id": "GoogleCloudDataplexV1DataScan",
 "properties": {
 "createTime": {
@@ -9572,6 +9766,15 @@
 "dataDiscoverySpec": {
 "$ref": "GoogleCloudDataplexV1DataDiscoverySpec",
 "description": "Settings for a data discovery scan."
+},
+"dataDocumentationResult": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResult",
+"description": "Output only. The result of a data documentation scan.",
+"readOnly": true
+},
+"dataDocumentationSpec": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationSpec",
+"description": "Settings for a data documentation scan."
 },
 "dataProfileResult": {
 "$ref": "GoogleCloudDataplexV1DataProfileResult",
@@ -9645,13 +9848,15 @@
 "DATA_SCAN_TYPE_UNSPECIFIED",
 "DATA_QUALITY",
 "DATA_PROFILE",
-"DATA_DISCOVERY"
+"DATA_DISCOVERY",
+"DATA_DOCUMENTATION"
 ],
 "enumDescriptions": [
 "The data scan type is unspecified.",
 "Data quality scan.",
 "Data profile scan.",
-"Data discovery scan."
+"Data discovery scan.",
+"Data documentation scan."
 ],
 "readOnly": true,
 "type": "string"
@@ -9790,12 +9995,14 @@
 "enum": [
 "TRIGGER_UNSPECIFIED",
 "ON_DEMAND",
-"SCHEDULE"
+"SCHEDULE",
+"ONE_TIME"
 ],
 "enumDescriptions": [
 "An unspecified trigger type.",
 "Data scan triggers on demand.",
-"Data scan triggers as per schedule."
+"Data scan triggers as per schedule.",
+"Data scan is run one time on creation."
 ],
 "type": "string"
 },
@@ -10005,6 +10212,16 @@
 "description": "Output only. Settings for a data discovery scan.",
 "readOnly": true
 },
+"dataDocumentationResult": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationResult",
+"description": "Output only. The result of a data documentation scan.",
+"readOnly": true
+},
+"dataDocumentationSpec": {
+"$ref": "GoogleCloudDataplexV1DataDocumentationSpec",
+"description": "Output only. Settings for a data documentation scan.",
+"readOnly": true
+},
 "dataProfileResult": {
 "$ref": "GoogleCloudDataplexV1DataProfileResult",
 "description": "Output only. The result of a data profile scan.",
@@ -10076,13 +10293,15 @@
 "DATA_SCAN_TYPE_UNSPECIFIED",
 "DATA_QUALITY",
 "DATA_PROFILE",
-"DATA_DISCOVERY"
+"DATA_DISCOVERY",
+"DATA_DOCUMENTATION"
 ],
 "enumDescriptions": [
 "The data scan type is unspecified.",
 "Data quality scan.",
 "Data profile scan.",
-"Data discovery scan."
+"Data discovery scan.",
+"Data documentation scan."
 ],
 "readOnly": true,
 "type": "string"
@@ -10104,7 +10323,7 @@
 "type": "string"
 },
 "resource": {
-"description": "Immutable. The service-qualified full resource name of the cloud resource for a DataScan job to scan against. The field could either be: Cloud Storage bucket for DataDiscoveryScan Format: //storage.googleapis.com/projects/PROJECT_ID/buckets/BUCKET_ID or BigQuery table of type \"TABLE\" for DataProfileScan/DataQualityScan Format: //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID",
+"description": "Immutable. The service-qualified full resource name of the cloud resource for a DataScan job to scan against. The field could either be: Cloud Storage bucket for DataDiscoveryScan Format: //storage.googleapis.com/projects/PROJECT_ID/buckets/BUCKET_ID or BigQuery table of type \"TABLE\" for DataProfileScan/DataQualityScan/DataDocumentationScan Format: //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID",
 "type": "string"
 }
 },
@@ -10380,6 +10599,10 @@
 "format": "google-datetime",
 "readOnly": true,
 "type": "string"
+},
+"enableMetastoreEncryption": {
+"description": "Optional. Represent the state of CMEK opt-in for metastore.",
+"type": "boolean"
 },
 "encryptionState": {
 "description": "Output only. The state of encryption of the databases.",
@@ -12605,7 +12828,7 @@
 "type": "array"
 },
 "entryGroups": {
-"description": "Required. The entry group that is in scope for the import job, specified as a relative resource name in the format projects/{project_number_or_id}/locations/{location_id}/entryGroups/{entry_group_id}. Only entries and aspects that belong to the specified entry group are affected by the job.Must contain exactly one element. The entry group and the job must be in the same location.",
+"description": "Required. The entry groups that are in scope for the import job, specified as relative resource names in the format projects/{project_number_or_id}/locations/{location_id}/entryGroups/{entry_group_id}. Only entries and aspects that belong to the specified entry groups are affected by the job.The entry groups and the job must be in the same location.",
 "items": {
 "type": "string"
 },
@@ -12854,15 +13077,18 @@
 "id": "GoogleCloudDataplexV1ScannedDataIncrementalField",
 "properties": {
 "end": {
-"description": "Value that marks the end of the range.",
+"description": "Output only. Value that marks the end of the range.",
+"readOnly": true,
 "type": "string"
 },
 "field": {
-"description": "The field that contains values which monotonically increases over time (e.g. a timestamp column).",
+"description": "Output only. The field that contains values which monotonically increases over time (e.g. a timestamp column).",
+"readOnly": true,
 "type": "string"
 },
 "start": {
-"description": "Value that marks the start of the range.",
+"description": "Output only. Value that marks the start of the range.",
+"readOnly": true,
 "type": "string"
 }
 },
@@ -14146,6 +14372,13 @@
 "description": "A list of operations that matches the specified filter in the request.",
 "items": {
 "$ref": "GoogleLongrunningOperation"
+},
+"type": "array"
+},
+"unreachable": {
+"description": "Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success and reads across collections e.g. when attempting to list all resources across all supported locations.",
+"items": {
+"type": "string"
 },
 "type": "array"
 }

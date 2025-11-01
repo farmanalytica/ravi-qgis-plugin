@@ -21,7 +21,7 @@ def make_expression_graph(
 
 class NumberTest(apitestcase.ApiTestCase):
 
-  def testNumber(self):
+  def test_number(self):
     """Verifies basic behavior of ee.Number."""
     num = ee.Number(1)
     self.assertEqual(1, num.encode())
@@ -34,7 +34,7 @@ class NumberTest(apitestcase.ApiTestCase):
         'right': ee.Number(2)
     }, computed.args)
 
-  def testInternals(self):
+  def test_internals(self):
     """Test eq(), ne() and hash()."""
     a = ee.Number(1)
     b = ee.Number(2.1)
@@ -45,6 +45,12 @@ class NumberTest(apitestcase.ApiTestCase):
     self.assertEqual(a, c)
     self.assertNotEqual(b, c)
     self.assertNotEqual(hash(a), hash(b))
+
+  def test_init_invalid_arg(self):
+    with self.assertRaisesRegex(
+        ee.EEException, 'Invalid argument specified for ee.Number'
+    ):
+      ee.Number('not a number')  # pytype: disable=wrong-arg-types
 
   def test_abs(self):
     expect = make_expression_graph({
@@ -139,7 +145,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_bitCount(self):
+  def test_bit_count(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -150,7 +156,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_bitwiseAnd(self):
+  def test_bitwise_and(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -166,7 +172,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_bitwiseNot(self):
+  def test_bitwise_not(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -177,7 +183,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_bitwiseOr(self):
+  def test_bitwise_or(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -193,7 +199,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_bitwiseXor(self):
+  def test_bitwise_xor(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -346,7 +352,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_erfInv(self):
+  def test_erf_inv(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -368,7 +374,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_erfcInv(self):
+  def test_erfc_inv(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -406,7 +412,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_firstNonZero(self):
+  def test_first_non_zero(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -601,7 +607,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_leftShift(self):
+  def test_left_shift(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -807,7 +813,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_rightShift(self):
+  def test_right_shift(self):
     expect = make_expression_graph({
         'arguments': {
             'left': {'constantValue': 1},
@@ -927,7 +933,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toByte(self):
+  def test_to_byte(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -938,7 +944,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toDouble(self):
+  def test_to_double(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -949,7 +955,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toFloat(self):
+  def test_to_float(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -960,7 +966,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toInt(self):
+  def test_to_int(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -971,7 +977,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toInt16(self):
+  def test_to_int16(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -982,7 +988,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toInt32(self):
+  def test_to_int32(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -993,7 +999,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toInt64(self):
+  def test_to_int64(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1004,7 +1010,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toInt8(self):
+  def test_to_int8(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1015,7 +1021,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toLong(self):
+  def test_to_long(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1026,7 +1032,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toShort(self):
+  def test_to_short(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1037,7 +1043,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toUint16(self):
+  def test_to_uint16(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1048,7 +1054,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toUint32(self):
+  def test_to_uint32(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1059,7 +1065,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_toUint8(self):
+  def test_to_uint8(self):
     expect = make_expression_graph({
         'arguments': {
             'input': {'constantValue': 1},
@@ -1114,7 +1120,7 @@ class NumberTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  def test_unitScale(self):
+  def test_unit_scale(self):
     expect = make_expression_graph({
         'arguments': {
             'number': {'constantValue': 1},

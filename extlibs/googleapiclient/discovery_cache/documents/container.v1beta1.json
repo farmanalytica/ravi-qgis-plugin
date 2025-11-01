@@ -2685,7 +2685,7 @@
 }
 }
 },
-"revision": "20250725",
+"revision": "20250930",
 "rootUrl": "https://container.googleapis.com/",
 "schemas": {
 "AcceleratorConfig": {
@@ -2810,7 +2810,7 @@
 },
 "configConnectorConfig": {
 "$ref": "ConfigConnectorConfig",
-"description": "Configuration for the ConfigConnector add-on, a Kubernetes extension to manage hosted GCP services through the Kubernetes API"
+"description": "Configuration for the ConfigConnector add-on, a Kubernetes extension to manage hosted Google Cloud services through the Kubernetes API."
 },
 "dnsCacheConfig": {
 "$ref": "DnsCacheConfig",
@@ -2822,7 +2822,7 @@
 },
 "gcpFilestoreCsiDriverConfig": {
 "$ref": "GcpFilestoreCsiDriverConfig",
-"description": "Configuration for the GCP Filestore CSI driver."
+"description": "Configuration for the Filestore CSI driver."
 },
 "gcsFuseCsiDriverConfig": {
 "$ref": "GcsFuseCsiDriverConfig",
@@ -3188,6 +3188,18 @@
 },
 "type": "object"
 },
+"AutoscaledRolloutPolicy": {
+"description": "Autoscaled rollout policy utilizes the cluster autoscaler during blue-green upgrade to scale both the blue and green pools.",
+"id": "AutoscaledRolloutPolicy",
+"properties": {
+"waitForDrainDuration": {
+"description": "Optional. Time to wait after cordoning the blue pool before draining the nodes. Defaults to 3 days. The value can be set between 0 and 7 days, inclusive.",
+"format": "google-duration",
+"type": "string"
+}
+},
+"type": "object"
+},
 "AvailableVersion": {
 "deprecated": true,
 "description": "Deprecated.",
@@ -3327,6 +3339,10 @@
 "description": "Settings for blue-green upgrade.",
 "id": "BlueGreenSettings",
 "properties": {
+"autoscaledRolloutPolicy": {
+"$ref": "AutoscaledRolloutPolicy",
+"description": "Autoscaled policy for cluster autoscaler enabled blue-green upgrade."
+},
 "nodePoolSoakDuration": {
 "description": "Time needed after draining entire blue pool. After this period, blue pool will be cleaned up.",
 "format": "google-duration",
@@ -3404,7 +3420,7 @@
 },
 "gcpSecretManagerCertificateConfig": {
 "$ref": "GCPSecretManagerCertificateConfig",
-"description": "Google Secret Manager (GCP) certificate configuration."
+"description": "Secret Manager certificate configuration."
 }
 },
 "type": "object"
@@ -3599,7 +3615,8 @@
 },
 "enterpriseConfig": {
 "$ref": "EnterpriseConfig",
-"description": "GKE Enterprise Configuration."
+"deprecated": true,
+"description": "GKE Enterprise Configuration. Deprecated: GKE Enterprise features are now available without an Enterprise tier."
 },
 "etag": {
 "description": "This checksum is computed by the server based on the value of cluster fields, and may be sent on update requests to ensure the client has an up-to-date value before proceeding.",
@@ -3817,6 +3834,10 @@
 "$ref": "SecretManagerConfig",
 "description": "Secret CSI driver configuration."
 },
+"secretSyncConfig": {
+"$ref": "SecretSyncConfig",
+"description": "Configuration for sync Secret Manager secrets as k8s secrets."
+},
 "securityPostureConfig": {
 "$ref": "SecurityPostureConfig",
 "description": "Enable/Disable Security Posture API features for the cluster."
@@ -3889,7 +3910,7 @@
 },
 "workloadAltsConfig": {
 "$ref": "WorkloadALTSConfig",
-"description": "Configuration for direct-path (via ALTS) with workload identity."
+"description": "Configuration for direct-path (via ALTS) with workload identity. This feature is not officially supported for external customers in Kubernetes Engine when using Workload Identity."
 },
 "workloadCertificates": {
 "$ref": "WorkloadCertificates",
@@ -3897,7 +3918,7 @@
 },
 "workloadIdentityConfig": {
 "$ref": "WorkloadIdentityConfig",
-"description": "Configuration for the use of Kubernetes Service Accounts in GCP IAM policies."
+"description": "Configuration for the use of Kubernetes Service Accounts in IAM policies."
 },
 "zone": {
 "deprecated": true,
@@ -4110,7 +4131,8 @@
 },
 "desiredEnterpriseConfig": {
 "$ref": "DesiredEnterpriseConfig",
-"description": "The desired enterprise configuration for the cluster."
+"deprecated": true,
+"description": "The desired enterprise configuration for the cluster. Deprecated: GKE Enterprise features are now available without an Enterprise tier."
 },
 "desiredFleet": {
 "$ref": "Fleet",
@@ -4205,6 +4227,10 @@
 "desiredNetworkPerformanceConfig": {
 "$ref": "ClusterNetworkPerformanceConfig",
 "description": "The desired network performance config."
+},
+"desiredNetworkTierConfig": {
+"$ref": "NetworkTierConfig",
+"description": "The desired network tier configuration for the cluster."
 },
 "desiredNodeKubeletConfig": {
 "$ref": "NodeKubeletConfig",
@@ -4341,7 +4367,7 @@
 },
 "desiredWorkloadAltsConfig": {
 "$ref": "WorkloadALTSConfig",
-"description": "Configuration for direct-path (via ALTS) with workload identity."
+"description": "Configuration for direct-path (via ALTS) with workload identity. This feature is not officially supported for external customers in Kubernetes Engine when using Workload Identity."
 },
 "desiredWorkloadCertificates": {
 "$ref": "WorkloadCertificates",
@@ -4581,6 +4607,10 @@
 "privateRegistryAccessConfig": {
 "$ref": "PrivateRegistryAccessConfig",
 "description": "PrivateRegistryAccessConfig is used to configure access configuration for private container registries."
+},
+"writableCgroups": {
+"$ref": "WritableCgroups",
+"description": "Optional. WritableCgroups defines writable cgroups configuration for the node pool."
 }
 },
 "type": "object"
@@ -4716,7 +4746,15 @@
 "id": "DNSEndpointConfig",
 "properties": {
 "allowExternalTraffic": {
-"description": "Controls whether user traffic is allowed over this endpoint. Note that GCP-managed services may still use the endpoint even if this is false.",
+"description": "Controls whether user traffic is allowed over this endpoint. Note that Google-managed services may still use the endpoint even if this is false.",
+"type": "boolean"
+},
+"enableK8sCertsViaDns": {
+"description": "Controls whether the k8s certs auth is allowed via DNS.",
+"type": "boolean"
+},
+"enableK8sTokensViaDns": {
+"description": "Controls whether the k8s token auth is allowed via DNS.",
 "type": "boolean"
 },
 "endpoint": {
@@ -4866,7 +4904,8 @@
 "type": "object"
 },
 "DesiredEnterpriseConfig": {
-"description": "DesiredEnterpriseConfig is a wrapper used for updating enterprise_config.",
+"deprecated": true,
+"description": "DesiredEnterpriseConfig is a wrapper used for updating enterprise_config. Deprecated: GKE Enterprise features are now available without an Enterprise tier.",
 "id": "DesiredEnterpriseConfig",
 "properties": {
 "desiredTier": {
@@ -4904,7 +4943,8 @@
 "type": "object"
 },
 "EnterpriseConfig": {
-"description": "EnterpriseConfig is the cluster enterprise configuration.",
+"deprecated": true,
+"description": "EnterpriseConfig is the cluster enterprise configuration. Deprecated: GKE Enterprise features are now available without an Enterprise tier.",
 "id": "EnterpriseConfig",
 "properties": {
 "clusterTier": {
@@ -5245,11 +5285,11 @@ false
 "type": "object"
 },
 "GcpFilestoreCsiDriverConfig": {
-"description": "Configuration for the GCP Filestore CSI driver.",
+"description": "Configuration for the Filestore CSI driver.",
 "id": "GcpFilestoreCsiDriverConfig",
 "properties": {
 "enabled": {
-"description": "Whether the GCP Filestore CSI driver is enabled for this cluster.",
+"description": "Whether the Filestore CSI driver is enabled for this cluster.",
 "type": "boolean"
 }
 },
@@ -5535,6 +5575,10 @@ false
 "Access type external (all v6 addresses are external IPs)"
 ],
 "type": "string"
+},
+"networkTierConfig": {
+"$ref": "NetworkTierConfig",
+"description": "Cluster-level network tier configuration is used to determine the default network tier for external IP addresses on cluster resources, such as node pools and load balancers."
 },
 "nodeIpv4Cidr": {
 "deprecated": true,
@@ -5823,7 +5867,7 @@ false
 "enumDescriptions": [
 "Default value. GKE will not modify the kernel configuration.",
 "It means that an application requesting THP will stall on allocation failure and directly reclaim pages and compact memory in an effort to allocate a THP immediately.",
-"It means that an application will wake kswapd in the background to reclaim pages and wake kcompactd to compact memory so that THP is available in the near future. It\u2019s the responsibility of khugepaged to then install the THP pages later.",
+"It means that an application will wake kswapd in the background to reclaim pages and wake kcompactd to compact memory so that THP is available in the near future. It's the responsibility of khugepaged to then install the THP pages later.",
 "It means that an application will enter direct reclaim and compaction like always, but only for regions that have used madvise(MADV_HUGEPAGE); all other regions will wake kswapd in the background to reclaim pages and wake kcompactd to compact memory so that THP is available in the near future.",
 "It means that an application will enter direct reclaim like always but only for regions that are have used madvise(MADV_HUGEPAGE). This is the default kernel configuration.",
 "It means that an application will never enter direct reclaim or compaction."
@@ -6055,7 +6099,8 @@ false
 "id": "LustreCsiDriverConfig",
 "properties": {
 "enableLegacyLustrePort": {
-"description": "If set to true, the Lustre CSI driver will install Lustre kernel modules using port 6988.",
+"deprecated": true,
+"description": "If set to true, the Lustre CSI driver will install Lustre kernel modules using port 6988. This serves as a workaround for a port conflict with the gke-metadata-server. This field is required ONLY under the following conditions: 1. The GKE node version is older than 1.33.2-gke.4655000. 2. You're connecting to a Lustre instance that has the 'gke-support-enabled' flag.",
 "type": "boolean"
 },
 "enabled": {
@@ -6540,6 +6585,29 @@ false
 },
 "type": "object"
 },
+"NetworkTierConfig": {
+"description": "NetworkTierConfig contains network tier information.",
+"id": "NetworkTierConfig",
+"properties": {
+"networkTier": {
+"description": "Network tier configuration.",
+"enum": [
+"NETWORK_TIER_UNSPECIFIED",
+"NETWORK_TIER_DEFAULT",
+"NETWORK_TIER_PREMIUM",
+"NETWORK_TIER_STANDARD"
+],
+"enumDescriptions": [
+"By default, use project-level configuration. When unspecified, the behavior defaults to NETWORK_TIER_DEFAULT. For cluster updates, this implies no action (no-op).",
+"Default network tier. Use project-level configuration. User can specify this value, meaning they want to keep the same behaviour as before cluster level network tier configuration is introduced. This field ensures backward compatibility for the network tier of cluster resources, such as node pools and load balancers, for their external IP addresses.",
+"Premium network tier.",
+"Standard network tier."
+],
+"type": "string"
+}
+},
+"type": "object"
+},
 "NodeAffinity": {
 "description": "Specifies the NodeAffinity key, values, and affinity operator according to [shared sole tenant node group affinities](https://{$universe.dns_names.final_documentation_domain}/compute/docs/nodes/sole-tenant-nodes#node_affinity_and_anti-affinity).",
 "id": "NodeAffinity",
@@ -6870,7 +6938,7 @@ false
 "type": "boolean"
 },
 "cpuCfsQuotaPeriod": {
-"description": "Set the CPU CFS quota period value 'cpu.cfs_period_us'. The string must be a sequence of decimal numbers, each with optional fraction and a unit suffix, such as \"300ms\". Valid time units are \"ns\", \"us\" (or \"\u00b5s\"), \"ms\", \"s\", \"m\", \"h\". The value must be a positive duration.",
+"description": "Set the CPU CFS quota period value 'cpu.cfs_period_us'. The string must be a sequence of decimal numbers, each with optional fraction and a unit suffix, such as \"300ms\". Valid time units are \"ns\", \"us\" (or \"\u00b5s\"), \"ms\", \"s\", \"m\", \"h\". The value must be a positive duration between 1ms and 1 second, inclusive.",
 "type": "string"
 },
 "cpuManagerPolicy": {
@@ -7003,6 +7071,11 @@ false
 "networkPerformanceConfig": {
 "$ref": "NetworkPerformanceConfig",
 "description": "Network bandwidth tier configuration."
+},
+"networkTierConfig": {
+"$ref": "NetworkTierConfig",
+"description": "Output only. The network tier configuration for the node pool inherits from the cluster-level configuration and remains immutable throughout the node pool's lifecycle, including during upgrades.",
+"readOnly": true
 },
 "podCidrOverprovisionConfig": {
 "$ref": "PodCIDROverprovisionConfig",
@@ -8086,7 +8159,7 @@ false
 "type": "object"
 },
 "ResourceLabels": {
-"description": "Collection of [GCP labels](https://{$universe.dns_names.final_documentation_domain}/resource-manager/docs/creating-managing-labels).",
+"description": "Collection of [Resource Manager labels](https://{$universe.dns_names.final_documentation_domain}/resource-manager/docs/creating-managing-labels).",
 "id": "ResourceLabels",
 "properties": {
 "labels": {
@@ -8267,6 +8340,21 @@ false
 },
 "rotationConfig": {
 "$ref": "RotationConfig",
+"description": "Rotation config for secret manager."
+}
+},
+"type": "object"
+},
+"SecretSyncConfig": {
+"description": "Configuration for sync Secret Manager secrets as k8s secrets.",
+"id": "SecretSyncConfig",
+"properties": {
+"enabled": {
+"description": "Enable/Disable Secret Sync Config.",
+"type": "boolean"
+},
+"rotationConfig": {
+"$ref": "SyncRotationConfig",
 "description": "Rotation config for secret manager."
 }
 },
@@ -9049,6 +9137,22 @@ false
 },
 "type": "object"
 },
+"SyncRotationConfig": {
+"description": "SyncRotationConfig is config for secret manager auto rotation.",
+"id": "SyncRotationConfig",
+"properties": {
+"enabled": {
+"description": "Whether the rotation is enabled.",
+"type": "boolean"
+},
+"rotationInterval": {
+"description": "The interval between two consecutive rotations. Default rotation interval is 2 minutes.",
+"format": "google-duration",
+"type": "string"
+}
+},
+"type": "object"
+},
 "TimeWindow": {
 "description": "Represents an arbitrary window of time.",
 "id": "TimeWindow",
@@ -9791,7 +9895,7 @@ false
 "type": "object"
 },
 "WorkloadALTSConfig": {
-"description": "Configuration for direct-path (via ALTS) with workload identity.",
+"description": "Configuration for direct-path (via ALTS) with workload identity. This feature is not officially supported for external customers in Kubernetes Engine when using Workload Identity.",
 "id": "WorkloadALTSConfig",
 "properties": {
 "enableAlts": {
@@ -9845,7 +9949,7 @@ true
 "type": "object"
 },
 "WorkloadIdentityConfig": {
-"description": "Configuration for the use of Kubernetes Service Accounts in GCP IAM policies.",
+"description": "Configuration for the use of Kubernetes Service Accounts in IAM policies.",
 "id": "WorkloadIdentityConfig",
 "properties": {
 "identityNamespace": {
@@ -9912,6 +10016,17 @@ true
 },
 "autopilotCompatibilityAuditingEnabled": {
 "description": "If true, enables the GCW Auditor that audits workloads on standard clusters.",
+"type": "boolean"
+}
+},
+"type": "object"
+},
+"WritableCgroups": {
+"description": "Defines writable cgroups configuration.",
+"id": "WritableCgroups",
+"properties": {
+"enabled": {
+"description": "Optional. Whether writable cgroups is enabled.",
 "type": "boolean"
 }
 },

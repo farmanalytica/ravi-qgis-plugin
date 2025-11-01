@@ -51,6 +51,8 @@ from functools import partial
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from shapely.geometry import shape
+from shapely.ops import unary_union
+import json
 from scipy.signal import savgol_filter
 from osgeo import gdal
 
@@ -353,6 +355,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_next_4.clicked.connect(self.next_clicked)
         self.QPushButton_next_5.clicked.connect(self.next_clicked)
         self.QPushButton_next_6.clicked.connect(self.next_clicked)
+        self.learn.clicked.connect(self.learn_clicked)
         self.QPushButton_next_7.clicked.connect(self.next_clicked)
         self.QPushButton_next_8.clicked.connect(self.next_clicked)
         self.QPushButton_back.clicked.connect(self.back_clicked)
@@ -375,7 +378,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.datasrecorte_3.clicked.connect(self.datasrecorte_clicked)
         self.add_dot.clicked.connect(self.add_dot_from_coordinates)
         self.QPushButton_skip.clicked.connect(lambda: self.tabWidget.setCurrentIndex(9))
-
+        self.soil.clicked.connect(self.soil_clicked)
         self.salvar.clicked.connect(self.salvar_clicked)
         self.salvar_2.clicked.connect(self.salvar_clicked_2)
         self.salvar_3.clicked.connect(self.salvar_clicked_3)
@@ -509,6 +512,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Synchronize primary checkboxes based on secondary ones
         for primary, secondary in zip(self.primary_masks, self.secondary_masks):
             primary.setChecked(secondary.isChecked())
+
+    def learn_clicked(self):
+        webbrowser.open("https://raviqgis.org")
 
     def index_batch_clicked(self):
         if self.language == "pt":
@@ -2084,8 +2090,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if layer_name == "":
             print("No layer selected.")
             self.aoi_area.setText("Total Area:")
-            self.QPushButton_next.setEnabled(False)
-            self.QPushButton_skip.setEnabled(False)
+            self.aoi = None
+            self.aoi_checked = False
+            self.aoi_checked_function()
             return None
         print(f"Layer name from combobox: '{layer_name}'")  # Debug
         self.zoom_to_layer(layer_name)
@@ -2110,9 +2117,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(
                 f"Layer found: {layer.name()}, ID: {layer_id}"
             )  # Debug: Confirm layer is found
+            print(f"Layer is valid: {layer.isValid()}")
+            print(f"Layer feature count: {layer.featureCount()}")
+            print(f"Layer geometry type: {layer.geometryType()}")
+            print(f"Layer CRS: {layer.crs().authid()}")
+            # Store both the dataSourceUri (for file-based layers) and the
+            # actual QgsVectorLayer object (for memory layers like 'memory?').
             self.selected_aio_layer_path = (
                 layer.dataProvider().dataSourceUri().split("|")[0]
             )
+            # Keep a reference to the QgsVectorLayer itself so we can
+            # extract geometries from in-memory layers safely.
+            self.selected_aio_layer = layer
             print(
                 f"Selected layer path: {self.selected_aio_layer_path}"
             )  # Debug: Show selected layer path
@@ -2122,19 +2138,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.aoi = self.load_vector_function()
             area = self.find_area()
             if area > 120:
-                self.QPushButton_next.setEnabled(False)
-                self.QPushButton_skip.setEnabled(False)
+                self.aoi = None
+                self.aoi_checked = False
+                self.aoi_checked_function()
                 self.loadtimeseries.setEnabled(False)
                 if self.language == 'pt':
-                    self.pop_warning("Área muito grande ({:.2f} km²). O limite é de 100 km².".format(area))
+                    self.pop_warning("Área muito grande ({:.2f} km²). O limite é de 120 km².".format(area))
                 else:
-                    self.pop_warning("Area too large ({:.2f} km²). The limit is 100 km².".format(area))
-                self.aio = None
-                #self.on_tab_changed(2)
+                    self.pop_warning("Area too large ({:.2f} km²). The limit is 120 km².".format(area))
+
                 return None
 
-            self.QPushButton_next.setEnabled(True)
-            self.QPushButton_skip.setEnabled(True)
+            # self.QPushButton_next.setEnabled(True)
+            # self.QPushButton_skip.setEnabled(True)
             self.loadtimeseries.setEnabled(True)
 
             return None
@@ -3012,92 +3028,277 @@ class RAVIDialog(QDialog, FORM_CLASS):
             )
         self.textBrowser_index_explain.setHtml(explanation)
 
+
     def load_vector_function(self, shapefile_path=None):
         """
-        Loads the vector layer from the selected file path, reprojects it to
-        EPSG:4326, dissolves multiple features if necessary, and converts it
-        into an Earth Engine FeatureCollection representing the AOI.
+        Loads a vector layer (memory layer or file path), reprojects to EPSG:4326,
+        dissolves to a single polygonal geometry, strips Z, and returns an
+        Earth Engine FeatureCollection representing the AOI.
         """
-        """
-        Carrega a camada vetorial do caminho do arquivo selecionado, a
-        reprojeta para EPSG:4326, dissolve várias feições, se necessário, e a
-        converte em um Earth Engine FeatureCollection representando a AOI.
-        """
-        if shapefile_path is None:
-            shapefile_path = self.selected_aio_layer_path
+
+        import os
+        import json
+        import tempfile
+        import zipfile
+
+        import geopandas as gpd
+        from shapely.geometry import shape, Polygon, MultiPolygon, GeometryCollection
+        from shapely.ops import unary_union
+
+        def transform_ok(ret):
+            # Normalize transform() return: in many PyQGIS builds, 0 = success.
+            # In some, it may return True/False.
+            if isinstance(ret, bool):
+                return ret
+            try:
+                return int(ret) == 0
+            except Exception:
+                # Fallback: consider truthy as success
+                return bool(ret)
+
+        def polygonal_union(geoms):
+            if not geoms:
+                return None
+            merged = unary_union(geoms)
+            if merged.is_empty:
+                return None
+            if isinstance(merged, (Polygon, MultiPolygon)):
+                return merged
+            if isinstance(merged, GeometryCollection):
+                polys = []
+                for g in merged.geoms:
+                    if isinstance(g, (Polygon, MultiPolygon)):
+                        polys.append(g)
+                if not polys:
+                    return None
+                if len(polys) == 1:
+                    return polys[0]
+                return unary_union(polys)
+            return None
+
+        def transform_to_wgs84_shapely(qgs_geom, src_crs):
+            # Copy via WKT to avoid clone() and fromWkb() binding issues
+            try:
+                copied = QgsGeometry.fromWkt(qgs_geom.asWkt())
+            except Exception:
+                # As a last resort, try constructing a new geometry from JSON
+                try:
+                    gj = qgs_geom.asJson()
+                    # Note: QgsGeometry has fromGeoJSON in newer versions; avoid reliance
+                    # We'll go straight to shapely if transform below fails.
+                    copied = QgsGeometry.fromWkt(qgs_geom.asWkt())
+                except Exception:
+                    return None
+
+            target_crs = QgsCoordinateReferenceSystem("EPSG:4326")
+            xform = QgsCoordinateTransform(src_crs, target_crs, QgsProject.instance())
+            ret = copied.transform(xform)
+            if not transform_ok(ret):
+                return None
+
+            try:
+                gj = copied.asJson()
+                geo = json.loads(gj)
+                return shape(geo)
+            except Exception:
+                return None
 
         try:
-            # Load the shapefile, handling both .zip archives and regular files.
-            if shapefile_path.endswith(".zip"):
-                with zipfile.ZipFile(shapefile_path, "r") as zip_ref:
-                    shapefile_found = False
-                    for file in zip_ref.namelist():
-                        if file.endswith(".shp"):
-                            shapefile_found = True
-                            shapefile_within_zip = file
-                            break
-                    if not shapefile_found:
-                        print("No .shp file found inside the zip archive.")
+            # Resolve layer object and/or path
+            if shapefile_path is None:
+                shapefile_path = getattr(self, "selected_aio_layer_path", None)
+                layer_obj = getattr(self, "selected_aio_layer", None)
+            else:
+                layer_obj = None
+
+            geojson = None
+
+            # Branch A: memory layer preferred
+            if layer_obj is not None and hasattr(layer_obj, "getFeatures"):
+                feats = [f for f in layer_obj.getFeatures()]
+                if len(feats) == 0:
+                    # Fallback: export to GeoJSON and read
+                    try:
+                        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".geojson")
+                        tmp_path = tmp.name
+                        tmp.close()
+                        err = QgsVectorFileWriter.writeAsVectorFormat(
+                            layer_obj, tmp_path, "utf-8", layer_obj.crs(), "GeoJSON"
+                        )
+                        err_code = err[0] if isinstance(err, (tuple, list)) else err
+                        if err_code != QgsVectorFileWriter.NoError:
+                            print(f"Failed to export layer to GeoJSON (error: {err})")
+                            return
+                        aoi_gdf = gpd.read_file(tmp_path)
+                        os.remove(tmp_path)
+
+                        if aoi_gdf is None or aoi_gdf.empty:
+                            print("Exported GeoJSON contains no geometries.")
+                            return
+
+                        if len(aoi_gdf) > 1:
+                            aoi_gdf = aoi_gdf.dissolve()
+
+                        geometry = aoi_gdf.geometry.iloc[0]
+                        if geometry is None or geometry.is_empty:
+                            print("Exported GeoJSON geometry is empty.")
+                            return
+
+                        try:
+                            if aoi_gdf.crs and aoi_gdf.crs.to_epsg() != 4326:
+                                aoi_gdf = aoi_gdf.to_crs(epsg=4326)
+                                geometry = aoi_gdf.geometry.iloc[0]
+                        except Exception:
+                            pass
+
+                        geojson = geometry.__geo_interface__
+                    except Exception as e:
+                        print(f"Fallback export failed: {e}")
+                        return
+                else:
+                    src_crs = layer_obj.crs()
+                    if not src_crs.isValid():
+                        print("Source layer has no valid CRS; cannot reproject to EPSG:4326.")
                         return
 
-                    # Read shapefile directly from the zip archive.
-                    aoi = gpd.read_file(
-                        f"zip://{shapefile_path}/{shapefile_within_zip}"
-                    )
+                    geoms = []
+                    for feat in feats:
+                        g = feat.geometry()
+                        if not g or g.isEmpty():
+                            continue
+                        shp = transform_to_wgs84_shapely(g, src_crs)
+                        if shp is not None and not shp.is_empty:
+                            geoms.append(shp)
+
+                    merged_poly = polygonal_union(geoms)
+                    if merged_poly is None or merged_poly.is_empty:
+                        print("No polygonal geometry found after union/dissolve.")
+                        return
+
+                    geojson = merged_poly.__geo_interface__
+
+            # Branch B: load from path
             else:
-                aoi = gpd.read_file(shapefile_path)
+                if shapefile_path is None:
+                    print("No path or layer provided to load_vector_function.")
+                    return
 
-            # Reproject the GeoDataFrame to EPSG:4326 to ensure correct
-            # coordinates for Earth Engine.
-            aoi = aoi.to_crs(epsg=4326)
+                if shapefile_path.lower().endswith(".zip"):
+                    try:
+                        tmp_dir = tempfile.mkdtemp()
+                        with zipfile.ZipFile(shapefile_path, "r") as zip_ref:
+                            zip_ref.extractall(tmp_dir)
+                        shp_files = [
+                            f for f in os.listdir(tmp_dir) if f.lower().endswith(".shp")
+                        ]
+                        if not shp_files:
+                            print("Zip file does not contain a .shp.")
+                            return
+                        shp_path = os.path.join(tmp_dir, shp_files[0])
+                        layer = QgsVectorLayer(shp_path, "temp", "ogr")
+                    except Exception as e:
+                        print(f"Failed to read zip file: {e}")
+                        return
+                else:
+                    layer = QgsVectorLayer(shapefile_path, "temp", "ogr")
 
-            if aoi.empty:
-                print("The shapefile does not contain any geometries.")
+                if not layer or not layer.isValid():
+                    print(f"Failed to load layer from {shapefile_path}")
+                    return
+
+                feats = [f for f in layer.getFeatures()]
+                if len(feats) == 0:
+                    print("The selected layer does not contain any geometries.")
+                    return
+
+                src_crs = layer.crs()
+                if not src_crs.isValid():
+                    print("Source layer has no valid CRS; cannot reproject to EPSG:4326.")
+                    return
+
+                geoms = []
+                for feat in feats:
+                    g = feat.geometry()
+                    if not g or g.isEmpty():
+                        continue
+                    shp = transform_to_wgs84_shapely(g, src_crs)
+                    if shp is not None and not shp.is_empty:
+                        geoms.append(shp)
+
+                merged_poly = polygonal_union(geoms)
+                if merged_poly is None or merged_poly.is_empty:
+                    print("No polygonal geometry found after union/dissolve.")
+                    return
+
+                geojson = merged_poly.__geo_interface__
+
+            if geojson is None:
+                print("Failed to build GeoJSON from input geometries.")
                 return
 
-            # Dissolve multiple features into a single geometry if necessary.
-            if len(aoi) > 1:
-                aoi = aoi.dissolve()
+            # Debug info
+            try:
+                print(f"GeoJSON type: {geojson.get('type')}")
+                if geojson.get("type") == "Polygon" and "coordinates" in geojson:
+                    print(f"First ring first coord: {geojson['coordinates'][0][0]}")
+                elif geojson.get("type") == "MultiPolygon" and "coordinates" in geojson:
+                    print(f"First polygon first ring first coord: {geojson['coordinates'][0][0][0]}")
+            except Exception:
+                pass
 
-            # Extract the first geometry.
-            geometry = aoi.geometry.iloc[0]
+            # Strip Z
+            def strip_z_coords(gj):
+                t = gj.get("type")
+                if t == "Polygon":
+                    gj["coordinates"] = [
+                        [coord[:2] for coord in ring] for ring in gj["coordinates"]
+                    ]
+                elif t == "MultiPolygon":
+                    gj["coordinates"] = [
+                        [[coord[:2] for coord in ring] for ring in poly]
+                        for poly in gj["coordinates"]
+                    ]
+                return gj
 
-            # Convert the geometry to GeoJSON format.
-            geojson = geometry.__geo_interface__
+            geojson = strip_z_coords(geojson)
 
-            # Remove any third dimension from the coordinates.
-            if geojson["type"] == "Polygon":
-                geojson["coordinates"] = [
-                    list(map(lambda coord: coord[:2], ring)) for ring in geojson["coordinates"]
-                ]
-            elif geojson["type"] == "MultiPolygon":
-                geojson["coordinates"] = [
-                    [list(map(lambda coord: coord[:2], ring)) for ring in polygon]
-                    for polygon in geojson["coordinates"]
-                ]
-
-            # Create an Earth Engine geometry object.
+            # Build Earth Engine AOI
             ee_geometry = ee.Geometry(geojson)
             feature = ee.Feature(ee_geometry)
             aoi = ee.FeatureCollection([feature])
 
             print("AOI defined successfully.")
-            self.QPushButton_next.setEnabled(True)
-            self.QPushButton_skip.setEnabled(True)
-            self.QPushButton_fast.setEnabled(True)
 
-            self.aio_set = True
-            self.vector_layer_combobox_2.setCurrentIndex(
-                self.vector_layer_combobox.currentIndex()
-            )
+            # Reset area warning flag for new AOI
+            self.area_warning_shown = False
 
-            self.vector_layer_combobox_3.setCurrentIndex(
-                self.vector_layer_combobox.currentIndex()
-            )
-            # self.next_clicked()
+            # UI updates
+            try:
+                self.QPushButton_next.setEnabled(True)
+                self.QPushButton_skip.setEnabled(True)
+                self.QPushButton_fast.setEnabled(True)
+                self.QPushButton_easy.setEnabled(True)
 
-            self.aoi_ckecked = True
-            self.aoi_ckecked_function()
+
+                self.aio_set = True
+                if hasattr(self, "vector_layer_combobox") and hasattr(
+                    self, "vector_layer_combobox_2"
+                ):
+                    self.vector_layer_combobox_2.setCurrentIndex(
+                        self.vector_layer_combobox.currentIndex()
+                    )
+                if hasattr(self, "vector_layer_combobox") and hasattr(
+                    self, "vector_layer_combobox_3"
+                ):
+                    self.vector_layer_combobox_3.setCurrentIndex(
+                        self.vector_layer_combobox.currentIndex()
+                    )
+
+                self.aoi_ckecked = True
+                # if hasattr(self, "aoi_ckecked_function"):
+                #     self.aoi_ckecked_function()
+            except Exception as e:
+                print(f"UI update warning: {e}")
 
             return aoi
 
@@ -3114,17 +3315,27 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.aoi.geometry().area().getInfo() / 1e6
         )  # Convert from square meters to square kilometers
         print(f"Area: {area:.2f} km²")
-        if area >= 100:
+        if area >= 120:
+            if not hasattr(self, 'area_warning_shown') or not self.area_warning_shown:
+                self.pop_warning(f"Área muito grande ({area:.2f} km²). O limite é de 100 km²")
+                self.area_warning_shown = True
             self.aoi = None
-            self.aoi_ckecked = False
-            self.aoi_ckecked_function()
+            self.aoi_checked = False
+            self.aoi_checked_function()
         return area
 
     def find_area(self):
         try:
-            area_km2 = (
-                self.aoi.geometry().area().getInfo() / 1e6
-            )  # Convert from square meters to square kilometers
+            if self.aoi is None:
+                print("AOI is None, cannot calculate area")
+                self.aoi_area.setText(f"Total Area:")
+                self.aoi = None
+                self.aoi_checked = False
+                self.aoi_checked_function()
+                return 0
+            area_m2 = self.aoi.geometry().area().getInfo()
+            print(f"Area in m² from EE: {area_m2}")
+            area_km2 = area_m2 / 1e6
             area_ha = area_km2 * 100  # Convert from square kilometers to hectares
             print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
             self.aoi_area.setText(
@@ -3134,17 +3345,23 @@ class RAVIDialog(QDialog, FORM_CLASS):
         except Exception as e:
             print(f"Error in find_area: {e}")
             self.aoi_area.setText(f"Total Area:")
+            self.aoi = None
+            self.aoi_checked = False
+            self.aoi_checked_function()
             return 0
 
-    def aoi_ckecked_function(self):
-        if self.aoi_ckecked and self.folder_set:
+    def aoi_checked_function(self):
+        print(f"AOI checked: {self.aoi_checked}, Folder set: {self.folder_set}")
+        if self.aoi_checked and self.folder_set:
             self.QPushButton_next.setEnabled(True)
             self.QPushButton_skip.setEnabled(True)
             self.QPushButton_fast.setEnabled(True)
+            self.QPushButton_easy.setEnabled(True)
         else:
             self.QPushButton_next.setEnabled(False)
             self.QPushButton_skip.setEnabled(False)
-            self.QPushButton_fast.setEnabled(True)
+            self.QPushButton_fast.setEnabled(False)
+            self.QPushButton_easy.setEnabled(False)
 
     def resetting(self):
         self.recorte_datas = None
@@ -3902,3 +4119,212 @@ class RAVIDialog(QDialog, FORM_CLASS):
         button_box.rejected.connect(dialog.reject)
 
         dialog.exec_()
+
+    def soil_clicked(self):
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            self.sentinel2_selected_dates_update()
+            self.soil_image()
+        except Exception as e:
+            self.pop_warning(f"An error occurred: {e}")
+        finally:
+            QApplication.restoreOverrideCursor()
+
+    def soil_image(self):
+        # Implement the logic to display the soil image
+        sentinel2 = self.sentinel2_selected_dates
+
+        # Define band name mapping (originais -> amigáveis)
+        s2_names = ['B2', 'B3', 'B4', 'B6', 'B8', 'B11', 'B12', 'QA60']
+        b_names = ['blue', 'green', 'red', 'rededge', 'nir', 'swir1', 'swir2', 'QA60']
+
+        # Rename bands on the collection so subsequent functions can use friendly names (red, nir, etc.)
+        sentinel2 = sentinel2.select(s2_names, b_names)
+
+        def maskS2clouds(image):
+            qa = image.select('QA60')
+            cloudBitMask = 1 << 10
+            cirrusBitMask = 1 << 11
+            mask = qa.bitwiseAnd(cloudBitMask).eq(0).And(
+                        qa.bitwiseAnd(cirrusBitMask).eq(0))
+            return image.updateMask(mask)
+
+        # 1. Adicionar índices (usando nir, red, swir1, swir2, etc.)
+        def add_indexes(img):
+            # usa nomes amigáveis: nir, red, swir1, swir2, green, blue
+            ndvi = img.normalizedDifference(['nir', 'red'])   # nir='nir', red='red'
+            nbr2 = img.normalizedDifference(['swir1', 'swir2']) # swir1='swir1', swir2='swir2'
+            grbl = img.select('green').subtract(img.select('blue')) # green - blue
+            regr = img.select('red').subtract(img.select('green')) # red - green
+            
+            img = img.addBands(ndvi.rename('ndvi')) \
+                    .addBands(nbr2.rename('nbr2')) \
+                    .addBands(grbl.rename('grbl')) \
+                    .addBands(regr.rename('regr'))
+            return img
+
+        # 2. Aplicar fatores de escala
+        def applyScaleFactors(image):
+            # Usa a lista de nomes amigáveis (b_names) — já renomeadas via select
+            opticalBands = image.select(b_names).divide(10000)
+            return image.addBands(opticalBands, None, True)
+
+        # 3. Adicionar máscara GEOS3 (lógica do solo)
+        def addGEOS3Mask(img, options={}):
+            ndvi_thres = [-0.25, 0.25]
+            nbr_thres = [-0.3, 0.1]
+            vnsir_thres = 0.9
+
+            # Atualizado para usar nomes amigáveis (red, green, blue, nir)
+            vnsir = ee.Image(1) \
+                    .subtract(ee.Image(2).multiply(img.select('red') \
+                                                .subtract(img.select('green')).subtract(img.select('blue'))) \
+                    .add(ee.Image(3).multiply(img.select('nir').subtract(img.select('red')))))
+            
+            # A lógica GEOS3 não muda, pois usa os *índices* que acabamos de criar
+            geos3 = img.select('ndvi').gte(ndvi_thres[0]).And(img.select('ndvi').lte(ndvi_thres[1])) \
+                        .And(img.select('nbr2').gte(nbr_thres[0]).And(img.select('nbr2').lte(nbr_thres[1]))) \
+                        .And(vnsir.lte(vnsir_thres)) \
+                        .And(img.select('grbl').gt(0)).And(img.select('regr').gt(0))
+                        
+            img = img.addBands(geos3.rename('GEOS3'))
+            return img
+
+        # 4. Aplicar máscara GEOS3 (mascarar pixels)
+        def maskByGEOS3(image):
+            mask_geos3 = image.select('GEOS3').eq(1)
+            # Usando os nomes amigáveis
+            mask_swir = image.select('swir2').gte(0)   # swir2
+            mask_green = image.select('green').gte(0)  # green
+            mask_red = image.select('red').gte(0)    # red
+            mask_blue = image.select('blue').gte(0)   # blue
+            
+            mask = mask_geos3.And(mask_swir).And(mask_green).And(mask_red).And(mask_blue)
+            return image.updateMask(mask)
+
+        # 5. Máscara final de NDVI
+        def maskByndvi(image):
+            # Esta função usa o índice 'ndvi', então não precisa de alteração
+            mask_ndvi_v1 = image.select('ndvi').gte(0.00)
+            mask_ndvi_v2 = image.select('ndvi').lte(0.20)
+            mask = mask_ndvi_v1.And(mask_ndvi_v2)
+            return image.updateMask(mask)
+
+
+        # =================================================================
+        # 4. EXECUÇÃO DO PROCESSAMENTO
+        # =================================================================
+
+        # 1. Adiciona índices e aplica escala (usando a coleção renomeada)
+        s2_processed = sentinel2.map(add_indexes).map(applyScaleFactors)
+
+        # 2. Adiciona a banda GEOS3
+        s2_with_geos3 = s2_processed.map(lambda img: addGEOS3Mask(img, {}))
+
+        # 3. Aplica a máscara GEOS3 e cria o compósito mediano (SYSI v1)
+        tess_v1 = s2_with_geos3.map(maskByGEOS3).median()
+
+        # 4. Aplica o filtro NDVI final (SYSI v2)
+        tess_v2_final = maskByndvi(tess_v1)
+
+        # 5. Seleciona as bandas para download (Nomes amigáveis + índices)
+        bands_to_export = ['blue','green','red','rededge','nir','swir1','swir2','ndvi']
+        imageToDownload = tess_v2_final.select(bands_to_export)
+
+        final_image = imageToDownload.toFloat()
+
+        # --- KEY CHANGE: Use updateMask for more reliable clipping ---
+        # Apply buffer if needed. Ensure self.aoi is an ee.Geometry object.
+        aoi = self.apply_buffer(self.aoi)
+
+        # 1. Create an explicit mask from the AOI geometry.
+        # ee.Image(1).clip(aoi) creates an image where the AOI is 1 and outside is 0.
+        # .mask() converts this to a mask where 1 is valid data and 0 is NoData.
+        mask = ee.Image(1).clip(aoi).mask()
+
+        # 2. Apply this mask to the final composite image.
+        # This operation sets pixels outside the mask to NoData (transparent).
+        final_image_masked = final_image.updateMask(mask)
+
+        # 3. Define the download region using the BOUNDING BOX of the AOI.
+        # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
+        # The actual clipping to the irregular shape is handled by updateMask.
+        download_region = aoi.geometry().bounds().getInfo()
+
+
+        # Download the selected composite (all selected bands) and load as a raster layer
+        try:
+            try:
+                url = final_image_masked.getDownloadURL(
+                    {
+                        "scale": 10,
+                        "region": download_region,
+                        "format": "GeoTIFF",
+                        "crs": "EPSG:4326",
+                    }
+                )
+            except Exception as e:
+                self.pop_warning(f"Failed to generate download URL: {e}")
+                return
+
+            base_output_file = f"Sentinel2_Soil_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.tiff"
+            output_file = self.get_unique_filename(base_output_file, temporary=True)
+
+            try:
+                response = requests.get(url, stream=True)
+                response.raise_for_status()
+                with open(output_file, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+                print(f"Image downloaded to {output_file}")
+            except requests.exceptions.RequestException as e:
+                self.pop_warning(f"Error downloading image: {e}")
+                return
+
+            # Add the image as a raster layer in QGIS
+            layer_name = f"Sentinel-2 SYSI"
+            layer = QgsRasterLayer(output_file, layer_name)
+            if not layer.isValid():
+                self.pop_warning(f"Failed to load the layer: {output_file}")
+                return
+
+            # For RGB preview use (red, green, blue) -> here bands order is [blue, green, red, ...]
+            # so indices (1-based) are: blue=1, green=2, red=3 -> for renderer we pass red=3, green=2, blue=1
+            renderer = QgsMultiBandColorRenderer(layer.dataProvider(), 3, 2, 1)
+
+            # Set contrast enhancement defaults (adjust if necessary)
+            min_val = 200
+            max_val = 2300
+            try:
+                red_ce = QgsContrastEnhancement(layer.dataProvider().dataType(3))
+                red_ce.setMinimumValue(min_val)
+                red_ce.setMaximumValue(max_val)
+                red_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                green_ce = QgsContrastEnhancement(layer.dataProvider().dataType(2))
+                green_ce.setMinimumValue(min_val)
+                green_ce.setMaximumValue(max_val)
+                green_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                blue_ce = QgsContrastEnhancement(layer.dataProvider().dataType(1))
+                blue_ce.setMinimumValue(min_val)
+                blue_ce.setMaximumValue(max_val)
+                blue_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                renderer.setRedContrastEnhancement(red_ce)
+                renderer.setGreenContrastEnhancement(green_ce)
+                renderer.setBlueContrastEnhancement(blue_ce)
+            except Exception as e:
+                print(f"Error configuring renderer contrast: {e}")
+
+            layer.setRenderer(renderer)
+
+            QgsProject.instance().addMapLayer(layer, addToLegend=False)
+            root = QgsProject.instance().layerTreeRoot()
+            root.insertChildNode(0, QgsLayerTreeLayer(layer))
+            iface.setActiveLayer(layer)
+
+        except Exception as e:
+            print(f"Error in soil_image download/load: {e}")
+            self.pop_warning(f"An error occurred while exporting/loading the soil image: {e}")

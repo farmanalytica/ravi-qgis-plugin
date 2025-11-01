@@ -16,10 +16,6 @@ from ee import ee_exception
 
 class CloudApiUtilsTest(unittest.TestCase):
 
-  def setUp(self):
-    super().setUp()
-    _cloud_api_utils.set_cloud_api_user_project('earthengine-legacy')
-
   def test_build_cloud_resource(self):
     base = 'https://earthengine.basetest'
     path = '$discovery/rest?version=v1&prettyPrint=false'
@@ -171,7 +167,10 @@ class CloudApiUtilsTest(unittest.TestCase):
   def test_convert_task_id_to_operation_name(self):
     self.assertEqual(
         'projects/earthengine-legacy/operations/taskId',
-        _cloud_api_utils.convert_task_id_to_operation_name('taskId'))
+        _cloud_api_utils.convert_task_id_to_operation_name(
+            'earthengine-legacy', 'taskId'
+        ),
+    )
 
   def test_encode_number_as_cloud_value(self):
     self.assertEqual({
@@ -550,6 +549,22 @@ class CloudApiUtilsTest(unittest.TestCase):
     self.assertEqual(
         expected,
         _cloud_api_utils.convert_sources_to_one_platform_sources(old_sources))
+
+  def test_convert_to_operation_state(self):
+    def convert(state):
+      return _cloud_api_utils.convert_to_operation_state(state)
+
+    self.assertEqual('CANCELLED', convert('CANCELLED'))
+    self.assertEqual('CANCELLING', convert('CANCEL_REQUESTED'))
+    self.assertEqual('CANCELLING', convert('CANCELLING'))
+    self.assertEqual('FAILED', convert('FAILED'))
+    self.assertEqual('PENDING', convert('PENDING'))
+    self.assertEqual('PENDING', convert('READY'))
+    self.assertEqual('RUNNING', convert('RUNNING'))
+    self.assertEqual('SUCCEEDED', convert('COMPLETED'))
+    self.assertEqual('SUCCEEDED', convert('SUCCEEDED'))
+    self.assertEqual('UNKNOWN', convert('random_string'))
+    self.assertEqual('UNKNOWN', convert('UNKNOWN'))
 
 
 if __name__ == '__main__':

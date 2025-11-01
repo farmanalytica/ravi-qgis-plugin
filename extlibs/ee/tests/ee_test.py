@@ -8,6 +8,7 @@ from google.oauth2 import credentials
 
 import unittest
 import ee
+from ee import _state
 from ee import apitestcase
 
 
@@ -18,7 +19,7 @@ class EETestCase(apitestcase.ApiTestCase):
     ee.Reset()
     ee.data._install_cloud_api_resource = lambda: None
 
-  def testInitialization(self):
+  def test_initialization(self):
     """Verifies library initialization."""
 
     def MockAlgorithms():
@@ -27,33 +28,50 @@ class EETestCase(apitestcase.ApiTestCase):
     ee.data.getAlgorithms = MockAlgorithms
 
     # Verify that the base state is uninitialized.
-    self.assertFalse(ee.data._initialized)
-    self.assertIsNone(ee.data._api_base_url)
+    state = _state.get_state()
+    self.assertFalse(state.initialized)
+    self.assertIsNone(state.credentials)
+    self.assertIsNone(state.api_base_url)
+    self.assertIsNone(state.tile_base_url)
+    self.assertIsNone(state.cloud_api_base_url)
+    self.assertIsNone(state.cloud_api_key)
+    self.assertIsNone(state.requests_session)
+    self.assertIsNone(state.cloud_api_resource)
+    self.assertIsNone(state.cloud_api_resource_raw)
+    self.assertEqual(state.cloud_api_user_project, 'earthengine-legacy')
+    self.assertIsNone(state.cloud_api_client_version)
+    self.assertIsNone(state.http_transport)
+    self.assertEqual(state.deadline_ms, 0)
+    self.assertEqual(state.max_retries, 5)
+    self.assertIsNone(state.user_agent)
     self.assertEqual(ee.ApiFunction._api, {})
     self.assertFalse(ee.Image._initialized)
 
     # Verify that ee.Initialize() sets the URL and initializes classes.
     ee.Initialize(None, 'foo', project='my-project')
-    self.assertTrue(ee.data._initialized)
-    self.assertEqual(ee.data._api_base_url, 'foo/api')
-    self.assertEqual(ee.data._cloud_api_user_project, 'my-project')
+    state = _state.get_state()
+    self.assertTrue(state.initialized)
+    self.assertEqual(state.api_base_url, 'foo/api')
+    self.assertEqual(state.cloud_api_user_project, 'my-project')
     self.assertEqual(ee.ApiFunction._api, {})
     self.assertTrue(ee.Image._initialized)
 
     # Verify that ee.Initialize() without a URL does not override custom URLs.
     ee.Initialize(None, project='my-project')
-    self.assertTrue(ee.data._initialized)
-    self.assertEqual(ee.data._api_base_url, 'foo/api')
+    state = _state.get_state()
+    self.assertTrue(state.initialized)
+    self.assertEqual(state.api_base_url, 'foo/api')
 
     # Verify that ee.Reset() reverts everything to the base state.
     ee.Reset()
-    self.assertFalse(ee.data._initialized)
-    self.assertIsNone(ee.data._api_base_url)
-    self.assertIsNone(ee.data._cloud_api_user_project)
+    state = _state.get_state()
+    self.assertFalse(state.initialized)
+    self.assertIsNone(state.api_base_url)
+    self.assertEqual(state.cloud_api_user_project, 'earthengine-legacy')
     self.assertEqual(ee.ApiFunction._api, {})
     self.assertFalse(ee.Image._initialized)
 
-  def testProjectInitialization(self):
+  def test_project_initialization(self):
     """Verifies that we can fetch the client project from many locations.
 
     This also exercises the logic in data.get_persistent_credentials.
@@ -118,7 +136,7 @@ class EETestCase(apitestcase.ApiTestCase):
         ee.Initialize()
       self.assertEqual(6, inits.call_count)
 
-  def testCallAndApply(self):
+  def test_call_and_apply(self):
     """Verifies library initialization."""
 
     # Use a custom set of known functions.
@@ -174,7 +192,7 @@ class EETestCase(apitestcase.ApiTestCase):
     called_with_null = ee.call('fakeFunction', None, 1)
     self.assertIsNone(called_with_null.args['image1'])
 
-  def testDynamicClasses(self):
+  def test_dynamic_classes(self):
     """Verifies dynamic class initialization."""
 
     # Use a custom set of known functions.
@@ -280,7 +298,7 @@ class EETestCase(apitestcase.ApiTestCase):
         ee.EEException, 'Unknown algorithm: Reducer.moo'):
       ee.call('fakeFunction', 'moo')
 
-  def testDynamicConstructor(self):
+  def test_dynamic_constructor(self):
     # Test the behavior of the dynamic class constructor.
 
     # Use a custom set of known functions for classes Foo and Bar.
@@ -389,7 +407,7 @@ class EETestCase(apitestcase.ApiTestCase):
     with self.assertRaisesRegex(ee.EEException, 'Must be a ComputedObject'):
       ee.Bar(1)
 
-  def testDynamicConstructorCasting(self):
+  def test_dynamic_constructor_casting(self):
     """Test the behavior of casting with dynamic classes."""
     self.InitializeApi()
     result = ee.Geometry.Rectangle(1, 1, 2, 2).bounds(0, 'EPSG:4326')
@@ -398,7 +416,7 @@ class EETestCase(apitestcase.ApiTestCase):
             ee.ErrorMargin(0), ee.Projection('EPSG:4326')))
     self.assertEqual(expected, result)
 
-  def testPromotion(self):
+  def test_promotion(self):
     """Verifies object promotion rules."""
     self.InitializeApi()
 
@@ -415,7 +433,7 @@ class EETestCase(apitestcase.ApiTestCase):
     self.assertIsInstance(ee._Promote(untyped, 'Element'), ee.Element)
     self.assertEqual('foo', ee._Promote(untyped, 'Element').varName)
 
-  def testUnboundMethods(self):
+  def test_unbound_methods(self):
     """Verifies unbound method attachment to ee.Algorithms."""
 
     # Use a custom set of known functions.
@@ -458,7 +476,7 @@ class EETestCase(apitestcase.ApiTestCase):
     self.assertEqual(ee.call('Foo.bar'), ee.Algorithms.Foo.bar())
     self.assertNotEqual(ee.Algorithms.Foo.bar(), ee.Algorithms.last())
 
-  def testNonAsciiDocumentation(self):
+  def test_non_ascii_documentation(self):
     """Verifies that non-ASCII characters in documentation work."""
     foo = '\uFB00\u00F6\u01EB'
     bar = 'b\u00E4r'

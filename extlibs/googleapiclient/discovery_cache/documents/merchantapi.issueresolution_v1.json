@@ -268,7 +268,7 @@
 }
 }
 },
-"revision": "20250804",
+"revision": "20250830",
 "rootUrl": "https://merchantapi.googleapis.com/",
 "schemas": {
 "Action": {
@@ -537,7 +537,7 @@ false
 "type": "object"
 },
 "BuiltInUserInputAction": {
-"description": "Action that is implemented and performed in (your) third-party application. The application needs to show an additional content and input form to the business. They can start the action only when they provided all required inputs. The application will request processing of the action by calling the [triggeraction method](https://developers.google.com/merchant/api/reference/rest/issueresolution_v1beta/issueresolution/triggeraction).",
+"description": "Action that is implemented and performed in (your) third-party application. The application needs to show an additional content and input form to the business. They can start the action only when they provided all required inputs. The application will request processing of the action by calling the [triggeraction method](https://developers.google.com/merchant/api/reference/rest/issueresolution_v1/issueresolution/triggeraction).",
 "id": "BuiltInUserInputAction",
 "properties": {
 "actionContext": {
@@ -653,14 +653,16 @@ false
 "REVIEW_PRODUCT_ISSUE_IN_MERCHANT_CENTER",
 "REVIEW_ACCOUNT_ISSUE_IN_MERCHANT_CENTER",
 "LEGAL_APPEAL_IN_HELP_CENTER",
-"VERIFY_IDENTITY_IN_MERCHANT_CENTER"
+"VERIFY_IDENTITY_IN_MERCHANT_CENTER",
+"VERIFY_BUSINESS_VIDEO_IN_MERCHANT_CENTER"
 ],
 "enumDescriptions": [
 "Default value. Will never be provided by the API.",
 "Redirect to Merchant Center where the business can request a review for issue related to their product.",
 "Redirect to Merchant Center where the business can request a review for issue related to their account.",
 "Redirect to the form in Help Center where the business can request a legal appeal for the issue.",
-"Redirect to Merchant Center where the business can perform identity verification."
+"Redirect to Merchant Center where the business can perform identity verification.",
+"Redirect to Merchant Center where the business can perform business video verification."
 ],
 "type": "string"
 },

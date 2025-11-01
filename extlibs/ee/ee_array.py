@@ -189,6 +189,8 @@ class Array(computedobject.ComputedObject):
 
     return apifunction.ApiFunction.call_(self.name() + '.bitCount', self)
 
+  @staticmethod
+  # pylint: disable-next=redefined-builtin
   def bitsToArray(input: _arg_types.Integer) -> Array:
     """Returns an Array from the bits of an integer.
 
@@ -1041,7 +1043,7 @@ class Array(computedobject.ComputedObject):
       start: The coordinate of the first slice (inclusive) along 'axis'.
         Negative numbers are used to position the start of slicing relative to
         the end of the array, where -1 starts at the last position on the axis,
-        -2 starts at the next to last position, etc.  Defaults to 0.
+        -2 starts at the next to last position, etc. Defaults to 0.
       end: The coordinate (exclusive) at which to stop taking slices. By default
         this will be the length of the given axis. Negative numbers are used to
         position the end of slicing relative to the end of the array, where -1
@@ -1049,7 +1051,7 @@ class Array(computedobject.ComputedObject):
         etc.
       step: The separation between slices along 'axis'; a slice will be taken at
         each whole multiple of 'step' from 'start' (inclusive) to 'end'
-        (exclusive). Must be positive.  Defaults to 1.
+        (exclusive). Must be positive. Defaults to 1.
 
     Returns:
       An ee.Array.

@@ -557,7 +557,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Immutable. Identifier. name of resource",
+"description": "Immutable. Identifier. Name of resource.",
 "location": "path",
 "pattern": "^organizations/[^/]+/locations/[^/]+/firewallEndpoints/[^/]+$",
 "required": true,
@@ -699,6 +699,11 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
+},
+"returnPartialSuccess": {
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"location": "query",
+"type": "boolean"
 }
 },
 "path": "v1/{+name}/operations",
@@ -1078,7 +1083,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. A list of extra location types that should be used as conditions for controlling the visibility of the locations.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -4485,6 +4490,11 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
+},
+"returnPartialSuccess": {
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"location": "query",
+"type": "boolean"
 }
 },
 "path": "v1/{+name}/operations",
@@ -5070,7 +5080,7 @@
 }
 }
 },
-"revision": "20250804",
+"revision": "20251001",
 "rootUrl": "https://networksecurity.googleapis.com/",
 "schemas": {
 "AddAddressGroupItemsRequest": {
@@ -5394,7 +5404,7 @@
 "type": "array"
 },
 "principals": {
-"description": "Optional. A list of identities derived from the client's certificate. This field will not match on a request unless frontend mutual TLS is enabled for the forwarding rule or Gateway and the client certificate has been successfully validated by mTLS. Each identity is a string whose value is matched against a list of URI SANs, DNS Name SANs, or the common name in the client's certificate. A match happens when any principal matches with the rule. Limited to 50 principals per Authorization Policy for Regional Internal Application Load Balancer, Regional External Application Load Balancer, Cross-region Internal Application Load Balancer, and Cloud Service Mesh. Limited to 25 principals per Authorization Policy for Global External Application Load Balancer.",
+"description": "Optional. A list of identities derived from the client's certificate. This field will not match on a request unless frontend mutual TLS is enabled for the forwarding rule or Gateway and the client certificate has been successfully validated by mTLS. Each identity is a string whose value is matched against a list of URI SANs, DNS Name SANs, or the common name in the client's certificate. A match happens when any principal matches with the rule. Limited to 50 principals per Authorization Policy for regional internal Application Load Balancers, regional external Application Load Balancers, cross-region internal Application Load Balancers, and Cloud Service Mesh. This field is not supported for global external Application Load Balancers.",
 "items": {
 "$ref": "AuthzPolicyAuthzRulePrincipal"
 },
@@ -5460,8 +5470,8 @@
 "enumDescriptions": [
 "Unspecified principal selector. It will be treated as CLIENT_CERT_URI_SAN by default.",
 "The principal rule is matched against a list of URI SANs in the validated client's certificate. A match happens when there is any exact URI SAN value match. This is the default principal selector.",
-"The principal rule is matched against a list of DNS Name SANs in the validated client's certificate. A match happens when there is any exact DNS Name SAN value match.",
-"The principal rule is matched against the common name in the client's certificate. Authorization against multiple common names in the client certificate is not supported. Requests with multiple common names in the client certificate will be rejected if CLIENT_CERT_COMMON_NAME is set as the principal selector. A match happens when there is an exact common name value match. This is only applicable for Application Load Balancers except for classic Global External Application load balancer. CLIENT_CERT_COMMON_NAME is not supported for INTERNAL_SELF_MANAGED load balancing scheme."
+"The principal rule is matched against a list of DNS Name SANs in the validated client's certificate. A match happens when there is any exact DNS Name SAN value match. This is only applicable for Application Load Balancers except for classic Global External Application load balancer. CLIENT_CERT_DNS_NAME_SAN is not supported for INTERNAL_SELF_MANAGED load balancing scheme.",
+"The principal rule is matched against the common name in the client's certificate. Authorization against multiple common names in the client certificate is not supported. Requests with multiple common names in the client certificate will be rejected if CLIENT_CERT_COMMON_NAME is set as the principal selector. A match happens when there is an exact common name value match. This is only applicable for Application Load Balancers except for global external Application Load Balancer and classic Application Load Balancer. CLIENT_CERT_COMMON_NAME is not supported for INTERNAL_SELF_MANAGED load balancing scheme."
 ],
 "type": "string"
 }
@@ -5884,7 +5894,7 @@
 "type": "object"
 },
 "FirewallEndpoint": {
-"description": "Message describing Endpoint object",
+"description": "Message describing Endpoint object.",
 "id": "FirewallEndpoint",
 "properties": {
 "associatedNetworks": {
@@ -5909,7 +5919,7 @@
 "type": "string"
 },
 "createTime": {
-"description": "Output only. Create time stamp",
+"description": "Output only. Create time stamp.",
 "format": "google-datetime",
 "readOnly": true,
 "type": "string"
@@ -5917,6 +5927,10 @@
 "description": {
 "description": "Optional. Description of the firewall endpoint. Max length 2048 characters.",
 "type": "string"
+},
+"endpointSettings": {
+"$ref": "FirewallEndpointEndpointSettings",
+"description": "Optional. Settings for the endpoint."
 },
 "labels": {
 "additionalProperties": {
@@ -5926,7 +5940,7 @@
 "type": "object"
 },
 "name": {
-"description": "Immutable. Identifier. name of resource",
+"description": "Immutable. Identifier. Name of resource.",
 "type": "string"
 },
 "reconciling": {
@@ -6057,6 +6071,17 @@
 "description": "Output only. The VPC network associated. Format: projects/{project}/global/networks/{name}.",
 "readOnly": true,
 "type": "string"
+}
+},
+"type": "object"
+},
+"FirewallEndpointEndpointSettings": {
+"description": "Settings for the endpoint.",
+"id": "FirewallEndpointEndpointSettings",
+"properties": {
+"jumboFramesEnabled": {
+"description": "Optional. Immutable. Indicates whether Jumbo Frames are enabled. Default value is false.",
+"type": "boolean"
 }
 },
 "type": "object"
@@ -7253,6 +7278,13 @@
 "$ref": "Operation"
 },
 "type": "array"
+},
+"unreachable": {
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
+"items": {
+"type": "string"
+},
+"type": "array"
 }
 },
 "type": "object"
@@ -7567,13 +7599,15 @@
 "STATE_UNSPECIFIED",
 "ACTIVE",
 "CREATING",
-"DELETING"
+"DELETING",
+"CLOSED"
 ],
 "enumDescriptions": [
 "State not set (this is not a valid state).",
 "The deployment group is ready.",
 "The deployment group is being created.",
-"The deployment group is being deleted."
+"The deployment group is being deleted.",
+"The deployment group is being wiped out (project deleted)."
 ],
 "readOnly": true,
 "type": "string"

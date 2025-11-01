@@ -1,7 +1,7 @@
 """A class for representing built-in EE API Function.
 
 Earth Engine can dynamically produce a JSON array listing the
-algorithms available to the user.  Each item in the dictionary identifies
+algorithms available to the user. Each item in the dictionary identifies
 the name and return type of the algorithm, the name and type of its
 arguments, whether they're required or optional, default values and docs
 for each argument and the algorithms as a whole.
@@ -60,7 +60,7 @@ class ApiFunction(function.Function):
     return (isinstance(other, ApiFunction) and
             self.getSignature() == other.getSignature())
 
-  # For Python 3, __hash__ is needed because __eq__ is defined.
+  # __hash__ is needed because __eq__ is defined.
   # See https://docs.python.org/3/reference/datamodel.html#object.__hash__
   def __hash__(self) -> int:
     return hash(computedobject.ComputedObject.freeze(self.getSignature()))

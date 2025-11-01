@@ -203,7 +203,7 @@
 "folders": {
 "methods": {
 "getAutokeyConfig": {
-"description": "Returns the AutokeyConfig for a folder.",
+"description": "Returns the AutokeyConfig for a folder or project.",
 "flatPath": "v1/folders/{foldersId}/autokeyConfig",
 "httpMethod": "GET",
 "id": "cloudkms.folders.getAutokeyConfig",
@@ -212,7 +212,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Required. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig`.",
+"description": "Required. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig` or `projects/{PROJECT_NUMBER}/autokeyConfig`.",
 "location": "path",
 "pattern": "^folders/[^/]+/autokeyConfig$",
 "required": true,
@@ -229,7 +229,7 @@
 ]
 },
 "getKajPolicyConfig": {
-"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/folders/{foldersId}/kajPolicyConfig",
 "httpMethod": "GET",
 "id": "cloudkms.folders.getKajPolicyConfig",
@@ -264,7 +264,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig`.",
+"description": "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig` `projects/{PROJECT_NUMBER}/autokeyConfig`.",
 "location": "path",
 "pattern": "^folders/[^/]+/autokeyConfig$",
 "required": true,
@@ -290,7 +290,7 @@
 ]
 },
 "updateKajPolicyConfig": {
-"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/folders/{foldersId}/kajPolicyConfig",
 "httpMethod": "PATCH",
 "id": "cloudkms.folders.updateKajPolicyConfig",
@@ -329,7 +329,7 @@
 "organizations": {
 "methods": {
 "getKajPolicyConfig": {
-"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/organizations/{organizationsId}/kajPolicyConfig",
 "httpMethod": "GET",
 "id": "cloudkms.organizations.getKajPolicyConfig",
@@ -355,7 +355,7 @@
 ]
 },
 "updateKajPolicyConfig": {
-"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/organizations/{organizationsId}/kajPolicyConfig",
 "httpMethod": "PATCH",
 "id": "cloudkms.organizations.updateKajPolicyConfig",
@@ -393,8 +393,34 @@
 },
 "projects": {
 "methods": {
+"getAutokeyConfig": {
+"description": "Returns the AutokeyConfig for a folder or project.",
+"flatPath": "v1/projects/{projectsId}/autokeyConfig",
+"httpMethod": "GET",
+"id": "cloudkms.projects.getAutokeyConfig",
+"parameterOrder": [
+"name"
+],
+"parameters": {
+"name": {
+"description": "Required. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig` or `projects/{PROJECT_NUMBER}/autokeyConfig`.",
+"location": "path",
+"pattern": "^projects/[^/]+/autokeyConfig$",
+"required": true,
+"type": "string"
+}
+},
+"path": "v1/{+name}",
+"response": {
+"$ref": "AutokeyConfig"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/cloudkms"
+]
+},
 "getKajPolicyConfig": {
-"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Gets the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/projects/{projectsId}/kajPolicyConfig",
 "httpMethod": "GET",
 "id": "cloudkms.projects.getKajPolicyConfig",
@@ -497,8 +523,43 @@
 "https://www.googleapis.com/auth/cloudkms"
 ]
 },
+"updateAutokeyConfig": {
+"description": "Updates the AutokeyConfig for a folder. The caller must have both `cloudkms.autokeyConfigs.update` permission on the parent folder and `cloudkms.cryptoKeys.setIamPolicy` permission on the provided key project. A KeyHandle creation in the folder's descendant projects will use this configuration to determine where to create the resulting CryptoKey.",
+"flatPath": "v1/projects/{projectsId}/autokeyConfig",
+"httpMethod": "PATCH",
+"id": "cloudkms.projects.updateAutokeyConfig",
+"parameterOrder": [
+"name"
+],
+"parameters": {
+"name": {
+"description": "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig` `projects/{PROJECT_NUMBER}/autokeyConfig`.",
+"location": "path",
+"pattern": "^projects/[^/]+/autokeyConfig$",
+"required": true,
+"type": "string"
+},
+"updateMask": {
+"description": "Required. Masks which fields of the AutokeyConfig to update, e.g. `keyProject`.",
+"format": "google-fieldmask",
+"location": "query",
+"type": "string"
+}
+},
+"path": "v1/{+name}",
+"request": {
+"$ref": "AutokeyConfig"
+},
+"response": {
+"$ref": "AutokeyConfig"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/cloudkms"
+]
+},
 "updateKajPolicyConfig": {
-"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization/folder/projects.",
+"description": "Updates the KeyAccessJustificationsPolicyConfig for a given organization, folder, or project.",
 "flatPath": "v1/projects/{projectsId}/kajPolicyConfig",
 "httpMethod": "PATCH",
 "id": "cloudkms.projects.updateKajPolicyConfig",
@@ -627,7 +688,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. A list of extra location types that should be used as conditions for controlling the visibility of the locations.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -2435,7 +2496,7 @@
 }
 }
 },
-"revision": "20250731",
+"revision": "20250926",
 "rootUrl": "https://cloudkms.googleapis.com/",
 "schemas": {
 "AsymmetricDecryptRequest": {
@@ -2616,7 +2677,7 @@
 "type": "object"
 },
 "AutokeyConfig": {
-"description": "Cloud KMS Autokey configuration for a folder.",
+"description": "Cloud KMS Autokey configuration for a folder or project.",
 "id": "AutokeyConfig",
 "properties": {
 "etag": {
@@ -2628,7 +2689,7 @@
 "type": "string"
 },
 "name": {
-"description": "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig`.",
+"description": "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig` `projects/{PROJECT_NUMBER}/autokeyConfig`.",
 "type": "string"
 },
 "state": {

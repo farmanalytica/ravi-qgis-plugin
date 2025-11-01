@@ -8,6 +8,7 @@ from unittest import mock
 
 import unittest
 import ee
+from ee import _state
 from ee import apitestcase
 from ee import batch
 from ee import data
@@ -55,15 +56,25 @@ class TaskTest(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    data.setCloudApiUserProject('test-project')
+    mock.patch.object(
+        _state,
+        'get_state',
+        return_value=_state.EEState(
+            initialized=True, cloud_api_user_project='test-project'
+        ),
+    ).start()
 
-  def testStartWithoutConfig(self):
+  def tearDown(self):
+    super().tearDown()
+    mock.patch.stopall()
+
+  def test_start_without_config(self):
     task = batch.Task('an id', 'a task type', 'a state')
     self.assertIsNone(task.config)
     with self.assertRaisesRegex(ee.EEException, 'Task config'):
       task.start()
 
-  def testStartUnknownTaskType(self):
+  def test_start_unknown_task_type(self):
     task_type = 'bad task type'
     task = batch.Task('an id', task_type, 'a state', {'some': 'value'})
     with self.assertRaisesRegex(
@@ -71,8 +82,9 @@ class TaskTest(unittest.TestCase):
     ):
       task.start()
 
-  def testStatusWithId(self):
-    task = batch.Task('test_1', 'a task type', 'a state')
+  def test_status_with_id(self):
+    name = 'projects/test-project/operations/test_1'
+    task = batch.Task('an id', 'a task type', 'a state', name=name)
     with mock.patch.object(
         data, 'getOperation', return_value=RUNNING_OPERATION
     ) as m:
@@ -81,7 +93,7 @@ class TaskTest(unittest.TestCase):
           m.call_args.args[0], 'projects/test-project/operations/test_1'
       )
 
-  def testStatusWithName(self):
+  def test_status_with_name(self):
     task = batch.Task(
         None,
         'a task type',
@@ -96,8 +108,9 @@ class TaskTest(unittest.TestCase):
           m.call_args.args[0], 'projects/test-project/operations/test_1'
       )
 
-  def testStatusWithIdStateUnknown(self):
-    task = batch.Task('an id', 'a task type', 'a state')
+  def test_status_with_id_state_unknown(self):
+    name = 'projects/test-project/operations/an id'
+    task = batch.Task('an id', 'a task type', 'a state', name=name)
     with mock.patch.object(
         data, 'getOperation', return_value=UNKNOWN_OPERATION
     ) as m:
@@ -106,29 +119,38 @@ class TaskTest(unittest.TestCase):
           m.call_args.args[0], 'projects/test-project/operations/an id'
       )
 
-  def testStatusWithoutIdOrName(self):
+  def test_status_without_id_or_name(self):
     task = batch.Task(None, 'a task type', 'a state')
     self.assertEqual('UNSUBMITTED', task.status()['state'])
 
-  def testActive(self):
-    task = batch.Task('an id', 'a task type', 'a state')
+  def test_active(self):
+    name = 'projects/test-project/operations/an id'
+    task = batch.Task('an id', 'a task type', 'a state', name=name)
     with mock.patch.object(
         data, 'getOperation', return_value=RUNNING_OPERATION
     ):
       self.assertTrue(task.active())
 
-  def testNotActive(self):
+  def test_not_active(self):
     task = batch.Task('an id', 'a task type', 'a state')
     with mock.patch.object(
         data, 'getOperation', return_value=SUCCEEDED_OPERATION
     ):
       self.assertFalse(task.active())
 
-  def testReprWithoutConfig(self):
+  def test_success(self):
+    self.assertTrue(batch.Task.State.success(batch.Task.State.COMPLETED))
+    self.assertTrue(batch.Task.State.success('COMPLETED'))
+    for state in batch.Task.State:
+      if state != batch.Task.State.COMPLETED:
+        self.assertFalse(batch.Task.State.success(state))
+        self.assertFalse(batch.Task.State.success(state.value))
+
+  def test_repr_without_config(self):
     task = batch.Task('an id', 'a task type', 'a state')
     self.assertEqual('<Task "an id">', task.__repr__())
 
-  def testReprWithConfig(self):
+  def test_repr_with_config(self):
     an_id = None
     task_type = 'a task type'
     state = 'a state'
@@ -140,7 +162,7 @@ class TaskTest(unittest.TestCase):
         f'<Task {task_type}: {description} ({state})>', task.__repr__()
     )
 
-  def testReprWithIdAndConfig(self):
+  def test_repr_with_id_and_config(self):
     an_id = 'an id'
     task_type = 'a task type'
     state = 'a state'
@@ -155,23 +177,23 @@ class TaskTest(unittest.TestCase):
 
 class ExportTest(unittest.TestCase):
 
-  def testExportCannotInit(self):
+  def test_export_cannot_init(self):
     with self.assertRaises(AssertionError):
       batch.Export()
 
-  def testExportImageCannotInit(self):
+  def test_export_image_cannot_init(self):
     with self.assertRaises(AssertionError):
       batch.Export.image.__init__('something')
 
-  def testExportMapCannotInit(self):
+  def test_export_map_cannot_init(self):
     with self.assertRaises(AssertionError):
       batch.Export.map.__init__('something')
 
-  def testExportTableCannotInit(self):
+  def test_export_table_cannot_init(self):
     with self.assertRaises(AssertionError):
       batch.Export.table.__init__('something')
 
-  def testExportVideoCannotInit(self):
+  def test_export_video_cannot_init(self):
     with self.assertRaises(AssertionError):
       batch.Export.video.__init__('something')
 
@@ -188,7 +210,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
     self.start_call_params = None
     self.update_call_params = None
 
-  def testTaskStartCloudApi(self):
+  def test_task_start_cloud_api(self):
     """Verifies that Task.start() calls the server appropriately."""
     mock_cloud_api_resource = mock.MagicMock()
     mock_cloud_api_resource.projects().table().export().execute.return_value = {
@@ -203,7 +225,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
       self.assertTrue(export_args[1]['body']['requestId'])
       self.assertEqual(export_args[1]['body']['description'], 'bar')
 
-  def testTaskCancelCloudApi(self):
+  def test_task_cancel_cloud_api(self):
     mock_cloud_api_resource = mock.MagicMock()
     mock_cloud_api_resource.projects().operations().list().execute.return_value = {
         'operations': [{
@@ -224,7 +246,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           cancel_args[1]['name'], 'projects/earthengine-legacy/operations/TEST1'
       )
 
-  def testExportImageTrivialRegionCloudApi(self):
+  def test_export_image_trivial_region_cloud_api(self):
     """Verifies the task created by Export.image() with a trivial region."""
     with apitestcase.UsingCloudApi():
       region = [0, 0, 1, 0, 1, 1]
@@ -259,7 +281,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task.config,
       )
 
-  def testExportImageCloudApi(self):
+  def test_export_image_cloud_api(self):
     """Verifies the task created by Export.image()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -302,7 +324,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task.config,
       )
 
-  def testExportImageCloudApiInvalidSkipEmptyTiles(self):
+  def test_export_image_cloud_api_invalid_skip_empty_tiles(self):
     """Verifies errors are thrown when incorrectly specifying skipEmptyTiles."""
     with apitestcase.UsingCloudApi():
       with self.assertRaisesRegex(
@@ -315,7 +337,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             skipEmptyTiles=True,
         )
 
-  def testExportImageWithTfRecordCloudApi(self):
+  def test_export_image_with_tf_record_cloud_api(self):
     """Verifies the task created by Export.image()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -374,7 +396,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task.config,
       )
 
-  def testExportImageToAssetCloudApi(self):
+  def test_export_image_to_asset_cloud_api(self):
     """Verifies the Asset export task created by Export.image.toAsset()."""
     with apitestcase.UsingCloudApi():
       config = dict(
@@ -438,7 +460,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_ordered.config,
       )
 
-  def testExportImageToAssetCloudApi_withTileSize(self):
+  def test_export_image_to_asset_cloud_api_with_tile_size(self):
     """Verifies the Asset export task created by Export.image.toAsset()."""
     with apitestcase.UsingCloudApi():
       config = dict(
@@ -476,7 +498,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_ordered.config,
       )
 
-  def testExportImageToCloudStorageCloudApi(self):
+  def test_export_image_to_cloud_storage_cloud_api(self):
     """Verifies the Cloud Storage export task created by Export.image()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -570,7 +592,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_with_priority.config,
       )
 
-  def testExportImageToGoogleDriveCloudApi(self):
+  def test_export_image_to_google_drive_cloud_api(self):
     """Verifies the Drive destined task created by Export.image.toDrive()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -676,7 +698,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           drive_task_with_priority.config,
       )
 
-  def testExportMapToCloudStorageCloudApi(self):
+  def test_export_map_to_cloud_storage_cloud_api(self):
     """Verifies the task created by Export.map.toCloudStorage()."""
     with apitestcase.UsingCloudApi():
       config = dict(
@@ -809,7 +831,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_with_priority.config,
       )
 
-  def testExportMapToCloudStorageCloudApi_WithV1Parameters(self):
+  def test_export_map_to_cloud_storage_cloud_api_with_v1_parameters(self):
     """Verifies Export.map.toCloudStorage() tasks with v1 parameters."""
     with apitestcase.UsingCloudApi():
       config = dict(
@@ -865,7 +887,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_keyed.config,
       )
 
-  def testExportMapToCloudStorageCloudApi_WithV1AlphaParameters(self):
+  def test_export_map_to_cloud_storage_cloud_api_with_v1alpha_parameters(self):
     """Verifies Export.map.toCloudStorage() tasks with v1alpha parameters."""
     with apitestcase.UsingCloudApi():
       task_keyed = ee.batch.Export.map.toCloudStorage(
@@ -894,7 +916,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_keyed.config,
       )
 
-  def testExportTableCloudApi(self):
+  def test_export_table_cloud_api(self):
     """Verifies the task created by Export.table()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table(
@@ -919,7 +941,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task.config,
       )
 
-  def testExportTableCloudApiBogusParameter(self):
+  def test_export_table_cloud_api_bogus_parameter(self):
     """Verifies that bogus parameters are rejected."""
     with apitestcase.UsingCloudApi():
       with self.assertRaisesRegex(
@@ -929,7 +951,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             ee.FeatureCollection('drive test FC'), framesPerSecond=30
         )
 
-  def testExportTableSelectorsCloudApi(self):
+  def test_export_table_selectors_cloud_api(self):
     """Verifies that table export accepts a list or tuple of selectors."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toCloudStorage(
@@ -952,7 +974,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
       )
       self.assertEqual(['ab', 'cd', 'ef'], task.config['selectors'])
 
-  def testExportTableToCloudStorageCloudApi(self):
+  def test_export_table_to_cloud_storage_cloud_api(self):
     """Verifies the Cloud Storage task created by Export.table()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toCloudStorage(
@@ -1003,7 +1025,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_with_priority.config,
       )
 
-  def testExportTableToGoogleDriveCloudApi(self):
+  def test_export_table_to_google_drive_cloud_api(self):
     """Verifies the Drive destined task created by Export.table.toDrive()."""
     with apitestcase.UsingCloudApi():
       test_collection = ee.FeatureCollection('foo')
@@ -1090,7 +1112,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
       )
       self.assertEqual(expected_config_with_priority, task_with_priority.config)
 
-  def testExportTableToAssetCloudApi(self):
+  def test_export_table_to_asset_cloud_api(self):
     """Verifies the export task created by Export.table.toAsset()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toAsset(
@@ -1138,7 +1160,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_with_priority.config,
       )
 
-  def testExportTableWithFileFormatCloudApi(self):
+  def test_export_table_with_file_format_cloud_api(self):
     """Verifies the task created by Export.table() given a file format."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toCloudStorage(
@@ -1165,7 +1187,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task.config,
       )
 
-  def testExportTableToFeatureViewCloudApi(self):
+  def test_export_table_to_feature_view_cloud_api(self):
     """Verifies the export task created by Export.table.toFeatureView()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toFeatureView(
@@ -1228,7 +1250,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           task_with_priority.config,
       )
 
-  def testExportTableToFeatureViewEmptyParamsCloudApi(self):
+  def test_export_table_to_feature_view_empty_params_cloud_api(self):
     """Verifies the export task created by Export.table.toFeatureView()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toFeatureView(
@@ -1260,7 +1282,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             task.config,
         )
 
-  def testExportTableToFeatureViewAllIngestionParams(self):
+  def test_export_table_to_feature_view_all_ingestion_params(self):
     """Verifies the task ingestion params created by toFeatureView()."""
     task = ee.batch.Export.table.toFeatureView(
         collection=ee.FeatureCollection('foo'),
@@ -1306,7 +1328,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
         task.config['featureViewExportOptions']['ingestionTimeParameters'],
     )
 
-  def testExportTableToFeatureViewBadRankByOneThingRule(self):
+  def test_export_table_to_feature_view_bad_rank_by_one_thing_rule(self):
     """Verifies a bad RankByOneThingRule throws an exception."""
     with self.assertRaisesRegex(
         ee.EEException, 'Ranking rule format is invalid.*'
@@ -1317,7 +1339,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           ingestionTimeParameters={'thinningRanking': 'my-attribute BAD_DIR'},
       )
 
-  def testExportTableToFeatureViewBadRankingRule(self):
+  def test_export_table_to_feature_view_bad_ranking_rule(self):
     """Verifies a bad RankingRule throws an exception."""
     with self.assertRaisesRegex(
         ee.EEException, 'Unable to build ranking rule from rules.*'
@@ -1328,7 +1350,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           ingestionTimeParameters={'thinningRanking': {'key': 'val'}},
       )
 
-  def testExportTableToFeatureViewBadIngestionTimeParams(self):
+  def test_export_table_to_feature_view_bad_ingestion_time_params(self):
     """Verifies a bad set of ingestion time params throws an exception."""
     with self.assertRaisesRegex(
         ee.EEException,
@@ -1343,7 +1365,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
           ingestionTimeParameters={'badThinningKey': {'key': 'val'}},
       )
 
-  def testExportTableToBigQueryRequiredParams(self):
+  def test_export_table_to_big_query_required_params(self):
     """Verifies the export task created by Export.table.toBigQuery()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toBigQuery(
@@ -1396,7 +1418,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             task_with_priority.config,
         )
 
-  def testExportTableToBigQueryAllParams(self):
+  def test_export_table_to_big_query_all_params(self):
     """Verifies the export task created by Export.table.toBigQuery()."""
     with apitestcase.UsingCloudApi():
       task = ee.batch.Export.table.toBigQuery(
@@ -1433,7 +1455,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             task.config,
         )
 
-  def testExportTableToBigQueryBadTableName(self):
+  def test_export_table_to_big_query_bad_table_name(self):
     """Verifies a bad table name throws an exception."""
     with apitestcase.UsingCloudApi():
       with self.assertRaisesRegex(
@@ -1456,7 +1478,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             description='foo',
         )
 
-  def testExportVideoCloudApi(self):
+  def test_export_video_cloud_api(self):
     """Verifies the task created by Export.video()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -1546,7 +1568,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
             collection, 'TestVideoName', config_with_bogus_option
         )
 
-  def testExportVideoToCloudStorageCloudApi(self):
+  def test_export_video_to_cloud_storage_cloud_api(self):
     """Verifies the task created by Export.video.toCloudStorage()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -1641,7 +1663,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
       )
       self.assertEqual(expected_config_with_priority, task_with_priority.config)
 
-  def testExportVideoToDriveCloudApi(self):
+  def test_export_video_to_drive_cloud_api(self):
     """Verifies the task created by Export.video.toDrive()."""
     with apitestcase.UsingCloudApi():
       region = ee.Geometry.Rectangle(1, 2, 3, 4)
@@ -1734,7 +1756,7 @@ class BatchTestCase(apitestcase.ApiTestCase):
       )
       self.assertEqual(expected_config_with_priority, task_with_priority.config)
 
-  def testExportWorkloadTag(self):
+  def test_export_workload_tag(self):
     """Verifies that the workload tag state is captured before start."""
     mock_cloud_api_resource = mock.MagicMock()
     mock_cloud_api_resource.projects().table().export().execute.return_value = {

@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -90,9 +90,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>360</x>
+       <x>570</x>
        <y>290</y>
-       <width>391</width>
+       <width>181</width>
        <height>41</height>
       </rect>
      </property>
@@ -104,32 +104,18 @@
      <property name="text">
       <string>Setup Authentication</string>
      </property>
-    </widget>
-    <widget class="QPushButton" name="desautenticacao">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>290</y>
-       <width>341</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Reset Autentication</string>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
      </property>
     </widget>
     <widget class="QTextBrowser" name="QTextBrowser">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>170</x>
        <y>10</y>
-       <width>741</width>
-       <height>221</height>
+       <width>581</width>
+       <height>271</height>
       </rect>
      </property>
      <property name="html">
@@ -153,8 +139,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>210</x>
-       <y>240</y>
-       <width>541</width>
+       <y>290</y>
+       <width>301</width>
        <height>41</height>
       </rect>
      </property>
@@ -164,7 +150,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="placeholderText">
-      <string>enter-project-iD-to-enable-setup-authentication</string>
+      <string>enter-project-iD-to-enable</string>
      </property>
      <property name="clearButtonEnabled">
       <bool>true</bool>
@@ -177,7 +163,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>239</y>
+       <y>289</y>
        <width>191</width>
        <height>41</height>
       </rect>
@@ -189,6 +175,69 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Project ID (Google Cloud):</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="desautenticacao">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>290</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/eraser-thin-svgrepo-com.svg</normaloff>../medias/eraser-thin-svgrepo-com.svg</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../icon-removebg-preview.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="learn">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Learn more</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
      </property>
     </widget>
    </widget>
@@ -299,9 +348,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>530</x>
+       <x>460</x>
        <y>290</y>
-       <width>101</width>
+       <width>141</width>
        <height>41</height>
       </rect>
      </property>
@@ -381,7 +430,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>240</y>
-       <width>291</width>
+       <width>201</width>
        <height>41</height>
       </rect>
      </property>
@@ -399,7 +448,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>120</y>
-       <width>741</width>
+       <width>431</width>
        <height>111</height>
       </rect>
      </property>
@@ -414,9 +463,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="aoi_area">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>40</y>
-        <width>571</width>
+        <x>10</x>
+        <y>20</y>
+        <width>291</width>
         <height>51</height>
        </rect>
       </property>
@@ -427,6 +476,24 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Total area:</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="drawing">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>361</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Enable Draw on Map to build area of Interest</string>
       </property>
      </widget>
     </widget>
@@ -461,9 +528,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>640</x>
+       <x>610</x>
        <y>290</y>
-       <width>111</width>
+       <width>141</width>
        <height>41</height>
       </rect>
      </property>
@@ -480,33 +547,15 @@ p, li { white-space: pre-wrap; }
        <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
-    <widget class="QCheckBox" name="drawing">
-     <property name="geometry">
-      <rect>
-       <x>370</x>
-       <y>250</y>
-       <width>361</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Enable Draw on Map to build area of Interest</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="QPushButton_fast">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>120</x>
        <y>290</y>
-       <width>371</width>
+       <width>321</width>
        <height>41</height>
       </rect>
      </property>
@@ -521,6 +570,27 @@ p, li { white-space: pre-wrap; }
      <property name="icon">
       <iconset>
        <normaloff>../medias/icons8-reproduzir-50.png</normaloff>../medias/icons8-reproduzir-50.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_easy">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>610</x>
+       <y>240</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Open EasyDEM</string>
      </property>
     </widget>
    </widget>
@@ -4405,6 +4475,95 @@ p, li { white-space: pre-wrap; }
     <zorder>salvar_2</zorder>
     <zorder>navegador_2</zorder>
     <zorder>datasrecorte_2</zorder>
+   </widget>
+   <widget class="QWidget" name="tab_14">
+    <attribute name="title">
+     <string>SYSI</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_24">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>971</width>
+       <height>351</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>SYSI</string>
+     </property>
+     <widget class="QPushButton" name="soil">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>RGB</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="soil_2">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>300</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>NDVI</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="soil_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>310</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>RGB</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
  </widget>

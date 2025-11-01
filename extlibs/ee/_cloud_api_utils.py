@@ -35,8 +35,15 @@ ASSET_NAME_PATTERN = (r'^projects/((?:\w+(?:[\w\-]+\.[\w\-]+)*?\.\w+\:)?'
 ASSET_ROOT_PATTERN = (r'^projects/((?:\w+(?:[\w\-]+\.[\w\-]+)*?\.\w+\:)?'
                       r'[a-z][a-z0-9\-]{4,28}[a-z0-9])/assets/?$')
 
-# The default user project to use when making Cloud API calls.
-_cloud_api_user_project: Optional[str] = None
+# Conversion from task state to operation state.
+TASK_TO_OPERATION_STATE = {
+    'READY': 'PENDING',
+    'RUNNING': 'RUNNING',
+    'CANCEL_REQUESTED': 'CANCELLING',
+    'COMPLETED': 'SUCCEEDED',
+    'CANCELLED': 'CANCELLED',
+    'FAILED': 'FAILED',
+}
 
 
 class _Http:
@@ -134,11 +141,6 @@ def _wrap_request(
     return request
 
   return builder
-
-
-def set_cloud_api_user_project(cloud_api_user_project: str) -> None:
-  global _cloud_api_user_project
-  _cloud_api_user_project = cloud_api_user_project
 
 
 def build_cloud_resource(
@@ -288,7 +290,7 @@ def _convert_dict(
       not contain these keys.
     key_warnings: Whether to print warnings for input keys that are not mapped
       to anything in the output.
-    retain_keys: Whether or not to retain the state of dict.  If false, any keys
+    retain_keys: Whether or not to retain the state of dict. If false, any keys
       that don't show up in the conversions dict will be dropped from result.
 
   Returns:
@@ -560,9 +562,9 @@ def convert_operation_name_to_task_id(operation_name: str) -> str:
   return found.group(1) if found else operation_name
 
 
-def convert_task_id_to_operation_name(task_id: str) -> str:
+def convert_task_id_to_operation_name(project: str, task_id: str) -> str:
   """Converts a task ID to an Operation name."""
-  return f'projects/{_cloud_api_user_project}/operations/{task_id}'
+  return f'projects/{project}/operations/{task_id}'
 
 
 def convert_params_to_image_manifest(params: dict[str, Any]) -> dict[str, Any]:
@@ -861,16 +863,29 @@ def convert_operation_to_task(operation: dict[str, Any]) -> dict[str, Any]:
 
 
 def _convert_operation_state_to_task_state(state: str) -> str:
-  """Converts a state string from an Operation to the Task equivalent."""
+  """Converts an Operation state to a Task state."""
   return _convert_value(
-      state, {
-          'PENDING': 'READY',
-          'RUNNING': 'RUNNING',
-          'CANCELLING': 'CANCEL_REQUESTED',
-          'SUCCEEDED': 'COMPLETED',
-          'CANCELLED': 'CANCELLED',
-          'FAILED': 'FAILED'
-      }, 'UNKNOWN')
+      state,
+      {value: key for key, value in TASK_TO_OPERATION_STATE.items()},
+      'UNKNOWN',
+  )
+
+
+def _convert_task_state_to_operation_state(state: str) -> str:
+  """Converts a Task state to an Operation state."""
+  return _convert_value(state, TASK_TO_OPERATION_STATE, 'UNKNOWN')
+
+
+def convert_to_operation_state(state: str) -> str:
+  """Converts a Task state or an Operation state to an Operation state."""
+  # First, try converting the state assuming it's a task state.
+  operation_state = _convert_task_state_to_operation_state(state)
+  if operation_state != 'UNKNOWN':
+    return operation_state
+
+  # If it wasn't a task state, check if the input is a valid operation state.
+  valid_operation_states = set(TASK_TO_OPERATION_STATE.values())
+  return state if state in valid_operation_states else 'UNKNOWN'
 
 
 def convert_iam_policy_to_acl(policy: dict[str, Any])  -> dict[str, Any]:

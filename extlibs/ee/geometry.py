@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import collections.abc
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 import json
 import math
 from typing import Any
@@ -44,6 +43,9 @@ class Geometry(computedobject.ComputedObject):
   ):
     """Creates a geometry.
 
+    Note that a creating a Geometry from a ComputedObject cannot have have any
+    overrides from the arguments proj, geodesic, or evenOdd.
+
     Args:
       geo_json: The GeoJSON object describing the geometry or a computed object
         to be reinterpred as a Geometry. Supports CRS specifications as per the
@@ -57,8 +59,8 @@ class Geometry(computedobject.ComputedObject):
       geodesic: Whether line segments should be interpreted as spherical
         geodesics. If false, indicates that line segments should be interpreted
         as planar lines in the specified CRS. If absent, defaults to true if the
-        CRS is geographic (including the default
-          EPSG:4326), or to false if the CRS is projected.
+        CRS is geographic (including the default EPSG:4326), or to false if the
+        CRS is projected.
       evenOdd: If true, polygon interiors will be determined by the even/odd
         rule, where a point is inside if it crosses an odd number of edges to
         reach a point at infinity. Otherwise polygons use the left-inside rule,
@@ -71,15 +73,16 @@ class Geometry(computedobject.ComputedObject):
     self.initialize()
 
     # pylint: disable-next=protected-access
+    has_resolved_geometry_type = getattr(geo_json, '_type', None) is not None
     computed = isinstance(geo_json, computedobject.ComputedObject) and not (
-        isinstance(geo_json, Geometry) and geo_json._type is not None
+        isinstance(geo_json, Geometry) and has_resolved_geometry_type
     )
-    options = proj or geodesic or evenOdd
+    options = proj is not None or geodesic is not None or evenOdd is not None
     if computed:
       if options:
         raise ee_exception.EEException(
             'Setting the CRS or geodesic on a computed Geometry is not '
-            'supported.  Use Geometry.transform().')
+            'supported. Use Geometry.transform().')
       else:
         super().__init__(geo_json.func, geo_json.args, geo_json.varName)
         return
@@ -157,7 +160,7 @@ class Geometry(computedobject.ComputedObject):
         if isinstance(name, str):
           return name
     raise ee_exception.EEException(
-        'Invalid CRS declaration in GeoJSON: ' + json.dumps(crs)
+        f'Invalid CRS declaration in GeoJSON: {json.dumps(crs)}'
     )
 
   @classmethod
@@ -342,12 +345,12 @@ class Geometry(computedobject.ComputedObject):
     # negated, we also reject NaN.
     if not south <= 90:
       raise ee_exception.EEException(
-          'Geometry.BBox: south must be at most +90°, but was {}°'.format(
-              south))
+          f'Geometry.BBox: south must be at most +90°, but was {south}°'
+      )
     if not north >= -90:
       raise ee_exception.EEException(
-          'Geometry.BBox: north must be at least -90°, but was {}°'.format(
-              north))
+          f'Geometry.BBox: north must be at least -90°, but was {north}°'
+      )
     # On the other hand, allow a box whose extent lies past the pole, but
     # canonicalize it to being exactly the pole.
     south = max(south, -90)
@@ -402,7 +405,7 @@ class Geometry(computedobject.ComputedObject):
     """Constructs an ee.Geometry describing a LineString.
 
     Args:
-      coords: A list of at least two points.  May be a list of coordinates in
+      coords: A list of at least two points. May be a list of coordinates in
           the GeoJSON 'LineString' format, a list of at least two ee.Geometry
           objects describing a point, or a list of at least four numbers
           defining the [x,y] coordinates of at least two points.
@@ -477,7 +480,7 @@ class Geometry(computedobject.ComputedObject):
     """Constructs an ee.Geometry describing a MultiLineString.
 
     Create a GeoJSON MultiLineString from either a list of points, or an array
-    of lines (each an array of Points).  If a list of points is specified,
+    of lines (each an array of Points). If a list of points is specified,
     only a single line is created.
 
     Args:
@@ -647,12 +650,12 @@ class Geometry(computedobject.ComputedObject):
       )
     return json.dumps(self.toGeoJSON())
 
-  def serialize(self, for_cloud_api=True):
+  def serialize(self, for_cloud_api: bool = True) -> str:
     """Returns the serialized representation of this object."""
     return serializer.toJSON(self, for_cloud_api=for_cloud_api)
 
   def __str__(self) -> str:
-    return 'ee.Geometry(%s)' % serializer.toReadableJSON(self)
+    return f'ee.Geometry({serializer.toReadableJSON(self)})'
 
   def __repr__(self) -> str:
     return self.__str__()
@@ -702,10 +705,10 @@ class Geometry(computedobject.ComputedObject):
     Returns:
       The number of nested arrays or -1 on error.
     """
-    if not isinstance(shape, collections.abc.Iterable):
+    if not isinstance(shape, Iterable):
       return -1
 
-    if (shape and isinstance(shape[0], collections.abc.Iterable) and
+    if (shape and isinstance(shape[0], Iterable) and
         not isinstance(shape[0], str)):
       count = Geometry._isValidCoordinates(shape[0])
       # If more than 1 ring or polygon, they should have the same nesting.
@@ -730,7 +733,7 @@ class Geometry(computedobject.ComputedObject):
     """Create a line from a list of points.
 
     Args:
-      coordinates: The points to convert.  Must be list of numbers of
+      coordinates: The points to convert. Must be list of numbers of
           even length, in the format [x1, y1, x2, y2, ...]
 
     Returns:
@@ -742,13 +745,13 @@ class Geometry(computedobject.ComputedObject):
       return coordinates
     if len(coordinates) % 2 != 0:
       raise ee_exception.EEException(
-          'Invalid number of coordinates: %s' % len(coordinates))
+          f'Invalid number of coordinates: {len(coordinates)}'
+      )
 
-    line = []
-    for i in range(0, len(coordinates), 2):
-      pt = [coordinates[i], coordinates[i + 1]]
-      line.append(pt)
-    return line
+    return [
+        [coordinates[i], coordinates[i + 1]]
+        for i in range(0, len(coordinates), 2)
+    ]
 
   @staticmethod
   def _parseArgs(ctor_name: str, depth: int, args: Any) -> dict[str, Any]:
