@@ -2,7 +2,7 @@
 name=RAVI
 qgisMinimumVersion=3.0
 description=Analysis of Vegetation Indices Time Series and download of multispectral imagery
-version=3.3
+version=4.0
 author=Caio Arantes
 email=caiosimplicioarantes@gmail.com
 
