@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1145</width>
-    <height>622</height>
+    <height>801</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -444,13 +444,13 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>291</width>
+        <width>411</width>
         <height>51</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>14</pointsize>
        </font>
       </property>
       <property name="text">
@@ -523,7 +523,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>medias/icons8-forward-button-50.png</normaloff>medias/icons8-forward-button-50.png</iconset>
+       <normaloff>../medias/skip-svgrepo-com (1).svg</normaloff>../medias/skip-svgrepo-com (1).svg</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_fast">
@@ -3965,6 +3965,68 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QGroupBox" name="groupBox_24">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>630</y>
+       <width>181</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>SYSI</string>
+     </property>
+     <widget class="QPushButton" name="soil">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>RGB</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="soil_2">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>30</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>NDVI</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+    </widget>
     <zorder>webView</zorder>
     <zorder>groupBox</zorder>
     <zorder>groupBox_2</zorder>
@@ -3974,6 +4036,7 @@ p, li { white-space: pre-wrap; }
     <zorder>clear_raster</zorder>
     <zorder>groupBox_29</zorder>
     <zorder>groupBox_23</zorder>
+    <zorder>groupBox_24</zorder>
    </widget>
    <widget class="QWidget" name="tab_12">
     <attribute name="title">
@@ -4479,95 +4542,6 @@ p, li { white-space: pre-wrap; }
     <zorder>salvar_2</zorder>
     <zorder>navegador_2</zorder>
     <zorder>datasrecorte_2</zorder>
-   </widget>
-   <widget class="QWidget" name="tab_14">
-    <attribute name="title">
-     <string>SYSI</string>
-    </attribute>
-    <widget class="QGroupBox" name="groupBox_24">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>971</width>
-       <height>351</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>SYSI</string>
-     </property>
-     <widget class="QPushButton" name="soil">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>RGB</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="soil_2">
-      <property name="geometry">
-       <rect>
-        <x>510</x>
-        <y>300</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>NDVI</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="soil_3">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>310</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>RGB</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-    </widget>
    </widget>
   </widget>
  </widget>

@@ -598,8 +598,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self._combobox_updating = True
         try:
             self.get_selected_layer_path()
-            self.find_area()
             self.aoi = self.load_vector_function()
+            self.find_area()
+            self.aoi_checked_function()
         finally:
             self._combobox_updating = False
 
@@ -1785,23 +1786,13 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         # --- Tab 2: Load Vector Layers ---
         # Get 'vector_layers_loaded' safely; if not set, default to False
-        _vector_layers_loaded = getattr(self, 'vector_layers_loaded', False)
-        if index == 2 and not _vector_layers_loaded:
-            try:
-                _load_vector_layers = getattr(self, 'load_vector_layers', None)
-                if _load_vector_layers and callable(_load_vector_layers):
-                    _load_vector_layers()
-                    _get_selected_layer_path = getattr(self, 'get_selected_layer_path', None)
-                    if _get_selected_layer_path and callable(_get_selected_layer_path):
-                        _get_selected_layer_path()
-                    else:
-                        print("Warning: get_selected_layer_path method not found or not callable.")
-                    setattr(self, 'vector_layers_loaded', True)
-                else:
-                    print("Warning: load_vector_layers method not found or not callable.")
-            except Exception as e:
-                print(f"Error loading vector layers or getting path: {e}")
-                # If it fails, keep vector_layers_loaded as False so it retries
+        if index == 2:
+            # Run update_vector_clicked only once per dialog lifetime
+            if not getattr(self, "_vector_update_run", False):
+                try:
+                    self.update_vector_clicked()
+                finally:
+                    setattr(self, "_vector_update_run", True)
 
         # --- Progression Checks (using QPushButton_next states) ---
         # Retrieve QPushButton objects safely. Assumes they might be assigned to 'self'
@@ -3039,9 +3030,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         dissolves to a single polygonal geometry, strips Z, and returns an
         Earth Engine FeatureCollection representing the AOI.
         """
-
-
-
         def transform_ok(ret):
             # Normalize transform() return: in many PyQGIS builds, 0 = success.
             # In some, it may return True/False.
@@ -3266,39 +3254,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             print("AOI defined successfully.")
 
-            # Reset area warning flag for new AOI
-            self.area_warning_shown = False
-            # Invalidate cached measurements when AOI changes
-            self._cached_area_m2 = None
-            self._cached_area_layer_id = None
-
-            # UI updates
-            try:
-                self.QPushButton_next.setEnabled(True)
-                self.QPushButton_skip.setEnabled(True)
-                self.QPushButton_fast.setEnabled(True)
-                self.QPushButton_easy.setEnabled(True)
-
-
-                self.aio_set = True
-                if hasattr(self, "vector_layer_combobox") and hasattr(
-                    self, "vector_layer_combobox_2"
-                ):
-                    self.vector_layer_combobox_2.setCurrentIndex(
-                        self.vector_layer_combobox.currentIndex()
-                    )
-                if hasattr(self, "vector_layer_combobox") and hasattr(
-                    self, "vector_layer_combobox_3"
-                ):
-                    self.vector_layer_combobox_3.setCurrentIndex(
-                        self.vector_layer_combobox.currentIndex()
-                    )
-
-                self.aoi_checked = True
-
-            except Exception as e:
-                print(f"UI update warning: {e}")
-
             return aoi
 
         except Exception as e:
@@ -3371,32 +3326,23 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             # Enforce 120 km² limit and single-popup behavior
             if area_km2 >= 120:
-                if not hasattr(self, 'area_warning_shown') or not self.area_warning_shown:
-                    self.area_warning_shown = True
-                    if self.language == 'pt':
-                        self.pop_warning(f"Área muito grande ({area_km2:.2f} km²). O limite é de 120 km²")
-                    else:
-                        self.pop_warning(f"Area too large ({area_km2:.2f} km²). The limit is 120 km²")
+                if self.language == 'pt':
+                    self.pop_warning(f"Área muito grande ({area_km2:.2f} km²). O limite é de 120 km²")
+                else:
+                    self.pop_warning(f"Area too large ({area_km2:.2f} km²). The limit is 120 km²")
                 self.aoi = None
                 self.aoi_checked = False
-                self.aoi_checked_function()
+            else:
+                self.aoi_checked = True 
 
-            # Cache computed area for the current layer
-            try:
-                self._cached_area_m2 = total_area
-                if hasattr(self, 'selected_aio_layer') and self.selected_aio_layer:
-                    self._cached_area_layer_id = self.selected_aio_layer.id()
-            except Exception:
-                pass
 
-            return area_km2
+
         except Exception as e:
             print(f"Error in find_area: {e}")
             self.aoi_area.setText(f"Total Area:")
             self.aoi = None
             self.aoi_checked = False
-            self.aoi_checked_function()
-
+            return None
 
     def aoi_checked_function(self):
         print(f"AOI checked: {self.aoi_checked}, Folder set: {self.folder_set}")
@@ -4107,8 +4053,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.webView_3.setHtml("")
             self.webView_2.setHtml("")
             print("Time series loaded successfully.")
-            self.load_rgb(True)
             self.load_index(True)
+            self.load_rgb(True)
             self.tabWidget.setCurrentIndex(10)
 
 
@@ -4177,205 +4123,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.pop_warning(f"An error occurred: {e}")
         finally:
             QApplication.restoreOverrideCursor()
-
-    def soil_image(self):
-        # Implement the logic to display the soil image
-        sentinel2 = self.sentinel2_selected_dates
-
-        # Define band name mapping (originais -> amigáveis)
-        s2_names = ['B2', 'B3', 'B4', 'B6', 'B8', 'B11', 'B12', 'QA60']
-        b_names = ['blue', 'green', 'red', 'rededge', 'nir', 'swir1', 'swir2', 'QA60']
-
-        # Rename bands on the collection so subsequent functions can use friendly names (red, nir, etc.)
-        sentinel2 = sentinel2.select(s2_names, b_names)
-
-        def maskS2clouds(image):
-            qa = image.select('QA60')
-            cloudBitMask = 1 << 10
-            cirrusBitMask = 1 << 11
-            mask = qa.bitwiseAnd(cloudBitMask).eq(0).And(
-                        qa.bitwiseAnd(cirrusBitMask).eq(0))
-            return image.updateMask(mask)
-
-        # 1. Adicionar índices (usando nir, red, swir1, swir2, etc.)
-        def add_indexes(img):
-            # usa nomes amigáveis: nir, red, swir1, swir2, green, blue
-            ndvi = img.normalizedDifference(['nir', 'red'])   # nir='nir', red='red'
-            nbr2 = img.normalizedDifference(['swir1', 'swir2']) # swir1='swir1', swir2='swir2'
-            grbl = img.select('green').subtract(img.select('blue')) # green - blue
-            regr = img.select('red').subtract(img.select('green')) # red - green
-            
-            img = img.addBands(ndvi.rename('ndvi')) \
-                    .addBands(nbr2.rename('nbr2')) \
-                    .addBands(grbl.rename('grbl')) \
-                    .addBands(regr.rename('regr'))
-            return img
-
-        # 2. Aplicar fatores de escala
-        def applyScaleFactors(image):
-            # Usa a lista de nomes amigáveis (b_names) — já renomeadas via select
-            opticalBands = image.select(b_names).divide(10000)
-            return image.addBands(opticalBands, None, True)
-
-        # 3. Adicionar máscara GEOS3 (lógica do solo)
-        def addGEOS3Mask(img, options={}):
-            ndvi_thres = [-0.25, 0.25]
-            nbr_thres = [-0.3, 0.1]
-            vnsir_thres = 0.9
-
-            # Atualizado para usar nomes amigáveis (red, green, blue, nir)
-            vnsir = ee.Image(1) \
-                    .subtract(ee.Image(2).multiply(img.select('red') \
-                                                .subtract(img.select('green')).subtract(img.select('blue'))) \
-                    .add(ee.Image(3).multiply(img.select('nir').subtract(img.select('red')))))
-            
-            # A lógica GEOS3 não muda, pois usa os *índices* que acabamos de criar
-            geos3 = img.select('ndvi').gte(ndvi_thres[0]).And(img.select('ndvi').lte(ndvi_thres[1])) \
-                        .And(img.select('nbr2').gte(nbr_thres[0]).And(img.select('nbr2').lte(nbr_thres[1]))) \
-                        .And(vnsir.lte(vnsir_thres)) \
-                        .And(img.select('grbl').gt(0)).And(img.select('regr').gt(0))
-                        
-            img = img.addBands(geos3.rename('GEOS3'))
-            return img
-
-        # 4. Aplicar máscara GEOS3 (mascarar pixels)
-        def maskByGEOS3(image):
-            mask_geos3 = image.select('GEOS3').eq(1)
-            # Usando os nomes amigáveis
-            mask_swir = image.select('swir2').gte(0)   # swir2
-            mask_green = image.select('green').gte(0)  # green
-            mask_red = image.select('red').gte(0)    # red
-            mask_blue = image.select('blue').gte(0)   # blue
-            
-            mask = mask_geos3.And(mask_swir).And(mask_green).And(mask_red).And(mask_blue)
-            return image.updateMask(mask)
-
-        # 5. Máscara final de NDVI
-        def maskByndvi(image):
-            # Esta função usa o índice 'ndvi', então não precisa de alteração
-            mask_ndvi_v1 = image.select('ndvi').gte(0.00)
-            mask_ndvi_v2 = image.select('ndvi').lte(0.20)
-            mask = mask_ndvi_v1.And(mask_ndvi_v2)
-            return image.updateMask(mask)
-
-
-        # =================================================================
-        # 4. EXECUÇÃO DO PROCESSAMENTO
-        # =================================================================
-
-        # 1. Adiciona índices e aplica escala (usando a coleção renomeada)
-        s2_processed = sentinel2.map(add_indexes).map(applyScaleFactors)
-
-        # 2. Adiciona a banda GEOS3
-        s2_with_geos3 = s2_processed.map(lambda img: addGEOS3Mask(img, {}))
-
-        # 3. Aplica a máscara GEOS3 e cria o compósito mediano (SYSI v1)
-        tess_v1 = s2_with_geos3.map(maskByGEOS3).median()
-
-        # 4. Aplica o filtro NDVI final (SYSI v2)
-        tess_v2_final = maskByndvi(tess_v1)
-
-        # 5. Seleciona as bandas para download (Nomes amigáveis + índices)
-        bands_to_export = ['blue','green','red','rededge','nir','swir1','swir2','ndvi']
-        imageToDownload = tess_v2_final.select(bands_to_export)
-
-        final_image = imageToDownload.toFloat()
-
-        # --- KEY CHANGE: Use updateMask for more reliable clipping ---
-        # Apply buffer if needed. Ensure self.aoi is an ee.Geometry object.
-        aoi = self.apply_buffer(self.aoi)
-
-        # 1. Create an explicit mask from the AOI geometry.
-        # ee.Image(1).clip(aoi) creates an image where the AOI is 1 and outside is 0.
-        # .mask() converts this to a mask where 1 is valid data and 0 is NoData.
-        mask = ee.Image(1).clip(aoi).mask()
-
-        # 2. Apply this mask to the final composite image.
-        # This operation sets pixels outside the mask to NoData (transparent).
-        final_image_masked = final_image.updateMask(mask)
-
-        # 3. Define the download region using the BOUNDING BOX of the AOI.
-        # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
-        # The actual clipping to the irregular shape is handled by updateMask.
-        download_region = aoi.geometry().bounds().getInfo()
-
-
-        # Download the selected composite (all selected bands) and load as a raster layer
-        try:
-            try:
-                url = final_image_masked.getDownloadURL(
-                    {
-                        "scale": 10,
-                        "region": download_region,
-                        "format": "GeoTIFF",
-                        "crs": "EPSG:4326",
-                    }
-                )
-            except Exception as e:
-                self.pop_warning(f"Failed to generate download URL: {e}")
-                return
-
-            base_output_file = f"Sentinel2_Soil_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.tiff"
-            output_file = self.get_unique_filename(base_output_file, temporary=True)
-
-            try:
-                response = requests.get(url, stream=True)
-                response.raise_for_status()
-                with open(output_file, "wb") as f:
-                    for chunk in response.iter_content(chunk_size=8192):
-                        if chunk:
-                            f.write(chunk)
-                print(f"Image downloaded to {output_file}")
-            except requests.exceptions.RequestException as e:
-                self.pop_warning(f"Error downloading image: {e}")
-                return
-
-            # Add the image as a raster layer in QGIS
-            layer_name = f"Sentinel-2 SYSI"
-            layer = QgsRasterLayer(output_file, layer_name)
-            if not layer.isValid():
-                self.pop_warning(f"Failed to load the layer: {output_file}")
-                return
-
-            # For RGB preview use (red, green, blue) -> here bands order is [blue, green, red, ...]
-            # so indices (1-based) are: blue=1, green=2, red=3 -> for renderer we pass red=3, green=2, blue=1
-            renderer = QgsMultiBandColorRenderer(layer.dataProvider(), 3, 2, 1)
-
-            # Set contrast enhancement defaults (adjust if necessary)
-            min_val = 200
-            max_val = 2300
-            try:
-                red_ce = QgsContrastEnhancement(layer.dataProvider().dataType(3))
-                red_ce.setMinimumValue(min_val)
-                red_ce.setMaximumValue(max_val)
-                red_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
-
-                green_ce = QgsContrastEnhancement(layer.dataProvider().dataType(2))
-                green_ce.setMinimumValue(min_val)
-                green_ce.setMaximumValue(max_val)
-                green_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
-
-                blue_ce = QgsContrastEnhancement(layer.dataProvider().dataType(1))
-                blue_ce.setMinimumValue(min_val)
-                blue_ce.setMaximumValue(max_val)
-                blue_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
-
-                renderer.setRedContrastEnhancement(red_ce)
-                renderer.setGreenContrastEnhancement(green_ce)
-                renderer.setBlueContrastEnhancement(blue_ce)
-            except Exception as e:
-                print(f"Error configuring renderer contrast: {e}")
-
-            layer.setRenderer(renderer)
-
-            QgsProject.instance().addMapLayer(layer, addToLegend=False)
-            root = QgsProject.instance().layerTreeRoot()
-            root.insertChildNode(0, QgsLayerTreeLayer(layer))
-            iface.setActiveLayer(layer)
-
-        except Exception as e:
-            print(f"Error in soil_image download/load: {e}")
-            self.pop_warning(f"An error occurred while exporting/loading the soil image: {e}")
 
     def easy_clicked(self):
         """Open the 'easy' UI dialog (localized)."""
@@ -4650,3 +4397,233 @@ class RAVIDialog(QDialog, FORM_CLASS):
             except Exception:
                 pass
     
+    def sysi_processing(self, imageToDownload):
+        final_image = imageToDownload.toFloat()
+
+        # --- KEY CHANGE: Use updateMask for more reliable clipping ---
+        # Apply buffer if needed. Ensure self.aoi is an ee.Geometry object.
+        aoi = self.apply_buffer(self.aoi)
+
+        # 1. Create an explicit mask from the AOI geometry.
+        # ee.Image(1).clip(aoi) creates an image where the AOI is 1 and outside is 0.
+        # .mask() converts this to a mask where 1 is valid data and 0 is NoData.
+        mask = ee.Image(1).clip(aoi).mask()
+
+        # 2. Apply this mask to the final composite image.
+        # This operation sets pixels outside the mask to NoData (transparent).
+        final_image_masked = final_image.updateMask(mask)
+
+        # 3. Define the download region using the BOUNDING BOX of the AOI.
+        # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
+        # The actual clipping to the irregular shape is handled by updateMask.
+        download_region = aoi.geometry().bounds().getInfo()
+
+
+        # Download the selected composite (all selected bands) and load as a raster layer
+        try:
+            try:
+                url = final_image_masked.getDownloadURL(
+                    {
+                        "scale": 10,
+                        "region": download_region,
+                        "format": "GeoTIFF",
+                        "crs": "EPSG:4326",
+                    }
+                )
+            except Exception as e:
+                self.pop_warning(f"Failed to generate download URL: {e}")
+                return
+
+            base_output_file = f"Sentinel2_Soil_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.tiff"
+            output_file = self.get_unique_filename(base_output_file, temporary=True)
+
+            try:
+                response = requests.get(url, stream=True)
+                response.raise_for_status()
+                with open(output_file, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+                print(f"Image downloaded to {output_file}")
+            except requests.exceptions.RequestException as e:
+                self.pop_warning(f"Error downloading image: {e}")
+                return
+
+            # Add the image as a raster layer in QGIS
+            layer_name = f"Sentinel-2 SYSI"
+            layer = QgsRasterLayer(output_file, layer_name)
+            if not layer.isValid():
+                self.pop_warning(f"Failed to load the layer: {output_file}")
+                return
+
+            # For RGB preview use (red, green, blue) -> here bands order is [blue, green, red, ...]
+            # so indices (1-based) are: blue=1, green=2, red=3 -> for renderer we pass red=3, green=2, blue=1
+            renderer = QgsMultiBandColorRenderer(layer.dataProvider(), 3, 2, 1)
+
+            # Set contrast enhancement defaults (adjust if necessary)
+            min_val = 200
+            max_val = 2300
+            try:
+                red_ce = QgsContrastEnhancement(layer.dataProvider().dataType(3))
+                red_ce.setMinimumValue(min_val)
+                red_ce.setMaximumValue(max_val)
+                red_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                green_ce = QgsContrastEnhancement(layer.dataProvider().dataType(2))
+                green_ce.setMinimumValue(min_val)
+                green_ce.setMaximumValue(max_val)
+                green_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                blue_ce = QgsContrastEnhancement(layer.dataProvider().dataType(1))
+                blue_ce.setMinimumValue(min_val)
+                blue_ce.setMaximumValue(max_val)
+                blue_ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+
+                renderer.setRedContrastEnhancement(red_ce)
+                renderer.setGreenContrastEnhancement(green_ce)
+                renderer.setBlueContrastEnhancement(blue_ce)
+            except Exception as e:
+                print(f"Error configuring renderer contrast: {e}")
+
+            layer.setRenderer(renderer)
+
+            QgsProject.instance().addMapLayer(layer, addToLegend=False)
+            root = QgsProject.instance().layerTreeRoot()
+            root.insertChildNode(0, QgsLayerTreeLayer(layer))
+            iface.setActiveLayer(layer)
+
+        except Exception as e:
+            print(f"Error in soil_image download/load: {e}")
+            self.pop_warning(f"An error occurred while exporting/loading the soil image: {e}")
+
+    def soil_image(self):
+        # ===================== PARÂMETROS AJUSTÁVEIS =====================
+        # (Valores extraídos diretamente do código JS)
+        
+        # Thresholds GEOS3
+        NDVI_GEOS3_MIN = -0.25
+        NDVI_GEOS3_MAX = 0.25
+        NBR2_MIN = -0.3
+        NBR2_MAX = 0.100
+        VNSIR_MAX = 0.9
+        
+        # Thresholds máscara NDVI final
+        NDVI_FINAL_MIN = 0.00
+        NDVI_FINAL_MAX = 0.20
+        
+        # Outros parâmetros
+        SCALE_FACTOR = 10000
+        RESCALE_FLAG = 0
+        
+        # ===============================================================
+
+        # Parâmetros de bandas
+        s2_names = ['B2', 'B3', 'B4', 'B6', 'B8', 'B11', 'B12', 'QA60']
+        b_names = ['blue', 'green', 'red', 'rededge', 'nir', 'swir1', 'swir2', 'QA60']
+
+        # 1) Seleciona e renomeia as bandas
+        sentinel2 = self.sentinel2_selected_dates.select(s2_names, b_names)
+
+        # 2) Máscara de nuvens QA60 (Idêntica ao JS)
+        def maskS2clouds(image):
+            qa = image.select('QA60')
+            cloudBitMask = 1 << 10
+            cirrusBitMask = 1 << 11
+            mask = qa.bitwiseAnd(cloudBitMask).eq(0).And(
+                qa.bitwiseAnd(cirrusBitMask).eq(0)
+            )
+            return image.updateMask(mask)
+
+        # 3) Adiciona índices (Idêntica ao JS)
+        def add_indexes(img):
+            ndvi = img.normalizedDifference(['nir', 'red']).rename('ndvi')
+            nbr2 = img.normalizedDifference(['swir1', 'swir2']).rename('nbr2')
+            grbl = img.select('green').subtract(img.select('blue')).rename('grbl')
+            regr = img.select('red').subtract(img.select('green')).rename('regr')
+            # A API Python aceita uma lista de imagens, que é equivalente ao encadeamento no JS
+            return img.addBands([ndvi, nbr2, grbl, regr])
+
+        # 4) Aplica fatores de escala (Idêntica ao JS)
+        def applyScaleFactors(image):
+            opticalBands = image.select(b_names).divide(SCALE_FACTOR)
+            # O terceiro parâmetro 'True' sobrescreve as bandas existentes
+            return image.addBands(opticalBands, None, True)
+
+        # 5) Função GEOS3 (Estrutura idêntica ao JS, com dicionário de opções)
+        def addGEOS3Mask(img, options):
+            # Acessa os valores do dicionário, assim como o JS
+            rescale_flag = options.get('rescale_flag', 0)
+            ndvi_thres = options.get('ndvi_thres', [-0.25, 0.25])
+            nbr_thres = options.get('nbr_thres', [-0.3, 0.1])
+            vnsir_thres = options.get('vnsir_thres', 0.9)
+
+            if rescale_flag == 1:
+                img = img.divide(SCALE_FACTOR)
+
+            # Cálculo VNSIR (tradução direta da matemática do JS)
+            vnsir = ee.Image(1).subtract(
+                ee.Image(2).multiply(img.select('red'))
+                .subtract(img.select('green')).subtract(img.select('blue'))
+                .add(ee.Image(3).multiply(img.select('nir').subtract(img.select('red'))))
+            )
+
+            # Equação GEOS3 (tradução direta da lógica do JS)
+            geos3 = (
+                img.select('ndvi').gte(ndvi_thres[0]).And(img.select('ndvi').lte(ndvi_thres[1]))
+                .And(img.select('nbr2').gte(nbr_thres[0]).And(img.select('nbr2').lte(nbr_thres[1])))
+                .And(vnsir.lte(vnsir_thres))
+                .And(img.select('grbl').gt(0)).And(img.select('regr').gt(0))
+            )
+            
+            return img.addBands(geos3.rename('GEOS3'))
+
+        # 6) Funções de máscara (Idênticas ao JS)
+        def maskByGEOS3(image):
+            mask_geos3 = image.select('GEOS3').eq(1)
+            mask_swir = image.select('swir2').gte(0)
+            mask_green = image.select('green').gte(0)
+            mask_red = image.select('red').gte(0)
+            mask_blue = image.select('blue').gte(0)
+            mask = mask_geos3.And(mask_swir).And(mask_green).And(mask_red).And(mask_blue)
+            return image.updateMask(mask)
+
+        def maskByndvi(image):
+            mask_ndvi_v1 = image.select('ndvi').gte(NDVI_FINAL_MIN)
+            mask_ndvi_v2 = image.select('ndvi').lte(NDVI_FINAL_MAX)
+            mask = mask_ndvi_v1.And(mask_ndvi_v2)
+            return image.updateMask(mask)
+
+        # ======================= PIPELINE DE PROCESSAMENTO =======================
+        # (Sequência exata do código JS)
+
+        # Etapa 1: Aplica pré-processamento
+        s2_processed = (sentinel2.map(maskS2clouds)
+                                .map(add_indexes)
+                                .map(applyScaleFactors))
+        
+        # Etapa 2: Aplica a máscara GEOS3 usando um lambda para passar as opções,
+        #          exatamente como a função anônima no JS.
+        sent_collection_with_geos3 = s2_processed.map(
+            lambda img: addGEOS3Mask(img, {
+                'rescale_flag': RESCALE_FLAG,
+                'ndvi_thres': [NDVI_GEOS3_MIN, NDVI_GEOS3_MAX],
+                'nbr_thres': [NBR2_MIN, NBR2_MAX],
+                'vnsir_thres': VNSIR_MAX
+            })
+        )
+
+        # Etapa 3: Aplica a máscara GEOS3 em cada imagem da coleção
+        tess_v1_collection = sent_collection_with_geos3.map(maskByGEOS3)
+
+        # Etapa 4: Cria a mediana (TESS v1)
+        tess_v1 = tess_v1_collection.median()
+
+        # Etapa 5: Aplica a máscara NDVI final para criar a TESS v2
+        tess_v2_final = maskByndvi(tess_v1)
+
+        # Etapa 6: Seleciona as bandas finais para o pós-processamento
+        bands_to_export = ['blue', 'green', 'red', 'rededge', 'nir', 'swir1', 'swir2', 'ndvi']
+        imageToDownload = tess_v2_final.select(bands_to_export)
+
+        # Etapa 7: Chama o método de pós-processamento com a imagem final
+        self.sysi_processing(imageToDownload)

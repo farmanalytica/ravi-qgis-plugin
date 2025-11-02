@@ -35,7 +35,15 @@ def open_nasapower(latitude, longitude, start, end):
             "https": proxy_value,
         }
 
-    response = requests.get(url=api_request_url, verify=True, timeout=1000, proxies=proxies)
+    # Try with proxy first, fallback to no proxy if it fails
+    try:
+        response = requests.get(url=api_request_url, verify=True, timeout=1000, proxies=proxies)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Request with proxy failed: {e}. Retrying without proxy...")
+        response = requests.get(url=api_request_url, verify=True, timeout=1000, proxies=None)
+        response.raise_for_status()
+    
     content = json.loads(response.content.decode('utf-8'))
     data = content['properties']['parameter']
 
