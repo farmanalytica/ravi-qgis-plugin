@@ -212,7 +212,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>../icon-removebg-preview.png</pixmap>
+      <pixmap>../icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -348,9 +348,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>450</x>
        <y>290</y>
-       <width>141</width>
+       <width>151</width>
        <height>41</height>
       </rect>
      </property>
@@ -422,34 +422,13 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="hybrid">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>240</y>
-       <width>201</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Load Google Maps Layer</string>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="groupBox_5">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>120</y>
        <width>431</width>
-       <height>111</height>
+       <height>101</height>
       </rect>
      </property>
      <property name="font">
@@ -482,7 +461,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>70</y>
         <width>361</width>
         <height>17</height>
        </rect>
@@ -565,7 +544,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Load most recent image available</string>
+      <string>Load the latest available image</string>
      </property>
      <property name="icon">
       <iconset>
@@ -578,9 +557,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>610</x>
+       <x>450</x>
        <y>240</y>
-       <width>141</width>
+       <width>291</width>
        <height>41</height>
       </rect>
      </property>
@@ -590,7 +569,32 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Open EasyDEM</string>
+      <string>Digital Elevation Model</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/dem.png</normaloff>../medias/dem.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="hybrid">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>431</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Load Google Maps Layer</string>
      </property>
     </widget>
    </widget>

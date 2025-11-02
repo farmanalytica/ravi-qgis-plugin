@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -215,7 +215,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>../icon-removebg-preview.png</pixmap>
+      <pixmap>../icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -583,9 +583,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>610</x>
+       <x>470</x>
        <y>240</y>
-       <width>141</width>
+       <width>281</width>
        <height>41</height>
       </rect>
      </property>
@@ -595,7 +595,11 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Abrir EasyDEM</string>
+      <string>Modelo Digital de Elevação</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../medias/dem.png</normaloff>../medias/dem.png</iconset>
      </property>
     </widget>
    </widget>

@@ -20,7 +20,14 @@ email                : caiosimplicioarante@gmail.com
 *                                                                         *
 ***************************************************************************/
 """
+import os
+import json
+import tempfile
+import zipfile
 
+import geopandas as gpd
+from shapely.geometry import shape, Polygon, MultiPolygon, GeometryCollection
+from shapely.ops import unary_union
 import os
 import time
 import tempfile
@@ -55,6 +62,7 @@ from shapely.ops import unary_union
 import json
 from scipy.signal import savgol_filter
 from osgeo import gdal
+from qgis.core import QgsDistanceArea, QgsCoordinateReferenceSystem, QgsCoordinateTransform
 
 from qgis.core import (
     QgsMessageLog,
@@ -275,6 +283,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.daily_data = None
         self.selected_aio_layer_path = None
         self.custom_expression_name = ""
+        self._cached_area_m2 = None
+        self._cached_area_layer_id = None
 
 
     def setup_ui(self):
@@ -319,7 +329,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.combo_year.addItems(
             [str(year) for year in range(2017, datetime.datetime.now().year + 1)]
         )
-
 
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
@@ -390,16 +399,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
-
-        self.vector_layer_combobox.currentIndexChanged.connect(self.get_selected_layer_path)
-
+        self.vector_layer_combobox.currentIndexChanged.connect(self.combobox_update)
         self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
-        #self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_3_update)
         self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_3_update)
-        #self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_2_update)
-
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
-
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
         self.radioButton_3months.clicked.connect(lambda: self.last_clicked(3))
@@ -578,7 +581,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Manipula o evento quando o botão "NASA POWER" é clicado."""
         # Get the latitude and longitude from the UI / Obtém a latitude e
         # longitude da UI
-        self.find_centroid()
         self.df_nasa, self.daily_data = nasa_power.open_nasapower(
             str(self.lat),
             str(self.lon),
@@ -586,6 +588,20 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.df_aux.date.tolist()[-1],
         )
         self.plot_timeseries()
+
+    def combobox_update(self, index=None):
+        # When combobox selection changes, process the newly selected layer
+        # DO NOT reload layers here; just process the selected layer
+        # to avoid resetting combobox to index 0
+        if getattr(self, "_combobox_updating", False):
+            return
+        self._combobox_updating = True
+        try:
+            self.get_selected_layer_path()
+            self.find_area()
+            self.aoi = self.load_vector_function()
+        finally:
+            self._combobox_updating = False
 
     def setup_custom_clicked(self):
         # Load the custom index UI
@@ -1306,8 +1322,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
             self.load_vector_layers()
             self.get_selected_layer_path()
-            self.load_vector_function()
             self.find_area()
+            self.aoi = self.load_vector_function()
 
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1857,7 +1873,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             (self.tabWidget.currentIndex() - 1) % self.tabWidget.count()
         )
 
-
     def load_path_sugestion(self):
         """
         Load the path suggestion based on the user's operating system.
@@ -1999,10 +2014,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def update_vector_clicked(self):
         self.load_vector_layers()
         self.get_selected_layer_path()
-        self.load_vector_function()
+        self.find_area()
+        self.aoi = self.load_vector_function()
 
     def load_vector_layers(self):
         # Get all layers in the current QGIS project / Obtém todas as camadas
+        print("Loading vector layers...")  # Debug
         # no projeto QGIS atual
         layers = list(QgsProject.instance().mapLayers().values())
 
@@ -2084,6 +2101,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         Recupera o caminho da camada atualmente selecionada na combobox e
         aciona o processamento adicional.
         """
+        print("Getting selected layer path...")  # Debug
+
         # Get the currently selected layer name from the combobox / Obtém o nome
         # da camada atualmente selecionada da combobox
         layer_name = (
@@ -2135,22 +2154,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 f"Selected layer path: {self.selected_aio_layer_path}"
             )  # Debug: Show selected layer path
 
-            # Trigger the processing function / Aciona a função de
-            # processamento
-            self.aoi = self.load_vector_function()
-            area = self.find_area()
-            if area > 120:
-                self.aoi = None
-                self.aoi_checked = False
-                self.aoi_checked_function()
-                self.loadtimeseries.setEnabled(False)
-                if self.language == 'pt':
-                    self.pop_warning("Área muito grande ({:.2f} km²). O limite é de 120 km².".format(area))
-                else:
-                    self.pop_warning("Area too large ({:.2f} km²). The limit is 120 km².".format(area))
-
-                return None
-
             self.loadtimeseries.setEnabled(True)
 
             return None
@@ -2170,6 +2173,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             index_name (str): The name of the vegetation index to calculate
                 (e.g., "NDVI", "EVI").
 
+                
         Returns:
             ee.Image: The image containing the calculated vegetation index, renamed
                 to "index".
@@ -3036,14 +3040,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         Earth Engine FeatureCollection representing the AOI.
         """
 
-        import os
-        import json
-        import tempfile
-        import zipfile
 
-        import geopandas as gpd
-        from shapely.geometry import shape, Polygon, MultiPolygon, GeometryCollection
-        from shapely.ops import unary_union
 
         def transform_ok(ret):
             # Normalize transform() return: in many PyQGIS builds, 0 = success.
@@ -3271,6 +3268,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             # Reset area warning flag for new AOI
             self.area_warning_shown = False
+            # Invalidate cached measurements when AOI changes
+            self._cached_area_m2 = None
+            self._cached_area_layer_id = None
 
             # UI updates
             try:
@@ -3305,41 +3305,90 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"Error in load_vector_function: {e}")
             return
 
-    def find_centroid(self):
-        centroid = self.aoi.geometry().centroid()
-        self.lat = centroid.getInfo().get("coordinates")[1]
-        self.lon = centroid.getInfo().get("coordinates")[0]
-        print(f"{round(self.lat,4)},{round(self.lon,4)}")
-        area = (
-            self.aoi.geometry().area().getInfo() / 1e6
-        )  # Convert from square meters to square kilometers
-        print(f"Area: {area:.2f} km²")
-        if area >= 120:
-            if not hasattr(self, 'area_warning_shown') or not self.area_warning_shown:
-                self.pop_warning(f"Área muito grande ({area:.2f} km²). O limite é de 100 km²")
-                self.area_warning_shown = True
-            self.aoi = None
-            self.aoi_checked = False
-            self.aoi_checked_function()
-        return area
+    # find_centroid removed: centroid is now computed inside find_area
 
     def find_area(self):
         try:
-            if self.aoi is None:
-                print("AOI is None, cannot calculate area")
-                self.aoi_area.setText(f"Total Area:")
-                self.aoi = None
-                self.aoi_checked = False
-                self.aoi_checked_function()
-                return 0
-            area_m2 = self.aoi.geometry().area().getInfo()
-            print(f"Area in m² from EE: {area_m2}")
-            area_km2 = area_m2 / 1e6
+            
+            # Calculate area using QGIS geodesic measurement
+            
+            da = QgsDistanceArea()
+            da.setEllipsoid('WGS84')
+
+            if not (hasattr(self, 'selected_aio_layer') and self.selected_aio_layer):
+                raise ValueError("No QGIS layer available for area calculation")
+
+            layer_crs = self.selected_aio_layer.crs()
+            if not layer_crs or not layer_crs.isValid():
+                raise ValueError("Selected layer has invalid CRS")
+            da.setSourceCrs(layer_crs, QgsProject.instance().transformContext())
+
+            total_area = 0.0
+            geoms = []
+            for feature in self.selected_aio_layer.getFeatures():
+                geom = feature.geometry()
+                if not geom or geom.isEmpty():
+                    continue
+                try:
+                    geom = geom.makeValid()
+                except Exception:
+                    pass
+                geoms.append(geom)
+                a = da.measureArea(geom)
+                if a is None or a != a:  # skip NaN
+                    continue
+                total_area += a
+
+            # Compute centroid from dissolved geometry and set self.lat/self.lon in EPSG:4326
+            try:
+                centroid_geom = None
+                if geoms:
+                    try:
+                        centroid_geom = QgsGeometry.unaryUnion(geoms).centroid()
+                    except Exception:
+                        centroid_geom = geoms[0].centroid()
+                if centroid_geom:
+                    to_wgs84 = QgsCoordinateTransform(
+                        layer_crs,
+                        QgsCoordinateReferenceSystem('EPSG:4326'),
+                        QgsProject.instance()
+                    )
+                    centroid_geom.transform(to_wgs84)
+                    pt = centroid_geom.asPoint()
+                    self.lat = pt.y()
+                    self.lon = pt.x()
+                    print(f"Centroid set to: {round(self.lat,4)},{round(self.lon,4)}")
+            except Exception:
+                # If centroid fails, leave lat/lon unchanged
+                pass
+            
+            area_km2 = total_area / 1e6
             area_ha = area_km2 * 100  # Convert from square kilometers to hectares
             print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
             self.aoi_area.setText(
                 f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)"
             )
+
+            # Enforce 120 km² limit and single-popup behavior
+            if area_km2 >= 120:
+                if not hasattr(self, 'area_warning_shown') or not self.area_warning_shown:
+                    self.area_warning_shown = True
+                    if self.language == 'pt':
+                        self.pop_warning(f"Área muito grande ({area_km2:.2f} km²). O limite é de 120 km²")
+                    else:
+                        self.pop_warning(f"Area too large ({area_km2:.2f} km²). The limit is 120 km²")
+                self.aoi = None
+                self.aoi_checked = False
+                self.aoi_checked_function()
+
+            # Cache computed area for the current layer
+            try:
+                self._cached_area_m2 = total_area
+                if hasattr(self, 'selected_aio_layer') and self.selected_aio_layer:
+                    self._cached_area_layer_id = self.selected_aio_layer.id()
+            except Exception:
+                pass
+
             return area_km2
         except Exception as e:
             print(f"Error in find_area: {e}")
@@ -3347,7 +3396,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.aoi = None
             self.aoi_checked = False
             self.aoi_checked_function()
-            return 0
+
 
     def aoi_checked_function(self):
         print(f"AOI checked: {self.aoi_checked}, Folder set: {self.folder_set}")
@@ -4342,7 +4391,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 def __init__(self, parent=None):
                     super(EasyDialog, self).__init__(parent)
 
-                    self.aoi = self.parent().aoi  # Assuming parent has an 'aoi' attribute
+                      # Assuming parent has an 'aoi' attribute
 
                     self.language = QSettings().value("locale/userLocale", "en")[0:2]
                     if self.language == "pt":
@@ -4366,7 +4415,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
                                     widget.clicked.connect(self.close)
                             except Exception:
                                 pass
-                    self.elevacao.clicked.connect(self.elevation_clicked)
                     self.update_dem_datasets()
                     self.dem_dataset_combobox.currentIndexChanged.connect(self.update_dem_info)
                     self.elevacao.clicked.connect(self.elevacao_clicked)
@@ -4390,11 +4438,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         print("No buffer applied")
                         return aoi
 
-                def elevation_clicked(self):
-                    print("Elevation button clicked.")
-                    parent = self.parent()
-                    print(parent.aoi_checked)
-
                 def update_dem_datasets(self):
                     print(list(self.dem_datasets.keys()))
                     self.dem_dataset_combobox.addItems(list(self.dem_datasets.keys()))
@@ -4408,6 +4451,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     self.dem_resolution_combobox.addItems([str(res) for res in self.dem_datasets[dem_name]["Resolution"]])
 
                 def elevacao_clicked(self):
+                    self.aoi = self.parent().aoi
+
+                    # Validate that AOI is defined before proceeding
+                    if self.aoi is None:
+                        self.pop_aviso("Error: No AOI defined. Please select a vector layer first.")
+                        return
 
                     QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)  
 
@@ -4426,7 +4475,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     msg.setWindowTitle("Alerta!")
                     msg.setIcon(QMessageBox.Icon.Warning)
                     msg.setText(aviso)
-                    msg.setStandardButtons(QMessageBox.Icon.Warning | QMessageBox.Cancel)  # Add Ok and Cancel buttons
+                    msg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
 
                     ret = msg.exec()  # Get the result of the dialog
 
@@ -4478,7 +4527,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     # 3. Define the download region using the BOUNDING BOX of the AOI.
                     # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
                     # The actual clipping to the irregular shape is handled by updateMask.
-                    download_region = aoi.geometry().bounds().getInfo()
+                    download_region = aoi.first().geometry().bounds().getInfo()
 
                     try:
                         url = final_image_masked.getDownloadUrl({
