@@ -519,7 +519,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             primary.setChecked(secondary.isChecked())
 
     def learn_clicked(self):
-        webbrowser.open("https://raviqgis.org")
+        webbrowser.open("https://www.raviqgis.org")
 
     def index_batch_clicked(self):
         if self.language == "pt":
