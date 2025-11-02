@@ -46,7 +46,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import urllib.request
 import ee
-
+import shutil
 from functools import partial
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -127,6 +127,7 @@ from .modules import (
     save_utils,
     authentication,
     coordinate_capture,
+    datasets_info,
 )
 
 from .modules.coordinate_capture import CoordinateCaptureTool
@@ -367,6 +368,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_back_7.clicked.connect(self.back_clicked)
         self.QPushButton_back_8.clicked.connect(self.back_clicked)
         self.QPushButton_back_9.clicked.connect(self.back_clicked)
+        self.QPushButton_easy.clicked.connect(self.easy_clicked)
         self.loadtimeseries.clicked.connect(self.loadtimeseries_clicked)
         self.QPushButton_fast.clicked.connect(self.fast_clicked)
         self.loadtimeseries_2.clicked.connect(self.loadtimeseries_clicked_2)
@@ -4325,3 +4327,277 @@ class RAVIDialog(QDialog, FORM_CLASS):
         except Exception as e:
             print(f"Error in soil_image download/load: {e}")
             self.pop_warning(f"An error occurred while exporting/loading the soil image: {e}")
+
+    def easy_clicked(self):
+        """Open the 'easy' UI dialog (localized)."""
+        try:
+            if self.language == "pt":
+                ui_path = os.path.join(os.path.dirname(__file__), "ui", "easy_pt.ui")
+            else:
+                ui_path = os.path.join(os.path.dirname(__file__), "ui", "easy.ui")
+
+            EasyForm, _ = uic.loadUiType(ui_path)
+
+            class EasyDialog(QDialog, EasyForm):
+                def __init__(self, parent=None):
+                    super(EasyDialog, self).__init__(parent)
+
+                    self.aoi = self.parent().aoi  # Assuming parent has an 'aoi' attribute
+
+                    self.language = QSettings().value("locale/userLocale", "en")[0:2]
+                    if self.language == "pt":
+                        self.dem_datasets = datasets_info.dem_datasets_pt
+                    else:
+                        self.dem_datasets = datasets_info.dem_datasets_en
+                    self.setupUi(self)
+                    # Make it non-modal and allow interaction with QGIS
+                    self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+                    self.setModal(False)
+                    # If the UI has a close/ok button, try to connect it
+                    for name in ("closeButton", "btnClose", "okButton", "buttonBox"):
+                        if hasattr(self, name):
+                            widget = getattr(self, name)
+                            try:
+                                # buttonBox is a QDialogButtonBox
+                                if isinstance(widget, QDialogButtonBox):
+                                    widget.accepted.connect(self.accept)
+                                    widget.rejected.connect(self.reject)
+                                else:
+                                    widget.clicked.connect(self.close)
+                            except Exception:
+                                pass
+                    self.elevacao.clicked.connect(self.elevation_clicked)
+                    self.update_dem_datasets()
+                    self.dem_dataset_combobox.currentIndexChanged.connect(self.update_dem_info)
+                    self.elevacao.clicked.connect(self.elevacao_clicked)
+                    self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
+
+                def update_labels(self):
+                    """Updates the text of several labels based on the values of horizontal
+                    sliders."""
+                    self.label_buffer.setText(f"{self.horizontalSlider_buffer.value()}m")
+
+                def apply_buffer(self, aoi):
+                    """Applies a buffer to the AOI geometry."""
+                    buffer_distance = self.horizontalSlider_buffer.value()
+                    print(f"Applying buffer of {buffer_distance} meters to AOI.")
+                    if buffer_distance != 0:
+                        print(f"Buffer distance: {buffer_distance} meters")
+                        aoi = aoi.map(lambda feature: feature.buffer(buffer_distance))
+                        #self.aoi = aoi
+                        return aoi
+                    else:
+                        print("No buffer applied")
+                        return aoi
+
+                def elevation_clicked(self):
+                    print("Elevation button clicked.")
+                    parent = self.parent()
+                    print(parent.aoi_checked)
+
+                def update_dem_datasets(self):
+                    print(list(self.dem_datasets.keys()))
+                    self.dem_dataset_combobox.addItems(list(self.dem_datasets.keys()))
+                    self.update_dem_info()
+
+                def update_dem_info(self):
+                    dem_name = self.dem_dataset_combobox.currentText()
+                    dem_info = self.dem_datasets[dem_name]["Info"]
+                    self.dem_info_textbox.setHtml(dem_info)
+                    self.dem_resolution_combobox.clear()
+                    self.dem_resolution_combobox.addItems([str(res) for res in self.dem_datasets[dem_name]["Resolution"]])
+
+                def elevacao_clicked(self):
+
+                    QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)  
+
+                    try: 
+                        self.elevacao_workflow()
+                        QApplication.restoreOverrideCursor()
+                    except Exception as e:
+                        print(f"Error in elevacao_workflow: {e}")
+                        QApplication.restoreOverrideCursor()
+                        self.pop_aviso(f"Error in elevation data processing: {e}")
+                        return
+
+                def pop_aviso(self, aviso):
+                    QApplication.restoreOverrideCursor()
+                    msg = QMessageBox(parent=self)
+                    msg.setWindowTitle("Alerta!")
+                    msg.setIcon(QMessageBox.Icon.Warning)
+                    msg.setText(aviso)
+                    msg.setStandardButtons(QMessageBox.Icon.Warning | QMessageBox.Cancel)  # Add Ok and Cancel buttons
+
+                    ret = msg.exec()  # Get the result of the dialog
+
+                def elevacao_workflow(self):
+
+                    # Assuming 'self.aoi' holds the Earth Engine FeatureCollection
+                    # --- KEY CHANGE: Use updateMask for more reliable clipping ---
+                    # Apply buffer if needed. Ensure self.aoi is an ee.Geometry object.
+                    aoi = self.apply_buffer(self.aoi)
+
+                    DEM_source_key = self.dem_dataset_combobox.currentText()
+                    DEM_source_id = self.dem_datasets[DEM_source_key]["ID"]
+                    DEM_resolution = int(self.dem_resolution_combobox.currentText())
+                    print(f"Selected DEM source: {DEM_source_key} ({DEM_source_id})", DEM_resolution)
+
+                    # Replace invalid characters in DEM source ID for filenames
+                    safe_dem_source_id = DEM_source_id.replace("/", "_").replace("\\", "_")
+
+                    # Fetch DEM image based on selected source
+                    if DEM_source_id == 'COPERNICUS/DEM/GLO30':
+                        dem = ee.ImageCollection(DEM_source_id).select('DEM').mosaic().clip(aoi)
+                    elif DEM_source_id == 'JAXA/ALOS/AW3D30/V3_2':
+                        dem = ee.ImageCollection(DEM_source_id).select('DSM').mosaic().clip(aoi)
+                    elif DEM_source_id == 'NASA/NASADEM_HGT/001':
+                        dem = ee.Image(DEM_source_id).select('elevation').clip(aoi)
+                    elif DEM_source_id == 'USGS/GMTED2010_FULL':
+                        dem = ee.Image(DEM_source_id).select('min').clip(aoi)
+                    elif DEM_source_id == 'ASTER/ASTGTM':
+                        dem = ee.Image(DEM_source_id).select('elevation').clip(aoi)
+                    else:
+                        dem = ee.Image(DEM_source_id).clip(aoi).select('elevation')
+
+                    # Create a temporary file to store the downloaded DEM
+                    with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tmp_file:
+                        temp_output_file = tmp_file.name
+
+                    final_image = dem.toFloat()
+
+
+                    # 1. Create an explicit mask from the AOI geometry.
+                    # ee.Image(1).clip(aoi) creates an image where the AOI is 1 and outside is 0.
+                    # .mask() converts this to a mask where 1 is valid data and 0 is NoData.
+                    mask = ee.Image(1).clip(aoi).mask()
+
+                    # 2. Apply this mask to the final composite image.
+                    # This operation sets pixels outside the mask to NoData (transparent).
+                    final_image_masked = final_image.updateMask(mask)
+
+                    # 3. Define the download region using the BOUNDING BOX of the AOI.
+                    # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
+                    # The actual clipping to the irregular shape is handled by updateMask.
+                    download_region = aoi.geometry().bounds().getInfo()
+
+                    try:
+                        url = final_image_masked.getDownloadUrl({
+                            'scale': DEM_resolution,
+                            'region': download_region,
+                            'format': 'GeoTIFF'
+                        })
+
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            with open(temp_output_file, 'wb') as file:
+                                file.write(response.content)
+                            print(f"DEM image downloaded to temporary file: {temp_output_file}")
+                        else:
+                            print(f"Failed to download DEM image: {response.status_code}")
+                            return
+
+                        # Generate a unique name for the output, including DEM source ID
+                          # Build a safe output directory using the parent's helper and ensure we have a directory path
+                        output_path = os.path.dirname(self.parent().get_unique_filename(safe_dem_source_id))
+                        layer_name = f'{safe_dem_source_id}'
+
+                        # Move the downloaded file to the output directory and load it directly in QGIS
+                        try:
+                            # Ensure destination directory exists
+                            os.makedirs(output_path, exist_ok=True)
+                            # Move temp file to destination directory with a stable filename
+                            dest_file = os.path.join(output_path, os.path.basename(temp_output_file))
+                            shutil.move(temp_output_file, dest_file)
+                            print(f"Downloaded DEM moved to: {dest_file}")
+
+                            # Load and add the raster to the map canvas (no local clipping)
+                            self._load_raster_to_canvas(dest_file, layer_name)
+                        except Exception as e:
+                            print(f"Error moving or loading raster: {str(e)}")
+                            # If something failed, try to remove temp file if it still exists
+                            if os.path.exists(temp_output_file):
+                                try:
+                                    os.remove(temp_output_file)
+                                except Exception:
+                                    pass
+
+                    except Exception as e:
+                        print(f"Error during download: {e}")
+                        self.pop_aviso(f"Error during download: {e}")
+                        return
+
+                def _load_raster_to_canvas(self, raster_path, layer_name):
+                    """Loads a raster with single band pseudocolor rendering (Magma style) to the QGIS canvas,
+                    dynamically determining the data range. This version does not perform any clipping."""
+                    raster_layer = QgsRasterLayer(raster_path, layer_name)
+                    if not raster_layer.isValid():
+                        print(f"Failed to load raster layer from '{raster_path}'.")
+                        return
+
+                    # Get min and max values from the raster
+                    provider = raster_layer.dataProvider()
+                    stats = provider.bandStatistics(1)
+                    min_val = stats.minimumValue
+                    max_val = stats.maximumValue
+
+                    print(f"Using data range {min_val} to {max_val} for rendering.")
+
+                    QgsProject.instance().addMapLayer(raster_layer, False)
+                    root = QgsProject.instance().layerTreeRoot()
+                    root.insertChildNode(0, QgsLayerTreeLayer(raster_layer))
+                    print("Raster layer loaded successfully!")
+
+                    # Create a color ramp shader
+                    color_ramp_shader = QgsColorRampShader()
+                    color_ramp_shader.setColorRampType(QgsColorRampShader.Interpolated)
+
+                    # Load the predefined "Magma" color ramp from the QGIS style manager
+                    style = QgsStyle().defaultStyle()
+                    color_ramp = style.colorRamp('Magma')
+
+                    # Check if the color ramp is successfully loaded
+                    if color_ramp:
+                        # Define the number of color stops (adjust as needed)
+                        num_stops = 5
+                        step = (max_val - min_val) / (num_stops - 1)
+
+                        # Create color ramp items using the actual data range
+                        color_ramp_items = []
+                        for i in range(num_stops):
+                            value = min_val + i * step
+                            color = color_ramp.color(i / (num_stops - 1))  # Interpolates color along the ramp
+                            color_ramp_items.append(QgsColorRampShader.ColorRampItem(value, color))
+
+                        # Set the color ramp items to the color ramp shader
+                        color_ramp_shader.setColorRampItemList(color_ramp_items)
+                    else:
+                        print("Color ramp 'Magma' not found in the QGIS style library.")
+                        return  # Exit if the color ramp is not found
+
+                    # Create a raster shader and set it to use the color ramp shader
+                    raster_shader = QgsRasterShader()
+                    raster_shader.setRasterShaderFunction(color_ramp_shader)
+
+                    # Apply the raster shader to the raster layer renderer
+                    renderer = QgsSingleBandPseudoColorRenderer(raster_layer.dataProvider(), 1, raster_shader)
+
+                    # Set the classification range to match the data range
+                    renderer.setClassificationMin(min_val)
+                    renderer.setClassificationMax(max_val)
+
+                    raster_layer.setRenderer(renderer)
+
+                    # Refresh the layer to update the visualization
+                    raster_layer.triggerRepaint()
+
+
+            dialog = EasyDialog(self)
+            dialog.exec()
+
+        except Exception as e:
+            print(f"Failed to open easy UI: {e}")
+            try:
+                self.pop_warning("Unable to open help dialog.")
+            except Exception:
+                pass
+    

@@ -574,7 +574,7 @@ p, li { white-space: pre-wrap; }
     </widget>
     <widget class="QPushButton" name="QPushButton_easy">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
