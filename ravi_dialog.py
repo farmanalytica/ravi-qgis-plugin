@@ -2002,7 +2002,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print("AOI definition triggered.")
             self.zoom_to_layer()
             area = self.find_area()
-            if area <= 120 and area > 0.01:
+            if area is not None and 0.01 < area <= 120:
                 if self.aoi_definition():
                     print("AOI defined successfully.")
                     self.aoi_checked = True
