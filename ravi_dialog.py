@@ -91,6 +91,7 @@ from qgis.core import (
     QgsFeature,
     QgsGeometry,
     QgsField,
+    QgsMapLayerProxyModel
 )
 from qgis.PyQt.QtGui import QFont, QColor
 from qgis.PyQt.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
@@ -187,12 +188,15 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.last_clicked(3)
         self.index_explain()
         self.load_intro()
-       
+        self.mMapLayerComboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.mMapLayerComboBox_2.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.mMapLayerComboBox_3.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.tabWidget.setCurrentIndex(0)
         
         # Lock window size immediately after initialization
         # Use QTimer to ensure the window is fully initialized
         QTimer.singleShot(0, lambda: self.resizeEvent("small"))
+        
 
     def load_intro(self):
         # Load intro.html into QTextBrowser
@@ -345,9 +349,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.clear_button_points.clicked.connect(self.remove_all_dots)
         self.QPushButton_features.clicked.connect(self.QPushButton_features_clicked)
-        self.update_vector.clicked.connect(self.update_vector_clicked)
-        self.update_vector_2.clicked.connect(self.update_vector_clicked)
-        self.update_vector_3.clicked.connect(self.update_vector_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
         self.load_1index.clicked.connect(self.load_index)
         self.load_1index_batch.clicked.connect(self.index_batch_clicked)
@@ -399,9 +400,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QCheckBox_sav_filter.stateChanged.connect(self.plot_timeseries)
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
-        self.vector_layer_combobox.currentIndexChanged.connect(self.combobox_update)
-        self.vector_layer_combobox_2.currentIndexChanged.connect(self.combobox_2_update)
-        self.vector_layer_combobox_3.currentIndexChanged.connect(self.combobox_3_update)
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
@@ -411,10 +409,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.radioButton_3years.clicked.connect(lambda: self.last_clicked(3 * 12))
         self.radioButton_5years.clicked.connect(lambda: self.last_clicked(5 * 12))
         self.combo_year.currentIndexChanged.connect(self.selected_year_clicked)
-
+        self.mMapLayerComboBox.currentIndexChanged.connect(self.combobox_update)
+        self.mMapLayerComboBox_2.currentIndexChanged.connect(self.combobox_update_2)
+        self.mMapLayerComboBox_3.currentIndexChanged.connect(self.combobox_update_3)
         self.horizontalSlider_local_pixel_limit.valueChanged.connect(self.update_labels)
         self.horizontalSlider_local_pixel_limit_2.valueChanged.connect(self.update_labels_2)
-
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
         self.horizontalSlider_aio_cover_2.valueChanged.connect(self.update_labels_2)
 
@@ -588,21 +587,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.df_aux.date.tolist()[-1],
         )
         self.plot_timeseries()
-
-    def combobox_update(self, index=None):
-        # When combobox selection changes, process the newly selected layer
-        # DO NOT reload layers here; just process the selected layer
-        # to avoid resetting combobox to index 0
-        if getattr(self, "_combobox_updating", False):
-            return
-        self._combobox_updating = True
-        try:
-            self.get_selected_layer_path()
-            self.aoi = self.load_vector_function()
-            self.find_area()
-            self.aoi_checked_function()
-        finally:
-            self._combobox_updating = False
 
     def setup_custom_clicked(self):
         # Load the custom index UI
@@ -794,7 +778,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # Clear the list in the tool
         self.coordinate_capture_tool.rubber_bands = []
 
-
     # =========================================================================
     # Project ID Management / Gerenciamento do ID do Projeto
     # =========================================================================
@@ -906,7 +889,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         # print('colors:')
         # print(CoordinateCaptureTool.DOT_COLORS)
 
-
     # =========================================================================
 
     def load_fields(self, id_column=None):
@@ -916,7 +898,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         print(f"Temporary folder: {temp_folder}")
 
         # Input shapefile path / Caminho do shapefile de entrada
-        input_path = self.selected_aio_layer_path
+        input_path = self.mMapLayerComboBox.currentLayer().source()
 
         # Open the layer / Abre a camada
         layer = QgsVectorLayer(input_path, "Polygons", "ogr")
@@ -951,7 +933,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         print(f"Temporary folder: {temp_folder}")
 
         # Input shapefile path
-        input_path = self.selected_aio_layer_path
+        input_path = self.mMapLayerComboBox.currentLayer().source()
 
         # Open the layer
         layer = QgsVectorLayer(input_path, "Polygons", "ogr")
@@ -1051,7 +1033,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             path = info["path"]
 
-            self.aoi_feature = self.load_vector_function(path)
+            self.aoi_feature = self.load_vector_feature(path)
             df_feature = self.feature_calculate_timeseries(name)
             df_feature["date"] = pd.to_datetime(df_feature["date"])
             features.append(df_feature)
@@ -1094,11 +1076,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
             y=self.series_indice.currentText(),
             color="Polygon",
             line_dash="Polygon",
-            title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}",
+            title=f"Time Series - {self.series_indice.currentText()} - {self.mMapLayerComboBox.currentText()}",
         )
         fig.update_layout(
             yaxis_title=self.series_indice.currentText(),
-            title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}",
+            title=f"Time Series - {self.series_indice.currentText()} - {self.mMapLayerComboBox.currentText()}",
             xaxis_title=None,  # Remove x-axis label
         )
         self.fig_2 = fig
@@ -1107,24 +1089,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             fig.to_html(include_plotlyjs="cdn", config=self.config)
         )
         print("Feature info calculated and plotted.")
-
-    def combobox_2_update(self):
-        print("combobox_2_update called")
-        self.vector_layer_combobox.setCurrentIndex(
-            self.vector_layer_combobox_2.currentIndex()
-        )
-        self.vector_layer_combobox_3.setCurrentIndex(
-            self.vector_layer_combobox_2.currentIndex()
-        )
-
-    def combobox_3_update(self):
-        print("combobox_3_update called")
-        self.vector_layer_combobox.setCurrentIndex(
-            self.vector_layer_combobox_3.currentIndex()
-        )
-        self.vector_layer_combobox_2.setCurrentIndex(
-            self.vector_layer_combobox_3.currentIndex()
-        )
 
     def reload_update2(self):
         self.finaledit.setDate(self.finaledit_2.date())
@@ -1321,11 +1285,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
-            self.load_vector_layers()
-            self.get_selected_layer_path()
-            self.find_area()
-            self.aoi = self.load_vector_function()
 
+    
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
         """Manipula o evento quando o botão salvar é clicado."""
@@ -1336,7 +1297,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             df = df[["date", "AOI_average", "image_id"]]
 
         name = (
-            f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series.csv"
+            f"{self.series_indice.currentText()}_{self.mMapLayerComboBox.currentText()}_time_series.csv"
         )
         save_utils.save(df, name, self)
 
@@ -1345,7 +1306,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Manipula o evento quando o botão salvar é clicado."""
         df = self.df_features
         name = (
-            f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series_features.csv"
+            f"{self.series_indice.currentText()}_{self.mMapLayerComboBox.currentText()}_time_series_features.csv"
         )
         save_utils.save(df, name, self)
 
@@ -1354,7 +1315,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Manipula o evento quando o botão salvar é clicado."""
         df = self.df_points
         name = (
-            f"{self.series_indice.currentText()}_{self.vector_layer_combobox.currentText()}_time_series_points.csv"
+            f"{self.series_indice.currentText()}_{self.mMapLayerComboBox.currentText()}_time_series_points.csv"
         )
         save_utils.save(df, name, self)
 
@@ -1363,7 +1324,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.pop_warning("No NASA data to save.")
             return
         name = (
-            f"nasa_power_climate_{self.vector_layer_combobox.currentText()}.csv"
+            f"nasa_power_climate_{self.mMapLayerComboBox.currentText()}.csv"
         )
 
         save_utils.save(self.daily_data, name, self)
@@ -1696,6 +1657,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if _programmatic_tab_change:
             return
 
+        if index == 2:
+            self.combobox_update()
         # Helper function for safe programmatic tab changes
         # This also needs to set the attribute on 'self' if it's missing,
         # then manage it for the duration of the set.
@@ -1784,15 +1747,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 else:
                     print("Warning: load_path_sugestion method not found or not callable.")
 
-        # --- Tab 2: Load Vector Layers ---
-        # Get 'vector_layers_loaded' safely; if not set, default to False
-        if index == 2:
-            # Run update_vector_clicked only once per dialog lifetime
-            if not getattr(self, "_vector_update_run", False):
-                try:
-                    self.update_vector_clicked()
-                finally:
-                    setattr(self, "_vector_update_run", True)
 
         # --- Progression Checks (using QPushButton_next states) ---
         # Retrieve QPushButton objects safely. Assumes they might be assigned to 'self'
@@ -2001,159 +1955,64 @@ class RAVIDialog(QDialog, FORM_CLASS):
             return QMessageBox.StandardButton.Ok
         else:
             return QMessageBox.StandardButton.Cancel
-
-    def update_vector_clicked(self):
-        self.load_vector_layers()
-        self.get_selected_layer_path()
-        self.find_area()
-        self.aoi = self.load_vector_function()
-
-    def load_vector_layers(self):
-        # Get all layers in the current QGIS project / Obtém todas as camadas
-        print("Loading vector layers...")  # Debug
-        # no projeto QGIS atual
-        layers = list(QgsProject.instance().mapLayers().values())
-
-        # Filter polygon and multipolygon vector layers / Filtra camadas
-        # vetoriais de polígono e multipolígono
-        vector_layers = [
-            layer
-            for layer in layers
-            if layer.type() == QgsMapLayer.VectorLayer
-            and layer.geometryType() == QgsWkbTypes.PolygonGeometry
-        ]
-
-        # Get current layer names / Obtém os nomes das camadas atuais
-        current_layer_names = set(
-            self.vector_layer_combobox.itemText(i)
-            for i in range(self.vector_layer_combobox.count())
-        )
-
-        # Clear the combobox and the dictionary / Limpa a combobox e o
-        # dicionário
-        self.vector_layer_combobox.clear()
-        self.vector_layer_ids = {}
-
-        # Find the new layer while populating the combobox / Encontra a nova
-        # camada enquanto popula a combobox
-        new_layer_name = None
-        for layer in vector_layers:
-            layer_name = layer.name()
-            self.vector_layer_combobox.addItem(layer_name)
-            self.vector_layer_ids[layer_name] = layer.id()
-
-            # If this layer wasn't in the previous list, it's new / Se esta
-            # camada não estava na lista anterior, é nova
-            if layer_name not in current_layer_names:
-                new_layer_name = layer_name
-
-        # Update the second combobox / Atualiza a segunda combobox
-        self.vector_layer_combobox_2.clear()
-        self.vector_layer_combobox_2.addItems(
-            self.vector_layer_combobox.itemText(i)
-            for i in range(self.vector_layer_combobox.count())
-        )
-        self.vector_layer_combobox_2.setCurrentIndex(
-            self.vector_layer_combobox.currentIndex()
-        )
-
-        # Update the third combobox / Atualiza a terceira combobox
-        self.vector_layer_combobox_3.clear()
-        self.vector_layer_combobox_3.addItems(
-            self.vector_layer_combobox.itemText(i)
-            for i in range(self.vector_layer_combobox.count())
-        )
-
-        self.vector_layer_combobox_3.setCurrentIndex(
-            self.vector_layer_combobox.currentIndex()
-        )
-
-        # If we found a new layer, select it / Se encontramos uma nova camada,
-        # selecione-a
-        if new_layer_name:
-            index = self.vector_layer_combobox.findText(new_layer_name)
-            self.vector_layer_combobox.setCurrentIndex(index)
-
-        if self.vector_layer_combobox.count() == 0:
-            self.aoi = None
-            self.tabWidget.setCurrentIndex(2)
-            
-            if language == 'pt':
-                self.pop_warning("Nenhuma camada vetorial encontrada no projeto.")
-            else:
-                self.pop_warning("No vector layers found in the project.")
-
-    def get_selected_layer_path(self):
-        """
-        Retrieves the path of the currently selected layer in the combobox and
-        triggers further processing.
-        """
-        """
-        Recupera o caminho da camada atualmente selecionada na combobox e
-        aciona o processamento adicional.
-        """
-        print("Getting selected layer path...")  # Debug
-
-        # Get the currently selected layer name from the combobox / Obtém o nome
-        # da camada atualmente selecionada da combobox
-        layer_name = (
-            self.vector_layer_combobox.currentText().strip()
-        )  # Remove whitespace
-        if layer_name == "":
-            print("No layer selected.")
-            self.aoi_area.setText("Total Area:")
-            self.aoi = None
-            self.aoi_checked = False
-            self.aoi_checked_function()
-            return None
-        print(f"Layer name from combobox: '{layer_name}'")  # Debug
-        self.zoom_to_layer(layer_name)
-
-        # Get the corresponding layer ID / Obtém o ID da camada
-        # correspondente
-        layer_id = self.vector_layer_ids.get(layer_name)
-        print(f"Layer ID from vector_layer_ids: {layer_id}")  # Debug
-
-        if layer_id is None:
-            print(
-                f"Error: Layer ID is None for layer name '{layer_name}'.  Check vector_layer_ids."
-            )
-            print(
-                f"Contents of vector_layer_ids: {self.vector_layer_ids}"
-            )  # Debug
-            return None
-
-        # Get the layer using its ID / Obtém a camada usando seu ID
-        layer = QgsProject.instance().mapLayer(layer_id)
-        if layer:
-            print(
-                f"Layer found: {layer.name()}, ID: {layer_id}"
-            )  # Debug: Confirm layer is found
-            print(f"Layer is valid: {layer.isValid()}")
-            print(f"Layer feature count: {layer.featureCount()}")
-            print(f"Layer geometry type: {layer.geometryType()}")
-            print(f"Layer CRS: {layer.crs().authid()}")
-            # Store both the dataSourceUri (for file-based layers) and the
-            # actual QgsVectorLayer object (for memory layers like 'memory?').
-            self.selected_aio_layer_path = (
-                layer.dataProvider().dataSourceUri().split("|")[0]
-            )
-            # Keep a reference to the QgsVectorLayer itself so we can
-            # extract geometries from in-memory layers safely.
-            self.selected_aio_layer = layer
-            print(
-                f"Selected layer path: {self.selected_aio_layer_path}"
-            )  # Debug: Show selected layer path
-
-            self.loadtimeseries.setEnabled(True)
-
-            return None
-        else:
-            print(
-                f"Layer '{layer_name}' with ID '{layer_id}' not found in the project."
-            )
-            return None
         
+    def combobox_update_3(self):
+
+        print("Combobox selection changed.")  
+        
+        # self.mMapLayerComboBox.blockSignals(True)# Debug
+
+        self.mMapLayerComboBox.setCurrentIndex(
+            self.mMapLayerComboBox_3.currentIndex()
+        )
+
+        self.mMapLayerComboBox_2.setCurrentIndex(
+            self.mMapLayerComboBox_3.currentIndex()
+        )
+
+    def combobox_update_2(self):
+        print("Combobox selection changed.")  # Debu
+        
+        # self.mMapLayerComboBox_3.blockSignals(True)
+
+        self.mMapLayerComboBox.setCurrentIndex(
+            self.mMapLayerComboBox_2.currentIndex()
+        )
+
+        self.mMapLayerComboBox_3.setCurrentIndex(
+            self.mMapLayerComboBox_2.currentIndex()
+        )
+
+    def combobox_update(self):
+        print("Combobox selection changed.")
+
+        # self.mMapLayerComboBox.blockSignals(True)  # Debug
+
+        self.mMapLayerComboBox_2.setCurrentIndex(
+            self.mMapLayerComboBox.currentIndex()
+        )
+
+        self.mMapLayerComboBox_3.setCurrentIndex(
+            self.mMapLayerComboBox.currentIndex()
+        )
+
+        if self.tabWidget.currentIndex() > 1:
+            print("AOI definition triggered.")
+            self.zoom_to_layer()
+            if self.find_area() <= 120:
+
+                if self.aoi_definition():
+                    print("AOI defined successfully.")
+                    self.aoi_checked = True
+                    self.aoi_checked_function()
+                else:
+                    print("AOI definition failed.")
+
+            else:
+                self.aoi = None
+                self.aoi_checked = False
+                self.aoi_checked_function()
+
     def calculate_vegetation_index(self, image, index_name):
         """
         Calculates the specified vegetation index for the given image using
@@ -2456,7 +2315,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         return aligned_image
 
-
     def calculate_auc(self, index_collection):
         """
         Calculates the Area Under Curve (AUC) with proper spatial alignment.
@@ -2510,7 +2368,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         return final_image
 
-
     def calculate_timeseries(self):
         """Calculates the time series of the selected vegetation index for the AOI."""
         vegetation_index = self.series_indice.currentText()
@@ -2539,7 +2396,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if buffer_distance != 0:
             print(f"Buffer distance: {buffer_distance} meters")
             aoi = aoi.map(lambda feature: feature.buffer(buffer_distance))
-            #self.aoi = aoi
             return aoi
         else:
             print("No buffer applied")
@@ -2583,7 +2439,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         print(f"Creating DataFrame for {name}")
         return pd.DataFrame({"date": dates, name: mean_indices})
-
 
     def load_rgb(self, temporary=False, min_val=200, max_val=2300):
         """
@@ -2764,39 +2619,53 @@ class RAVIDialog(QDialog, FORM_CLASS):
         finally:
             QApplication.restoreOverrideCursor()
 
-
-    def zoom_to_layer(self, layer_name, margin_ratio=0.3):
+    def zoom_to_layer(self, margin_ratio=0.3):
         """
-        Zoom to the specified layer with an optional margin.
+        Zoom to the layer currently selected in self.mMapLayerComboBox,
+        adding an optional margin.
 
-        :param layer_name: Name of the layer to zoom to.
-        :param margin_ratio: Fraction of the extent to add as margin (default
-            is 0.1, or 10%).
+        :param margin_ratio: Fraction of the extent to add as margin (default 0.3).
         """
-        """
-        Amplia para a camada especificada com uma margem opcional.
+        # Try to obtain the layer directly from the combobox (preferred)
+        layer = None
+        try:
+            if hasattr(self, "mMapLayerComboBox") and self.mMapLayerComboBox is not None:
+                layer = self.mMapLayerComboBox.currentLayer()
+        except Exception:
+            layer = None
 
-        :param layer_name: Nome da camada para ampliar.
-        :param margin_ratio: Fração da extensão para adicionar como margem
-            (o padrão é 0,1 ou 10%).
-        """
-        project = QgsProject.instance()
-        layers = project.mapLayersByName(
-            layer_name
-        )  # Get layers matching the name
+        # Fallback: try to resolve by combobox text (name)
+        if layer is None or not getattr(layer, "isValid", lambda: False)():
+            try:
+                layer_name = None
+                if hasattr(self, "mMapLayerComboBox"):
+                    try:
+                        layer_name = self.mMapLayerComboBox.currentText().strip()
+                    except Exception:
+                        layer_name = None
 
-        if not layers:
-            print(f"Layer '{layer_name}' not found.")
+                if layer_name:
+                    layers = QgsProject.instance().mapLayersByName(layer_name)
+                    if layers:
+                        layer = layers[0]
+            except Exception:
+                layer = None
+
+        if layer is None or not getattr(layer, "isValid", lambda: False)():
+            print("No valid layer selected in mMapLayerComboBox to zoom to.")
             return
 
-        layer = layers[0]  # Use the first matching layer
-        iface = qgis.utils.iface  # Access the QGIS interface
-        canvas = iface.mapCanvas()  # Get the active map canvas
+        # Use iface canvas to set extent
+        canvas = qgis.utils.iface.mapCanvas()
 
-        # Ensure the canvas CRS matches the layer CRS
-        canvas.setDestinationCrs(layer.crs())
+        # Ensure canvas destination CRS matches the layer CRS
+        try:
+            canvas.setDestinationCrs(layer.crs())
+        except Exception:
+            # If setting CRS fails, continue anyway
+            pass
 
-        # Get the layer's extent and add a margin
+        # Compute expanded extent with margin
         layer_extent = layer.extent()
         x_margin = layer_extent.width() * margin_ratio
         y_margin = layer_extent.height() * margin_ratio
@@ -2808,11 +2677,13 @@ class RAVIDialog(QDialog, FORM_CLASS):
             layer_extent.yMaximum() + y_margin,
         )
 
-        # Set the expanded extent to the canvas
         canvas.setExtent(expanded_extent)
         canvas.refresh()
 
-        print(f"Zoomed to layer extent with margin: {expanded_extent.toString()}")
+        try:
+            print(f"Zoomed to layer '{layer.name()}' extent with margin: {expanded_extent.toString()}")
+        except Exception:
+            print("Zoomed to selected layer extent.")
 
     def get_subdirectory_filename(self, base_name, temporary=False):
         """
@@ -3023,8 +2894,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             )
         self.textBrowser_index_explain.setHtml(explanation)
 
-
-    def load_vector_function(self, shapefile_path=None):
+    def load_vector_feature(self, shapefile_path=None):
         """
         Loads a vector layer (memory layer or file path), reprojects to EPSG:4326,
         dissolves to a single polygonal geometry, strips Z, and returns an
@@ -3165,7 +3035,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # Branch B: load from path
             else:
                 if shapefile_path is None:
-                    print("No path or layer provided to load_vector_function.")
+                    print("No path or layer provided to load_vector_feature.")
                     return
 
                 if shapefile_path.lower().endswith(".zip"):
@@ -3257,30 +3127,160 @@ class RAVIDialog(QDialog, FORM_CLASS):
             return aoi
 
         except Exception as e:
-            print(f"Error in load_vector_function: {e}")
+            print(f"Error in load_vector_feature: {e}")
             return
 
-    # find_centroid removed: centroid is now computed inside find_area
+    def aoi_definition(self):
+        """
+        Uses the currently selected layer in self.mMapLayerComboBox as the AOI source.
+        Reprojects to EPSG:4326, dissolves polygonal geometries to a single polygonal
+        geometry, strips Z, and returns an Earth Engine FeatureCollection (AOI).
+        Returns None if preconditions are not met or no polygonal result is produced.
+        """
+
+        def transform_ok(ret):
+            if isinstance(ret, bool):
+                return ret
+            try:
+                return int(ret) == 0
+            except Exception:
+                return bool(ret)
+
+        def polygonal_union(geoms):
+            if not geoms:
+                return None
+            merged = unary_union(geoms)
+            if merged.is_empty:
+                return None
+            if isinstance(merged, (Polygon, MultiPolygon)):
+                return merged
+            if isinstance(merged, GeometryCollection):
+                polys = [g for g in merged.geoms if isinstance(g, (Polygon, MultiPolygon))]
+                if not polys:
+                    return None
+                if len(polys) == 1:
+                    return polys[0]
+                return unary_union(polys)
+            return None
+
+        def transform_to_wgs84_shapely(qgs_geom, src_crs):
+            copied = QgsGeometry.fromWkt(qgs_geom.asWkt())
+            target_crs = QgsCoordinateReferenceSystem("EPSG:4326")
+            xform = QgsCoordinateTransform(src_crs, target_crs, QgsProject.instance())
+            ret = copied.transform(xform)
+            if not transform_ok(ret):
+                return None
+            gj = copied.asJson()
+            geo = json.loads(gj)
+            return shape(geo)
+
+        # Get the selected layer from the combo box
+        layer = getattr(self, "mMapLayerComboBox", None)
+        if layer is None:
+            return None
+
+        layer = self.mMapLayerComboBox.currentLayer()
+        if not layer or not layer.isValid():
+            return None
+
+        src_crs = layer.crs()
+        if not src_crs or not src_crs.isValid():
+            return None
+
+        # Iterate features without fetching attributes
+        feats = layer.getFeatures(QgsFeatureRequest().setNoAttributes())
+
+        geoms = []
+        for feat in feats:
+            g = feat.geometry()
+            if not g or g.isEmpty():
+                continue
+            if g.type() != QgsWkbTypes.GeometryType.PolygonGeometry:
+                continue
+            shp = transform_to_wgs84_shapely(g, src_crs)
+            if shp is None or shp.is_empty:
+                continue
+            if shp.geom_type not in ("Polygon", "MultiPolygon"):
+                continue
+            geoms.append(shp)
+
+        merged_poly = polygonal_union(geoms)
+        if merged_poly is None or merged_poly.is_empty:
+            return None
+
+        geojson = merged_poly.__geo_interface__
+        if not geojson or "type" not in geojson:
+            return None
+
+        def strip_z_coords(gj):
+            t = gj.get("type")
+            if t == "Polygon":
+                gj["coordinates"] = [
+                    [coord[:2] for coord in ring] for ring in gj["coordinates"]
+                ]
+            elif t == "MultiPolygon":
+                gj["coordinates"] = [
+                    [[coord[:2] for coord in ring] for ring in poly]
+                    for poly in gj["coordinates"]
+                ]
+            return gj
+
+        geojson = strip_z_coords(geojson)
+
+        ee_geometry = ee.Geometry(geojson)
+        feature = ee.Feature(ee_geometry)
+        aoi = ee.FeatureCollection([feature])
+        self.aoi = aoi
+        return True
 
     def find_area(self):
         try:
-            
-            # Calculate area using QGIS geodesic measurement
-            
+            # Prepare geodesic distance/area calculator
             da = QgsDistanceArea()
             da.setEllipsoid('WGS84')
 
-            if not (hasattr(self, 'selected_aio_layer') and self.selected_aio_layer):
-                raise ValueError("No QGIS layer available for area calculation")
+            # Try to get layer from mMapLayerComboBox first
+            layer = None
+            try:
+                if hasattr(self, "mMapLayerComboBox") and self.mMapLayerComboBox is not None:
+                    layer = self.mMapLayerComboBox.currentLayer()
+            except Exception:
+                layer = None
 
-            layer_crs = self.selected_aio_layer.crs()
+            # Fallback: resolve by combobox text (layer name)
+            if layer is None or not getattr(layer, "isValid", lambda: False)():
+                try:
+                    layer_name = (
+                        self.mMapLayerComboBox.currentText().strip()
+                        if hasattr(self, "mMapLayerComboBox")
+                        else None
+                    )
+                    if layer_name:
+                        layers = QgsProject.instance().mapLayersByName(layer_name)
+                        if layers:
+                            layer = layers[0]
+                except Exception:
+                    layer = None
+
+            if layer is None or not getattr(layer, "isValid", lambda: False)():
+                raise ValueError("No valid layer selected in mMapLayerComboBox for area calculation")
+
+            # Keep references consistent with other methods
+            self.selected_aio_layer = layer
+            try:
+                self.selected_aio_layer_path = layer.dataProvider().dataSourceUri().split("|")[0]
+            except Exception:
+                self.selected_aio_layer_path = None
+
+            # Ensure CRS is valid and set for geodesic measures
+            layer_crs = layer.crs()
             if not layer_crs or not layer_crs.isValid():
                 raise ValueError("Selected layer has invalid CRS")
             da.setSourceCrs(layer_crs, QgsProject.instance().transformContext())
 
             total_area = 0.0
             geoms = []
-            for feature in self.selected_aio_layer.getFeatures():
+            for feature in layer.getFeatures():
                 geom = feature.geometry()
                 if not geom or geom.isEmpty():
                     continue
@@ -3314,34 +3314,16 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     self.lon = pt.x()
                     print(f"Centroid set to: {round(self.lat,4)},{round(self.lon,4)}")
             except Exception:
-                # If centroid fails, leave lat/lon unchanged
                 pass
-            
+
             area_km2 = total_area / 1e6
-            area_ha = area_km2 * 100  # Convert from square kilometers to hectares
+            area_ha = area_km2 * 100  # Convert from km² to hectares
             print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
-            self.aoi_area.setText(
-                f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)"
-            )
-
-            # Enforce 120 km² limit and single-popup behavior
-            if area_km2 >= 120:
-                if self.language == 'pt':
-                    self.pop_warning(f"Área muito grande ({area_km2:.2f} km²). O limite é de 120 km²")
-                else:
-                    self.pop_warning(f"Area too large ({area_km2:.2f} km²). The limit is 120 km²")
-                self.aoi = None
-                self.aoi_checked = False
-            else:
-                self.aoi_checked = True 
-
-
+            self.aoi_area.setText(f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
+            return area_km2
 
         except Exception as e:
             print(f"Error in find_area: {e}")
-            self.aoi_area.setText(f"Total Area:")
-            self.aoi = None
-            self.aoi_checked = False
             return None
 
     def aoi_checked_function(self):
@@ -3359,7 +3341,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
     def resetting(self):
         self.recorte_datas = None
-        self.aoi = self.load_vector_function()
         self.inicio = self.incioedit.date().toString("yyyy-MM-dd")
         self.final = self.finaledit.date().toString("yyyy-MM-dd")
         self.nuvem = self.horizontalSlider_total_pixel_limit.value()
@@ -3894,7 +3875,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.fig.update_layout(
             # xaxis_title='Date',
             yaxis_title=self.series_indice.currentText(),
-            title=f"Time Series - {self.series_indice.currentText()} - {self.vector_layer_combobox.currentText()}               Image count: {len(df)}",
+            title=f"Time Series - {self.series_indice.currentText()} - {self.mMapLayerComboBox.currentText()}               Image count: {len(df)}",
         )
 
         self.fig.update_traces(

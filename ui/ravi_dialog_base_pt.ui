@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1391</width>
+    <width>787</width>
     <height>785</height>
    </rect>
   </property>
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -374,7 +374,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>10</y>
        <width>741</width>
-       <height>101</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -387,34 +387,12 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Selecione a área de interesse (AOI):Carregue ou crie uma camada vetorial. Atualize para listá-la.</string>
      </property>
-     <widget class="QPushButton" name="update_vector">
-      <property name="geometry">
-       <rect>
-        <x>610</x>
-        <y>40</y>
-        <width>121</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Atualizar</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/refresh-3104.png</normaloff>../medias/refresh-3104.png</iconset>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="vector_layer_combobox">
+     <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>591</width>
+        <y>30</y>
+        <width>721</width>
         <height>41</height>
        </rect>
       </property>
@@ -450,9 +428,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>120</y>
+       <y>110</y>
        <width>451</width>
-       <height>111</height>
+       <height>121</height>
       </rect>
      </property>
      <property name="font">
@@ -2000,21 +1978,6 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Área de interesse - Passo 3</string>
      </property>
-     <widget class="QComboBox" name="vector_layer_combobox_2">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>30</y>
-        <width>371</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
      <widget class="QPushButton" name="update_vector_2">
       <property name="geometry">
        <rect>
@@ -2053,6 +2016,21 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>AOI:</string>
+      </property>
+     </widget>
+     <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>30</y>
+        <width>371</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
      </widget>
     </widget>
@@ -3814,43 +3792,6 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string/>
      </property>
-     <widget class="QComboBox" name="vector_layer_combobox_3">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>10</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="update_vector_3">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>10</y>
-        <width>41</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/refresh-3104.png</normaloff>../medias/refresh-3104.png</iconset>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
@@ -3900,6 +3841,21 @@ p, li { white-space: pre-wrap; }
         <x>530</x>
         <y>10</y>
         <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_3">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>10</y>
+        <width>241</width>
         <height>31</height>
        </rect>
       </property>
@@ -4429,8 +4385,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="groupBox_24">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>670</y>
+     <x>530</x>
+     <y>680</y>
      <width>161</width>
      <height>71</height>
     </rect>
@@ -4499,6 +4455,11 @@ p, li { white-space: pre-wrap; }
    <class>QgsFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qgsfilterlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
   </customwidget>
   <customwidget>
    <class>QgsPasswordLineEdit</class>
