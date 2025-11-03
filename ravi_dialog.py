@@ -188,9 +188,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.last_clicked(3)
         self.index_explain()
         self.load_intro()
-        self.mMapLayerComboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        self.mMapLayerComboBox_2.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        self.mMapLayerComboBox_3.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        # Show only vector layers with polygon geometry (layers that have area)
+        self.mMapLayerComboBox.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.mMapLayerComboBox_2.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.mMapLayerComboBox_3.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
         self.tabWidget.setCurrentIndex(0)
         
         # Lock window size immediately after initialization
@@ -1999,8 +2001,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         if self.tabWidget.currentIndex() > 1:
             print("AOI definition triggered.")
             self.zoom_to_layer()
-            if self.find_area() <= 120:
-
+            area = self.find_area()
+            if area <= 120 and area > 0.01:
                 if self.aoi_definition():
                     print("AOI defined successfully.")
                     self.aoi_checked = True
@@ -3333,11 +3335,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.QPushButton_skip.setEnabled(True)
             self.QPushButton_fast.setEnabled(True)
             self.QPushButton_easy.setEnabled(True)
+            self.loadtimeseries.setEnabled(True)
+            self.loadtimeseries_2.setEnabled(True)
+            self.QPushButton_features.setEnabled(True)
+
         else:
             self.QPushButton_next.setEnabled(False)
             self.QPushButton_skip.setEnabled(False)
             self.QPushButton_fast.setEnabled(False)
             self.QPushButton_easy.setEnabled(False)
+            self.loadtimeseries.setEnabled(False)
+            self.loadtimeseries_2.setEnabled(False)
+            self.QPushButton_features.setEnabled(False)
 
     def resetting(self):
         self.recorte_datas = None
