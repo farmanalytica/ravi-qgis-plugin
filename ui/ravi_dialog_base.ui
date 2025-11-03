@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>990</width>
+    <width>1299</width>
     <height>801</height>
    </rect>
   </property>
@@ -540,7 +540,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>450</x>
        <y>240</y>
-       <width>291</width>
+       <width>301</width>
        <height>41</height>
       </rect>
      </property>
@@ -550,7 +550,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Digital Elevation Model</string>
+      <string> Get Digital Elevation Model</string>
      </property>
      <property name="icon">
       <iconset>

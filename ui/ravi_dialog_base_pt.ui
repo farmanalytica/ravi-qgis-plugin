@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -576,7 +576,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Modelo Digital de Elevação</string>
+      <string> Obter Modelo Digital de Elevação</string>
      </property>
      <property name="icon">
       <iconset>
