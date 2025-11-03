@@ -159,8 +159,11 @@ p, li { white-space: pre-wrap; }
      <property name="textInteractionFlags">
       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
      </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
      <property name="openLinks">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QgsPasswordLineEdit" name="project_QgsPasswordLineEdit">
@@ -215,7 +218,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>../icon.png</pixmap>
+      <pixmap>icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
