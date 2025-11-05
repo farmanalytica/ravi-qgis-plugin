@@ -336,6 +336,15 @@ class RAVIDialog(QDialog, FORM_CLASS):
             [str(year) for year in range(2017, datetime.datetime.now().year + 1)]
         )
 
+        self.QComboBox_composition.addItems([
+            "Real color (RGB)",
+            "Red-NIR-Green",
+            "NIR-Red-Green",
+            "SWIR2-NIR-Green",
+            "SWIR1-NIR-SWIR2",
+        ])
+
+
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
         """Conecta os sinais da UI aos seus respectivos slots."""
@@ -2562,18 +2571,19 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     os.remove(temp_file)
 
             # Add the image as a raster layer in QGIS
-            layer_name = f"Sentinel-2 RGB {date[0]}"
+            layer_name = f"Sentinel-2 {date[0]}"
             layer = QgsRasterLayer(output_file, layer_name)
             if not layer.isValid():
                 self.pop_warning(f"Failed to load the layer: {output_file}")
                 return
 
+            render_channels = self.rgb_rendering()
             # Create a new MultiBandColorRenderer for RGB
             renderer = QgsMultiBandColorRenderer(
                 layer.dataProvider(),
-                4,  # Red band (B4, 1-based index)
-                3,  # Green band (B3)
-                2,  # Blue band (B2)
+                render_channels[0],  # Red channel
+                render_channels[1],  # Green channel
+                render_channels[2],  # Blue channel
             )
 
             # Set contrast enhancement for each band (Red, Green, Blue)
@@ -2620,6 +2630,34 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(traceback.format_exc())
         finally:
             QApplication.restoreOverrideCursor()
+
+    def rgb_rendering(self):
+        """Returns the band numbers for RGB rendering."""
+        # Sentinel-2 band numbers for RGB
+
+        pallet = self.QComboBox_composition.currentText()
+        if pallet == "Real color (RGB)":
+            red_band = 4  # Red
+            green_band = 3  # Green
+            blue_band = 2  # Blue
+        elif pallet == "Red-NIR-Green":
+            red_band = 4  # Red
+            green_band = 8  # NIR
+            blue_band = 3  # Green
+        elif pallet == "NIR-Red-Green":
+            red_band = 8  # NIR
+            green_band = 4  # Red
+            blue_band = 3  # Green
+        elif pallet == "SWIR2-NIR-Green":
+            red_band = 12  # SWIR2
+            green_band = 8  # NIR
+            blue_band = 3  # Green
+        elif pallet == "SWIR1-NIR-SWIR2":
+            red_band = 11  # SWIR1
+            green_band = 8  # NIR
+            blue_band = 12  # SWIR2
+
+        return (red_band, green_band, blue_band)
 
     def zoom_to_layer(self, margin_ratio=0.3):
         """
@@ -4156,6 +4194,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     self.dem_dataset_combobox.currentIndexChanged.connect(self.update_dem_info)
                     self.elevacao.clicked.connect(self.elevacao_clicked)
                     self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
+                    self.dem_info_textbox.setReadOnly(True)  # Prevent editing# Make it interactive
+                    self.dem_info_textbox.setOpenExternalLinks(True)
+                    self.dem_info_textbox.anchorClicked.connect(self.open_link)
+
+                def open_link(self, url):
+                    """Open the clicked link in the default web browser."""
+                    print(f"Opening URL: {url.toString()}")
+                    webbrowser.open(url.toString())
 
                 def update_labels(self):
                     """Updates the text of several labels based on the values of horizontal

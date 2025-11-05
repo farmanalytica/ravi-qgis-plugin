@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1299</width>
-    <height>801</height>
+    <height>795</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -2910,302 +2910,6 @@ p, li { white-space: pre-wrap; }
     <attribute name="title">
      <string>Panel</string>
     </attribute>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>390</y>
-       <width>271</width>
-       <height>191</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>Select a Date: (yyyy-mm-dd):</string>
-     </property>
-     <widget class="QLabel" name="label_23">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>111</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::AutoText</enum>
-      </property>
-      <property name="scaledContents">
-       <bool>false</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_26">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>151</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::AutoText</enum>
-      </property>
-      <property name="scaledContents">
-       <bool>false</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="dataunica">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="load_1rgb">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Download</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="load_1index">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>110</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Download</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="imagem_unica_indice">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>30</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="Line" name="line_4">
-      <property name="geometry">
-       <rect>
-        <x>204</x>
-        <y>50</y>
-        <width>21</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="Line" name="line_6">
-      <property name="geometry">
-       <rect>
-        <x>75</x>
-        <y>60</y>
-        <width>21</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="load_1rgb_preview">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Preview (RGB)</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="load_1index_preview">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>70</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Preview</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
-      </property>
-     </widget>
-     <widget class="Line" name="line_2">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>40</y>
-        <width>118</width>
-        <height>10</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="rgb_batch">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>150</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>(batch)</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="load_1index_batch">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>150</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>(batch)</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
-      </property>
-     </widget>
-     <zorder>line_6</zorder>
-     <zorder>line_4</zorder>
-     <zorder>label_23</zorder>
-     <zorder>label_26</zorder>
-     <zorder>load_1rgb</zorder>
-     <zorder>load_1index</zorder>
-     <zorder>load_1rgb_preview</zorder>
-     <zorder>load_1index_preview</zorder>
-     <zorder>line_2</zorder>
-     <zorder>dataunica</zorder>
-     <zorder>imagem_unica_indice</zorder>
-     <zorder>rgb_batch</zorder>
-     <zorder>load_1index_batch</zorder>
-    </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
@@ -3411,7 +3115,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_8">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>300</x>
        <y>430</y>
        <width>211</width>
        <height>151</height>
@@ -3646,9 +3350,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>520</x>
        <y>510</y>
-       <width>181</width>
+       <width>171</width>
        <height>71</height>
       </rect>
      </property>
@@ -3665,7 +3369,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>161</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -3807,9 +3511,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>30</y>
        <width>1131</width>
-       <height>391</height>
+       <height>361</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -3986,8 +3690,285 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>350</y>
+       <width>281</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Select a Date: (yyyy-mm-dd):</string>
+     </property>
+     <widget class="QLabel" name="label_23">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>111</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_26">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>151</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="imagem_unica_indice">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1rgb_preview">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Preview</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1index">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>150</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Download</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="dataunica">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>30</y>
+        <width>261</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="Line" name="line">
+      <property name="geometry">
+       <rect>
+        <x>68</x>
+        <y>50</y>
+        <width>31</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="Line" name="line_3">
+      <property name="geometry">
+       <rect>
+        <x>211</x>
+        <y>50</y>
+        <width>16</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1rgb">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Download</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1index_preview">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>110</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Preview</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rgb_batch">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(batch)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_1index_batch">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>190</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>(batch)</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="QComboBox_composition">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <zorder>line_3</zorder>
+     <zorder>label_23</zorder>
+     <zorder>label_26</zorder>
+     <zorder>line</zorder>
+     <zorder>load_1index</zorder>
+     <zorder>load_1rgb_preview</zorder>
+     <zorder>load_1rgb</zorder>
+     <zorder>load_1index_preview</zorder>
+     <zorder>imagem_unica_indice</zorder>
+     <zorder>dataunica</zorder>
+     <zorder>rgb_batch</zorder>
+     <zorder>load_1index_batch</zorder>
+     <zorder>QComboBox_composition</zorder>
+    </widget>
     <zorder>webView</zorder>
-    <zorder>groupBox</zorder>
     <zorder>groupBox_2</zorder>
     <zorder>groupBox_7</zorder>
     <zorder>groupBox_8</zorder>
@@ -3996,6 +3977,7 @@ p, li { white-space: pre-wrap; }
     <zorder>groupBox_29</zorder>
     <zorder>groupBox_23</zorder>
     <zorder>groupBox_24</zorder>
+    <zorder>groupBox</zorder>
    </widget>
    <widget class="QWidget" name="tab_12">
     <attribute name="title">

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
+    <width>1464</width>
     <height>785</height>
    </rect>
   </property>
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>10</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -1981,28 +1981,6 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Área de interesse - Passo 3</string>
      </property>
-     <widget class="QPushButton" name="update_vector_2">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>30</y>
-        <width>91</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Atualizar</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../medias/refresh-3104.png</normaloff>../medias/refresh-3104.png</iconset>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
@@ -2026,8 +2004,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>60</x>
         <y>30</y>
-        <width>371</width>
-        <height>27</height>
+        <width>471</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -2876,9 +2854,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>20</y>
        <width>1131</width>
-       <height>391</height>
+       <height>371</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -2906,9 +2884,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>390</y>
+       <y>350</y>
        <width>291</width>
-       <height>191</height>
+       <height>231</height>
       </rect>
      </property>
      <property name="font">
@@ -2966,9 +2944,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="imagem_unica_indice">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>30</y>
-        <width>101</width>
+        <x>170</x>
+        <y>70</y>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
@@ -2982,7 +2960,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
+        <y>110</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -2993,7 +2971,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>Visualizar (RGB)</string>
+       <string>Visualizar</string>
       </property>
       <property name="icon">
        <iconset>
@@ -3004,7 +2982,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>110</y>
+        <y>150</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -3025,9 +3003,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="dataunica">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>11</x>
         <y>30</y>
-        <width>151</width>
+        <width>271</width>
         <height>31</height>
        </rect>
       </property>
@@ -3040,10 +3018,10 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line">
       <property name="geometry">
        <rect>
-        <x>76</x>
+        <x>68</x>
         <y>50</y>
         <width>31</width>
-        <height>101</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="orientation">
@@ -3053,10 +3031,10 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line_3">
       <property name="geometry">
        <rect>
-        <x>229</x>
+        <x>211</x>
         <y>50</y>
         <width>16</width>
-        <height>101</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="orientation">
@@ -3067,7 +3045,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>150</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -3089,7 +3067,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>70</y>
+        <y>110</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -3107,24 +3085,11 @@ p, li { white-space: pre-wrap; }
         <normaloff>../medias/preview.png</normaloff>../medias/preview.png</iconset>
       </property>
      </widget>
-     <widget class="Line" name="line_2">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>40</y>
-        <width>118</width>
-        <height>10</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
      <widget class="QPushButton" name="rgb_batch">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>150</y>
+        <y>190</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -3146,7 +3111,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>150</y>
+        <y>190</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -3164,6 +3129,21 @@ p, li { white-space: pre-wrap; }
         <normaloff>../medias/download.svg</normaloff>../medias/download.svg</iconset>
       </property>
      </widget>
+     <widget class="QComboBox" name="QComboBox_composition">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
      <zorder>line_3</zorder>
      <zorder>label_23</zorder>
      <zorder>label_26</zorder>
@@ -3172,11 +3152,11 @@ p, li { white-space: pre-wrap; }
      <zorder>load_1rgb_preview</zorder>
      <zorder>load_1rgb</zorder>
      <zorder>load_1index_preview</zorder>
-     <zorder>line_2</zorder>
      <zorder>imagem_unica_indice</zorder>
      <zorder>dataunica</zorder>
      <zorder>rgb_batch</zorder>
      <zorder>load_1index_batch</zorder>
+     <zorder>QComboBox_composition</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
