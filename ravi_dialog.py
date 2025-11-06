@@ -24,7 +24,6 @@ import os
 import json
 import tempfile
 import zipfile
-
 import geopandas as gpd
 from shapely.geometry import shape, Polygon, MultiPolygon, GeometryCollection
 from shapely.ops import unary_union
@@ -3275,19 +3274,17 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
     def find_area(self):
         try:
-            # Prepare geodesic distance/area calculator
             da = QgsDistanceArea()
-            da.setEllipsoid('WGS84')
+            da.setEllipsoid("WGS84")
 
-            # Try to get layer from mMapLayerComboBox first
+            # Resolve layer (same as before)
             layer = None
             try:
-                if hasattr(self, "mMapLayerComboBox") and self.mMapLayerComboBox is not None:
+                if getattr(self, "mMapLayerComboBox", None) is not None:
                     layer = self.mMapLayerComboBox.currentLayer()
             except Exception:
                 layer = None
 
-            # Fallback: resolve by combobox text (layer name)
             if layer is None or not getattr(layer, "isValid", lambda: False)():
                 try:
                     layer_name = (
@@ -3305,66 +3302,103 @@ class RAVIDialog(QDialog, FORM_CLASS):
             if layer is None or not getattr(layer, "isValid", lambda: False)():
                 raise ValueError("No valid layer selected in mMapLayerComboBox for area calculation")
 
-            # Keep references consistent with other methods
             self.selected_aio_layer = layer
             try:
                 self.selected_aio_layer_path = layer.dataProvider().dataSourceUri().split("|")[0]
             except Exception:
                 self.selected_aio_layer_path = None
 
-            # Ensure CRS is valid and set for geodesic measures
             layer_crs = layer.crs()
             if not layer_crs or not layer_crs.isValid():
                 raise ValueError("Selected layer has invalid CRS")
+
             da.setSourceCrs(layer_crs, QgsProject.instance().transformContext())
 
-            total_area = 0.0
-            geoms = []
-            for feature in layer.getFeatures():
-                geom = feature.geometry()
-                if not geom or geom.isEmpty():
+            # Collect polygon geometries
+            poly_geoms = []
+            for f in layer.getFeatures():
+                g = f.geometry()
+                if not g or g.isEmpty():
                     continue
                 try:
-                    geom = geom.makeValid()
+                    g = g.makeValid()
                 except Exception:
                     pass
-                geoms.append(geom)
-                a = da.measureArea(geom)
-                if a is None or a != a:  # skip NaN
-                    continue
-                total_area += a
-
-            # Compute centroid from dissolved geometry and set self.lat/self.lon in EPSG:4326
-            try:
-                centroid_geom = None
-                if geoms:
+                # keep only polygonal geometries
+                if QgsWkbTypes.geometryType(g.wkbType()) != QgsWkbTypes.PolygonGeometry:
                     try:
-                        centroid_geom = QgsGeometry.unaryUnion(geoms).centroid()
+                        g2 = g.convertToType(QgsWkbTypes.PolygonGeometry, False)
+                        if not g2 or g2.isEmpty():
+                            continue
+                        g = g2
                     except Exception:
-                        centroid_geom = geoms[0].centroid()
-                if centroid_geom:
+                        continue
+                # Optional: segmentize curves
+                try:
+                    if QgsWkbTypes.isCurvedType(g.wkbType()):
+                        g = QgsGeometry(g.constGet().segmentize(5.0))
+                except Exception:
+                    pass
+                poly_geoms.append(g)
+
+            if not poly_geoms:
+                print("No polygon geometries to measure.")
+                if hasattr(self, "aoi_area") and self.aoi_area is not None:
+                    self.aoi_area.setText("Total Area: 0.00 km² (0.00 hectares)")
+                return 0.0
+
+            # Union all polygons to remove overlaps
+            try:
+                union_geom = QgsGeometry.unaryUnion(poly_geoms)
+            except Exception:
+                # Fallback: progressive union if unaryUnion fails
+                union_geom = poly_geoms[0]
+                for g in poly_geoms[1:]:
+                    try:
+                        union_geom = union_geom.union(g)
+                    except Exception:
+                        pass
+
+            if not union_geom or union_geom.isEmpty():
+                print("Union resulted in empty geometry.")
+                if hasattr(self, "aoi_area") and self.aoi_area is not None:
+                    self.aoi_area.setText("Total Area: 0.00 km² (0.00 hectares)")
+                return 0.0
+
+            # Measure area of the union (geodesic)
+            total_area = da.measureArea(union_geom)
+            if total_area is None or total_area != total_area or total_area < 0:
+                total_area = 0.0
+
+            # Centroid from union for consistency
+            try:
+                centroid_geom = union_geom.centroid()
+                if centroid_geom and not centroid_geom.isEmpty():
                     to_wgs84 = QgsCoordinateTransform(
                         layer_crs,
-                        QgsCoordinateReferenceSystem('EPSG:4326'),
-                        QgsProject.instance()
+                        QgsCoordinateReferenceSystem("EPSG:4326"),
+                        QgsProject.instance().transformContext(),
                     )
-                    centroid_geom.transform(to_wgs84)
-                    pt = centroid_geom.asPoint()
-                    self.lat = pt.y()
-                    self.lon = pt.x()
-                    print(f"Centroid set to: {round(self.lat,4)},{round(self.lon,4)}")
+                    pt_wgs84 = to_wgs84.transform(centroid_geom.asPoint())
+                    self.lat = pt_wgs84.y()
+                    self.lon = pt_wgs84.x()
+                    print(f"Centroid set to: {round(self.lat, 4)},{round(self.lon, 4)}")
             except Exception:
                 pass
 
             area_km2 = total_area / 1e6
-            area_ha = area_km2 * 100  # Convert from km² to hectares
-            print(f"Area: {area_km2:.2f} km² ({area_ha:.2f} ha)")
-            self.aoi_area.setText(f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)")
+            area_ha = area_km2 * 100.0
+            print(f"Area (no overlaps): {area_km2:.2f} km² ({area_ha:.2f} ha)")
+            if hasattr(self, "aoi_area") and self.aoi_area is not None:
+                self.aoi_area.setText(
+                    f"Total Area: {area_km2:.2f} km² ({area_ha:.2f} hectares)"
+                )
             return area_km2
 
         except Exception as e:
             print(f"Error in find_area: {e}")
             return None
+
 
     def aoi_checked_function(self):
         print(f"AOI checked: {self.aoi_checked}, Folder set: {self.folder_set}")
