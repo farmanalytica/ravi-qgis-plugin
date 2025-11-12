@@ -71,6 +71,7 @@ from qgis.core import (
     QgsVectorFileWriter,
     QgsFeatureRequest,
     QgsProject,
+    QgsTask,
     QgsRasterLayer,
     QgsRasterShader,
     QgsColorRampShader,
@@ -93,7 +94,7 @@ from qgis.core import (
     QgsMapLayerProxyModel
 )
 from qgis.PyQt.QtGui import QFont, QColor
-from qgis.PyQt.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
+from qgis.PyQt.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent, pyqtSlot, QObject
 from qgis.PyQt.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -119,6 +120,18 @@ from qgis.PyQt.QtWidgets import (
 
 from qgis.PyQt import uic, QtWidgets
 from qgis.PyQt.QtCore import Qt, QEvent # This specific import was duplicated multiple times, consolidating here.
+# QWebChannel may not be available in some QGIS/Qt builds. Try fallbacks.
+try:
+    from qgis.PyQt.QtWebChannel import QWebChannel
+except Exception:
+    try:
+        # fallback to system PyQt5 (rare in QGIS env, but try)
+        from PyQt5.QtWebChannel import QWebChannel
+    except Exception:
+        try:
+            from PyQt6.QtWebChannel import QWebChannel
+        except Exception:
+            QWebChannel = None
 from qgis.gui import (
     QgsMapToolEmitPoint,
     QgsRubberBand,
@@ -135,10 +148,12 @@ from .modules import (
     save_utils,
     authentication,
     coordinate_capture,
+    coordinate_capture_2,
     datasets_info,
 )
 
 from .modules.coordinate_capture import CoordinateCaptureTool
+from .modules.coordinate_capture_2 import CoordinateCaptureTool_2
 
 # =============================================================================
 # RAVIDialog Class Definition / Definição da Classe RAVIDialog
@@ -156,6 +171,20 @@ else:
 FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), ui_file))
 
 class RAVIDialog(QDialog, FORM_CLASS):
+    class _Bridge(QObject):
+        """Objeto exposto ao JS para receber eventos de hover."""
+        @pyqtSlot(str)
+        def receive(self, date_str):
+            try:
+                print(f"Hover date: {date_str}")
+            except Exception:
+                print("Received hover, but failed to print.")
+        def receive(self, date_str):
+            try:
+                print(f"Hover date: {date_str}")
+            except Exception:
+                print("Received hover, but failed to print.")
+
     def __init__(self, parent=None, iface=None):
         super(RAVIDialog, self).__init__(parent)
         self.setupUi(self)
@@ -411,6 +440,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
+
+        self.checkBox_captureCoordinates_2.stateChanged.connect(self.toggle_coordinate_capture_tool_2)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
         self.radioButton_3months.clicked.connect(lambda: self.last_clicked(3))
@@ -836,68 +867,60 @@ class RAVIDialog(QDialog, FORM_CLASS):
             )
         QApplication.restoreOverrideCursor()
 
-    def plot_timeseries_points(self):
-        print("Plotting time series for points...")
+    def process_coordinates_2(self, longitude, latitude):
+        """Processes the captured coordinates with Earth Engine."""
+        """Processa as coordenadas capturadas com o Earth Engine."""
+        #QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
-        df = self.df_aux_points
-        print(df.shape)
+        # 1. Define the point (longitude, latitude) / Define o ponto
+        # (longitude, latitude)
+        #point = ee.Geometry.Point(longitude, latitude)
 
-        # Melt the dataframe to have a long format
-        df_melted = df.melt(
-            id_vars="date",
-            var_name="Points (lat, long)",
-            value_name=self.series_indice.currentText(),
+        print(f"Processing coordinates: ({latitude}, {longitude})")
+
+        # Define a 100 m circular AOI around the captured coordinate
+        point = ee.Geometry.Point(longitude, latitude)
+        # create 100 m circular AOI around the captured point
+        aoi_circle = point.buffer(100)  # buffer in meters
+
+        # Convert the buffered geometry to a FeatureCollection (required by later functions)
+        aoi_feat = ee.Feature(aoi_circle, {"name": f"pt_{round(latitude,5)}_{round(longitude,5)}"})
+        aoi_circle = ee.FeatureCollection([aoi_feat])
+
+        # Use full range from 2017-01-01 to today
+        start_date = "2017-01-01"
+        end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+
+        sentinel2_point_collection = (
+            ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+            .filterBounds(aoi_circle)
+            .filterDate(start_date, end_date)
+            .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 40))
+            .map(lambda image: image.set("date", image.date().format("YYYY-MM-dd")))
         )
 
-        # Get unique point labels
-        unique_points = df_melted["Points (lat, long)"].unique()
-        
-        # Create color mapping
-        color_map = {}
-        
-        # Use blue for the first point
-        if len(unique_points) > 0:
-            color_map[unique_points[0]] = "blue"
-        
-        # Use the captured colors for the remaining points
-        for i, point in enumerate(unique_points[1:], 1):
-            if i-1 < len(CoordinateCaptureTool.DOT_COLORS):
-                # Convert QColor to hex string
-                qcolor = CoordinateCaptureTool.DOT_COLORS[i-1]
-                hex_color = f"#{qcolor.red():02x}{qcolor.green():02x}{qcolor.blue():02x}"
-                color_map[point] = hex_color
-        
-        print("Color mapping:")
-        print(color_map)
+        print("Sentinel-2 collection size for point AOI:", sentinel2_point_collection.size().getInfo())
 
-        # Create the line plot with custom colors
-        fig = px.line(
-            df_melted,
-            x="date",
-            y=self.series_indice.currentText(),
-            color="Points (lat, long)",
-            line_dash="Points (lat, long)",
-            title=f"Time Series - {self.series_indice.currentText()} - Points",
-            color_discrete_map=color_map
-        )
-        
-        fig.update_layout(
-            yaxis_title=self.series_indice.currentText(),
-            title=f"Time Series - {self.series_indice.currentText()} - Points",
-            xaxis_title=None,  # Remove x-axis label
-        )
-        
-        self.fig_3 = fig
-        #fig.show()
+        self.collection_info = []
+        self.collection_info_pt = []
 
-        self.webView_2.setHtml(
-            fig.to_html(include_plotlyjs="cdn", config=self.config)
+        sentinel2_point_collection = self.AOI_coverage_filter(
+            sentinel2_point_collection, aoi_circle, .9
         )
-        
-        print("Feature info calculated and plotted.")
-        
-        # print('colors:')
-        # print(CoordinateCaptureTool.DOT_COLORS)
+
+        print("Sentinel-2 collection size after AOI coverage filter for point AOI:", sentinel2_point_collection.size().getInfo())   
+
+        sentinel2_point_collection = self.SCL_filter(
+            sentinel2_point_collection, aoi_circle, .9
+        )
+        print("Applied local SCL percentage filter for point AOI.")
+
+        # Keep only one image per day (prefer best coverage)
+        sentinel2_point_collection = self.uniqueday_collection(sentinel2_point_collection)
+        final_count = sentinel2_point_collection.size().getInfo()
+        print(f"Final sentinel-2 count for point AOI: {final_count}")
+
+
 
     # =========================================================================
 
@@ -2890,6 +2913,17 @@ class RAVIDialog(QDialog, FORM_CLASS):
             import traceback
             QgsMessageLog.logMessage(f"An unexpected error occurred: {e}\n{traceback.format_exc()}", "MyPlugin", Qgis.Critical)
 
+    def heavyFunction():
+        # Some CPU intensive processing ...
+        pass
+
+    def workdone():
+        # ... do something useful with the results
+        pass
+
+    task = QgsTask.fromFunction('heavy function', heavyFunction,
+                        on_finished=workdone)
+
     def on_file_changed(self, file_path):
         """Slot called when the selected file changes."""
         """Slot chamado quando o arquivo selecionado muda."""
@@ -4031,6 +4065,131 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.plot1 = True
 
+        self.print_webview_index()
+
+    def print_webview_index(self):
+        """Configura listener de hover do Plotly que envia a data para Python.
+
+        Compatível com QtWebEngine (QWebEnginePage) e QtWebKit (QWebPage/mainFrame()).
+        Ao detectar a engine, registra um bridge e injeta um pequeno JS que liga
+        o evento 'plotly_hover' ao método Python bridge.receive(date_str).
+        """
+        page_widget = getattr(self, "webView", None)
+        if page_widget is None:
+            print("webView não encontrado")
+            return
+
+        qpage = page_widget.page()
+        if qpage is None:
+            print("webView.page() retornou None")
+            return
+
+        bridge = RAVIDialog._Bridge()
+        try:
+            # QtWebEngine path (async JS execution, QWebChannel)
+            # Only attempt QWebChannel path when QWebChannel is available
+            if QWebChannel is not None and (hasattr(qpage, "setWebChannel") or hasattr(page_widget, "setWebChannel")):
+                channel = QWebChannel()
+                channel.registerObject("bridge", bridge)
+                try:
+                    # prefer page.setWebChannel if available
+                    if hasattr(qpage, "setWebChannel"):
+                        qpage.setWebChannel(channel)
+                    else:
+                        page_widget.setWebChannel(channel)
+                except Exception:
+                    # ignore failures to set channel here
+                    pass
+
+                # inject qwebchannel.js and setup hover forwarding
+                js = """
+        var loadQWebChannelAndBind = function() {
+        var s = document.createElement('script');
+        s.src = 'qrc:///qtwebchannel/qwebchannel.js';
+        s.onload = function() {
+            new QWebChannel(qt.webChannelTransport, function(channel) {
+            window.bridge = channel.objects.bridge;
+            var setupHover = function(){
+                var plot = document.getElementsByClassName('plotly-graph-div')[0];
+                if (!plot || !window.Plotly) { setTimeout(setupHover,200); return; }
+                plot.on('plotly_hover', function(data){
+                try {
+                    var date = data.points[0].x;
+                    if (window.bridge && window.bridge.receive) window.bridge.receive(date.toString());
+                } catch(e){ console.log(e); }
+                });
+            };
+            setupHover();
+            });
+        };
+        document.head.appendChild(s);
+        };
+        loadQWebChannelAndBind();
+        """
+                try:
+                    # runJavaScript exists on QWebEnginePage
+                    if hasattr(qpage, "runJavaScript"):
+                        qpage.runJavaScript(js)
+                    else:
+                        # fallback to evaluateJavaScript if available (some QtWebKit bindings)
+                        if hasattr(qpage, "evaluateJavaScript"):
+                            qpage.evaluateJavaScript(js)
+                    print("Hover listener (QtWebEngine) injetado.")
+                    return
+                except Exception as e:
+                    print(f"Falha ao injetar JS QtWebEngine: {e}")
+
+            # QtWebKit fallback (síncrono via mainFrame())
+            if hasattr(qpage, "mainFrame") and callable(getattr(qpage, "mainFrame")):
+                try:
+                    frame = qpage.mainFrame()
+                    try:
+                        frame.addToJavaScriptWindowObject("bridge", bridge)
+                    except Exception:
+                        pass
+
+                    js_kit = """
+        var setupHover = function(){
+        var plot = document.getElementsByClassName('plotly-graph-div')[0];
+        if (!plot || !window.Plotly) { setTimeout(setupHover,200); return; }
+        plot.on('plotly_hover', function(data){
+            try {
+            var date = data.points[0].x;
+            if (window.bridge && window.bridge.receive) window.bridge.receive(date.toString());
+            } catch(e){ console.log(e); }
+        });
+        };
+        setupHover();
+        """
+                    frame.evaluateJavaScript(js_kit)
+                    print("Hover listener (QtWebKit) injetado.")
+                    return
+                except Exception as e:
+                    print(f"Falha ao injetar JS QtWebKit: {e}")
+
+        except Exception as e:
+            print(f"Erro ao configurar hover listener: {e}")
+
+        print("Não foi possível configurar listener de hover.")
+
+    def handle_html_index(self, html):
+        """Handler de debug que pode ser chamado tanto de toHtml(callback)
+        (assíncrono) quanto de mainFrame().toHtml() (síncrono).
+        """
+        try:
+            if html is None:
+                print("HTML retornado é None")
+                return
+            if isinstance(html, bytes):
+                try:
+                    html = html.decode('utf-8', errors='replace')
+                except Exception:
+                    html = str(html)
+            print(f"HTML length: {len(html)}")
+            print(html[:2000])
+        except Exception as e:
+            print(f"Erro em handle_html_index: {e}")
+
 
     def open_browser(self):
         """Opens the plot in a web browser."""
@@ -4566,6 +4725,32 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"Error in soil_image download/load: {e}")
             self.pop_warning(f"An error occurred while exporting/loading the soil image: {e}")
 
+
+    def toggle_coordinate_capture_tool_2(self, state):
+        print("toggle_coordinate_capture_tool_2 called")
+        """Toggles the coordinate capture tool based on the checkbox state."""
+        """Ativa/desativa a ferramenta de captura de coordenadas com base no
+        estado da checkbox."""
+        canvas = iface.mapCanvas()
+        if state == Qt.Checked:  # Checkbox is checked (active) / Checkbox
+            # está marcada (ativa)
+            # Deactivate any existing tool before activating the new one /
+            # Desativa qualquer ferramenta existente antes de ativar a nova
+            if canvas.mapTool():
+                canvas.unsetMapTool(canvas.mapTool())
+            if not self.coordinate_capture_tool:  # Only create if it doesn't exist / Cria somente se não existir
+                self.coordinate_capture_tool = CoordinateCaptureTool_2(canvas, self)
+                print("CoordinateCaptureTool created")
+            canvas.setMapTool(self.coordinate_capture_tool)
+            print("Coordinate capture tool activated.")
+            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+        else:  # Checkbox is unchecked (inactive) / Checkbox não está marcada
+            # (inativa)
+            self.deactivate_coordinate_capture_tool()
+            print("Coordinate capture tool deactivated.")
+            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+
+
     def soil_image(self):
         # ===================== PARÂMETROS AJUSTÁVEIS =====================
         # (Valores extraídos diretamente do código JS)
@@ -4625,7 +4810,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             rescale_flag = options.get('rescale_flag', 0)
             ndvi_thres = options.get('ndvi_thres', [-0.25, 0.25])
             nbr_thres = options.get('nbr_thres', [-0.3, 0.1])
-            vnsir_thres = options.get('vnsir_thres', 0.9)
+            vnsir_thres = options.get('vnsir_thres', [0, VNSIR_MAX])
 
             if rescale_flag == 1:
                 img = img.divide(SCALE_FACTOR)

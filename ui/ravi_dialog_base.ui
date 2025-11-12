@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1299</width>
-    <height>795</height>
+    <width>891</width>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -578,6 +578,24 @@ p, li { white-space: pre-wrap; }
       <string>Load Google Maps Layer</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>170</y>
+       <width>241</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Explor mode</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -767,7 +785,7 @@ p, li { white-space: pre-wrap; }
         <x>350</x>
         <y>30</y>
         <width>261</width>
-        <height>191</height>
+        <height>205</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
