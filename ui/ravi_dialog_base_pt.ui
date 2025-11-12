@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1464</width>
-    <height>785</height>
+    <width>973</width>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>12</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -246,69 +246,11 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>200</y>
-       <width>151</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Explor mode</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
      <string>Passo 2</string>
     </attribute>
-    <widget class="QGroupBox" name="groupBox_10">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>110</y>
-       <width>741</width>
-       <height>81</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="title">
-      <string>Selecionar pasta de saída (os arquivos gerados serão salvos nesta pasta):</string>
-     </property>
-     <widget class="QgsFileWidget" name="mQgsFileWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>721</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="storageMode">
-       <enum>QgsFileWidget::GetDirectory</enum>
-      </property>
-     </widget>
-    </widget>
     <widget class="QPushButton" name="QPushButton_back_4">
      <property name="enabled">
       <bool>true</bool>
@@ -359,6 +301,192 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
+    <widget class="QGroupBox" name="groupBox_25">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>741</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>Modo exploração</string>
+     </property>
+     <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>261</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Ativar clique no mapa</string>
+      </property>
+     </widget>
+     <widget class="QWebView" name="webView_point" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>711</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="locale">
+       <locale language="Portuguese" country="Brazil"/>
+      </property>
+      <property name="url" stdset="0">
+       <url>
+        <string/>
+       </url>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="hybrid_3">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>30</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Google Maps</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="navegador_7">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>30</y>
+        <width>201</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Abrir no navegador</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_7">
+      <property name="geometry">
+       <rect>
+        <x>690</x>
+        <y>30</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="indice_exporation_mode">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QgsFileWidget" name="mQgsFileWidget">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>0</y>
+       <width>531</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="storageMode">
+      <enum>QgsFileWidget::GetDirectory</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_49">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>13</y>
+       <width>211</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Selecionar pasta de saída:</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_4">
     <attribute name="title">
@@ -395,7 +523,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>10</y>
        <width>741</width>
-       <height>91</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
@@ -406,7 +534,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Selecione a área de interesse (AOI):Carregue ou crie uma camada vetorial. Atualize para listá-la.</string>
+      <string>Selecione a área de interesse (AOI): Carregue ou crie uma camada vetorial.</string>
      </property>
      <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox">
       <property name="geometry">
@@ -414,7 +542,7 @@ p, li { white-space: pre-wrap; }
         <x>10</x>
         <y>30</y>
         <width>721</width>
-        <height>41</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -450,8 +578,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>110</y>
-       <width>451</width>
-       <height>121</height>
+       <width>741</width>
+       <height>71</height>
       </rect>
      </property>
      <property name="font">
@@ -469,8 +597,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>431</width>
-        <height>51</height>
+        <width>301</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -485,8 +613,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="drawing">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>80</y>
+        <x>320</x>
+        <y>30</y>
         <width>411</width>
         <height>20</height>
        </rect>

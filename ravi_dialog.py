@@ -357,6 +357,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
+        self.indice_exporation_mode.addItems(vegetation_index)
+        
         self.series_indice_2.addItems(vegetation_index)
         self.series_indice_3.addItems(vegetation_index)
         self.series_indice.addItems(vegetation_index)
@@ -835,7 +837,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # 2. Buffer the point to create a *very* small polygon (e.g., 2
             # meters) / Cria um buffer no ponto para criar um polígono *muito*
             # pequeno (ex: 2 metros)
-            aoi = point.buffer(2)
+            # aoi = point.buffer(2)
 
             # Do something with the aoi (e.g., print its information) / Faz
             # algo com a aoi (ex: imprime suas informações)
@@ -848,7 +850,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.df_points = self.df_aux[["date", "AOI_average"]]
                 self.df_points["date"] = pd.to_datetime(self.df_points["date"])
 
-            new_df = self.point_calculate_timeseries(aoi, name)
+            new_df = self.point_calculate_timeseries(point, name)
             new_df["date"] = pd.to_datetime(new_df["date"])
             print(new_df)
             self.df_points = pd.merge(
@@ -905,13 +907,13 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.collection_info_pt = []
 
         sentinel2_point_collection = self.AOI_coverage_filter(
-            sentinel2_point_collection, aoi_circle, .9
+            sentinel2_point_collection, aoi_circle, .95
         )
 
         print("Sentinel-2 collection size after AOI coverage filter for point AOI:", sentinel2_point_collection.size().getInfo())   
 
         sentinel2_point_collection = self.SCL_filter(
-            sentinel2_point_collection, aoi_circle, .9
+            sentinel2_point_collection, aoi_circle, .95
         )
         print("Applied local SCL percentage filter for point AOI.")
 
@@ -919,6 +921,33 @@ class RAVIDialog(QDialog, FORM_CLASS):
         sentinel2_point_collection = self.uniqueday_collection(sentinel2_point_collection)
         final_count = sentinel2_point_collection.size().getInfo()
         print(f"Final sentinel-2 count for point AOI: {final_count}")
+
+        self.sentinel2_point_collection = sentinel2_point_collection
+
+        self.point = point
+
+        self.df_exploration = self.calculate_timeseries_exploration_mode(point)
+        print(self.df_exploration)
+
+        self.plot_timeseries_exploration_mode()
+
+    def plot_timeseries_exploration_mode(self):
+
+        df = self.df_exploration.copy()
+
+        print("Plotting time series for points...")
+
+        print(df.shape)
+
+
+        # #fig.show()
+
+        # self.webView_exploration.setHtml(
+        #     self.fig_exploration.to_html(include_plotlyjs="cdn", config=self.config)
+        # )
+        
+        # print("exploration info calculated and plotted.")
+    
 
 
 
@@ -1318,7 +1347,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             QgsProject.instance().addMapLayer(loaded_layer)
             print(f"Layer added successfully with CRS: {loaded_layer.crs().authid()}")
-
     
     def salvar_clicked(self):
         """Handles the event when the save button is clicked."""
@@ -1549,6 +1577,69 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print("Points info updated and ploted).")
         except:
             pass
+
+    def plot_timeseries_points(self):
+        print("Plotting time series for points...")
+
+        df = self.df_aux_points
+        print(df.shape)
+
+        # Melt the dataframe to have a long format
+        df_melted = df.melt(
+            id_vars="date",
+            var_name="Points (lat, long)",
+            value_name=self.series_indice.currentText(),
+        )
+
+        # Get unique point labels
+        unique_points = df_melted["Points (lat, long)"].unique()
+        
+        # Create color mapping
+        color_map = {}
+        
+        # Use blue for the first point
+        if len(unique_points) > 0:
+            color_map[unique_points[0]] = "blue"
+        
+        # Use the captured colors for the remaining points
+        for i, point in enumerate(unique_points[1:], 1):
+            if i-1 < len(CoordinateCaptureTool.DOT_COLORS):
+                # Convert QColor to hex string
+                qcolor = CoordinateCaptureTool.DOT_COLORS[i-1]
+                hex_color = f"#{qcolor.red():02x}{qcolor.green():02x}{qcolor.blue():02x}"
+                color_map[point] = hex_color
+        
+        print("Color mapping:")
+        print(color_map)
+
+        # Create the line plot with custom colors
+        fig = px.line(
+            df_melted,
+            x="date",
+            y=self.series_indice.currentText(),
+            color="Points (lat, long)",
+            line_dash="Points (lat, long)",
+            title=f"Time Series - {self.series_indice.currentText()} - Points",
+            color_discrete_map=color_map
+        )
+        
+        fig.update_layout(
+            yaxis_title=self.series_indice.currentText(),
+            title=f"Time Series - {self.series_indice.currentText()} - Points",
+            xaxis_title=None,  # Remove x-axis label
+        )
+        
+        self.fig_3 = fig
+        #fig.show()
+
+        self.webView_2.setHtml(
+            fig.to_html(include_plotlyjs="cdn", config=self.config)
+        )
+        
+        print("Feature info calculated and plotted.")
+        
+        # print('colors:')
+        # print(CoordinateCaptureTool.DOT_COLORS)
 
     def toggle_group_visibility(self, group_widget, toggle_button, group_label):
         """
@@ -2400,6 +2491,22 @@ class RAVIDialog(QDialog, FORM_CLASS):
         final_image = first_image.select(0).multiply(0).add(auc_image)
         
         return final_image
+
+    def calculate_timeseries_exploration_mode(self, aoi):
+        """Calculates the time series of the selected vegetation index for a specific point."""
+        print("Calculating time series in exploration mode...")
+        vegetation_index = "NDVI"
+        name = "Novo ponto"
+
+        result = self.sentinel2_point_collection.map(lambda image: self.calculate_index_with_mean(image, vegetation_index, aoi))
+        result = result.filter(ee.Filter.notNull(["mean_index"]))
+
+        # Retrieve dates and mean index values separately using aggregate_array
+        dates = result.aggregate_array("date").getInfo()
+        mean_indices = result.aggregate_array("mean_index").getInfo()
+
+        print(f"Creating DataFrame for {name}")
+        return pd.DataFrame({"date": dates, name: mean_indices})
 
     def calculate_timeseries(self):
         """Calculates the time series of the selected vegetation index for the AOI."""

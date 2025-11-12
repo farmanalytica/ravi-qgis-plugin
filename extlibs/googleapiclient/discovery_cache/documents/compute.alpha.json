@@ -126,7 +126,7 @@
 "acceleratorTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/acceleratorTypes",
 "httpMethod": "GET",
 "id": "compute.acceleratorTypes.aggregatedList",
@@ -302,7 +302,7 @@
 "addresses": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/addresses",
 "httpMethod": "GET",
 "id": "compute.addresses.aggregatedList",
@@ -791,7 +791,7 @@
 "autoscalers": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/autoscalers",
 "httpMethod": "GET",
 "id": "compute.autoscalers.aggregatedList",
@@ -1854,7 +1854,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/backendServices",
 "httpMethod": "GET",
 "id": "compute.backendServices.aggregatedList",
@@ -2853,7 +2853,7 @@
 "diskTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/diskTypes",
 "httpMethod": "GET",
 "id": "compute.diskTypes.aggregatedList",
@@ -3079,7 +3079,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/disks",
 "httpMethod": "GET",
 "id": "compute.disks.aggregatedList",
@@ -5439,7 +5439,7 @@
 "forwardingRules": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/forwardingRules",
 "httpMethod": "GET",
 "id": "compute.forwardingRules.aggregatedList",
@@ -5900,7 +5900,7 @@
 "futureReservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, recommendation is that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/futureReservations",
 "httpMethod": "GET",
 "id": "compute.futureReservations.aggregatedList",
@@ -7924,8 +7924,8 @@
 },
 "delete": {
 "description": "Purge scoped resources (zonal policies) from a global VM extension\npolicy, and then delete the global VM extension policy. Purge of the scoped\nresources is a pre-condition of the global VM extension policy deletion.\nThe deletion of the global VM extension policy happens after the purge\nrollout is done, so it's not a part of the LRO. It's an automatic process\nthat triggers in the backend.",
-"flatPath": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}",
-"httpMethod": "PATCH",
+"flatPath": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}/delete",
+"httpMethod": "POST",
 "id": "compute.globalVmExtensionPolicies.delete",
 "parameterOrder": [
 "project",
@@ -7949,39 +7949,12 @@
 "description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
 "location": "query",
 "type": "string"
-},
-"rolloutInput.conflictBehavior": {
-"description": "Optional. [Optional] Specifies the behavior of the Rollout if a conflict is\ndetected in a project during a Rollout. It can be one of the following\nvalues:\n1) empty : don't overwrite the local value if conflict happens. This is\nthe default behavior.\n2) \"overwrite\" : Overwrite the local value with the rollout value.\nThe concept of \"conflict\" applies to:\n1) Insert action. If the zonal policy already exists when Insert\nhappens, it's a conflict.\n2) Update action. If the zonal policy was updated out of band by a\nzonal API, it's a conflict.",
-"location": "query",
-"type": "string"
-},
-"rolloutInput.name": {
-"description": "Optional. The name of the rollout plan.\nEx.\nprojects//locations/global/rolloutPlans/.",
-"location": "query",
-"type": "string"
-},
-"rolloutInput.predefinedRolloutPlan": {
-"description": "Optional. Predefined rollout plan.",
-"enum": [
-"FAST_ROLLOUT",
-"ROLLOUT_PLAN_UNSPECIFIED",
-"SLOW_ROLLOUT"
-],
-"enumDescriptions": [
-"",
-"",
-""
-],
-"location": "query",
-"type": "string"
-},
-"rolloutInput.retryUuid": {
-"description": "Optional. The UUID of the retry action. Only set it if this is a retry\nfor an existing resource. This is for the user re-populate the resource\nwithout changes. An error will be returned if the retry_uuid is set but\nthe resource get modified.",
-"location": "query",
-"type": "string"
 }
 },
-"path": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}",
+"path": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}/delete",
+"request": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperationRolloutInput"
+},
 "response": {
 "$ref": "Operation"
 },
@@ -8159,6 +8132,72 @@
 },
 "haControllers": {
 "methods": {
+"aggregatedList": {
+"description": "Retrieves an aggregated list of all of the HaControllers in the specified\nproject across all regions.",
+"flatPath": "projects/{project}/aggregated/haControllers",
+"httpMethod": "GET",
+"id": "compute.haControllers.aggregatedList",
+"parameterOrder": [
+"project"
+],
+"parameters": {
+"filter": {
+"description": "A filter expression that filters resources listed in the response. Most\nCompute resources support two types of filter expressions:\nexpressions that support regular expressions and expressions that follow\nAPI improvement proposal AIP-160.\nThese two types of filter expressions cannot be mixed in one request.\n\nIf you want to use AIP-160, your expression must specify the field name, an\noperator, and the value that you want to use for filtering. The value\nmust be a string, a number, or a boolean. The operator\nmust be either `=`, `!=`, `>`, `<`, `<=`, `>=` or `:`.\n\nFor example, if you are filtering Compute Engine instances, you can\nexclude instances named `example-instance` by specifying\n`name != example-instance`.\n\nThe `:*` comparison can be used to test whether a key has been defined.\nFor example, to find all objects with `owner` label use:\n```\nlabels.owner:*\n```\n\nYou can also filter nested fields. For example, you could specify\n`scheduling.automaticRestart = false` to include instances only\nif they are not scheduled for automatic restarts. You can use filtering\non nested fields to filter based onresource labels.\n\nTo filter on multiple expressions, provide each separate expression within\nparentheses. For example:\n```\n(scheduling.automaticRestart = true)\n(cpuPlatform = \"Intel Skylake\")\n```\nBy default, each expression is an `AND` expression. However, you\ncan include `AND` and `OR` expressions explicitly.\nFor example:\n```\n(cpuPlatform = \"Intel Skylake\") OR\n(cpuPlatform = \"Intel Broadwell\") AND\n(scheduling.automaticRestart = true)\n```\n\nIf you want to use a regular expression, use the `eq` (equal) or `ne`\n(not equal) operator against a single un-parenthesized expression with or\nwithout quotes or against multiple parenthesized expressions. Examples:\n\n`fieldname eq unquoted literal`\n`fieldname eq 'single quoted literal'`\n`fieldname eq \"double quoted literal\"`\n`(fieldname1 eq literal) (fieldname2 ne \"literal\")`\n\nThe literal value is interpreted as a regular expression using GoogleRE2 library syntax.\nThe literal value must match the entire field.\n\nFor example, to filter for instances that do not end with name \"instance\",\nyou would use `name ne .*instance`.\n\nYou cannot combine constraints on multiple fields using regular\nexpressions.",
+"location": "query",
+"type": "string"
+},
+"includeAllScopes": {
+"description": "Indicates whether every visible scope for each scope type (zone, region,\nglobal) should be included in the response. For new resource types added\nafter this field, the flag has no effect as new resource types will always\ninclude every visible scope for each scope type in response. For resource\ntypes which predate this field, if this flag is omitted or false, only\nscopes of the scope types where the resource type is expected to be found\nwill be included.",
+"location": "query",
+"type": "boolean"
+},
+"maxResults": {
+"default": "500",
+"description": "The maximum number of results per page that should be returned.\nIf the number of available results is larger than `maxResults`,\nCompute Engine returns a `nextPageToken` that can be used to get\nthe next page of results in subsequent list requests. Acceptable values are\n`0` to `500`, inclusive. (Default: `500`)",
+"format": "uint32",
+"location": "query",
+"minimum": "0",
+"type": "integer"
+},
+"orderBy": {
+"description": "Sorts list results by a certain order. By default, results\nare returned in alphanumerical order based on the resource name.\n\nYou can also sort results in descending order based on the creation\ntimestamp using `orderBy=\"creationTimestamp desc\"`. This sorts\nresults based on the `creationTimestamp` field in\nreverse chronological order (newest result first). Use this to sort\nresources like operations so that the newest operation is returned first.\n\nCurrently, only sorting by `name` or\n`creationTimestamp desc` is supported.",
+"location": "query",
+"type": "string"
+},
+"pageToken": {
+"description": "Specifies a page token to use. Set `pageToken` to the\n`nextPageToken` returned by a previous list request to get\nthe next page of results.",
+"location": "query",
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"returnPartialSuccess": {
+"description": "Opt-in for partial success behavior which provides partial results in case\nof failure. The default value is false.\n\nFor example, when partial success behavior is enabled, aggregatedList for a\nsingle zone scope either returns all resources in the zone or no resources,\nwith an error code.",
+"location": "query",
+"type": "boolean"
+},
+"serviceProjectNumber": {
+"description": "The Shared VPC service project id or service project number for which\naggregated list request is invoked for subnetworks list-usable api.",
+"format": "int64",
+"location": "query",
+"type": "string"
+}
+},
+"path": "projects/{project}/aggregated/haControllers",
+"response": {
+"$ref": "HaControllersAggregatedList"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
 "delete": {
 "description": "Deletes an HaController in the specified project.",
 "flatPath": "projects/{project}/regions/{region}/haControllers/{haController}",
@@ -20634,7 +20673,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/firewallPolicies",
 "httpMethod": "GET",
 "id": "compute.networkFirewallPolicies.aggregatedList",
@@ -25071,7 +25110,7 @@
 },
 "moveDisk": {
 "deprecated": true,
-"description": "Starting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://{$universe.dns_names.final_documentation_domain}/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
+"description": "Moves a persistent disk from one zone to another.\n*Note*: The moveDisk API will be deprecated on September 29, 2026.\n\nStarting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://cloud.google.com/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
 "flatPath": "projects/{project}/moveDisk",
 "httpMethod": "POST",
 "id": "compute.projects.moveDisk",
@@ -27793,7 +27832,7 @@
 "regionCommitments": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/commitments",
 "httpMethod": "GET",
 "id": "compute.regionCommitments.aggregatedList",
@@ -28262,7 +28301,7 @@
 "regionCompositeHealthChecks": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves the list of all CompositeHealthCheck resources (all\nregional) available to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all CompositeHealthCheck resources (all\nregional) available to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/compositeHealthChecks",
 "httpMethod": "GET",
 "id": "compute.regionCompositeHealthChecks.aggregatedList",
@@ -29797,7 +29836,7 @@
 "regionHealthAggregationPolicies": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves the list of all HealthAggregationPolicy resources,\nregional and global, available to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all HealthAggregationPolicy resources,\nregional and global, available to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/healthAggregationPolicies",
 "httpMethod": "GET",
 "id": "compute.regionHealthAggregationPolicies.aggregatedList",
@@ -30157,7 +30196,7 @@
 "regionHealthCheckServices": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves the list of all HealthCheckService resources,\nregional and global, available to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all HealthCheckService resources,\nregional and global, available to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/healthCheckServices",
 "httpMethod": "GET",
 "id": "compute.regionHealthCheckServices.aggregatedList",
@@ -40603,7 +40642,7 @@
 "reservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/reservations",
 "httpMethod": "GET",
 "id": "compute.reservations.aggregatedList",
@@ -41621,6 +41660,350 @@
 },
 "response": {
 "$ref": "TestPermissionsResponse"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+}
+}
+},
+"rolloutPlans": {
+"methods": {
+"delete": {
+"description": "Deletes a RolloutPlan.",
+"flatPath": "projects/{project}/global/rolloutPlans/{rolloutPlan}",
+"httpMethod": "DELETE",
+"id": "compute.rolloutPlans.delete",
+"parameterOrder": [
+"project",
+"rolloutPlan"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"rolloutPlan": {
+"description": "Name of the RolloutPlan resource to delete.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rolloutPlans/{rolloutPlan}",
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"get": {
+"description": "Gets details of a single project-scoped RolloutPlan.",
+"flatPath": "projects/{project}/global/rolloutPlans/{rolloutPlan}",
+"httpMethod": "GET",
+"id": "compute.rolloutPlans.get",
+"parameterOrder": [
+"project",
+"rolloutPlan"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"rolloutPlan": {
+"description": "Name of the persistent rollout plan to return.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rolloutPlans/{rolloutPlan}",
+"response": {
+"$ref": "RolloutPlan"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"insert": {
+"description": "Creates a new RolloutPlan in a given project and location.",
+"flatPath": "projects/{project}/global/rolloutPlans",
+"httpMethod": "POST",
+"id": "compute.rolloutPlans.insert",
+"parameterOrder": [
+"project"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rolloutPlans",
+"request": {
+"$ref": "RolloutPlan"
+},
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"list": {
+"description": "Lists RolloutPlans in a given project and location.",
+"flatPath": "projects/{project}/global/rolloutPlans",
+"httpMethod": "GET",
+"id": "compute.rolloutPlans.list",
+"parameterOrder": [
+"project"
+],
+"parameters": {
+"filter": {
+"description": "A filter expression that filters resources listed in the response. Most\nCompute resources support two types of filter expressions:\nexpressions that support regular expressions and expressions that follow\nAPI improvement proposal AIP-160.\nThese two types of filter expressions cannot be mixed in one request.\n\nIf you want to use AIP-160, your expression must specify the field name, an\noperator, and the value that you want to use for filtering. The value\nmust be a string, a number, or a boolean. The operator\nmust be either `=`, `!=`, `>`, `<`, `<=`, `>=` or `:`.\n\nFor example, if you are filtering Compute Engine instances, you can\nexclude instances named `example-instance` by specifying\n`name != example-instance`.\n\nThe `:*` comparison can be used to test whether a key has been defined.\nFor example, to find all objects with `owner` label use:\n```\nlabels.owner:*\n```\n\nYou can also filter nested fields. For example, you could specify\n`scheduling.automaticRestart = false` to include instances only\nif they are not scheduled for automatic restarts. You can use filtering\non nested fields to filter based onresource labels.\n\nTo filter on multiple expressions, provide each separate expression within\nparentheses. For example:\n```\n(scheduling.automaticRestart = true)\n(cpuPlatform = \"Intel Skylake\")\n```\nBy default, each expression is an `AND` expression. However, you\ncan include `AND` and `OR` expressions explicitly.\nFor example:\n```\n(cpuPlatform = \"Intel Skylake\") OR\n(cpuPlatform = \"Intel Broadwell\") AND\n(scheduling.automaticRestart = true)\n```\n\nIf you want to use a regular expression, use the `eq` (equal) or `ne`\n(not equal) operator against a single un-parenthesized expression with or\nwithout quotes or against multiple parenthesized expressions. Examples:\n\n`fieldname eq unquoted literal`\n`fieldname eq 'single quoted literal'`\n`fieldname eq \"double quoted literal\"`\n`(fieldname1 eq literal) (fieldname2 ne \"literal\")`\n\nThe literal value is interpreted as a regular expression using GoogleRE2 library syntax.\nThe literal value must match the entire field.\n\nFor example, to filter for instances that do not end with name \"instance\",\nyou would use `name ne .*instance`.\n\nYou cannot combine constraints on multiple fields using regular\nexpressions.",
+"location": "query",
+"type": "string"
+},
+"maxResults": {
+"default": "500",
+"description": "The maximum number of results per page that should be returned.\nIf the number of available results is larger than `maxResults`,\nCompute Engine returns a `nextPageToken` that can be used to get\nthe next page of results in subsequent list requests. Acceptable values are\n`0` to `500`, inclusive. (Default: `500`)",
+"format": "uint32",
+"location": "query",
+"minimum": "0",
+"type": "integer"
+},
+"orderBy": {
+"description": "Sorts list results by a certain order. By default, results\nare returned in alphanumerical order based on the resource name.\n\nYou can also sort results in descending order based on the creation\ntimestamp using `orderBy=\"creationTimestamp desc\"`. This sorts\nresults based on the `creationTimestamp` field in\nreverse chronological order (newest result first). Use this to sort\nresources like operations so that the newest operation is returned first.\n\nCurrently, only sorting by `name` or\n`creationTimestamp desc` is supported.",
+"location": "query",
+"type": "string"
+},
+"pageToken": {
+"description": "Specifies a page token to use. Set `pageToken` to the\n`nextPageToken` returned by a previous list request to get\nthe next page of results.",
+"location": "query",
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"returnPartialSuccess": {
+"description": "Opt-in for partial success behavior which provides partial results in case\nof failure. The default value is false.\n\nFor example, when partial success behavior is enabled, aggregatedList for a\nsingle zone scope either returns all resources in the zone or no resources,\nwith an error code.",
+"location": "query",
+"type": "boolean"
+}
+},
+"path": "projects/{project}/global/rolloutPlans",
+"response": {
+"$ref": "RolloutPlansListResponse"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+}
+}
+},
+"rollouts": {
+"methods": {
+"cancel": {
+"description": "Cancels a Rollout.",
+"flatPath": "projects/{project}/global/rollouts/{rollout}",
+"httpMethod": "PATCH",
+"id": "compute.rollouts.cancel",
+"parameterOrder": [
+"project",
+"rollout"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"rollback": {
+"description": "Optional. If true, then the ongoing rollout must be rolled back. Else, just cancel\nthe rollout without taking any further actions. Note that products must\nsupport at least one of these options, however, it does not need to support\nboth.",
+"location": "query",
+"type": "boolean"
+},
+"rollout": {
+"description": "Name of the Rollout resource to cancel.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rollouts/{rollout}",
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"delete": {
+"description": "Deletes a Rollout.",
+"flatPath": "projects/{project}/global/rollouts/{rollout}",
+"httpMethod": "DELETE",
+"id": "compute.rollouts.delete",
+"parameterOrder": [
+"project",
+"rollout"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"rollout": {
+"description": "Name of the Rollout resource to delete.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rollouts/{rollout}",
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"get": {
+"description": "Gets details of a single project-scoped Rollout.",
+"flatPath": "projects/{project}/global/rollouts/{rollout}",
+"httpMethod": "GET",
+"id": "compute.rollouts.get",
+"parameterOrder": [
+"project",
+"rollout"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"rollout": {
+"description": "Name of the persistent rollout to return.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/rollouts/{rollout}",
+"response": {
+"$ref": "Rollout"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"list": {
+"description": "Lists Rollouts in a given project and location.",
+"flatPath": "projects/{project}/global/rollouts",
+"httpMethod": "GET",
+"id": "compute.rollouts.list",
+"parameterOrder": [
+"project"
+],
+"parameters": {
+"filter": {
+"description": "A filter expression that filters resources listed in the response. Most\nCompute resources support two types of filter expressions:\nexpressions that support regular expressions and expressions that follow\nAPI improvement proposal AIP-160.\nThese two types of filter expressions cannot be mixed in one request.\n\nIf you want to use AIP-160, your expression must specify the field name, an\noperator, and the value that you want to use for filtering. The value\nmust be a string, a number, or a boolean. The operator\nmust be either `=`, `!=`, `>`, `<`, `<=`, `>=` or `:`.\n\nFor example, if you are filtering Compute Engine instances, you can\nexclude instances named `example-instance` by specifying\n`name != example-instance`.\n\nThe `:*` comparison can be used to test whether a key has been defined.\nFor example, to find all objects with `owner` label use:\n```\nlabels.owner:*\n```\n\nYou can also filter nested fields. For example, you could specify\n`scheduling.automaticRestart = false` to include instances only\nif they are not scheduled for automatic restarts. You can use filtering\non nested fields to filter based onresource labels.\n\nTo filter on multiple expressions, provide each separate expression within\nparentheses. For example:\n```\n(scheduling.automaticRestart = true)\n(cpuPlatform = \"Intel Skylake\")\n```\nBy default, each expression is an `AND` expression. However, you\ncan include `AND` and `OR` expressions explicitly.\nFor example:\n```\n(cpuPlatform = \"Intel Skylake\") OR\n(cpuPlatform = \"Intel Broadwell\") AND\n(scheduling.automaticRestart = true)\n```\n\nIf you want to use a regular expression, use the `eq` (equal) or `ne`\n(not equal) operator against a single un-parenthesized expression with or\nwithout quotes or against multiple parenthesized expressions. Examples:\n\n`fieldname eq unquoted literal`\n`fieldname eq 'single quoted literal'`\n`fieldname eq \"double quoted literal\"`\n`(fieldname1 eq literal) (fieldname2 ne \"literal\")`\n\nThe literal value is interpreted as a regular expression using GoogleRE2 library syntax.\nThe literal value must match the entire field.\n\nFor example, to filter for instances that do not end with name \"instance\",\nyou would use `name ne .*instance`.\n\nYou cannot combine constraints on multiple fields using regular\nexpressions.",
+"location": "query",
+"type": "string"
+},
+"maxResults": {
+"default": "500",
+"description": "The maximum number of results per page that should be returned.\nIf the number of available results is larger than `maxResults`,\nCompute Engine returns a `nextPageToken` that can be used to get\nthe next page of results in subsequent list requests. Acceptable values are\n`0` to `500`, inclusive. (Default: `500`)",
+"format": "uint32",
+"location": "query",
+"minimum": "0",
+"type": "integer"
+},
+"orderBy": {
+"description": "Sorts list results by a certain order. By default, results\nare returned in alphanumerical order based on the resource name.\n\nYou can also sort results in descending order based on the creation\ntimestamp using `orderBy=\"creationTimestamp desc\"`. This sorts\nresults based on the `creationTimestamp` field in\nreverse chronological order (newest result first). Use this to sort\nresources like operations so that the newest operation is returned first.\n\nCurrently, only sorting by `name` or\n`creationTimestamp desc` is supported.",
+"location": "query",
+"type": "string"
+},
+"pageToken": {
+"description": "Specifies a page token to use. Set `pageToken` to the\n`nextPageToken` returned by a previous list request to get\nthe next page of results.",
+"location": "query",
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"returnPartialSuccess": {
+"description": "Opt-in for partial success behavior which provides partial results in case\nof failure. The default value is false.\n\nFor example, when partial success behavior is enabled, aggregatedList for a\nsingle zone scope either returns all resources in the zone or no resources,\nwith an error code.",
+"location": "query",
+"type": "boolean"
+}
+},
+"path": "projects/{project}/global/rollouts",
+"response": {
+"$ref": "RolloutsListResponse"
 },
 "scopes": [
 "https://www.googleapis.com/auth/cloud-platform",
@@ -46401,6 +46784,20 @@
 "description": "The Shared VPC service project id or service project number for which\naggregated list request is invoked for subnetworks list-usable api.",
 "format": "int64",
 "location": "query",
+"type": "string"
+},
+"views": {
+"description": "Defines the extra views returned back in the subnetwork resource.\nSupported values:\n   \n   - WITH_UTILIZATION: Utilization data is included in the\n   response.",
+"enum": [
+"DEFAULT",
+"WITH_UTILIZATION"
+],
+"enumDescriptions": [
+"",
+"Utilization data is included in the response."
+],
+"location": "query",
+"repeated": true,
 "type": "string"
 }
 },
@@ -52783,7 +53180,7 @@
 }
 }
 },
-"revision": "20250930",
+"revision": "20251019",
 "rootUrl": "https://compute.googleapis.com/",
 "schemas": {
 "AWSV4Signature": {
@@ -56234,7 +56631,7 @@ false
 "id": "BackendBucketCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -56730,7 +57127,7 @@ false
 "type": "number"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -57384,7 +57781,7 @@ false
 "id": "BackendServiceCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -57449,7 +57846,7 @@ false
 "type": "boolean"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -58127,7 +58524,7 @@ false
 "type": "string"
 },
 "identity": {
-"description": "Assigns the Managed Identity for the RegionBackendService Workload.\n\n\nUse this property to configure the load balancer back-end to use\ncertificates and roots of trust provisioned by the Managed Workload\nIdentity system. \n\n The `managedIdentity` property is the\nfully-specified SPIFFE ID to use in the SVID presented by the Load\nBalancer Workload. \n\n The SPIFFE ID must be a resource starting with the\n\"spiffe\" scheme identifier, followed by the \"trustDomain\" property value,\nfollowed by the path to the Managed Workload Identity. \n\n Supported\nSPIFFE ID format: \n   \n   - spiffe://<trust_domain>/ns/<namespace>/sa/<subject>\n\n\nThe Trust Domain within the Managed Identity must refer to a valid\nWorkload Identity Pool. The TrustConfig and CertificateIssuanceConfig\nwill be inherited from the Workload Identity Pool. \n\n Restrictions: \n   \n   - If you set the `managedIdentity` property, you cannot manually set\n   the following fields: \n       - tlsSettings.sni\n      - tlsSettings.subjectAltNames\n      - tlsSettings.authenticationConfig\n   \n\nWhen defining a `managedIdentity` for a RegionBackendServices, the\ncorresponding Workload Identity Pool must have a ca_pool\nconfigured in the same region. \n\n The system will set up a read-onlytlsSettings.authenticationConfig for the Managed Identity.",
+"description": "Assigns the Managed Identity for the BackendService Workload.\n\n\nUse this property to configure the load balancer back-end to use\ncertificates and roots of trust provisioned by the Managed Workload\nIdentity system. \n\n The `identity` property is the\nfully-specified SPIFFE ID to use in the SVID presented by the Load\nBalancer Workload. \n\n The SPIFFE ID must be a resource starting with the\n`trustDomain` property value, followed by the path to the Managed\nWorkload Identity. \n\n Supported SPIFFE ID format: \n   \n   - //<trust_domain>/ns/<namespace>/sa/<subject>\n\n\nThe Trust Domain within the Managed Identity must refer to a valid\nWorkload Identity Pool. The TrustConfig and CertificateIssuanceConfig\nwill be inherited from the Workload Identity Pool. \n\n Restrictions: \n   \n   - If you set the `identity` property, you cannot manually set\n   the following fields: \n       - tlsSettings.sni\n      - tlsSettings.subjectAltNames\n      - tlsSettings.authenticationConfig\n   \n\nWhen defining a `identity` for a RegionBackendServices, the\ncorresponding Workload Identity Pool must have a ca_pool\nconfigured in the same region. \n\n The system will set up a read-onlytlsSettings.authenticationConfig for the Managed Identity.",
 "type": "string"
 },
 "sni": {
@@ -59160,7 +59557,7 @@ false
 "type": "number"
 },
 "uptimeScore": {
-"description": "The uptime score indicates the availability of your Spot VMs. For more\ninformation about the preemption process, see Preemption\nof Spot VMs.\nThe score range is 0.0 through 1.0. Higher is better.",
+"description": "The uptime score indicates the likelihood that your Spot VMs will\ncontinue to run without preemption within the next few hours. For more\ninformation about the preemption process, see Preemption\nof Spot VMs.\nThe score range is 0.0 through 1.0. Higher is better.",
 "format": "double",
 "type": "number"
 }
@@ -59377,9 +59774,11 @@ false
 "INVALID",
 "SIXTY_MONTH",
 "THIRTY_SIX_MONTH",
-"TWELVE_MONTH"
+"TWELVE_MONTH",
+"TWENTY_FOUR_MONTH"
 ],
 "enumDescriptions": [
+"",
 "",
 "",
 "",
@@ -63866,11 +64265,13 @@ false
 "policyType": {
 "description": "The type of the firewall policy. This field can be eitherVPC_POLICY or RDMA_ROCE_POLICY.\n\nNote: if not specified then VPC_POLICY will be used.",
 "enum": [
+"RDMA_FALCON_POLICY",
 "RDMA_ROCE_POLICY",
 "ULL_POLICY",
 "VPC_POLICY"
 ],
 "enumDescriptions": [
+"",
 "",
 "",
 ""
@@ -65434,9 +65835,11 @@ false
 "INVALID",
 "SIXTY_MONTH",
 "THIRTY_SIX_MONTH",
-"TWELVE_MONTH"
+"TWELVE_MONTH",
+"TWENTY_FOUR_MONTH"
 ],
 "enumDescriptions": [
+"",
 "",
 "",
 "",
@@ -67783,11 +68186,182 @@ false
 },
 "type": "object"
 },
+"HaControllersAggregatedList": {
+"id": "HaControllersAggregatedList",
+"properties": {
+"etag": {
+"type": "string"
+},
+"id": {
+"description": "[Output Only] Unique identifier for the resource; defined by the server.",
+"type": "string"
+},
+"items": {
+"additionalProperties": {
+"$ref": "HaControllersScopedList",
+"description": "Name of the scope containing this set of ha controllers."
+},
+"description": "A list of HaControllersScopedList resources.",
+"type": "object"
+},
+"kind": {
+"default": "compute#haControllersAggregatedList",
+"description": "[Output Only] Type of resource. Alwayscompute#haControllersAggregatedList for lists of\nHaControllers.",
+"type": "string"
+},
+"nextPageToken": {
+"description": "[Output Only] This token allows you to get the next page of results for\nlist requests. If the number of results is larger thanmaxResults, use the nextPageToken as a value for\nthe query parameter pageToken in the next list request.\nSubsequent list requests will have their own nextPageToken to\ncontinue paging through the results.",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined URL for this resource.",
+"type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"warning": {
+"description": "[Output Only] Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
 "HaControllersFailoverRequest": {
 "id": "HaControllersFailoverRequest",
 "properties": {
-"primaryZone": {
+"failoverToZone": {
 "description": "Name of the destination zone for the failover.",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"type": "string"
+},
+"primaryZone": {
+"deprecated": true,
+"description": "Name of the destination zone for the failover.\nDeprecated: use failover_to_zone instead.",
 "pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
 "type": "string"
 }
@@ -67828,6 +68402,143 @@ false
 },
 "warning": {
 "description": "Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
+"HaControllersScopedList": {
+"id": "HaControllersScopedList",
+"properties": {
+"haControllers": {
+"description": "List of HaControllers contained in this scope.",
+"items": {
+"$ref": "HaController"
+},
+"type": "array"
+},
+"warning": {
+"description": "Informational warning which replaces the list of\nbackend services when the list is empty.",
 "properties": {
 "code": {
 "description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
@@ -71710,9 +72421,11 @@ false
 "type": "string"
 },
 "identity": {
+"deprecated": true,
 "type": "string"
 },
 "identityCertificate": {
+"deprecated": true,
 "type": "boolean"
 },
 "instanceEncryptionKey": {
@@ -71963,6 +72676,9 @@ false
 "upcomingMaintenance": {
 "$ref": "UpcomingMaintenance",
 "description": "[Output Only] DEPRECATED: Please useresource_status.upcoming_maintenance instead. Specifies\nupcoming maintenance for the instance."
+},
+"workloadIdentityConfig": {
+"$ref": "WorkloadIdentityConfig"
 },
 "zone": {
 "description": "[Output Only] URL of the zone where the instance resides.\nYou must specify this field as part of the HTTP request URL. It is\nnot settable as a field in the request body.",
@@ -73145,12 +73861,23 @@ false
 "InstanceGroupManagerInstanceFlexibilityPolicyInstanceSelection": {
 "id": "InstanceGroupManagerInstanceFlexibilityPolicyInstanceSelection",
 "properties": {
+"disks": {
+"description": "List of disks to be attached to the instances created from this\nselection.",
+"items": {
+"$ref": "AttachedDisk"
+},
+"type": "array"
+},
 "machineTypes": {
 "description": "Full machine-type names, e.g. \"n1-standard-16\".",
 "items": {
 "type": "string"
 },
 "type": "array"
+},
+"minCpuPlatform": {
+"description": "Name of the minimum CPU platform to be used by this instance selection.\ne.g. 'Intel Ice Lake'.",
+"type": "string"
 },
 "rank": {
 "description": "Preference of this instance selection. Lower number means higher\npreference. MIG will first try to create a VM based on the machine-type\nwith lowest rank and fallback to next rank based on availability.\nMachine types and instance selections with the same rank have the same\npreference.",
@@ -73248,7 +73975,7 @@ false
 "id": "InstanceGroupManagerInstanceLifecyclePolicyOnRepair",
 "properties": {
 "allowChangingZone": {
-"description": "Specifies whether the MIG can change a VM's zone during a repair.",
+"description": "Specifies whether the MIG can change a VM's zone during a repair.\nValid values are:\n   \n   - NO (default): MIG cannot change a VM's zone during a\n   repair.\n   - YES: MIG can select a different zone for the VM during\n   a repair.",
 "enum": [
 "NO",
 "YES"
@@ -75590,9 +76317,11 @@ false
 "type": "array"
 },
 "identity": {
+"deprecated": true,
 "type": "string"
 },
 "identityCertificate": {
+"deprecated": true,
 "type": "boolean"
 },
 "keyRevocationActionType": {
@@ -75733,6 +76462,9 @@ false
 "tags": {
 "$ref": "Tags",
 "description": "A list of tags to apply to the instances that are created from these\nproperties. The tags identify valid sources or targets for network\nfirewalls. The setTags method can modify this list of tags. Each tag within\nthe list must comply with RFC1035."
+},
+"workloadIdentityConfig": {
+"$ref": "WorkloadIdentityConfig"
 }
 },
 "type": "object"
@@ -78193,7 +78925,7 @@ false
 "type": "integer"
 },
 "type": {
-"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.",
+"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.\n\n- L2_DEDICATED: a L2 attachment to a Dedicated Interconnect.",
 "enum": [
 "DEDICATED",
 "L2_DEDICATED",
@@ -78202,7 +78934,7 @@ false
 ],
 "enumDescriptions": [
 "Attachment to a dedicated interconnect.",
-"Attachment to a L2 interconnect, created by the customer.",
+"Attachment to a dedicated interconnect, forwarding L2 packets.",
 "Attachment to a partner interconnect, created by the customer.",
 "Attachment to a partner interconnect, created by the partner."
 ],
@@ -78912,7 +79644,7 @@ false
 ],
 "enumDescriptions": [
 "Attachment to a dedicated interconnect.",
-"Attachment to a L2 interconnect, created by the customer.",
+"Attachment to a dedicated interconnect, forwarding L2 packets.",
 "Attachment to a partner interconnect, created by the customer.",
 "Attachment to a partner interconnect, created by the partner."
 ],
@@ -79852,7 +80584,7 @@ false
 "type": "string"
 },
 "etag": {
-"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed byAPI 154.",
+"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed by AIP 154.",
 "type": "string"
 },
 "id": {
@@ -83900,8 +84632,19 @@ false
 "ManagedInstanceInstanceFlexibilityOverride": {
 "id": "ManagedInstanceInstanceFlexibilityOverride",
 "properties": {
+"disks": {
+"description": "List of disks to be attached to the instance.",
+"items": {
+"$ref": "AttachedDisk"
+},
+"type": "array"
+},
 "machineType": {
 "description": "The machine type to be used for this instance.",
+"type": "string"
+},
+"minCpuPlatform": {
+"description": "Name of the minimum CPU platform to be used by this instance.\ne.g. 'Intel Ice Lake'.",
 "type": "string"
 },
 "provisioningModel": {
@@ -88493,6 +89236,18 @@ false
 },
 "type": "array"
 },
+"allowAddressCreation": {
+"description": "Specifies whether address creation is allowed.",
+"enum": [
+"ADDRESS_CREATION_ALLOWED",
+"ADDRESS_CREATION_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
 "allowAliasIpRanges": {
 "description": "Specifies whether alias IP ranges (and secondary address ranges) are\nallowed.",
 "enum": [
@@ -88637,6 +89392,30 @@ false
 ],
 "type": "string"
 },
+"allowMultiNicInSameSubnetwork": {
+"description": "Specifies whether multi-nic in the same subnetwork is allowed.",
+"enum": [
+"MULTI_NIC_IN_SAME_SUBNETWORK_ALLOWED",
+"MULTI_NIC_IN_SAME_SUBNETWORK_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
+"allowMulticast": {
+"description": "Specifies whether multicast is allowed.",
+"enum": [
+"MULTICAST_ALLOWED",
+"MULTICAST_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
 "allowNcc": {
 "description": "Specifies whether NCC is allowed.",
 "enum": [
@@ -88733,6 +89512,18 @@ false
 ],
 "type": "string"
 },
+"allowSubnetworkCreation": {
+"description": "Specifies whether subnetwork creation is allowed.",
+"enum": [
+"SUBNETWORK_CREATION_ALLOWED",
+"SUBNETWORK_CREATION_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
 "allowVpcFirewallRules": {
 "description": "Specifies whether VPC firewall rules can be created under the network.",
 "enum": [
@@ -88772,11 +89563,13 @@ false
 "firewallPolicyTypes": {
 "items": {
 "enum": [
+"RDMA_FALCON_POLICY",
 "RDMA_ROCE_POLICY",
 "ULL_POLICY",
 "VPC_POLICY"
 ],
 "enumDescriptions": [
+"",
 "",
 "",
 ""
@@ -88805,6 +89598,29 @@ false
 "VIRTIO"
 ],
 "type": "string"
+},
+"type": "array"
+},
+"multicast": {
+"description": "Specifies which type of multicast is supported.",
+"enum": [
+"MULTICAST_SDN",
+"MULTICAST_ULL"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
+"predefinedNetworkInternalIpv6Range": {
+"description": "Specifies a predefined internal IPv6 range for the network.",
+"type": "string"
+},
+"predefinedSubnetworkRanges": {
+"description": "Predefined subnetwork ranges for the network.",
+"items": {
+"$ref": "NetworkProfileNetworkFeaturesPredefinedSubnetworkRange"
 },
 "type": "array"
 },
@@ -88900,6 +89716,20 @@ false
 "",
 ""
 ],
+"type": "string"
+}
+},
+"type": "object"
+},
+"NetworkProfileNetworkFeaturesPredefinedSubnetworkRange": {
+"id": "NetworkProfileNetworkFeaturesPredefinedSubnetworkRange",
+"properties": {
+"ipv6Range": {
+"description": "The IPv6 range of the predefined subnetwork.",
+"type": "string"
+},
+"namePrefix": {
+"description": "The naming prefix of the predefined subnetwork.",
 "type": "string"
 }
 },
@@ -100904,12 +101734,14 @@ false
 "FAULT_BEHAVIOR_UNSPECIFIED",
 "GPU_ERROR",
 "PERFORMANCE",
+"SILENT_DATA_CORRUPTION",
 "SWITCH_FAILURE"
 ],
 "enumDescriptions": [
 "",
 "The subBlock experienced a GPU error.",
 "The subBlock experienced performance issues.",
+"The subBlock experienced silent data corruption.",
 "The subBlock experienced a switch failure."
 ],
 "type": "string"
@@ -101581,6 +102413,18 @@ false
 "description": "A GroupPlacementPolicy specifies resource placement configuration.\nIt specifies the failure bucket separation",
 "id": "ResourcePolicyGroupPlacementPolicy",
 "properties": {
+"acceleratorTopologyMode": {
+"description": "Specifies the connection mode for the accelerator topology. If not\nspecified, the default is AUTO_CONNECT.",
+"enum": [
+"AUTO_CONNECT",
+"PROVISION_ONLY"
+],
+"enumDescriptions": [
+"The interconnected chips are pre-configured at the time of VM creation.",
+"The interconnected chips are connected on demand. At the time of VM\ncreation, the chips are not connected."
+],
+"type": "string"
+},
 "availabilityDomainCount": {
 "description": "The number of availability domains to spread instances across. If two\ninstances are in different availability domain, they are not in the same\nlow latency network.",
 "format": "int32",
@@ -102556,6 +103400,530 @@ false
 },
 "type": "object"
 },
+"Rollout": {
+"description": "Represent a Rollout resource.",
+"id": "Rollout",
+"properties": {
+"cancellationTime": {
+"description": "Output only. The timestamp at which the Rollout was cancelled.",
+"readOnly": true,
+"type": "string"
+},
+"completionTime": {
+"description": "Output only. The timestamp at which the Rollout was completed.",
+"readOnly": true,
+"type": "string"
+},
+"creationTimestamp": {
+"description": "[Output Only] Creation timestamp inRFC3339\ntext format.",
+"type": "string"
+},
+"currentWaveNumber": {
+"description": "Output only. The number of the currently running wave.\nEx. 1",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+},
+"description": {
+"description": "An optional description of this resource. Provide this property when you\ncreate the resource.",
+"type": "string"
+},
+"etag": {
+"description": "Output only. etag of the Rollout\nEx. abc1234",
+"readOnly": true,
+"type": "string"
+},
+"id": {
+"description": "[Output Only] The unique identifier for the resource. This identifier is\ndefined by the server.",
+"format": "uint64",
+"type": "string"
+},
+"kind": {
+"default": "compute#rollout",
+"description": "[Output Only] Type of the resource. Always compute#rollout\nfor rollouts.",
+"type": "string"
+},
+"name": {
+"description": "Name of the resource. Provided by the client when the resource is created.\nThe name must be 1-63 characters long, and comply withRFC1035.\nSpecifically, the name must be 1-63 characters long and match the regular\nexpression `[a-z]([-a-z0-9]*[a-z0-9])?`\nwhich means the first character must be a lowercase letter, and all\nfollowing characters must be a dash, lowercase letter, or digit, except\nthe last character, which cannot be a dash.",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"type": "string"
+},
+"rolloutEntity": {
+"$ref": "RolloutRolloutEntity",
+"description": "Required. The resource being rolled out."
+},
+"rolloutPlan": {
+"description": "Required. Rollout Plan used to model the Rollout.\nEx. progressiverollout.googleapis.com/v1/organizations/1/rolloutPlans\nEx. progressiverollout.googleapis.com/v1/folders/1/rolloutPlans",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined fully-qualified URL for this resource.",
+"type": "string"
+},
+"selfLinkWithId": {
+"description": "[Output Only] Server-defined URL for this resource's resource id.",
+"type": "string"
+},
+"state": {
+"description": "Output only. The current state of the Rollout.",
+"enum": [
+"CANCELLED",
+"CANCELLING",
+"CANCEL_FAILED",
+"COMPLETED",
+"COMPLETE_FAILED",
+"COMPLETING",
+"FAILED",
+"PAUSED",
+"PAUSE_FAILED",
+"PAUSING",
+"PROCESSING",
+"READY",
+"RESUMING",
+"ROLLBACK_WAVE_FAILED",
+"ROLLING_BACK",
+"STATE_UNSPECIFIED",
+"UNINITIALIZED",
+"WAVE_FAILED"
+],
+"enumDescriptions": [
+"The rollout is in a failure terminal state.",
+"The rollout is being cancelled.",
+"An attempted cancel operation was unsuccessful.",
+"The rollout is in a successful terminal state.",
+"An attempted complete operation was unsuccessful.",
+"The rollout is being marked as completed.",
+"The rollout completed with failures.",
+"The rollout is paused.",
+"An attempted pause operation was unsuccessful.",
+"The rollout is being paused.",
+"A wave is being processed by the product.",
+"The rollout has been successfully initialized and is ready to start.",
+"The rollout is being resumed after being paused.",
+"An attempted rollback operation failed to complete successfully.",
+"A wave rollback is in progress for this rollout.",
+"Undefined default state. Should never be exposed to users.",
+"The rollout has been created but is not yet ready to be started.",
+"The product failed to process the wave."
+],
+"readOnly": true,
+"type": "string"
+},
+"waveDetails": {
+"description": "Output only. Details about each wave of the rollout.",
+"items": {
+"$ref": "RolloutWaveDetails"
+},
+"readOnly": true,
+"type": "array"
+}
+},
+"type": "object"
+},
+"RolloutPlan": {
+"description": "Message describing RolloutPlan object",
+"id": "RolloutPlan",
+"properties": {
+"creationTimestamp": {
+"description": "[Output Only] Creation timestamp inRFC3339\ntext format.",
+"type": "string"
+},
+"description": {
+"description": "An optional description of this resource. Provide this property when you\ncreate the resource.",
+"type": "string"
+},
+"id": {
+"description": "[Output Only] The unique identifier for the resource. This identifier is\ndefined by the server.",
+"format": "uint64",
+"type": "string"
+},
+"kind": {
+"default": "compute#rolloutPlan",
+"description": "[Output Only] Type of the resource. Always compute#rolloutPlan\nfor rolloutPlans.",
+"type": "string"
+},
+"locationScope": {
+"description": "The location scope of the rollout plan. If not specified, the location\nscope is considered as ZONAL.",
+"enum": [
+"LOCATION_SCOPE_UNSPECIFIED",
+"REGIONAL",
+"ZONAL"
+],
+"enumDescriptions": [
+"Unspecified value. Considered as ZONAL.",
+"Regional scope.",
+"Zonal scope."
+],
+"type": "string"
+},
+"name": {
+"annotations": {
+"required": [
+"compute.rolloutPlans.insert"
+]
+},
+"description": "Name of the resource. Provided by the client when the resource is created.\nThe name must be 1-63 characters long, and comply withRFC1035.\nSpecifically, the name must be 1-63 characters long and match the regular\nexpression `[a-z]([-a-z0-9]*[a-z0-9])?`\nwhich means the first character must be a lowercase letter, and all\nfollowing characters must be a dash, lowercase letter, or digit, except\nthe last character, which cannot be a dash.",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined fully-qualified URL for this resource.",
+"type": "string"
+},
+"selfLinkWithId": {
+"description": "[Output Only] Server-defined URL for this resource's resource id.",
+"type": "string"
+},
+"waves": {
+"description": "Required. The waves included in this rollout plan.",
+"items": {
+"$ref": "RolloutPlanWave"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"RolloutPlanWave": {
+"description": "A single wave in a rollout plan.",
+"id": "RolloutPlanWave",
+"properties": {
+"displayName": {
+"description": "Optional. The display name of this wave of the rollout plan.",
+"type": "string"
+},
+"number": {
+"description": "Output only. The wave number.",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+},
+"orchestrationOptions": {
+"$ref": "RolloutPlanWaveOrchestrationOptions",
+"description": "Optional. The orchestration options for this wave."
+},
+"selectors": {
+"description": "Required. The selectors for this wave. There is a logical AND between each selector\ndefined in a wave, so a resource must satisfy the criteria of *all* the\nspecified selectors to be in scope for the wave.",
+"items": {
+"$ref": "RolloutPlanWaveSelector"
+},
+"type": "array"
+},
+"validation": {
+"$ref": "RolloutPlanWaveValidation",
+"description": "Required. The validation to be performed at the end of this wave."
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveOrchestrationOptions": {
+"description": "Options to control the pace of orchestration of a wave. These options are\nrequired only if the resource being rolled out follows the Orchestrated\npattern.",
+"id": "RolloutPlanWaveOrchestrationOptions",
+"properties": {
+"delays": {
+"description": "Optional. Delays, if any, to be added between batches of projects. We allow\nmultiple Delays to be specified, letting users set separate delays\nbetween batches of projects corresponding to different locations and\nbatches of projects corresponding to the same location.",
+"items": {
+"$ref": "RolloutPlanWaveOrchestrationOptionsDelay"
+},
+"type": "array"
+},
+"maxConcurrentLocations": {
+"description": "Optional. Maximum number of locations to be orchestrated in parallel.",
+"format": "int64",
+"type": "string"
+},
+"maxConcurrentResourcesPerLocation": {
+"description": "Optional. Maximum number of resources to be orchestrated per location in\nparallel.",
+"format": "int64",
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveOrchestrationOptionsDelay": {
+"description": "Options to control the delay, if any, between batches of projects.",
+"id": "RolloutPlanWaveOrchestrationOptionsDelay",
+"properties": {
+"delimiter": {
+"description": "Optional. Controls whether the delay should only be added between batches of\nprojects corresponding to different locations, or also between\nbatches of projects corresponding to the same location.\n\nMust be set to DELIMITER_UNSPECIFIED if no delay is to be added.",
+"enum": [
+"DELIMITER_BATCH",
+"DELIMITER_LOCATION",
+"DELIMITER_UNSPECIFIED"
+],
+"enumDescriptions": [
+"The delay will also be added between batches of projects\ncorresponding to the same location.",
+"The delay will only be added between batches of projects\ncorresponding to different locations.",
+"No delay will be added between batches of projects. Processing will\ncontinue with the next batch as soon as the previous batch of LROs\nis done."
+],
+"type": "string"
+},
+"duration": {
+"description": "Optional. The duration of the delay, if any, to be added between batches of\nprojects. A zero duration corresponds to no delay.",
+"format": "google-duration",
+"type": "string"
+},
+"type": {
+"description": "Optional. Controls whether the specified duration is to be added at the end of\neach batch, or if the total processing time for each batch will be\npadded if needed to meet the specified duration.\n\nMust be set to TYPE_UNSPECIFIED if no delay is to be added.",
+"enum": [
+"TYPE_MINIMUM",
+"TYPE_OFFSET",
+"TYPE_UNSPECIFIED"
+],
+"enumDescriptions": [
+"The total processing time for each batch of projects will be padded\nif needed to meet the specified delay duration.",
+"The specified delay will directly be added after each batch of\nprojects as specified by the delimiter.",
+"No delay will be added between batches of projects. Processing will\ncontinue with the next batch as soon as the previous batch of LROs\nis done."
+],
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveSelector": {
+"description": "A selector which specifies what resource(s) are included in a given wave.",
+"id": "RolloutPlanWaveSelector",
+"properties": {
+"locationSelector": {
+"$ref": "RolloutPlanWaveSelectorLocationSelector",
+"description": "Optional. Roll out to resources by Cloud locations."
+},
+"resourceHierarchySelector": {
+"$ref": "RolloutPlanWaveSelectorResourceHierarchySelector",
+"description": "Optional. Roll out to resources by Cloud Resource Manager resource hierarchy."
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveSelectorLocationSelector": {
+"description": "Roll out to resources by location.",
+"id": "RolloutPlanWaveSelectorLocationSelector",
+"properties": {
+"includedLocations": {
+"description": "Optional. Example: \"us-central1-a\"",
+"items": {
+"type": "string"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveSelectorResourceHierarchySelector": {
+"description": "Roll out to resources by Cloud Resource Manager resource hierarchy\nnodes such as projects, folders, orgs.",
+"id": "RolloutPlanWaveSelectorResourceHierarchySelector",
+"properties": {
+"includedFolders": {
+"description": "Optional. Format: \"folders/{folder_id}\"",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"includedOrganizations": {
+"description": "Optional. Format: \"organizations/{organization_id}\"",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"includedProjects": {
+"description": "Optional. Format: \"projects/{project_id}\"",
+"items": {
+"type": "string"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveValidation": {
+"description": "The validation to be performed before progressing to the next wave.",
+"id": "RolloutPlanWaveValidation",
+"properties": {
+"timeBasedValidationMetadata": {
+"$ref": "RolloutPlanWaveValidationTimeBasedValidationMetadata",
+"description": "Optional. Metadata required if type = \"time\"."
+},
+"type": {
+"description": "Required. The type of the validation. If a type of validation is associated with\na metadata object, the appropriate metadata field mapping to the\nvalidation type must be provided in the validation message. Possible\nvalues are in quotes below alongside an explanation:\n  \"manual\": The system waits for an end-user approval API before\n    progressing to the next wave.\n  \"time\": The system waits for a user specified duration before\n    progressing to the next wave. TimeBasedValidation must be provided.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutPlanWaveValidationTimeBasedValidationMetadata": {
+"description": "Metadata required if type = \"time\".",
+"id": "RolloutPlanWaveValidationTimeBasedValidationMetadata",
+"properties": {
+"waitDuration": {
+"description": "Optional. The duration that the system waits in between waves. This wait starts\nafter all changes in the wave are rolled out.",
+"format": "google-duration",
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutPlansListResponse": {
+"description": "Contains a list of RolloutPlan resources.",
+"id": "RolloutPlansListResponse",
+"properties": {
+"etag": {
+"type": "string"
+},
+"id": {
+"description": "[Output Only] Unique identifier for the resource; defined by the server.",
+"type": "string"
+},
+"items": {
+"description": "A list of RolloutPlan resources.",
+"items": {
+"$ref": "RolloutPlan"
+},
+"type": "array"
+},
+"nextPageToken": {
+"description": "[Output Only] This token allows you to get the next page of results for\nlist requests. If the number of results is larger thanmaxResults, use the nextPageToken as a value for\nthe query parameter pageToken in the next list request.\nSubsequent list requests will have their own nextPageToken to\ncontinue paging through the results.",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined URL for this resource.",
+"type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.\nend_interface: MixerListResponseWithEtagBuilder",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"warning": {
+"description": "[Output Only] Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
 "RolloutPolicy": {
 "description": "A rollout policy configuration.",
 "id": "RolloutPolicy",
@@ -102569,6 +103937,251 @@ false
 "type": "string"
 },
 "description": "Location based rollout policies to apply to the resource.\n\nCurrently only zone names are supported and must be represented\nas valid URLs, like: zones/us-central1-a.\n\nThe value expects an RFC3339 timestamp on or after which the update is\nconsidered rolled out to the specified location.",
+"type": "object"
+}
+},
+"type": "object"
+},
+"RolloutRolloutEntity": {
+"description": "Specifications of the resource to roll out.",
+"id": "RolloutRolloutEntity",
+"properties": {
+"orchestratedEntity": {
+"$ref": "RolloutRolloutEntityOrchestratedEntity",
+"description": "Optional. Entity details for products using the Orchestrated Integration model."
+}
+},
+"type": "object"
+},
+"RolloutRolloutEntityOrchestratedEntity": {
+"description": "This message is used if the resource type follows the Orchestrated\nintegration model with ProgressiveRollout.",
+"id": "RolloutRolloutEntityOrchestratedEntity",
+"properties": {
+"conflictBehavior": {
+"description": "Required. Specifies the behavior of the Rollout if an out of band update is\ndetected in a project during a Rollout. It can be one of the following\nvalues:\n1) overwrite : Overwrite the local value with the rollout value.\n2) no_overwrite : Do not overwrite the local value with the rollout\nvalue.",
+"type": "string"
+},
+"orchestrationAction": {
+"description": "Required. Orchestration action during the Rollout. It can be one of the following\nvalues:\n1) \"update\": Resources will be updated by the rollout.\n2) \"delete\": Resources will be deleted by the rollout.",
+"type": "string"
+},
+"orchestrationSource": {
+"description": "Required. Fully qualified resource name of the resource which contains the source\nof truth of the configuration being rolled out across\nlocations/projects. For example, in the case of a global Rollout which\nis applied across regions, this contains the name of the global\nresource created by the user which contains a payload for a resource\nthat is orchestrated across regions. This follows the following format:\n//.googleapis.com/organizations//locations/global//\ne.g.\n//osconfig.googleapis.com/organizations/1/locations/global/policyOrchestrators/po1",
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutWaveDetails": {
+"description": "Additional metadata about the status of each wave provided by the server.",
+"id": "RolloutWaveDetails",
+"properties": {
+"orchestratedWaveDetails": {
+"$ref": "RolloutWaveDetailsOrchestratedWaveDetails",
+"description": "Output only. Additional details of the wave for products using the Orchestrated\nIntegration model.",
+"readOnly": true
+},
+"waveDisplayName": {
+"description": "Output only. Wave name.\nEx. wave1",
+"readOnly": true,
+"type": "string"
+},
+"waveNumber": {
+"description": "Output only. System generated number for the wave.",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutWaveDetailsOrchestratedWaveDetails": {
+"description": "Details of the wave for products using the Orchestrated integration\nmodel.",
+"id": "RolloutWaveDetailsOrchestratedWaveDetails",
+"properties": {
+"completedResourcesCount": {
+"description": "Output only. Resource completed so far.",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+},
+"estimatedTotalResourcesCount": {
+"description": "Output only. Estimated total count of resources.",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+},
+"failedLocations": {
+"description": "Output only. Locations that failed during orchestration, and ProgressiveRollout\nstopped retrying. There may be some successful resources rolled out in\nthe wave as the location may have failed later in the Rollout.",
+"items": {
+"type": "string"
+},
+"readOnly": true,
+"type": "array"
+},
+"failedResourcesCount": {
+"description": "Output only. Resources failed.",
+"format": "int64",
+"readOnly": true,
+"type": "string"
+}
+},
+"type": "object"
+},
+"RolloutsListResponse": {
+"id": "RolloutsListResponse",
+"properties": {
+"etag": {
+"type": "string"
+},
+"id": {
+"description": "[Output Only] Unique identifier for the resource; defined by the server.",
+"type": "string"
+},
+"items": {
+"description": "A list of Rollout resources.",
+"items": {
+"$ref": "Rollout"
+},
+"type": "array"
+},
+"nextPageToken": {
+"description": "[Output Only] This token allows you to get the next page of results for\nlist requests. If the number of results is larger thanmaxResults, use the nextPageToken as a value for\nthe query parameter pageToken in the next list request.\nSubsequent list requests will have their own nextPageToken to\ncontinue paging through the results.",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined URL for this resource.",
+"type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.\nend_interface: MixerListResponseWithEtagBuilder",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"warning": {
+"description": "[Output Only] Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
 "type": "object"
 }
 },
@@ -102722,7 +104335,7 @@ false
 "type": "integer"
 },
 "routeStatus": {
-"description": "[Output only] The status of the route.",
+"description": "[Output only] The status of the route. This status only applies to\ndynamic routes learned by Cloud Routers. This status is not applicable\nto static routes.",
 "enum": [
 "ACTIVE",
 "DROPPED",
@@ -121615,6 +123228,18 @@ false
 "The highest service class."
 ],
 "type": "string"
+}
+},
+"type": "object"
+},
+"WorkloadIdentityConfig": {
+"id": "WorkloadIdentityConfig",
+"properties": {
+"identity": {
+"type": "string"
+},
+"identityCertificateEnabled": {
+"type": "boolean"
 }
 },
 "type": "object"

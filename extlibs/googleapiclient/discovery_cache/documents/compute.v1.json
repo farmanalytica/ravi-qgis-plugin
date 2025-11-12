@@ -126,7 +126,7 @@
 "acceleratorTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/acceleratorTypes",
 "httpMethod": "GET",
 "id": "compute.acceleratorTypes.aggregatedList",
@@ -302,7 +302,7 @@
 "addresses": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/addresses",
 "httpMethod": "GET",
 "id": "compute.addresses.aggregatedList",
@@ -713,7 +713,7 @@
 "autoscalers": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/autoscalers",
 "httpMethod": "GET",
 "id": "compute.autoscalers.aggregatedList",
@@ -1609,7 +1609,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/backendServices",
 "httpMethod": "GET",
 "id": "compute.backendServices.aggregatedList",
@@ -2518,7 +2518,7 @@
 "diskTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/diskTypes",
 "httpMethod": "GET",
 "id": "compute.diskTypes.aggregatedList",
@@ -2744,7 +2744,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/disks",
 "httpMethod": "GET",
 "id": "compute.disks.aggregatedList",
@@ -4707,6 +4707,44 @@
 "https://www.googleapis.com/auth/compute"
 ]
 },
+"testIamPermissions": {
+"description": "Returns permissions that a caller has on the specified resource.",
+"flatPath": "projects/{project}/global/firewalls/{resource}/testIamPermissions",
+"httpMethod": "POST",
+"id": "compute.firewalls.testIamPermissions",
+"parameterOrder": [
+"project",
+"resource"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"resource": {
+"description": "Name or id of the resource for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9_]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/firewalls/{resource}/testIamPermissions",
+"request": {
+"$ref": "TestPermissionsRequest"
+},
+"response": {
+"$ref": "TestPermissionsResponse"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
 "update": {
 "description": "Updates the specified firewall rule with the data included in the\nrequest.\nNote that all fields will be updated if using PUT, even fields that are not\nspecified. To update individual fields, please use PATCH instead.",
 "flatPath": "projects/{project}/global/firewalls/{firewall}",
@@ -4754,7 +4792,7 @@
 "forwardingRules": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/forwardingRules",
 "httpMethod": "GET",
 "id": "compute.forwardingRules.aggregatedList",
@@ -5169,7 +5207,7 @@
 "futureReservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, recommendation is that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/futureReservations",
 "httpMethod": "GET",
 "id": "compute.futureReservations.aggregatedList",
@@ -17735,7 +17773,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/firewallPolicies",
 "httpMethod": "GET",
 "id": "compute.networkFirewallPolicies.aggregatedList",
@@ -21880,7 +21918,7 @@
 },
 "moveDisk": {
 "deprecated": true,
-"description": "Starting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://{$universe.dns_names.final_documentation_domain}/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
+"description": "Moves a persistent disk from one zone to another.\n*Note*: The moveDisk API will be deprecated on September 29, 2026.\n\nStarting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://cloud.google.com/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
 "flatPath": "projects/{project}/moveDisk",
 "httpMethod": "POST",
 "id": "compute.projects.moveDisk",
@@ -23672,7 +23710,7 @@
 "regionCommitments": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/commitments",
 "httpMethod": "GET",
 "id": "compute.regionCommitments.aggregatedList",
@@ -31830,6 +31868,21 @@
 "required": true,
 "type": "string"
 },
+"view": {
+"description": "View of the subBlock.",
+"enum": [
+"SUB_BLOCK_VIEW_BASIC",
+"SUB_BLOCK_VIEW_FULL",
+"SUB_BLOCK_VIEW_UNSPECIFIED"
+],
+"enumDescriptions": [
+"This view includes basic information about the reservation sub block",
+"Includes detailed topology view.",
+"The default / unset value. The API will default to the BASIC view."
+],
+"location": "query",
+"type": "string"
+},
 "zone": {
 "description": "Name of the zone for this request. Zone name should conform to RFC1035.",
 "location": "path",
@@ -32189,7 +32242,7 @@
 "reservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/reservations",
 "httpMethod": "GET",
 "id": "compute.reservations.aggregatedList",
@@ -37071,6 +37124,20 @@
 "description": "The Shared VPC service project id or service project number for which\naggregated list request is invoked for subnetworks list-usable api.",
 "format": "int64",
 "location": "query",
+"type": "string"
+},
+"views": {
+"description": "Defines the extra views returned back in the subnetwork resource.\nSupported values:\n   \n   - WITH_UTILIZATION: Utilization data is included in the\n   response.",
+"enum": [
+"DEFAULT",
+"WITH_UTILIZATION"
+],
+"enumDescriptions": [
+"",
+"Utilization data is included in the response."
+],
+"location": "query",
+"repeated": true,
 "type": "string"
 }
 },
@@ -42356,7 +42423,7 @@
 }
 }
 },
-"revision": "20251015",
+"revision": "20251019",
 "rootUrl": "https://compute.googleapis.com/",
 "schemas": {
 "AWSV4Signature": {
@@ -42393,6 +42460,66 @@
 },
 "acceleratorType": {
 "description": "Full or partial URL of the accelerator type resource to attach to this\ninstance. For example:projects/my-project/zones/us-central1-c/acceleratorTypes/nvidia-tesla-p100\nIf you are creating an instance template, specify only the\naccelerator name.\nSee GPUs on Compute Engine\nfor a full list of accelerator types.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfo": {
+"description": "Info for accelerator topologies within a densely packed reservation.",
+"id": "AcceleratorTopologiesInfo",
+"properties": {
+"acceleratorTopologyInfos": {
+"description": "Info for each accelerator topology.",
+"items": {
+"$ref": "AcceleratorTopologiesInfoAcceleratorTopologyInfo"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfoAcceleratorTopologyInfo": {
+"description": "Info for a slice of a given topology.",
+"id": "AcceleratorTopologiesInfoAcceleratorTopologyInfo",
+"properties": {
+"acceleratorTopology": {
+"description": "The accelerator topology.",
+"type": "string"
+},
+"infoPerTopologyStates": {
+"description": "Info for each topology state.",
+"items": {
+"$ref": "AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState": {
+"description": "Info for each topology state.",
+"id": "AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState",
+"properties": {
+"count": {
+"description": "The number of accelerator topologies in this state.",
+"format": "int32",
+"type": "integer"
+},
+"state": {
+"description": "The state of the accelerator topology.",
+"enum": [
+"AVAILABLE",
+"RUNNING",
+"TOPOLOGY_STATE_UNSPECIFIED",
+"UNHEALTHY"
+],
+"enumDescriptions": [
+"The accelerator topology is available.",
+"The accelerator topology is running.",
+"The state of the topology is unspecified.",
+"The accelerator topology is unhealthy."
+],
 "type": "string"
 }
 },
@@ -45311,7 +45438,7 @@ false
 "id": "BackendBucketCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -45516,7 +45643,7 @@ false
 "type": "number"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -46138,7 +46265,7 @@ false
 "id": "BackendServiceCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -46203,7 +46330,7 @@ false
 "type": "boolean"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -52621,6 +52748,20 @@ false
 ],
 "type": "string"
 },
+"reservationMode": {
+"description": "The reservation mode which determines reservation-termination behavior and\nexpected pricing.",
+"enum": [
+"CALENDAR",
+"DEFAULT",
+"RESERVATION_MODE_UNSPECIFIED"
+],
+"enumDescriptions": [
+"The delivered reservations will delivered at specified start time and\nterminated at specified end time along with terminating the VMs running\non it.",
+"The delivered reservations do not terminate VMs at the end of\nreservations. This is default mode.",
+""
+],
+"type": "string"
+},
 "reservationName": {
 "description": "Name of reservations where the capacity is provisioned at the time of\ndelivery of  future reservations. If the reservation with the given name\ndoes not exist already, it is created automatically at the time of Approval\nwith INACTIVE state till specified start-time. Either provide the\nreservation_name or a name_prefix.",
 "type": "string"
@@ -53435,6 +53576,35 @@ false
 },
 "type": "object"
 },
+"GRPCTLSHealthCheck": {
+"id": "GRPCTLSHealthCheck",
+"properties": {
+"grpcServiceName": {
+"description": "The gRPC service name for the health check. This field is optional. The\nvalue of grpc_service_name has the following meanings by convention: \n\n- Empty service_name means the overall status of all services at the\nbackend. \n\n- Non-empty service_name means the health of that gRPC service, as defined\nby the owner of the service. \n\nThe grpc_service_name can only be ASCII.",
+"type": "string"
+},
+"port": {
+"description": "The TCP port number to which the health check prober sends packets. Valid\nvalues are 1 through 65535.",
+"format": "int32",
+"type": "integer"
+},
+"portSpecification": {
+"description": "Specifies how a port is selected for health checking. Can be one of the\nfollowing values: \nUSE_FIXED_PORT: Specifies a port number explicitly using theport field  in the health check. Supported by backend services\nfor passthrough load balancers and backend services for proxy load\nbalancers. Not supported by target pools. The health check supports all\nbackends supported by the backend service provided the backend can be\nhealth checked. For example, GCE_VM_IP network endpoint\ngroups, GCE_VM_IP_PORT network endpoint groups, and instance\ngroup backends. \n USE_NAMED_PORT: Not supported. \nUSE_SERVING_PORT: Provides an indirect method of specifying\nthe health check port by referring to the backend service. Only supported\nby backend services for proxy load balancers. Not supported by target\npools.  Not supported by backend services for passthrough load balancers.\nSupports all backends that can be health checked; for example,GCE_VM_IP_PORT network endpoint groups and instance group\nbackends.\n\nFor GCE_VM_IP_PORT network endpoint group backends, the health\ncheck uses the port number specified for each endpoint in the network\nendpoint group.  For instance group backends, the health check uses the\nport number determined by looking up the backend service's named port in\nthe instance group's list of named ports.",
+"enum": [
+"USE_FIXED_PORT",
+"USE_NAMED_PORT",
+"USE_SERVING_PORT"
+],
+"enumDescriptions": [
+"The port number in the health check's port is used for health\nchecking. Applies to network endpoint group and instance group backends.",
+"Not supported.",
+"For network endpoint group backends, the health check uses the port number\nspecified on each endpoint in the network endpoint group. For instance\ngroup backends, the health check uses the port number specified for the\nbackend service's named port defined in the instance group's named ports."
+],
+"type": "string"
+}
+},
+"type": "object"
+},
 "GlobalAddressesMoveRequest": {
 "id": "GlobalAddressesMoveRequest",
 "properties": {
@@ -53880,6 +54050,9 @@ false
 "grpcHealthCheck": {
 "$ref": "GRPCHealthCheck"
 },
+"grpcTlsHealthCheck": {
+"$ref": "GRPCTLSHealthCheck"
+},
 "healthyThreshold": {
 "description": "A so-far unhealthy instance will be marked healthy after this\nmany consecutive successes. The default value is 2.",
 "format": "int32",
@@ -53943,6 +54116,7 @@ false
 "description": "Specifies the type of the healthCheck, either TCP,SSL, HTTP, HTTPS,HTTP2 or GRPC. Exactly one of the\nprotocol-specific health check fields must be specified, which must matchtype field.",
 "enum": [
 "GRPC",
+"GRPC_WITH_TLS",
 "HTTP",
 "HTTP2",
 "HTTPS",
@@ -53951,6 +54125,7 @@ false
 "TCP"
 ],
 "enumDescriptions": [
+"",
 "",
 "",
 "",
@@ -61285,10 +61460,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -61431,6 +61608,10 @@ false
 ],
 "type": "string"
 },
+"params": {
+"$ref": "InterconnectParams",
+"description": "Input only. [Input Only] Additional params passed with the request, but not persisted\nas part of resource payload."
+},
 "peerIpAddress": {
 "description": "[Output Only] IP address configured on the customer side of the\nInterconnect link. The customer should configure this IP address during\nturnup when prompted by Google NOC. This can be used only for ping tests.",
 "type": "string"
@@ -61449,10 +61630,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -61734,6 +61917,10 @@ false
 "description": "[Output Only] Type of the resource. Alwayscompute#interconnectAttachment for interconnect attachments.",
 "type": "string"
 },
+"l2Forwarding": {
+"$ref": "InterconnectAttachmentL2Forwarding",
+"description": "L2 Interconnect Attachment related config. This field is required if the\ntype is L2_DEDICATED.\n\nThe configuration specifies how VLAN tags (like dot1q, qinq, or dot1ad)\nwithin L2 packets are mapped to the destination appliances IP addresses.\nThe packet is then encapsulated with the appliance IP address and sent to\nthe edge appliance."
+},
 "labelFingerprint": {
 "description": "A fingerprint for the labels being applied to this InterconnectAttachment,\nwhich is essentially a hash of the labels set used for optimistic locking.\nThe fingerprint is initially generated by Compute Engine and changes after\nevery request to modify or update labels. You must always provide an\nup-to-date fingerprint hash in order to update or change labels,\notherwise the request will fail with error412 conditionNotMet.\n\nTo see the latest fingerprint, make a get() request to\nretrieve an InterconnectAttachment.",
 "format": "byte",
@@ -61771,6 +61958,10 @@ false
 "pairingKey": {
 "description": "[Output only for type PARTNER. Input only for PARTNER_PROVIDER. Not\npresent for DEDICATED].\nThe opaque identifier of a PARTNER attachment used to initiate\nprovisioning with a selected partner.\nOf the form \"XXXXX/region/domain\"",
 "type": "string"
+},
+"params": {
+"$ref": "InterconnectAttachmentParams",
+"description": "Input only. [Input Only] Additional params passed with the request, but not persisted\nas part of resource payload."
 },
 "partnerAsn": {
 "description": "Optional BGP ASN for the router supplied by a Layer 3 Partner if they\nconfigured BGP on behalf of the customer.\nOutput only for PARTNER type, input only for PARTNER_PROVIDER, not\navailable for DEDICATED.",
@@ -61845,14 +62036,16 @@ false
 "type": "integer"
 },
 "type": {
-"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.",
+"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.\n\n- L2_DEDICATED: a L2 attachment to a Dedicated Interconnect.",
 "enum": [
 "DEDICATED",
+"L2_DEDICATED",
 "PARTNER",
 "PARTNER_PROVIDER"
 ],
 "enumDescriptions": [
 "Attachment to a dedicated interconnect.",
+"Attachment to a dedicated interconnect, forwarding L2 packets.",
 "Attachment to a partner interconnect, created by the customer.",
 "Attachment to a partner interconnect, created by the partner."
 ],
@@ -62624,6 +62817,88 @@ false
 },
 "type": "object"
 },
+"InterconnectAttachmentL2Forwarding": {
+"description": "L2 Interconnect Attachment related configuration.",
+"id": "InterconnectAttachmentL2Forwarding",
+"properties": {
+"applianceMappings": {
+"additionalProperties": {
+"$ref": "InterconnectAttachmentL2ForwardingApplianceMapping"
+},
+"description": "Optional. A map of VLAN tags to appliances and optional inner mapping\nrules. If VLANs are not explicitly mapped to any appliance, the\ndefaultApplianceIpAddress is used.\n\nEach VLAN tag can be a single number or a range of numbers in the range\nof 1 to 4094, e.g., \"1\" or \"4001-4094\". Non-empty and non-overlapping\nVLAN tag ranges are enforced, and violating operations will be rejected.\n\nThe VLAN tags in the Ethernet header must use an ethertype value of\n0x88A8 or 0x8100.",
+"type": "object"
+},
+"defaultApplianceIpAddress": {
+"description": "Optional. A single IPv4 or IPv6 address used as the default destination\nIP when there is no VLAN mapping result found.\n\nUnset field (null-value) indicates the unmatched packet should be\ndropped.",
+"type": "string"
+},
+"geneveHeader": {
+"$ref": "InterconnectAttachmentL2ForwardingGeneveHeader",
+"description": "Optional. It represents the structure of a Geneve (Generic Network\nVirtualization Encapsulation) header, as defined in RFC8926. It encapsulates packets from various\nprotocols (e.g., Ethernet, IPv4, IPv6) for use in network virtualization\nenvironments."
+},
+"network": {
+"description": "Required. Resource URL of the network to which this attachment belongs.",
+"type": "string"
+},
+"tunnelEndpointIpAddress": {
+"description": "Required. A single IPv4 or IPv6 address. This address will be used as the\nsource IP address for packets sent to the appliances, and must be used as\nthe destination IP address for packets that should be sent out through\nthis attachment.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingApplianceMapping": {
+"description": "Two-level VLAN-to-Appliance mapping rule.",
+"id": "InterconnectAttachmentL2ForwardingApplianceMapping",
+"properties": {
+"applianceIpAddress": {
+"description": "Optional. A single IPv4 or IPv6 address used as the destination IP\naddress for ingress packets that match on a VLAN tag, but do not match\na more specific inner VLAN tag.\n\nUnset field (null-value) indicates both VLAN tags are required to be\nmapped. Otherwise, defaultApplianceIpAddress is used.",
+"type": "string"
+},
+"innerVlanToApplianceMappings": {
+"description": "Optional. Used to match against the inner VLAN when the packet\ncontains two VLAN tags.\n\nA list of mapping rules from inner VLAN tags to IP addresses. If the\ninner VLAN is not explicitly mapped to an IP address range, the\napplianceIpAddress is used.",
+"items": {
+"$ref": "InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping"
+},
+"type": "array"
+},
+"name": {
+"description": "Optional. The name of this appliance mapping rule.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping": {
+"description": "The inner VLAN-to-Appliance mapping.",
+"id": "InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping",
+"properties": {
+"innerApplianceIpAddress": {
+"description": "Required in this object. A single IPv4 or IPv6 address used as the\ndestination IP address for ingress packets that match on both VLAN\ntags.",
+"type": "string"
+},
+"innerVlanTags": {
+"description": "Required in this object. Used to match the inner VLAN tag on the\npacket. Each entry can be a single number or a range of numbers in\nthe range of 1 to 4094, e.g., [\"1\", \"4001-4094\"] is valid. Non-empty\nand Non-overlapping VLAN tag ranges are enforced, and violating\noperations will be rejected.\n\nThe inner VLAN tags must have an ethertype value of 0x8100.",
+"items": {
+"type": "string"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingGeneveHeader": {
+"description": "GeneveHeader related configurations.",
+"id": "InterconnectAttachmentL2ForwardingGeneveHeader",
+"properties": {
+"vni": {
+"description": "Optional. VNI is a 24-bit unique virtual network identifier, from 0 to\n16,777,215.",
+"format": "uint32",
+"type": "integer"
+}
+},
+"type": "object"
+},
 "InterconnectAttachmentList": {
 "description": "Response to the list request, and contains a list of interconnect\nattachments.",
 "id": "InterconnectAttachmentList",
@@ -62774,6 +63049,20 @@ false
 "type": "string"
 }
 },
+"type": "object"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentParams": {
+"description": "Additional interconnect attachment parameters.",
+"id": "InterconnectAttachmentParams",
+"properties": {
+"resourceManagerTags": {
+"additionalProperties": {
+"type": "string"
+},
+"description": "Tag keys/values directly bound to this resource.\nTag keys and values have the same definition as resource\nmanager tags. The field is allowed for INSERT\nonly. The keys/values to set on the resource should be specified in\neither ID { : } or Namespaced format\n{ : }.\nFor example the following are valid inputs:\n* {\"tagKeys/333\" : \"tagValues/444\", \"tagKeys/123\" : \"tagValues/456\"}\n* {\"123/environment\" : \"production\", \"345/abc\" : \"xyz\"}\nNote:\n* Invalid combinations of ID & namespaced format is not supported. For\n  instance: {\"123/environment\" : \"tagValues/444\"} is invalid.\n* Inconsistent format is not supported. For instance:\n  {\"tagKeys/333\" : \"tagValues/444\", \"123/env\" : \"prod\"} is invalid.",
 "type": "object"
 }
 },
@@ -63164,7 +63453,7 @@ false
 "type": "string"
 },
 "etag": {
-"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed byAPI 154.",
+"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed by AIP 154.",
 "type": "string"
 },
 "id": {
@@ -63500,10 +63789,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -63949,10 +64240,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -64261,6 +64554,10 @@ false
 "format": "int64",
 "type": "string"
 },
+"l2ForwardingEnabled": {
+"description": "Identifies whether L2 Interconnect Attachments can be created in this\nregion for interconnects that are in this location.",
+"type": "boolean"
+},
 "locationPresence": {
 "description": "Identifies the network presence of this location.",
 "enum": [
@@ -64428,6 +64725,20 @@ false
 "[Deprecated] The outage associated with this notification was canceled\nbefore the outage was due to start."
 ],
 "type": "string"
+}
+},
+"type": "object"
+},
+"InterconnectParams": {
+"description": "Additional interconnect parameters.",
+"id": "InterconnectParams",
+"properties": {
+"resourceManagerTags": {
+"additionalProperties": {
+"type": "string"
+},
+"description": "Tag keys/values directly bound to this resource.\nTag keys and values have the same definition as resource\nmanager tags. The field is allowed for INSERT\nonly. The keys/values to set on the resource should be specified in\neither ID { : } or Namespaced format\n{ : }.\nFor example the following are valid inputs:\n* {\"tagKeys/333\" : \"tagValues/444\", \"tagKeys/123\" : \"tagValues/456\"}\n* {\"123/environment\" : \"production\", \"345/abc\" : \"xyz\"}\nNote:\n* Invalid combinations of ID & namespaced format is not supported. For\n  instance: {\"123/environment\" : \"tagValues/444\"} is invalid.\n* Inconsistent format is not supported. For instance:\n  {\"tagKeys/333\" : \"tagValues/444\", \"123/env\" : \"prod\"} is invalid.",
+"type": "object"
 }
 },
 "type": "object"
@@ -68654,6 +68965,18 @@ false
 "format": "byte",
 "type": "string"
 },
+"igmpQuery": {
+"description": "Indicate whether igmp query is enabled on the network interface\nor not. If enabled, also indicates the version of IGMP supported.",
+"enum": [
+"IGMP_QUERY_DISABLED",
+"IGMP_QUERY_V2"
+],
+"enumDescriptions": [
+"The network interface has disabled IGMP query.",
+"The network interface has enabled IGMP query - v2."
+],
+"type": "string"
+},
 "internalIpv6PrefixLength": {
 "description": "The prefix length of the primary internal IPv6 range.",
 "format": "int32",
@@ -69368,6 +69691,18 @@ false
 ],
 "type": "string"
 },
+"allowMulticast": {
+"description": "Specifies whether multicast is allowed.",
+"enum": [
+"MULTICAST_ALLOWED",
+"MULTICAST_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
 "allowNcc": {
 "description": "Specifies whether NCC is allowed.",
 "enum": [
@@ -69510,6 +69845,18 @@ false
 "type": "string"
 },
 "type": "array"
+},
+"multicast": {
+"description": "Specifies which type of multicast is supported.",
+"enum": [
+"MULTICAST_SDN",
+"MULTICAST_ULL"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
 },
 "subnetPurposes": {
 "description": "Specifies which subnetwork purposes are supported.",
@@ -77841,6 +78188,20 @@ false
 "pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
 "type": "string"
 },
+"protectionTier": {
+"description": "Protection tier for the workload which specifies the workload expectations\nin the event of infrastructure failures at data center (e.g. power\nand/or cooling failures).",
+"enum": [
+"CAPACITY_OPTIMIZED",
+"PROTECTION_TIER_UNSPECIFIED",
+"STANDARD"
+],
+"enumDescriptions": [
+"CAPACITY_OPTIMIZED capacity leverages redundancies (e.g. power, cooling)\nat the data center during normal operating conditions. In the event of\ninfrastructure failures at data center (e.g. power and/or cooling\nfailures), this workload may be disrupted. As a consequence, it has a\nweaker availability SLO than STANDARD.",
+"Unspecified protection tier.",
+"STANDARD protection for workload that should be protected by redundancies\n(e.g. power, cooling) at the data center level. In the event of\ninfrastructure failures at data center (e.g. power and/or cooling\nfailures), this workload is expected to continue as normal using the\nredundancies."
+],
+"type": "string"
+},
 "reservationSharingPolicy": {
 "$ref": "AllocationReservationSharingPolicy",
 "description": "Specify the reservation sharing policy. If unspecified, the reservation\nwill not be shared with Google Cloud managed services."
@@ -78628,6 +78989,10 @@ false
 "description": "Represents a reservation subBlock resource.",
 "id": "ReservationSubBlock",
 "properties": {
+"acceleratorTopologiesInfo": {
+"$ref": "AcceleratorTopologiesInfo",
+"description": "[Output Only] Slice info for the reservation subBlock."
+},
 "count": {
 "description": "[Output Only] The number of hosts that are allocated in this\nreservation subBlock.",
 "format": "int32",
@@ -78971,12 +79336,14 @@ false
 "FAULT_BEHAVIOR_UNSPECIFIED",
 "GPU_ERROR",
 "PERFORMANCE",
+"SILENT_DATA_CORRUPTION",
 "SWITCH_FAILURE"
 ],
 "enumDescriptions": [
 "",
 "The subBlock experienced a GPU error.",
 "The subBlock experienced performance issues.",
+"The subBlock experienced silent data corruption.",
 "The subBlock experienced a switch failure."
 ],
 "type": "string"
@@ -80329,7 +80696,7 @@ false
 "type": "integer"
 },
 "routeStatus": {
-"description": "[Output only] The status of the route.",
+"description": "[Output only] The status of the route. This status only applies to\ndynamic routes learned by Cloud Routers. This status is not applicable\nto static routes.",
 "enum": [
 "ACTIVE",
 "DROPPED",
@@ -85185,6 +85552,14 @@ false
 "description": "A Shielded Instance Identity.",
 "id": "ShieldedInstanceIdentity",
 "properties": {
+"eccP256EncryptionKey": {
+"$ref": "ShieldedInstanceIdentityEntry",
+"description": "An Endorsement Key (EK) made by the ECC P256 algorithm\nissued to the Shielded Instance's vTPM."
+},
+"eccP256SigningKey": {
+"$ref": "ShieldedInstanceIdentityEntry",
+"description": "An Attestation Key (AK) made by the ECC P256 algorithm\nissued to the Shielded Instance's vTPM."
+},
 "encryptionKey": {
 "$ref": "ShieldedInstanceIdentityEntry",
 "description": "An Endorsement Key (EK) made by the RSA 2048 algorithm\nissued to the Shielded Instance's vTPM."
@@ -93525,6 +93900,7 @@ false
 "FAILURE_NETWORK",
 "FAILURE_NVLINK",
 "FAILURE_REDUNDANT_HARDWARE_FAULT",
+"FAILURE_TPU",
 "INFRASTRUCTURE_RELOCATION",
 "MAINTENANCE_REASON_UNKNOWN",
 "PLANNED_NETWORK_UPDATE",
@@ -93543,6 +93919,7 @@ false
 "Maintenance due to network errors.",
 "Maintenance due to NVLink failure.",
 "Maintenance due to redundant hardware fault.",
+"Maintenance due to TPU errors.",
 "Maintenance due to infrastructure relocation.",
 "Unknown maintenance reason. Do not use this value.",
 "Maintenance due to planned network update.",

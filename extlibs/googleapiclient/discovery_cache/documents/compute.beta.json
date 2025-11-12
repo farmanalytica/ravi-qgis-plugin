@@ -126,7 +126,7 @@
 "acceleratorTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of accelerator types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/acceleratorTypes",
 "httpMethod": "GET",
 "id": "compute.acceleratorTypes.aggregatedList",
@@ -302,7 +302,7 @@
 "addresses": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of addresses.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/addresses",
 "httpMethod": "GET",
 "id": "compute.addresses.aggregatedList",
@@ -754,7 +754,7 @@
 "autoscalers": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of autoscalers.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/autoscalers",
 "httpMethod": "GET",
 "id": "compute.autoscalers.aggregatedList",
@@ -1817,7 +1817,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all BackendService resources, regional and global,\navailable to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/backendServices",
 "httpMethod": "GET",
 "id": "compute.backendServices.aggregatedList",
@@ -2816,7 +2816,7 @@
 "diskTypes": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of disk types.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/diskTypes",
 "httpMethod": "GET",
 "id": "compute.diskTypes.aggregatedList",
@@ -3042,7 +3042,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of persistent disks.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/disks",
 "httpMethod": "GET",
 "id": "compute.disks.aggregatedList",
@@ -4605,6 +4605,11 @@
 "httpMethod": "GET",
 "id": "compute.firewallPolicies.listAssociations",
 "parameters": {
+"includeInheritedPolicies": {
+"description": "If set to \"true\", the response will contain a list of all associations for\nthe containing folders and the containing organization of the target. The\nparameter has no effect if the target is an organization.",
+"location": "query",
+"type": "boolean"
+},
 "targetResource": {
 "description": "The target resource to list associations. It is an organization, or a\nfolder.",
 "location": "query",
@@ -5234,7 +5239,7 @@
 "forwardingRules": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of forwarding rules.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/forwardingRules",
 "httpMethod": "GET",
 "id": "compute.forwardingRules.aggregatedList",
@@ -5695,7 +5700,7 @@
 "futureReservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, recommendation is that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of future reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/futureReservations",
 "httpMethod": "GET",
 "id": "compute.futureReservations.aggregatedList",
@@ -7514,6 +7519,111 @@
 "scopes": [
 "https://www.googleapis.com/auth/cloud-platform",
 "https://www.googleapis.com/auth/compute"
+]
+}
+}
+},
+"globalVmExtensionPolicies": {
+"methods": {
+"aggregatedList": {
+"description": "Retrieves the list of all VM Extension Policy resources\navailable to the specified project.\n\nTo prevent failure, it's recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
+"flatPath": "projects/{project}/aggregated/vmExtensionPolicies",
+"httpMethod": "GET",
+"id": "compute.globalVmExtensionPolicies.aggregatedList",
+"parameterOrder": [
+"project"
+],
+"parameters": {
+"filter": {
+"description": "A filter expression that filters resources listed in the response. Most\nCompute resources support two types of filter expressions:\nexpressions that support regular expressions and expressions that follow\nAPI improvement proposal AIP-160.\nThese two types of filter expressions cannot be mixed in one request.\n\nIf you want to use AIP-160, your expression must specify the field name, an\noperator, and the value that you want to use for filtering. The value\nmust be a string, a number, or a boolean. The operator\nmust be either `=`, `!=`, `>`, `<`, `<=`, `>=` or `:`.\n\nFor example, if you are filtering Compute Engine instances, you can\nexclude instances named `example-instance` by specifying\n`name != example-instance`.\n\nThe `:*` comparison can be used to test whether a key has been defined.\nFor example, to find all objects with `owner` label use:\n```\nlabels.owner:*\n```\n\nYou can also filter nested fields. For example, you could specify\n`scheduling.automaticRestart = false` to include instances only\nif they are not scheduled for automatic restarts. You can use filtering\non nested fields to filter based onresource labels.\n\nTo filter on multiple expressions, provide each separate expression within\nparentheses. For example:\n```\n(scheduling.automaticRestart = true)\n(cpuPlatform = \"Intel Skylake\")\n```\nBy default, each expression is an `AND` expression. However, you\ncan include `AND` and `OR` expressions explicitly.\nFor example:\n```\n(cpuPlatform = \"Intel Skylake\") OR\n(cpuPlatform = \"Intel Broadwell\") AND\n(scheduling.automaticRestart = true)\n```\n\nIf you want to use a regular expression, use the `eq` (equal) or `ne`\n(not equal) operator against a single un-parenthesized expression with or\nwithout quotes or against multiple parenthesized expressions. Examples:\n\n`fieldname eq unquoted literal`\n`fieldname eq 'single quoted literal'`\n`fieldname eq \"double quoted literal\"`\n`(fieldname1 eq literal) (fieldname2 ne \"literal\")`\n\nThe literal value is interpreted as a regular expression using GoogleRE2 library syntax.\nThe literal value must match the entire field.\n\nFor example, to filter for instances that do not end with name \"instance\",\nyou would use `name ne .*instance`.\n\nYou cannot combine constraints on multiple fields using regular\nexpressions.",
+"location": "query",
+"type": "string"
+},
+"includeAllScopes": {
+"description": "Indicates whether every visible scope for each scope type (zone, region,\nglobal) should be included in the response. For new resource types added\nafter this field, the flag has no effect as new resource types will always\ninclude every visible scope for each scope type in response. For resource\ntypes which predate this field, if this flag is omitted or false, only\nscopes of the scope types where the resource type is expected to be found\nwill be included.",
+"location": "query",
+"type": "boolean"
+},
+"maxResults": {
+"default": "500",
+"description": "The maximum number of results per page that should be returned.\nIf the number of available results is larger than `maxResults`,\nCompute Engine returns a `nextPageToken` that can be used to get\nthe next page of results in subsequent list requests. Acceptable values are\n`0` to `500`, inclusive. (Default: `500`)",
+"format": "uint32",
+"location": "query",
+"minimum": "0",
+"type": "integer"
+},
+"orderBy": {
+"description": "Sorts list results by a certain order. By default, results\nare returned in alphanumerical order based on the resource name.\n\nYou can also sort results in descending order based on the creation\ntimestamp using `orderBy=\"creationTimestamp desc\"`. This sorts\nresults based on the `creationTimestamp` field in\nreverse chronological order (newest result first). Use this to sort\nresources like operations so that the newest operation is returned first.\n\nCurrently, only sorting by `name` or\n`creationTimestamp desc` is supported.",
+"location": "query",
+"type": "string"
+},
+"pageToken": {
+"description": "Specifies a page token to use. Set `pageToken` to the\n`nextPageToken` returned by a previous list request to get\nthe next page of results.",
+"location": "query",
+"type": "string"
+},
+"project": {
+"description": "Name of the project scoping this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"returnPartialSuccess": {
+"description": "Opt-in for partial success behavior which provides partial results in case\nof failure. The default value is false.\n\nFor example, when partial success behavior is enabled, aggregatedList for a\nsingle zone scope either returns all resources in the zone or no resources,\nwith an error code.",
+"location": "query",
+"type": "boolean"
+},
+"serviceProjectNumber": {
+"description": "The Shared VPC service project id or service project number for which\naggregated list request is invoked for subnetworks list-usable api.",
+"format": "int64",
+"location": "query",
+"type": "string"
+}
+},
+"path": "projects/{project}/aggregated/vmExtensionPolicies",
+"response": {
+"$ref": "VmExtensionPolicyAggregatedListResponse"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"get": {
+"description": "Gets details of a global VM extension policy.",
+"flatPath": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}",
+"httpMethod": "GET",
+"id": "compute.globalVmExtensionPolicies.get",
+"parameterOrder": [
+"project",
+"globalVmExtensionPolicy"
+],
+"parameters": {
+"globalVmExtensionPolicy": {
+"description": "Name of the GlobalVmExtensionPolicy resource to return.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/global/vmExtensionPolicies/{globalVmExtensionPolicy}",
+"response": {
+"$ref": "GlobalVmExtensionPolicy"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
 ]
 }
 }
@@ -9598,6 +9708,47 @@
 "path": "projects/{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}",
 "response": {
 "$ref": "InstanceGroupManager"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"getAvailableAcceleratorTopologies": {
+"description": "Returns information about available accelerator topologies for a given MIG.",
+"flatPath": "projects/{project}/zones/{zone}/instanceGroupManagers/{resourceId}/getAvailableAcceleratorTopologies",
+"httpMethod": "GET",
+"id": "compute.instanceGroupManagers.getAvailableAcceleratorTopologies",
+"parameterOrder": [
+"project",
+"zone",
+"resourceId"
+],
+"parameters": {
+"project": {
+"description": "Required. Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"resourceId": {
+"description": "Required. The name of the managed instance group.\nIt should conform to RFC1035.",
+"location": "path",
+"required": true,
+"type": "string"
+},
+"zone": {
+"description": "Required. The name of thezone where the managed\ninstance group is located.\nName should conform to RFC1035.",
+"location": "path",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/instanceGroupManagers/{resourceId}/getAvailableAcceleratorTopologies",
+"response": {
+"$ref": "InstanceGroupManagersGetAvailableAcceleratorTopologiesResponse"
 },
 "scopes": [
 "https://www.googleapis.com/auth/cloud-platform",
@@ -19008,7 +19159,7 @@
 ]
 },
 "aggregatedList": {
-"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of network firewall policies, listing network\nfirewall policies from all applicable scopes (global and regional) and\ngrouping the results per scope.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/firewallPolicies",
 "httpMethod": "GET",
 "id": "compute.networkFirewallPolicies.aggregatedList",
@@ -23203,7 +23354,7 @@
 },
 "moveDisk": {
 "deprecated": true,
-"description": "Starting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://{$universe.dns_names.final_documentation_domain}/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
+"description": "Moves a persistent disk from one zone to another.\n*Note*: The moveDisk API will be deprecated on September 29, 2026.\n\nStarting September 29, 2025, you can't use the moveDisk API on new\nprojects. To move a disk to a different region or zone, follow the steps in\n[Change the location of a\ndisk](https://cloud.google.com/compute/docs/disks/migrate-to-hyperdisk#migrate-to-hd).\n\nProjects that already use the moveDisk API can continue usage until\nSeptember 29, 2026.\n\nStarting November 1, 2025, API responses will include a warning message in\nthe response body about the upcoming deprecation. You can skip the message\nto continue using the service without interruption.",
 "flatPath": "projects/{project}/moveDisk",
 "httpMethod": "POST",
 "id": "compute.projects.moveDisk",
@@ -25532,7 +25683,7 @@
 "regionCommitments": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of commitments by region.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/commitments",
 "httpMethod": "GET",
 "id": "compute.regionCommitments.aggregatedList",
@@ -25907,7 +26058,7 @@
 "regionCompositeHealthChecks": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves the list of all CompositeHealthCheck resources (all\nregional) available to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all CompositeHealthCheck resources (all\nregional) available to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/compositeHealthChecks",
 "httpMethod": "GET",
 "id": "compute.regionCompositeHealthChecks.aggregatedList",
@@ -27300,7 +27451,7 @@
 "regionHealthAggregationPolicies": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves the list of all HealthAggregationPolicy resources,\nregional and global, available to the specified project.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves the list of all HealthAggregationPolicy resources,\nregional and global, available to the specified project.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/healthAggregationPolicies",
 "httpMethod": "GET",
 "id": "compute.regionHealthAggregationPolicies.aggregatedList",
@@ -37314,6 +37465,21 @@
 "required": true,
 "type": "string"
 },
+"view": {
+"description": "View of the subBlock.",
+"enum": [
+"SUB_BLOCK_VIEW_BASIC",
+"SUB_BLOCK_VIEW_FULL",
+"SUB_BLOCK_VIEW_UNSPECIFIED"
+],
+"enumDescriptions": [
+"This view includes basic information about the reservation sub block",
+"Includes detailed topology view.",
+"The default / unset value. The API will default to the BASIC view."
+],
+"location": "query",
+"type": "string"
+},
 "zone": {
 "description": "Name of the zone for this request. Zone name should conform to RFC1035.",
 "location": "path",
@@ -37673,7 +37839,7 @@
 "reservations": {
 "methods": {
 "aggregatedList": {
-"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, Google recommends that you set the\n`returnPartialSuccess` parameter to `true`.",
+"description": "Retrieves an aggregated list of reservations.\n\nTo prevent failure, it is recommended that you set the\n`returnPartialSuccess` parameter to `true`.",
 "flatPath": "projects/{project}/aggregated/reservations",
 "httpMethod": "GET",
 "id": "compute.reservations.aggregatedList",
@@ -42819,6 +42985,20 @@
 "description": "The Shared VPC service project id or service project number for which\naggregated list request is invoked for subnetworks list-usable api.",
 "format": "int64",
 "location": "query",
+"type": "string"
+},
+"views": {
+"description": "Defines the extra views returned back in the subnetwork resource.\nSupported values:\n   \n   - WITH_UTILIZATION: Utilization data is included in the\n   response.",
+"enum": [
+"DEFAULT",
+"WITH_UTILIZATION"
+],
+"enumDescriptions": [
+"",
+"Utilization data is included in the response."
+],
+"location": "query",
+"repeated": true,
 "type": "string"
 }
 },
@@ -48329,6 +48509,253 @@
 }
 }
 },
+"zoneVmExtensionPolicies": {
+"methods": {
+"delete": {
+"description": "Deletes a specified zone VM extension policy.",
+"flatPath": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"httpMethod": "DELETE",
+"id": "compute.zoneVmExtensionPolicies.delete",
+"parameterOrder": [
+"project",
+"zone",
+"vmExtensionPolicy"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"vmExtensionPolicy": {
+"description": "Name of the zone VM extension policy to delete.",
+"location": "path",
+"required": true,
+"type": "string"
+},
+"zone": {
+"description": "Name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"get": {
+"description": "Retrieves details of a specific zone VM extension policy.",
+"flatPath": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"httpMethod": "GET",
+"id": "compute.zoneVmExtensionPolicies.get",
+"parameterOrder": [
+"project",
+"zone",
+"vmExtensionPolicy"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"vmExtensionPolicy": {
+"description": "Name of the VM extension policy resource to return.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+},
+"zone": {
+"description": "Name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"response": {
+"$ref": "VmExtensionPolicy"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"insert": {
+"description": "Creates a new zone-level VM extension policy within a project.",
+"flatPath": "projects/{project}/zones/{zone}/vmExtensionPolicies",
+"httpMethod": "POST",
+"id": "compute.zoneVmExtensionPolicies.insert",
+"parameterOrder": [
+"project",
+"zone"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"zone": {
+"description": "Name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/vmExtensionPolicies",
+"request": {
+"$ref": "VmExtensionPolicy"
+},
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
+"list": {
+"description": "Lists all VM extension policies within a specific zone for a project.",
+"flatPath": "projects/{project}/zones/{zone}/vmExtensionPolicies",
+"httpMethod": "GET",
+"id": "compute.zoneVmExtensionPolicies.list",
+"parameterOrder": [
+"project",
+"zone"
+],
+"parameters": {
+"filter": {
+"description": "A filter expression that filters resources listed in the response. Most\nCompute resources support two types of filter expressions:\nexpressions that support regular expressions and expressions that follow\nAPI improvement proposal AIP-160.\nThese two types of filter expressions cannot be mixed in one request.\n\nIf you want to use AIP-160, your expression must specify the field name, an\noperator, and the value that you want to use for filtering. The value\nmust be a string, a number, or a boolean. The operator\nmust be either `=`, `!=`, `>`, `<`, `<=`, `>=` or `:`.\n\nFor example, if you are filtering Compute Engine instances, you can\nexclude instances named `example-instance` by specifying\n`name != example-instance`.\n\nThe `:*` comparison can be used to test whether a key has been defined.\nFor example, to find all objects with `owner` label use:\n```\nlabels.owner:*\n```\n\nYou can also filter nested fields. For example, you could specify\n`scheduling.automaticRestart = false` to include instances only\nif they are not scheduled for automatic restarts. You can use filtering\non nested fields to filter based onresource labels.\n\nTo filter on multiple expressions, provide each separate expression within\nparentheses. For example:\n```\n(scheduling.automaticRestart = true)\n(cpuPlatform = \"Intel Skylake\")\n```\nBy default, each expression is an `AND` expression. However, you\ncan include `AND` and `OR` expressions explicitly.\nFor example:\n```\n(cpuPlatform = \"Intel Skylake\") OR\n(cpuPlatform = \"Intel Broadwell\") AND\n(scheduling.automaticRestart = true)\n```\n\nIf you want to use a regular expression, use the `eq` (equal) or `ne`\n(not equal) operator against a single un-parenthesized expression with or\nwithout quotes or against multiple parenthesized expressions. Examples:\n\n`fieldname eq unquoted literal`\n`fieldname eq 'single quoted literal'`\n`fieldname eq \"double quoted literal\"`\n`(fieldname1 eq literal) (fieldname2 ne \"literal\")`\n\nThe literal value is interpreted as a regular expression using GoogleRE2 library syntax.\nThe literal value must match the entire field.\n\nFor example, to filter for instances that do not end with name \"instance\",\nyou would use `name ne .*instance`.\n\nYou cannot combine constraints on multiple fields using regular\nexpressions.",
+"location": "query",
+"type": "string"
+},
+"maxResults": {
+"default": "500",
+"description": "The maximum number of results per page that should be returned.\nIf the number of available results is larger than `maxResults`,\nCompute Engine returns a `nextPageToken` that can be used to get\nthe next page of results in subsequent list requests. Acceptable values are\n`0` to `500`, inclusive. (Default: `500`)",
+"format": "uint32",
+"location": "query",
+"minimum": "0",
+"type": "integer"
+},
+"orderBy": {
+"description": "Sorts list results by a certain order. By default, results\nare returned in alphanumerical order based on the resource name.\n\nYou can also sort results in descending order based on the creation\ntimestamp using `orderBy=\"creationTimestamp desc\"`. This sorts\nresults based on the `creationTimestamp` field in\nreverse chronological order (newest result first). Use this to sort\nresources like operations so that the newest operation is returned first.\n\nCurrently, only sorting by `name` or\n`creationTimestamp desc` is supported.",
+"location": "query",
+"type": "string"
+},
+"pageToken": {
+"description": "Specifies a page token to use. Set `pageToken` to the\n`nextPageToken` returned by a previous list request to get\nthe next page of results.",
+"location": "query",
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"returnPartialSuccess": {
+"description": "Opt-in for partial success behavior which provides partial results in case\nof failure. The default value is false.\n\nFor example, when partial success behavior is enabled, aggregatedList for a\nsingle zone scope either returns all resources in the zone or no resources,\nwith an error code.",
+"location": "query",
+"type": "boolean"
+},
+"zone": {
+"description": "Name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/vmExtensionPolicies",
+"response": {
+"$ref": "VmExtensionPolicyList"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/compute.readonly"
+]
+},
+"update": {
+"description": "Modifies an existing zone VM extension policy.",
+"flatPath": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"httpMethod": "PATCH",
+"id": "compute.zoneVmExtensionPolicies.update",
+"parameterOrder": [
+"project",
+"zone",
+"vmExtensionPolicy"
+],
+"parameters": {
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so\nthat if you must retry your request, the server will know to ignore the\nrequest if it has already been completed.\n\nFor example, consider a situation where you make an initial request and\nthe request times out. If you make the request again with the same\nrequest ID, the server can check if original operation with the same\nrequest ID was received, and if so, will ignore the second request. This\nprevents clients from accidentally creating duplicate commitments.\n\nThe request ID must be\na valid UUID with the exception that zero UUID is not supported\n(00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"vmExtensionPolicy": {
+"description": "Name of the zone VM extension policy to update.",
+"location": "path",
+"required": true,
+"type": "string"
+},
+"zone": {
+"description": "Name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/vmExtensionPolicies/{vmExtensionPolicy}",
+"request": {
+"$ref": "VmExtensionPolicy"
+},
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+}
+}
+},
 "zones": {
 "methods": {
 "get": {
@@ -48424,7 +48851,7 @@
 }
 }
 },
-"revision": "20251015",
+"revision": "20251019",
 "rootUrl": "https://compute.googleapis.com/",
 "schemas": {
 "AWSV4Signature": {
@@ -48461,6 +48888,66 @@
 },
 "acceleratorType": {
 "description": "Full or partial URL of the accelerator type resource to attach to this\ninstance. For example:projects/my-project/zones/us-central1-c/acceleratorTypes/nvidia-tesla-p100\nIf you are creating an instance template, specify only the\naccelerator name.\nSee GPUs on Compute Engine\nfor a full list of accelerator types.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfo": {
+"description": "Info for accelerator topologies within a densely packed reservation.",
+"id": "AcceleratorTopologiesInfo",
+"properties": {
+"acceleratorTopologyInfos": {
+"description": "Info for each accelerator topology.",
+"items": {
+"$ref": "AcceleratorTopologiesInfoAcceleratorTopologyInfo"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfoAcceleratorTopologyInfo": {
+"description": "Info for a slice of a given topology.",
+"id": "AcceleratorTopologiesInfoAcceleratorTopologyInfo",
+"properties": {
+"acceleratorTopology": {
+"description": "The accelerator topology.",
+"type": "string"
+},
+"infoPerTopologyStates": {
+"description": "Info for each topology state.",
+"items": {
+"$ref": "AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState": {
+"description": "Info for each topology state.",
+"id": "AcceleratorTopologiesInfoAcceleratorTopologyInfoInfoPerTopologyState",
+"properties": {
+"count": {
+"description": "The number of accelerator topologies in this state.",
+"format": "int32",
+"type": "integer"
+},
+"state": {
+"description": "The state of the accelerator topology.",
+"enum": [
+"AVAILABLE",
+"RUNNING",
+"TOPOLOGY_STATE_UNSPECIFIED",
+"UNHEALTHY"
+],
+"enumDescriptions": [
+"The accelerator topology is available.",
+"The accelerator topology is running.",
+"The state of the topology is unspecified.",
+"The accelerator topology is unhealthy."
+],
 "type": "string"
 }
 },
@@ -51364,6 +51851,10 @@ false
 "$ref": "BackendBucketParams",
 "description": "Input only. [Input Only] Additional params passed with the request, but not persisted\nas part of resource payload."
 },
+"region": {
+"description": "[Output Only] URL of the region where the regional backend bucket\nresides. This field is not applicable to global backend buckets.\nYou must specify this field as part of the HTTP request URL. It is\nnot settable as a field in the request body.",
+"type": "string"
+},
 "selfLink": {
 "description": "[Output Only] Server-defined URL for the resource.",
 "type": "string"
@@ -51651,7 +52142,7 @@ false
 "id": "BackendBucketCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -52147,7 +52638,7 @@ false
 "type": "number"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -52777,7 +53268,7 @@ false
 "id": "BackendServiceCdnPolicyNegativeCachingPolicy",
 "properties": {
 "code": {
-"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 are can be\nspecified as values, and you cannot specify a status code more than\nonce.",
+"description": "The HTTP status code to define a TTL against. Only HTTP status codes\n300, 301, 302, 307, 308, 404, 405, 410, 421, 451 and 501 can be\nspecified as values, and you cannot specify a status code more than\nonce.",
 "format": "int32",
 "type": "integer"
 },
@@ -52842,7 +53333,7 @@ false
 "type": "boolean"
 },
 "name": {
-"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression[a-z]([-_.a-z0-9]*[a-z0-9])? which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
+"description": "Name of a custom utilization signal. The name must be 1-64 characters\nlong and match the regular expression\n`[a-z]([-_.a-z0-9]*[a-z0-9])?` which means that the\nfirst character must be a lowercase letter, and all following\ncharacters must be a dash, period, underscore, lowercase letter, or\ndigit, except the last character, which cannot be a dash, period, or\nunderscore. For usage guidelines, see Custom Metrics balancing mode. This\nfield can only be used for a global or regional backend service with the\nloadBalancingScheme set to EXTERNAL_MANAGED,INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -53476,6 +53967,10 @@ false
 "properties": {
 "authenticationConfig": {
 "description": "Reference to the BackendAuthenticationConfig resource from the\nnetworksecurity.googleapis.com namespace. Can be used in authenticating\nTLS connections to the backend, as specified by the authenticationMode\nfield. Can only be specified if authenticationMode is not NONE.",
+"type": "string"
+},
+"identity": {
+"description": "Assigns the Managed Identity for the BackendService Workload.\n\n\nUse this property to configure the load balancer back-end to use\ncertificates and roots of trust provisioned by the Managed Workload\nIdentity system. \n\n The `identity` property is the\nfully-specified SPIFFE ID to use in the SVID presented by the Load\nBalancer Workload. \n\n The SPIFFE ID must be a resource starting with the\n`trustDomain` property value, followed by the path to the Managed\nWorkload Identity. \n\n Supported SPIFFE ID format: \n   \n   - //<trust_domain>/ns/<namespace>/sa/<subject>\n\n\nThe Trust Domain within the Managed Identity must refer to a valid\nWorkload Identity Pool. The TrustConfig and CertificateIssuanceConfig\nwill be inherited from the Workload Identity Pool. \n\n Restrictions: \n   \n   - If you set the `identity` property, you cannot manually set\n   the following fields: \n       - tlsSettings.sni\n      - tlsSettings.subjectAltNames\n      - tlsSettings.authenticationConfig\n   \n\nWhen defining a `identity` for a RegionBackendServices, the\ncorresponding Workload Identity Pool must have a ca_pool\nconfigured in the same region. \n\n The system will set up a read-onlytlsSettings.authenticationConfig for the Managed Identity.",
 "type": "string"
 },
 "sni": {
@@ -55085,6 +55580,13 @@ false
 "selfLink": {
 "description": "[Output Only] Server-defined URL for this resource.",
 "type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.",
+"items": {
+"type": "string"
+},
+"type": "array"
 },
 "warning": {
 "description": "[Output Only] Informational warning message.",
@@ -61325,6 +61827,223 @@ false
 },
 "type": "object"
 },
+"GlobalVmExtensionPolicy": {
+"description": "Message describing GlobalVmExtensionPolicy object.",
+"id": "GlobalVmExtensionPolicy",
+"properties": {
+"creationTimestamp": {
+"description": "[Output Only] Creation timestamp inRFC3339\ntext format.",
+"type": "string"
+},
+"description": {
+"description": "An optional description of this resource. Provide this property when you\ncreate the resource.",
+"type": "string"
+},
+"extensionPolicies": {
+"additionalProperties": {
+"$ref": "GlobalVmExtensionPolicyExtensionPolicy"
+},
+"description": "Required. Map from extension (eg: \"cloudops\") to its policy configuration.\nThe key is the name of the extension.",
+"type": "object"
+},
+"id": {
+"description": "[Output Only] The unique identifier for the resource. This identifier is\ndefined by the server.",
+"format": "uint64",
+"type": "string"
+},
+"instanceSelectors": {
+"description": "Optional. Selector to target VMs for a policy.\nThere is a logical \"AND\" between instance_selectors.",
+"items": {
+"$ref": "GlobalVmExtensionPolicyInstanceSelector"
+},
+"type": "array"
+},
+"kind": {
+"default": "compute#globalVmExtensionPolicy",
+"description": "[Output Only] Type of the resource. Alwayscompute#globalVmExtensionPolicy for globalVmExtensionPolicies.",
+"type": "string"
+},
+"name": {
+"description": "Name of the resource. Provided by the client when the resource is created.\nThe name must be 1-63 characters long, and comply withRFC1035.\nSpecifically, the name must be 1-63 characters long and match the regular\nexpression `[a-z]([-a-z0-9]*[a-z0-9])?`\nwhich means the first character must be a lowercase letter, and all\nfollowing characters must be a dash, lowercase letter, or digit, except\nthe last character, which cannot be a dash.",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"type": "string"
+},
+"priority": {
+"description": "Optional. Used to resolve conflicts when multiple policies are active for the same\nextension. Defaults to 0.\n\nLarger the number, higher the priority. When the priority is the same,\nthe policy with the newer create time has higher priority.",
+"format": "int32",
+"type": "integer"
+},
+"rolloutOperation": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperation",
+"description": "Required. The rollout strategy and status."
+},
+"scopedResourceStatus": {
+"description": "[Output Only] The scoped resource status. It's only for tracking the\npurging status of the policy.",
+"enum": [
+"SCOPED_RESOURCE_STATUS_DELETING",
+"SCOPED_RESOURCE_STATUS_UNSPECIFIED"
+],
+"enumDescriptions": [
+"The zonal policies are being deleted.",
+"Default value. This value is unused."
+],
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined fully-qualified URL for this resource.",
+"type": "string"
+},
+"selfLinkWithId": {
+"description": "[Output Only] Server-defined URL for this resource's resource id.",
+"type": "string"
+},
+"updateTimestamp": {
+"description": "[Output Only] Update timestamp inRFC3339\ntext format.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyExtensionPolicy": {
+"description": "Policy for a single extension.",
+"id": "GlobalVmExtensionPolicyExtensionPolicy",
+"properties": {
+"pinnedVersion": {
+"description": "Optional. The version pinning for the extension.\nIf empty, the extension will be installed with the latest version\nreleased by the extension producer.",
+"type": "string"
+},
+"stringConfig": {
+"description": "Optional. String configuration. Any string payload that the extension\nunderstands.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyInstanceSelector": {
+"description": "Selector to target VMs for a zone VM extension policy.",
+"id": "GlobalVmExtensionPolicyInstanceSelector",
+"properties": {
+"labelSelector": {
+"$ref": "GlobalVmExtensionPolicyLabelSelector",
+"description": "Optional. Labels within the LabelSelector are OR'd."
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyLabelSelector": {
+"description": "A LabelSelector is applicable for a VM only if it matches all labels in\nthe LabelSelector.",
+"id": "GlobalVmExtensionPolicyLabelSelector",
+"properties": {
+"inclusionLabels": {
+"additionalProperties": {
+"type": "string"
+},
+"description": "Optional. Labels as key value pairs.\nA VM should contain all the pairs specified in this map to be selected;\nLabels within the LabelSelector are OR'ed.",
+"type": "object"
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyRolloutOperation": {
+"description": "Represents the rollout operation",
+"id": "GlobalVmExtensionPolicyRolloutOperation",
+"properties": {
+"rolloutInput": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperationRolloutInput",
+"description": "Required. The rollout input which defines the rollout plan."
+},
+"rolloutStatus": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperationRolloutStatus",
+"description": "[Output Only] The rollout status of the policy."
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyRolloutOperationRolloutInput": {
+"id": "GlobalVmExtensionPolicyRolloutOperationRolloutInput",
+"properties": {
+"conflictBehavior": {
+"description": "Optional. [Optional] Specifies the behavior of the Rollout if a conflict is\ndetected in a project during a Rollout. It can be one of the following\nvalues:\n1) empty : don't overwrite the local value if conflict happens. This is\nthe default behavior.\n2) \"overwrite\" : Overwrite the local value with the rollout value.\nThe concept of \"conflict\" applies to:\n1) Insert action. If the zonal policy already exists when Insert\nhappens, it's a conflict.\n2) Update action. If the zonal policy was updated out of band by a\nzonal API, it's a conflict.",
+"type": "string"
+},
+"name": {
+"description": "Optional. The name of the rollout plan.\nEx.\nprojects//locations/global/rolloutPlans/.",
+"type": "string"
+},
+"predefinedRolloutPlan": {
+"description": "Optional. Predefined rollout plan.",
+"enum": [
+"FAST_ROLLOUT",
+"ROLLOUT_PLAN_UNSPECIFIED",
+"SLOW_ROLLOUT"
+],
+"enumDescriptions": [
+"",
+"",
+""
+],
+"type": "string"
+},
+"retryUuid": {
+"description": "Optional. The UUID of the retry action. Only set it if this is a retry\nfor an existing resource. This is for the user re-populate the resource\nwithout changes. An error will be returned if the retry_uuid is set but\nthe resource get modified.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyRolloutOperationRolloutStatus": {
+"id": "GlobalVmExtensionPolicyRolloutOperationRolloutStatus",
+"properties": {
+"currentRollouts": {
+"description": "[Output Only] The current rollouts for the latest version of the\nresource. There should be only one current rollout, but for\nscalability, we make it repeated.",
+"items": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperationRolloutStatusRolloutMetadata"
+},
+"type": "array"
+},
+"previousRollout": {
+"$ref": "GlobalVmExtensionPolicyRolloutOperationRolloutStatusRolloutMetadata",
+"description": "[Output Only] The last completed rollout resource. This field will not\nbe populated until the first rollout is completed."
+}
+},
+"type": "object"
+},
+"GlobalVmExtensionPolicyRolloutOperationRolloutStatusRolloutMetadata": {
+"id": "GlobalVmExtensionPolicyRolloutOperationRolloutStatusRolloutMetadata",
+"properties": {
+"rollout": {
+"description": "[Output Only] The name of the rollout.\nEx. projects//locations/global/rollouts/.",
+"type": "string"
+},
+"rolloutPlan": {
+"description": "[Output Only] The name of the rollout plan.\nEx.\nprojects//locations/global/rolloutPlans/.",
+"type": "string"
+},
+"state": {
+"description": "[Output Only] The overall state of the rollout.",
+"enum": [
+"STATE_CANCELLED",
+"STATE_COMPLETED",
+"STATE_FAILED",
+"STATE_PAUSED",
+"STATE_PROCESSING",
+"STATE_UNKNOWN",
+"STATE_UNSPECIFIED"
+],
+"enumDescriptions": [
+"Iteration was explicitly cancelled.",
+"Iteration completed, with all actions being successful.",
+"Iteration completed, with failures.",
+"The rollout is paused.",
+"Iteration is in progress.",
+"Impossible to determine current state of the iteration.",
+"Default value. This value is unused."
+],
+"type": "string"
+}
+},
+"type": "object"
+},
 "GroupMaintenanceInfo": {
 "description": "Maintenance Info for ReservationBlocks.",
 "id": "GroupMaintenanceInfo",
@@ -63109,6 +63828,13 @@ false
 "selfLink": {
 "description": "[Output Only] Server-defined URL for this resource.",
 "type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.",
+"items": {
+"type": "string"
+},
+"type": "array"
 },
 "warning": {
 "description": "[Output Only] Informational warning message.",
@@ -66458,7 +67184,7 @@ false
 "id": "InstanceGroupManagerInstanceLifecyclePolicyOnRepair",
 "properties": {
 "allowChangingZone": {
-"description": "Specifies whether the MIG can change a VM's zone during a repair.",
+"description": "Specifies whether the MIG can change a VM's zone during a repair.\nValid values are:\n   \n   - NO (default): MIG cannot change a VM's zone during a\n   repair.\n   - YES: MIG can select a different zone for the VM during\n   a repair.",
 "enum": [
 "NO",
 "YES"
@@ -67435,6 +68161,42 @@ false
 "type": "string"
 },
 "type": "array"
+}
+},
+"type": "object"
+},
+"InstanceGroupManagersGetAvailableAcceleratorTopologiesResponse": {
+"id": "InstanceGroupManagersGetAvailableAcceleratorTopologiesResponse",
+"properties": {
+"acceleratorTopologiesInfo": {
+"additionalProperties": {
+"$ref": "InstanceGroupManagersGetAvailableAcceleratorTopologiesResponseAcceleratorTopologyInfo"
+},
+"description": "The accelerator topology information returned per id of the topology\nlocation.",
+"type": "object"
+}
+},
+"type": "object"
+},
+"InstanceGroupManagersGetAvailableAcceleratorTopologiesResponseAcceleratorTopologyInfo": {
+"id": "InstanceGroupManagersGetAvailableAcceleratorTopologiesResponseAcceleratorTopologyInfo",
+"properties": {
+"acceleratorTopology": {
+"description": "Topology in the format of: \"16x16\", \"4x4x4\", etc.",
+"type": "string"
+},
+"acceleratorTopologyHealth": {
+"enum": [
+"DEGRADED",
+"HEALTHY",
+"UNHEALTHY"
+],
+"enumDescriptions": [
+"All VM are in RUNNING state, but there is an issue with\nthe inter-chip connectivity that makes this part\nof the infrastructure ready to use as a working\ninter-chip connected group only in a degraded mode.\nThis is allowed only for Instances configured with ICI\nresiliency",
+"All VM are in RUNNING state, there are no issues with the\ninter-chip connectivity.",
+"Some VMs may not be in RUNNING state, or there is an\nissue with the inter-chip connectivity that makes this\npart of the infrastructure unsuitable for forming a\nworking inter-chip connected group."
+],
+"type": "string"
 }
 },
 "type": "object"
@@ -70550,10 +71312,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -70718,10 +71482,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -71019,6 +71785,10 @@ false
 "description": "[Output Only] Type of the resource. Alwayscompute#interconnectAttachment for interconnect attachments.",
 "type": "string"
 },
+"l2Forwarding": {
+"$ref": "InterconnectAttachmentL2Forwarding",
+"description": "L2 Interconnect Attachment related config. This field is required if the\ntype is L2_DEDICATED.\n\nThe configuration specifies how VLAN tags (like dot1q, qinq, or dot1ad)\nwithin L2 packets are mapped to the destination appliances IP addresses.\nThe packet is then encapsulated with the appliance IP address and sent to\nthe edge appliance."
+},
 "labelFingerprint": {
 "description": "A fingerprint for the labels being applied to this InterconnectAttachment,\nwhich is essentially a hash of the labels set used for optimistic locking.\nThe fingerprint is initially generated by Compute Engine and changes after\nevery request to modify or update labels. You must always provide an\nup-to-date fingerprint hash in order to update or change labels,\notherwise the request will fail with error412 conditionNotMet.\n\nTo see the latest fingerprint, make a get() request to\nretrieve an InterconnectAttachment.",
 "format": "byte",
@@ -71134,14 +71904,16 @@ false
 "type": "integer"
 },
 "type": {
-"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.",
+"description": "The type of interconnect attachment this is, which can take one of the\nfollowing values:\n   \n   - DEDICATED: an attachment to a Dedicated Interconnect.\n   - PARTNER: an attachment to a Partner Interconnect, created by the\n   customer.\n   - PARTNER_PROVIDER: an attachment to a Partner Interconnect, created by\n   the partner.\n\n- L2_DEDICATED: a L2 attachment to a Dedicated Interconnect.",
 "enum": [
 "DEDICATED",
+"L2_DEDICATED",
 "PARTNER",
 "PARTNER_PROVIDER"
 ],
 "enumDescriptions": [
 "Attachment to a dedicated interconnect.",
+"Attachment to a dedicated interconnect, forwarding L2 packets.",
 "Attachment to a partner interconnect, created by the customer.",
 "Attachment to a partner interconnect, created by the partner."
 ],
@@ -71913,6 +72685,88 @@ false
 },
 "type": "object"
 },
+"InterconnectAttachmentL2Forwarding": {
+"description": "L2 Interconnect Attachment related configuration.",
+"id": "InterconnectAttachmentL2Forwarding",
+"properties": {
+"applianceMappings": {
+"additionalProperties": {
+"$ref": "InterconnectAttachmentL2ForwardingApplianceMapping"
+},
+"description": "Optional. A map of VLAN tags to appliances and optional inner mapping\nrules. If VLANs are not explicitly mapped to any appliance, the\ndefaultApplianceIpAddress is used.\n\nEach VLAN tag can be a single number or a range of numbers in the range\nof 1 to 4094, e.g., \"1\" or \"4001-4094\". Non-empty and non-overlapping\nVLAN tag ranges are enforced, and violating operations will be rejected.\n\nThe VLAN tags in the Ethernet header must use an ethertype value of\n0x88A8 or 0x8100.",
+"type": "object"
+},
+"defaultApplianceIpAddress": {
+"description": "Optional. A single IPv4 or IPv6 address used as the default destination\nIP when there is no VLAN mapping result found.\n\nUnset field (null-value) indicates the unmatched packet should be\ndropped.",
+"type": "string"
+},
+"geneveHeader": {
+"$ref": "InterconnectAttachmentL2ForwardingGeneveHeader",
+"description": "Optional. It represents the structure of a Geneve (Generic Network\nVirtualization Encapsulation) header, as defined in RFC8926. It encapsulates packets from various\nprotocols (e.g., Ethernet, IPv4, IPv6) for use in network virtualization\nenvironments."
+},
+"network": {
+"description": "Required. Resource URL of the network to which this attachment belongs.",
+"type": "string"
+},
+"tunnelEndpointIpAddress": {
+"description": "Required. A single IPv4 or IPv6 address. This address will be used as the\nsource IP address for packets sent to the appliances, and must be used as\nthe destination IP address for packets that should be sent out through\nthis attachment.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingApplianceMapping": {
+"description": "Two-level VLAN-to-Appliance mapping rule.",
+"id": "InterconnectAttachmentL2ForwardingApplianceMapping",
+"properties": {
+"applianceIpAddress": {
+"description": "Optional. A single IPv4 or IPv6 address used as the destination IP\naddress for ingress packets that match on a VLAN tag, but do not match\na more specific inner VLAN tag.\n\nUnset field (null-value) indicates both VLAN tags are required to be\nmapped. Otherwise, defaultApplianceIpAddress is used.",
+"type": "string"
+},
+"innerVlanToApplianceMappings": {
+"description": "Optional. Used to match against the inner VLAN when the packet\ncontains two VLAN tags.\n\nA list of mapping rules from inner VLAN tags to IP addresses. If the\ninner VLAN is not explicitly mapped to an IP address range, the\napplianceIpAddress is used.",
+"items": {
+"$ref": "InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping"
+},
+"type": "array"
+},
+"name": {
+"description": "Optional. The name of this appliance mapping rule.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping": {
+"description": "The inner VLAN-to-Appliance mapping.",
+"id": "InterconnectAttachmentL2ForwardingApplianceMappingInnerVlanToApplianceMapping",
+"properties": {
+"innerApplianceIpAddress": {
+"description": "Required in this object. A single IPv4 or IPv6 address used as the\ndestination IP address for ingress packets that match on both VLAN\ntags.",
+"type": "string"
+},
+"innerVlanTags": {
+"description": "Required in this object. Used to match the inner VLAN tag on the\npacket. Each entry can be a single number or a range of numbers in\nthe range of 1 to 4094, e.g., [\"1\", \"4001-4094\"] is valid. Non-empty\nand Non-overlapping VLAN tag ranges are enforced, and violating\noperations will be rejected.\n\nThe inner VLAN tags must have an ethertype value of 0x8100.",
+"items": {
+"type": "string"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"InterconnectAttachmentL2ForwardingGeneveHeader": {
+"description": "GeneveHeader related configurations.",
+"id": "InterconnectAttachmentL2ForwardingGeneveHeader",
+"properties": {
+"vni": {
+"description": "Optional. VNI is a 24-bit unique virtual network identifier, from 0 to\n16,777,215.",
+"format": "uint32",
+"type": "integer"
+}
+},
+"type": "object"
+},
 "InterconnectAttachmentList": {
 "description": "Response to the list request, and contains a list of interconnect\nattachments.",
 "id": "InterconnectAttachmentList",
@@ -72467,7 +73321,7 @@ false
 "type": "string"
 },
 "etag": {
-"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed byAPI 154.",
+"description": "Opaque system-generated token that uniquely identifies the configuration.\nIf provided when patching a configuration in update mode, the provided\ntoken must match the current token or the update is rejected. This provides\na reliable means of doing read-modify-write (optimistic locking) as\ndescribed by AIP 154.",
 "type": "string"
 },
 "id": {
@@ -72803,10 +73657,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -73252,10 +74108,12 @@ false
 "items": {
 "enum": [
 "IF_CROSS_SITE_NETWORK",
+"IF_L2_FORWARDING",
 "IF_MACSEC"
 ],
 "enumDescriptions": [
 "Cross-Site Networking",
+"L2 Interconnect Attachment Forwarding",
 "Media Access Control security (MACsec)"
 ],
 "type": "string"
@@ -73563,6 +74421,10 @@ false
 "description": "Expected round-trip time in milliseconds, from this InterconnectLocation\nto a VM in this region.",
 "format": "int64",
 "type": "string"
+},
+"l2ForwardingEnabled": {
+"description": "Identifies whether L2 Interconnect Attachments can be created in this\nregion for interconnects that are in this location.",
+"type": "boolean"
 },
 "locationPresence": {
 "description": "Identifies the network presence of this location.",
@@ -79861,6 +80723,18 @@ false
 ],
 "type": "string"
 },
+"allowMulticast": {
+"description": "Specifies whether multicast is allowed.",
+"enum": [
+"MULTICAST_ALLOWED",
+"MULTICAST_BLOCKED"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
+},
 "allowNcc": {
 "description": "Specifies whether NCC is allowed.",
 "enum": [
@@ -80017,6 +80891,18 @@ false
 "type": "string"
 },
 "type": "array"
+},
+"multicast": {
+"description": "Specifies which type of multicast is supported.",
+"enum": [
+"MULTICAST_SDN",
+"MULTICAST_ULL"
+],
+"enumDescriptions": [
+"",
+""
+],
+"type": "string"
 },
 "subnetPurposes": {
 "description": "Specifies which subnetwork purposes are supported.",
@@ -89469,6 +90355,10 @@ false
 "description": "Represents a reservation subBlock resource.",
 "id": "ReservationSubBlock",
 "properties": {
+"acceleratorTopologiesInfo": {
+"$ref": "AcceleratorTopologiesInfo",
+"description": "[Output Only] Slice info for the reservation subBlock."
+},
 "count": {
 "description": "[Output Only] The number of hosts that are allocated in this\nreservation subBlock.",
 "format": "int32",
@@ -89817,12 +90707,14 @@ false
 "FAULT_BEHAVIOR_UNSPECIFIED",
 "GPU_ERROR",
 "PERFORMANCE",
+"SILENT_DATA_CORRUPTION",
 "SWITCH_FAILURE"
 ],
 "enumDescriptions": [
 "",
 "The subBlock experienced a GPU error.",
 "The subBlock experienced performance issues.",
+"The subBlock experienced silent data corruption.",
 "The subBlock experienced a switch failure."
 ],
 "type": "string"
@@ -90486,6 +91378,18 @@ false
 "description": "A GroupPlacementPolicy specifies resource placement configuration.\nIt specifies the failure bucket separation",
 "id": "ResourcePolicyGroupPlacementPolicy",
 "properties": {
+"acceleratorTopologyMode": {
+"description": "Specifies the connection mode for the accelerator topology. If not\nspecified, the default is AUTO_CONNECT.",
+"enum": [
+"AUTO_CONNECT",
+"PROVISION_ONLY"
+],
+"enumDescriptions": [
+"The interconnected chips are pre-configured at the time of VM creation.",
+"The interconnected chips are connected on demand. At the time of VM\ncreation, the chips are not connected."
+],
+"type": "string"
+},
 "availabilityDomainCount": {
 "description": "The number of availability domains to spread instances across. If two\ninstances are in different availability domain, they are not in the same\nlow latency network.",
 "format": "int32",
@@ -91274,7 +92178,7 @@ false
 "type": "integer"
 },
 "routeStatus": {
-"description": "[Output only] The status of the route.",
+"description": "[Output only] The status of the route. This status only applies to\ndynamic routes learned by Cloud Routers. This status is not applicable\nto static routes.",
 "enum": [
 "ACTIVE",
 "DROPPED",
@@ -96400,6 +97304,14 @@ false
 "description": "A Shielded Instance Identity.",
 "id": "ShieldedInstanceIdentity",
 "properties": {
+"eccP256EncryptionKey": {
+"$ref": "ShieldedInstanceIdentityEntry",
+"description": "An Endorsement Key (EK) made by the ECC P256 algorithm\nissued to the Shielded Instance's vTPM."
+},
+"eccP256SigningKey": {
+"$ref": "ShieldedInstanceIdentityEntry",
+"description": "An Attestation Key (AK) made by the ECC P256 algorithm\nissued to the Shielded Instance's vTPM."
+},
 "encryptionKey": {
 "$ref": "ShieldedInstanceIdentityEntry",
 "description": "An Endorsement Key (EK) made by the RSA 2048 algorithm\nissued to the Shielded Instance's vTPM."
@@ -105357,6 +106269,7 @@ false
 "FAILURE_NETWORK",
 "FAILURE_NVLINK",
 "FAILURE_REDUNDANT_HARDWARE_FAULT",
+"FAILURE_TPU",
 "INFRASTRUCTURE_RELOCATION",
 "MAINTENANCE_REASON_UNKNOWN",
 "PLANNED_NETWORK_UPDATE",
@@ -105375,6 +106288,7 @@ false
 "Maintenance due to network errors.",
 "Maintenance due to NVLink failure.",
 "Maintenance due to redundant hardware fault.",
+"Maintenance due to TPU errors.",
 "Maintenance due to infrastructure relocation.",
 "Unknown maintenance reason. Do not use this value.",
 "Maintenance due to planned network update.",
@@ -106526,6 +107440,602 @@ false
 "selfLink": {
 "description": "[Output Only] Server-defined URL for this resource.",
 "type": "string"
+},
+"warning": {
+"description": "[Output Only] Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
+"VmExtensionPoliciesScopedList": {
+"id": "VmExtensionPoliciesScopedList",
+"properties": {
+"vmExtensionPolicies": {
+"description": "List of VmExtensionPolicy resources contained in this scope.",
+"items": {
+"$ref": "VmExtensionPolicy"
+},
+"type": "array"
+},
+"warning": {
+"description": "Informational warning which replaces the list of\nbackend services when the list is empty.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
+"VmExtensionPolicy": {
+"description": "Represents a VM extension policy.",
+"id": "VmExtensionPolicy",
+"properties": {
+"creationTimestamp": {
+"description": "[Output Only] Creation timestamp inRFC3339\ntext format.",
+"type": "string"
+},
+"description": {
+"description": "An optional description of this resource.",
+"type": "string"
+},
+"extensionPolicies": {
+"additionalProperties": {
+"$ref": "VmExtensionPolicyExtensionPolicy"
+},
+"description": "Required. A map of extension names (e.g., \"cloudops\") to their corresponding policy\nconfigurations.",
+"type": "object"
+},
+"globalResourceLink": {
+"description": "Optional. [Output Only] Link to the global policy that manages this zone policy, if\napplicable.",
+"type": "string"
+},
+"id": {
+"description": "[Output Only] The unique identifier for the resource. This identifier is\ndefined by the server.",
+"format": "uint64",
+"type": "string"
+},
+"instanceSelectors": {
+"description": "Optional. Selectors to target VMs for this policy. VMs are selected if they match\n*any* of the provided selectors (logical OR). If this list is empty, the\npolicy applies to all VMs.",
+"items": {
+"$ref": "VmExtensionPolicyInstanceSelector"
+},
+"type": "array"
+},
+"kind": {
+"default": "compute#vmExtensionPolicy",
+"description": "[Output Only] Type of the resource. Alwayscompute#vmExtensionPolicy.",
+"type": "string"
+},
+"managedByGlobal": {
+"description": "Optional. [Output Only] Indicates if this policy is managed by a global policy.",
+"type": "boolean"
+},
+"name": {
+"annotations": {
+"required": [
+"compute.zoneVmExtensionPolicies.insert"
+]
+},
+"description": "Name of the resource. Provided by the client when the resource is created.\nThe name must be 1-63 characters long, and comply withRFC1035.\nSpecifically, the name must be 1-63 characters long and match the regular\nexpression `[a-z]([-a-z0-9]*[a-z0-9])?`\nwhich means the first character must be a lowercase letter, and all\nfollowing characters must be a dash, lowercase letter, or digit, except\nthe last character, which cannot be a dash.",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"type": "string"
+},
+"priority": {
+"description": "Optional. Priority of this policy. Used to resolve conflicts when multiple policies\napply to the same extension.\nThe policy priority is an integer from 0 to 65535, inclusive. Lower\nintegers indicate higher priorities. If you do not specify a priority when\ncreating a rule, it is assigned a priority of 1000. If priorities are\nequal, the policy with the more recent creation timestamp takes precedence.",
+"format": "int32",
+"type": "integer"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined fully-qualified URL for this resource.",
+"type": "string"
+},
+"selfLinkWithId": {
+"description": "[Output Only] Server-defined URL for this resource's resource id.",
+"type": "string"
+},
+"state": {
+"description": "Optional. [Output Only] Current state of the policy: ACTIVE or DELETING.",
+"enum": [
+"ACTIVE",
+"DELETING",
+"STATE_UNSPECIFIED"
+],
+"enumDescriptions": [
+"The policy is active and applied to matching VMs.\nNewly created VMs that match the policy will also receive the\nextension policy.",
+"The policy is in the process of being deleted. After the extension is\nremoved from all matching VMs, the policy will be deleted.",
+"Default value. Do not use."
+],
+"type": "string"
+},
+"updateTimestamp": {
+"description": "[Output Only] Update timestamp inRFC3339\ntext format.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"VmExtensionPolicyAggregatedListResponse": {
+"description": "Response for the aggregated list of VM extension policies.",
+"id": "VmExtensionPolicyAggregatedListResponse",
+"properties": {
+"etag": {
+"type": "string"
+},
+"id": {
+"description": "[Output Only] Unique identifier for the resource; defined by the server.",
+"type": "string"
+},
+"items": {
+"additionalProperties": {
+"$ref": "VmExtensionPoliciesScopedList",
+"description": "Name of the scope containing this set of VmExtensionPolicies."
+},
+"description": "A list of VmExtensionPoliciesScopedList resources.",
+"type": "object"
+},
+"kind": {
+"default": "compute#VmExtensionPolicyAggregatedList",
+"description": "[Output Only] Type of resource. Alwayscompute#VmExtensionPolicyAggregatedList for lists of\nVmExtensionPolicies.",
+"type": "string"
+},
+"nextPageToken": {
+"description": "[Output Only] This token allows you to get the next page of results for\nlist requests. If the number of results is larger thanmaxResults, use the nextPageToken as a value for\nthe query parameter pageToken in the next list request.\nSubsequent list requests will have their own nextPageToken to\ncontinue paging through the results.",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined URL for this resource.",
+"type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.",
+"items": {
+"type": "string"
+},
+"type": "array"
+},
+"warning": {
+"description": "[Output Only] Informational warning message.",
+"properties": {
+"code": {
+"description": "[Output Only] A warning code, if applicable. For example, Compute\nEngine returns NO_RESULTS_ON_PAGE if there\nare no results in the response.",
+"enum": [
+"CLEANUP_FAILED",
+"DEPRECATED_RESOURCE_USED",
+"DEPRECATED_TYPE_USED",
+"DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+"EXPERIMENTAL_TYPE_USED",
+"EXTERNAL_API_WARNING",
+"FIELD_VALUE_OVERRIDEN",
+"INJECTED_KERNELS_DEPRECATED",
+"INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB",
+"LARGE_DEPLOYMENT_WARNING",
+"LIST_OVERHEAD_QUOTA_EXCEED",
+"MISSING_TYPE_DEPENDENCY",
+"NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+"NEXT_HOP_CANNOT_IP_FORWARD",
+"NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE",
+"NEXT_HOP_INSTANCE_NOT_FOUND",
+"NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+"NEXT_HOP_NOT_RUNNING",
+"NOT_CRITICAL_ERROR",
+"NO_RESULTS_ON_PAGE",
+"PARTIAL_SUCCESS",
+"QUOTA_INFO_UNAVAILABLE",
+"REQUIRED_TOS_AGREEMENT",
+"RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+"RESOURCE_NOT_DELETED",
+"SCHEMA_VALIDATION_IGNORED",
+"SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+"UNDECLARED_PROPERTIES",
+"UNREACHABLE"
+],
+"enumDeprecated": [
+false,
+false,
+false,
+false,
+false,
+false,
+true,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false,
+false
+],
+"enumDescriptions": [
+"Warning about failed cleanup of transient changes made by a failed\noperation.",
+"A link to a deprecated resource was created.",
+"When deploying and at least one of the resources has a type marked as\ndeprecated",
+"The user created a boot disk that is larger than image size.",
+"When deploying and at least one of the resources has a type marked as\nexperimental",
+"Warning that is present in an external api call",
+"Warning that value of a field has been overridden.\nDeprecated unused field.",
+"The operation involved use of an injected kernel, which is deprecated.",
+"A WEIGHTED_MAGLEV backend service is associated with a health check that is\nnot of type HTTP/HTTPS/HTTP2.",
+"When deploying a deployment with a exceedingly large number of resources",
+"Resource can't be retrieved due to list overhead quota exceed\nwhich captures the amount of resources filtered out by\nuser-defined list filter.",
+"A resource depends on a missing type",
+"The route's nextHopIp address is not assigned to an instance on the\nnetwork.",
+"The route's next hop instance cannot ip forward.",
+"The route's nextHopInstance URL refers to an instance that does not have an\nipv6 interface on the same network as the route.",
+"The route's nextHopInstance URL refers to an instance that does not exist.",
+"The route's nextHopInstance URL refers to an instance that is not on the\nsame network as the route.",
+"The route's next hop instance does not have a status of RUNNING.",
+"Error which is not critical. We decided to continue the process despite\nthe mentioned error.",
+"No results are present on a particular list page.",
+"Success is reported, but some results may be missing due to errors",
+"Quota information is not available to client requests (e.g:\nregions.list).",
+"The user attempted to use a resource that requires a TOS they have not\naccepted.",
+"Warning that a resource is in use.",
+"One or more of the resources set to auto-delete could not be deleted\nbecause they were in use.",
+"When a resource schema validation is ignored.",
+"Instance template used in instance group manager is valid as such, but\nits application does not make a lot of sense, because it allows only\nsingle instance in instance group.",
+"When undeclared properties in the schema are present",
+"A given scope cannot be reached."
+],
+"type": "string"
+},
+"data": {
+"description": "[Output Only] Metadata about this warning in key:\nvalue format. For example:\n\n\"data\": [\n  {\n   \"key\": \"scope\",\n   \"value\": \"zones/us-east1-d\"\n  }",
+"items": {
+"properties": {
+"key": {
+"description": "[Output Only] A key that provides more detail on the warning being\nreturned. For example, for warnings where there are no results in a list\nrequest for a particular zone, this key might be scope and\nthe key value might be the zone name. Other examples might be a key\nindicating a deprecated resource and a suggested replacement, or a\nwarning about invalid network settings (for example, if an instance\nattempts to perform IP forwarding but is not enabled for IP forwarding).",
+"type": "string"
+},
+"value": {
+"description": "[Output Only] A warning data value corresponding to the key.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"type": "array"
+},
+"message": {
+"description": "[Output Only] A human-readable description of the warning code.",
+"type": "string"
+}
+},
+"type": "object"
+}
+},
+"type": "object"
+},
+"VmExtensionPolicyExtensionPolicy": {
+"description": "Configuration for a specific VM extension.",
+"id": "VmExtensionPolicyExtensionPolicy",
+"properties": {
+"pinnedVersion": {
+"description": "Optional. The specific version of the extension to install. If not set, the latest\nversion is used.",
+"type": "string"
+},
+"stringConfig": {
+"description": "Optional. String-based configuration data for the extension.",
+"type": "string"
+}
+},
+"type": "object"
+},
+"VmExtensionPolicyInstanceSelector": {
+"description": "Defines how to select VMs to apply a zone VM extension policy.",
+"id": "VmExtensionPolicyInstanceSelector",
+"properties": {
+"labelSelector": {
+"$ref": "VmExtensionPolicyLabelSelector",
+"description": "Optional. LabelSelector selects VMs based on their labels."
+}
+},
+"type": "object"
+},
+"VmExtensionPolicyLabelSelector": {
+"description": "A LabelSelector is applied to a VM only if it matches all the specified\nlabels.",
+"id": "VmExtensionPolicyLabelSelector",
+"properties": {
+"inclusionLabels": {
+"additionalProperties": {
+"type": "string"
+},
+"description": "Optional. A map of key-value pairs representing VM labels.\nVMs must have all of the labels specified in this map to be selected\n(logical AND).\n\ne.g. If the `inclusion_labels` are {(\"key1\", \"value1\"), (\"key2\",\n\"value2\")}, the VM labels must contain both (\"key1\", \"value1\") and\n(\"key2\", \"value2\") to be selected. If the VM labels are (\"key1\",\n\"value1\") and (\"something\", \"else\"), it will not be selected.\n\nIf the map is empty, it's considered a match.",
+"type": "object"
+}
+},
+"type": "object"
+},
+"VmExtensionPolicyList": {
+"id": "VmExtensionPolicyList",
+"properties": {
+"etag": {
+"description": "[Output Only] Fingerprint of this resource. A hash of the contents stored\nin this object. This field is used in optimistic locking. This field will\nbe ignored when inserting a VmExtensionPolicy. An up-to-date\nfingerprint must be provided in order to update the VmExtensionPolicy.\n\nTo see the latest value of the fingerprint, make a get() request to\nretrieve a VmExtensionPolicy.",
+"type": "string"
+},
+"id": {
+"description": "[Output Only] Unique identifier for the resource; defined by the server.",
+"type": "string"
+},
+"items": {
+"description": "[Output Only] A list of VM extension policy resources.",
+"items": {
+"$ref": "VmExtensionPolicy"
+},
+"type": "array"
+},
+"kind": {
+"default": "compute#vmExtensionPolicyList",
+"description": "Type of resource.",
+"type": "string"
+},
+"nextPageToken": {
+"description": "[Output Only] This token allows you to get the next page of results for\nlist requests. If the number of results is larger thanmaxResults, use the nextPageToken as a value for\nthe query parameter pageToken in the next list request.\nSubsequent list requests will have their own nextPageToken to\ncontinue paging through the results.",
+"type": "string"
+},
+"selfLink": {
+"description": "[Output Only] Server-defined URL for this resource.",
+"type": "string"
+},
+"unreachables": {
+"description": "[Output Only] Unreachable resources.",
+"items": {
+"type": "string"
+},
+"type": "array"
 },
 "warning": {
 "description": "[Output Only] Informational warning message.",

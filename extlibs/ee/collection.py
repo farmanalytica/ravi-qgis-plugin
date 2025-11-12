@@ -5,8 +5,9 @@ This class is never intended to be instantiated by the user.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 import datetime
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from ee import _arg_types
 from ee import _utils
@@ -204,7 +205,7 @@ class Collection(Generic[ElementType], element.Element):
 
   # pylint: disable-next=redefined-builtin
   def aggregate_product(self, property: _arg_types.String) -> ee_number.Number:
-    """Returns the product of the values ofthe selected property.
+    """Returns the product of the values of the selected property.
 
     Aggregates over a given property of the objects in a collection, calculating
     the product of the values of the selected property.
