@@ -20,11 +20,6 @@ email                : caiosimplicioarante@gmail.com
 *                                                                         *
 ***************************************************************************/
 """
-import os
-import json
-import tempfile
-import zipfile
-import geopandas as gpd
 from shapely.geometry import shape, Polygon, MultiPolygon, GeometryCollection
 from shapely.ops import unary_union
 import os
@@ -288,7 +283,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.hide()
         event.ignore()
 
-
     def inicialize_variables(self):
         """Initializes variables."""          
 
@@ -358,7 +352,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
         self.indice_exploration_mode.addItems(vegetation_index)
-        
         self.series_indice_2.addItems(vegetation_index)
         self.series_indice_3.addItems(vegetation_index)
         self.series_indice.addItems(vegetation_index)
@@ -413,16 +406,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
         """Conecta os sinais da UI aos seus respectivos slots."""
-        
-
         self.autenticacao.clicked.connect(lambda: authentication.auth(self))
-        self.desautenticacao.clicked.connect(lambda: authentication.auth_clear(self))
-        
+        self.desautenticacao.clicked.connect(lambda: authentication.auth_clear(self))    
         # Connect the textChanged signal to the autoSaveProjectId function
         self.project_QgsPasswordLineEdit.textChanged.connect(
             lambda new_text: authentication.autoSaveProjectId(self, new_text)
         )
-
         self.clear_button_points.clicked.connect(self.remove_all_dots)
         self.QPushButton_features.clicked.connect(self.QPushButton_features_clicked)
         self.tabWidget.currentChanged.connect(self.on_tab_changed)
@@ -480,7 +469,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.filtro_grau.currentIndexChanged.connect(self.plot_timeseries)
         self.window_len.currentIndexChanged.connect(self.plot_timeseries)
         self.checkBox_captureCoordinates.stateChanged.connect(self.toggle_coordinate_capture_tool)
-
         self.checkBox_captureCoordinates_2.stateChanged.connect(self.toggle_coordinate_capture_tool_2)
         self.mQgsFileWidget.fileChanged.connect(self.on_file_changed)
         self.radioButton_all.clicked.connect(self.all_clicked)
@@ -497,26 +485,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.horizontalSlider_local_pixel_limit_2.valueChanged.connect(self.update_labels_2)
         self.horizontalSlider_aio_cover.valueChanged.connect(self.update_labels)
         self.horizontalSlider_aio_cover_2.valueChanged.connect(self.update_labels_2)
-
         self.horizontalSlider_buffer.valueChanged.connect(self.update_labels)
         self.horizontalSlider_buffer_2.valueChanged.connect(self.update_labels_2)
-
         self.horizontalSlider_total_pixel_limit.valueChanged.connect(self.update_labels)
-        self.horizontalSlider_total_pixel_limit_2.valueChanged.connect(self.update_labels_2)
-   
+        self.horizontalSlider_total_pixel_limit_2.valueChanged.connect(self.update_labels_2)  
         self.series_indice.currentIndexChanged.connect(self.reload_update)
         self.series_indice_2.currentIndexChanged.connect(self.reload_update2)
         self.series_indice_3.currentIndexChanged.connect(self.reload_update3)
-
-
         self.incioedit.dateChanged.connect(self.reload_update)
         self.incioedit_2.dateChanged.connect(self.reload_update2)
-
         self.finaledit.dateChanged.connect(self.reload_update)
         self.finaledit_2.dateChanged.connect(self.reload_update2)
-
         self.proxy.clicked.connect(self.open_proxy_dialog)
-        
         self.nasapower.clicked.connect(self.nasapower_clicked)
         self.clear_nasa.clicked.connect(self.clear_nasa_clicked)
         self.QTextBrowser.anchorClicked.connect(self.open_link)
@@ -654,7 +634,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.dataunica.setCurrentIndex(index)
             print(f"Loading index for date: {data}, index: {index}")
             self.load_rgb()  
-
 
     def nasapower_clicked(self):
         """Handles the event when the "NASA POWER" button is clicked."""
@@ -821,7 +800,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
         else:
             print("No coordinate capture tool to deactivate.")
-
 
     def remove_all_dots(self):
         """Removes all dots from the map canvas."""
@@ -1006,11 +984,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
         )
         
         print("exploration info calculated and plotted.")
-    
-
-
-
-    # =========================================================================
 
     def load_fields(self, id_column=None):
         # Get the system's temporary directory / Obtém o diretório temporário do
