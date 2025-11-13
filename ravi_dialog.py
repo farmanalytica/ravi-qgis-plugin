@@ -292,6 +292,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         # Initialize variables / Inicializa variáveis
         self.coordinate_capture_tool = None
+        self.coordinate_capture_tool_2 = None
         self.plot1 = None
         self.autentication = False
         self.folder_set = False
@@ -784,6 +785,21 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             print("Coordinate capture tool deactivated.")
 
+    def activate_coordinate_capture_tool_2(self):
+        canvas = iface.mapCanvas()
+        if (
+            self.checkBox_captureCoordinates_2.isChecked()
+        ):  # Button is checked (active)
+            # Deactivate any existing tool before activating the new one
+            if canvas.mapTool():
+                canvas.unsetMapTool(canvas.mapTool())
+            self.coordinate_capture_tool_2 = CoordinateCaptureTool_2(canvas, self)
+            canvas.setMapTool(self.coordinate_capture_tool_2)
+            print("Coordinate capture tool activated.")
+        else:  # Button is unchecked (inactive)
+            self.deactivate_coordinate_capture_tool_2()
+            print("Coordinate capture tool deactivated.")
+
     def deactivate_coordinate_capture_tool(self):
         """Deactivates the coordinate capture map tool."""
         """Desativa a ferramenta de mapa de captura de coordenadas."""
@@ -798,6 +814,44 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # self.coordinate_capture_tool = None  # Deactivate the tool
             print("CoordinateCaptureTool deactivated")
             print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+        else:
+            print("No coordinate capture tool to deactivate.")
+
+
+    def deactivate_coordinate_capture_tool_2(self):
+        """Deactivates the coordinate capture map tool."""
+        """Desativa a ferramenta de mapa de captura de coordenadas."""
+        print("deactivate_coordinate_capture_tool called")
+        if (
+            hasattr(self, "coordinate_capture_tool_2")
+            and self.coordinate_capture_tool_2
+        ):
+            canvas = iface.mapCanvas()
+
+            # Remove any markers/rubber bands created by the tool
+            bands = getattr(self.coordinate_capture_tool_2, 'rubber_bands', None)
+            if bands:
+                for item in list(bands):
+                    try:
+                        # preferred removal via scene
+                        canvas.scene().removeItem(item)
+                    except Exception:
+                        try:
+                            # fallback: try hide/delete
+                            item.hide()
+                        except Exception:
+                            pass
+                # clear the list on the tool
+                bands.clear()
+
+            # Unset the map tool and clear reference
+            canvas.unsetMapTool(self.coordinate_capture_tool_2)
+            self.coordinate_capture_tool_2 = None
+
+            # Refresh canvas to remove visuals
+            iface.mapCanvas().refresh()
+
+            print("CoordinateCaptureTool_2 deactivated and markers cleared")
         else:
             print("No coordinate capture tool to deactivate.")
 
@@ -945,7 +999,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             self.point = point
 
-            self.df_exploration = self.calculate_timeseries_exploration_mode(point, (f"(lat, lon: {latitude}, {longitude})"))
+            self.df_exploration = self.calculate_timeseries_exploration_mode(point, (f"(lat, lon: {round(latitude,5)}, {round(longitude,5)})"))
             print(self.df_exploration)
 
             self.plot_timeseries_exploration_mode()
@@ -4867,17 +4921,17 @@ class RAVIDialog(QDialog, FORM_CLASS):
             # Desativa qualquer ferramenta existente antes de ativar a nova
             if canvas.mapTool():
                 canvas.unsetMapTool(canvas.mapTool())
-            if not self.coordinate_capture_tool:  # Only create if it doesn't exist / Cria somente se não existir
-                self.coordinate_capture_tool = CoordinateCaptureTool_2(canvas, self)
+            if not self.coordinate_capture_tool_2:  # Only create if it doesn't exist / Cria somente se não existir
+                self.coordinate_capture_tool_2 = CoordinateCaptureTool_2(canvas, self)
                 print("CoordinateCaptureTool created")
-            canvas.setMapTool(self.coordinate_capture_tool)
+            canvas.setMapTool(self.coordinate_capture_tool_2)
             print("Coordinate capture tool activated.")
-            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+            print(f"self.coordinate_capture_tool_2: {self.coordinate_capture_tool_2}")
         else:  # Checkbox is unchecked (inactive) / Checkbox não está marcada
             # (inativa)
-            self.deactivate_coordinate_capture_tool()
+            self.deactivate_coordinate_capture_tool_2()
             print("Coordinate capture tool deactivated.")
-            print(f"self.coordinate_capture_tool: {self.coordinate_capture_tool}")
+            print(f"self.coordinate_capture_tool_2: {self.coordinate_capture_tool_2}")
 
 
     def soil_image(self):
