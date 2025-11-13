@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
+    <width>1158</width>
     <height>673</height>
    </rect>
   </property>
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>12</number>
+    <number>1</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -305,9 +305,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>10</y>
        <width>741</width>
-       <height>231</height>
+       <height>271</height>
       </rect>
      </property>
      <property name="font">
@@ -324,9 +324,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>30</y>
-        <width>261</width>
+        <x>13</x>
+        <y>29</y>
+        <width>181</width>
         <height>20</height>
        </rect>
       </property>
@@ -339,13 +339,13 @@ p, li { white-space: pre-wrap; }
        <string>Ativar clique no mapa</string>
       </property>
      </widget>
-     <widget class="QWebView" name="webView_point" native="true">
+     <widget class="QWebView" name="webView_exploration" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
-        <width>711</width>
-        <height>151</height>
+        <y>60</y>
+        <width>721</width>
+        <height>201</height>
        </rect>
       </property>
       <property name="mouseTracking">
@@ -369,14 +369,14 @@ p, li { white-space: pre-wrap; }
        </url>
       </property>
      </widget>
-     <widget class="QPushButton" name="hybrid_3">
+     <widget class="QPushButton" name="hybrid_2">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>350</x>
-        <y>30</y>
+        <y>25</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -390,11 +390,11 @@ p, li { white-space: pre-wrap; }
        <string>Google Maps</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="navegador_7">
+     <widget class="QPushButton" name="navegador_exploration">
       <property name="geometry">
        <rect>
         <x>480</x>
-        <y>30</y>
+        <y>25</y>
         <width>201</width>
         <height>31</height>
        </rect>
@@ -412,11 +412,11 @@ p, li { white-space: pre-wrap; }
         <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
       </property>
      </widget>
-     <widget class="QPushButton" name="salvar_7">
+     <widget class="QPushButton" name="salvar_exploration">
       <property name="geometry">
        <rect>
         <x>690</x>
-        <y>30</y>
+        <y>25</y>
         <width>41</width>
         <height>31</height>
        </rect>
@@ -434,11 +434,11 @@ p, li { white-space: pre-wrap; }
         <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
       </property>
      </widget>
-     <widget class="QComboBox" name="indice_exporation_mode">
+     <widget class="QComboBox" name="indice_exploration_mode">
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>30</y>
+        <y>25</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -449,43 +449,12 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
      </widget>
-    </widget>
-    <widget class="QgsFileWidget" name="mQgsFileWidget">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>0</y>
-       <width>531</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="storageMode">
-      <enum>QgsFileWidget::GetDirectory</enum>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_49">
-     <property name="geometry">
-      <rect>
-       <x>16</x>
-       <y>13</y>
-       <width>211</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Selecionar pasta de saída:</string>
-     </property>
+     <zorder>webView_exploration</zorder>
+     <zorder>hybrid_2</zorder>
+     <zorder>navegador_exploration</zorder>
+     <zorder>salvar_exploration</zorder>
+     <zorder>indice_exploration_mode</zorder>
+     <zorder>checkBox_captureCoordinates_2</zorder>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_4">
@@ -521,7 +490,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>50</y>
        <width>741</width>
        <height>81</height>
       </rect>
@@ -577,9 +546,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>140</y>
        <width>741</width>
-       <height>71</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
@@ -590,20 +559,20 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Mantenha a área total menor que 120 km² (12.000 hectares)</string>
+      <string>Mantenha a área total menor que 120 km² (12 000 hectares)</string>
      </property>
      <widget class="QLabel" name="aoi_area">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>32</y>
         <width>301</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="text">
@@ -613,8 +582,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="drawing">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>30</y>
+        <x>330</x>
+        <y>37</y>
         <width>411</width>
         <height>20</height>
        </rect>
@@ -727,6 +696,43 @@ p, li { white-space: pre-wrap; }
      <property name="icon">
       <iconset>
        <normaloff>../medias/dem.png</normaloff>../medias/dem.png</iconset>
+     </property>
+    </widget>
+    <widget class="QgsFileWidget" name="mQgsFileWidget">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>0</y>
+       <width>531</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="storageMode">
+      <enum>QgsFileWidget::GetDirectory</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_49">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>13</y>
+       <width>211</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Selecionar pasta de saída:</string>
      </property>
     </widget>
    </widget>

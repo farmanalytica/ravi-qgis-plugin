@@ -357,7 +357,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.imagem_unica_indice.addItems(vegetation_index)
         self.indice_composicao.addItems(vegetation_index)
-        self.indice_exporation_mode.addItems(vegetation_index)
+        self.indice_exploration_mode.addItems(vegetation_index)
         
         self.series_indice_2.addItems(vegetation_index)
         self.series_indice_3.addItems(vegetation_index)
@@ -374,6 +374,41 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "SWIR1-NIR-SWIR2",
         ])
 
+
+        # Configurations for the Plotly plot
+        self.config = {
+            "displaylogo": False,
+            "modeBarButtonsToRemove": [
+                "toImage",
+                "sendDataToCloud",
+                "zoom2d",
+                "pan2d",
+                "select2d",
+                "lasso2d",
+                "zoomIn2d",
+                "zoomOut2d",
+                "autoScale2d",
+                "resetScale2d",
+                "hoverClosestCartesian",
+                "hoverCompareCartesian",
+                "zoom3d",
+                "pan3d",
+                "orbitRotation",
+                "tableRotation",
+                "resetCameraLastSave",
+                "resetCameraDefault3d",
+                "hoverClosest3d",
+                "zoomInGeo",
+                "zoomOutGeo",
+                "resetGeo",
+                "hoverClosestGeo",
+                "hoverClosestGl2d",
+                "hoverClosestPie",
+                "toggleHover",
+                "toggleSpikelines",
+                "resetViews",
+            ],
+        }
 
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
@@ -401,6 +436,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.composicao_preview.clicked.connect(lambda: self.composite_clicked(True))
         self.clear_raster.clicked.connect(self.clear_all_raster_layers)
         self.hybrid.clicked.connect(map_tools.hybrid_function)
+        self.hybrid_2.clicked.connect(map_tools.hybrid_function)
         self.QPushButton_next.clicked.connect(self.next_clicked)
         self.QPushButton_next_2.clicked.connect(self.next_clicked)
         self.QPushButton_next_3.clicked.connect(self.next_clicked)
@@ -426,6 +462,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.navegador.clicked.connect(self.open_browser)
         self.navegador_2.clicked.connect(self.open_browser_2)
         self.navegador_3.clicked.connect(self.open_browser_3)
+        self.navegador_exploration.clicked.connect(self.open_browser_exploration)
         self.datasrecorte.clicked.connect(self.datasrecorte_clicked)
         self.datasrecorte_2.clicked.connect(self.datasrecorte_clicked)
         self.datasrecorte_3.clicked.connect(self.datasrecorte_clicked)
@@ -435,6 +472,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.salvar.clicked.connect(self.salvar_clicked)
         self.salvar_2.clicked.connect(self.salvar_clicked_2)
         self.salvar_3.clicked.connect(self.salvar_clicked_3)
+        self.salvar_exploration.clicked.connect(self.salvar_exploration_clicked)
         self.salvar_nasa.clicked.connect(self.salvar_nasa_clicked)
         #self.build_vector_layer.clicked.connect(self.build_vector_layer_clicked)
         self.drawing.stateChanged.connect(self.drawing_clicked)
@@ -870,83 +908,104 @@ class RAVIDialog(QDialog, FORM_CLASS):
         QApplication.restoreOverrideCursor()
 
     def process_coordinates_2(self, longitude, latitude):
-        """Processes the captured coordinates with Earth Engine."""
-        """Processa as coordenadas capturadas com o Earth Engine."""
-        #QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
-        # 1. Define the point (longitude, latitude) / Define o ponto
-        # (longitude, latitude)
-        #point = ee.Geometry.Point(longitude, latitude)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            """Processes the captured coordinates with Earth Engine."""
+            """Processa as coordenadas capturadas com o Earth Engine."""
+            #QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
-        print(f"Processing coordinates: ({latitude}, {longitude})")
+            # 1. Define the point (longitude, latitude) / Define o ponto
+            # (longitude, latitude)
+            #point = ee.Geometry.Point(longitude, latitude)
 
-        # Define a 100 m circular AOI around the captured coordinate
-        point = ee.Geometry.Point(longitude, latitude)
-        # create 100 m circular AOI around the captured point
-        aoi_circle = point.buffer(100)  # buffer in meters
+            print(f"Processing coordinates: ({latitude}, {longitude})")
 
-        # Convert the buffered geometry to a FeatureCollection (required by later functions)
-        aoi_feat = ee.Feature(aoi_circle, {"name": f"pt_{round(latitude,5)}_{round(longitude,5)}"})
-        aoi_circle = ee.FeatureCollection([aoi_feat])
+            # Define a 100 m circular AOI around the captured coordinate
+            point = ee.Geometry.Point(longitude, latitude)
+            # create 100 m circular AOI around the captured point
+            aoi_circle = point.buffer(100)  # buffer in meters
 
-        # Use full range from 2017-01-01 to today
-        start_date = "2017-01-01"
-        end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+            # Convert the buffered geometry to a FeatureCollection (required by later functions)
+            aoi_feat = ee.Feature(aoi_circle, {"name": f"pt_{round(latitude,5)}_{round(longitude,5)}"})
+            aoi_circle = ee.FeatureCollection([aoi_feat])
 
-        sentinel2_point_collection = (
-            ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
-            .filterBounds(aoi_circle)
-            .filterDate(start_date, end_date)
-            .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 40))
-            .map(lambda image: image.set("date", image.date().format("YYYY-MM-dd")))
-        )
+            # Use full range from 2017-01-01 to today
+            start_date = "2017-01-01"
+            end_date = datetime.datetime.today().strftime("%Y-%m-%d")
 
-        print("Sentinel-2 collection size for point AOI:", sentinel2_point_collection.size().getInfo())
+            sentinel2_point_collection = (
+                ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                .filterBounds(aoi_circle)
+                .filterDate(start_date, end_date)
+                .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 40))
+                .map(lambda image: image.set("date", image.date().format("YYYY-MM-dd")))
+            )
 
-        self.collection_info = []
-        self.collection_info_pt = []
+            #print("Sentinel-2 collection size for point AOI:", sentinel2_point_collection.size().getInfo())
 
-        sentinel2_point_collection = self.AOI_coverage_filter(
-            sentinel2_point_collection, aoi_circle, .95
-        )
+            self.collection_info = []
+            self.collection_info_pt = []
 
-        print("Sentinel-2 collection size after AOI coverage filter for point AOI:", sentinel2_point_collection.size().getInfo())   
+            sentinel2_point_collection = self.AOI_coverage_filter(
+                sentinel2_point_collection, aoi_circle, .95
+            )
 
-        sentinel2_point_collection = self.SCL_filter(
-            sentinel2_point_collection, aoi_circle, .95
-        )
-        print("Applied local SCL percentage filter for point AOI.")
+            # print("Sentinel-2 collection size after AOI coverage filter for point AOI:", sentinel2_point_collection.size().getInfo())   
 
-        # Keep only one image per day (prefer best coverage)
-        sentinel2_point_collection = self.uniqueday_collection(sentinel2_point_collection)
-        final_count = sentinel2_point_collection.size().getInfo()
-        print(f"Final sentinel-2 count for point AOI: {final_count}")
+            sentinel2_point_collection = self.SCL_filter(
+                sentinel2_point_collection, aoi_circle, .95
+            )
+            print("Applied local SCL percentage filter for point AOI.")
 
-        self.sentinel2_point_collection = sentinel2_point_collection
+            # Keep only one image per day (prefer best coverage)
+            sentinel2_point_collection = self.uniqueday_collection(sentinel2_point_collection)
+            # final_count = sentinel2_point_collection.size().getInfo()
+            # print(f"Final sentinel-2 count for point AOI: {final_count}")
 
-        self.point = point
+            self.sentinel2_point_collection = sentinel2_point_collection
 
-        self.df_exploration = self.calculate_timeseries_exploration_mode(point)
-        print(self.df_exploration)
+            self.point = point
 
-        self.plot_timeseries_exploration_mode()
+            self.df_exploration = self.calculate_timeseries_exploration_mode(point, (f"(lat, lon: {latitude}, {longitude})"))
+            print(self.df_exploration)
+
+            self.plot_timeseries_exploration_mode()
+        except Exception as e:
+            QApplication.restoreOverrideCursor()
+            print(f"Error processing with Earth Engine: {e}")
+            QMessageBox.critical(
+                self,
+                "Earth Engine Error",
+                f"An error occurred: {e}",
+            )
+        QApplication.restoreOverrideCursor()
 
     def plot_timeseries_exploration_mode(self):
 
         df = self.df_exploration.copy()
 
-        print("Plotting time series for points...")
+        df['date'] = pd.to_datetime(df['date'])
 
-        print(df.shape)
+        ycol = df.columns[1]
 
+        fig = px.line(df, x='date', y=ycol, markers=True,
+                    title=f'{self.indice_exploration_mode.currentText()} Time Series - {df.columns[1]}',
+                    labels={'date': 'Date', ycol: self.indice_exploration_mode.currentText()},
+                    template='plotly_white')
 
-        # #fig.show()
+        fig.update_layout(
+            hovermode='x unified',
+            margin=dict(l=10, r=10, t=30, b=5)  # ajusta margens (esquerda, direita, topo, base)
+        )
 
-        # self.webView_exploration.setHtml(
-        #     self.fig_exploration.to_html(include_plotlyjs="cdn", config=self.config)
-        # )
+        self.fig_exploration = fig
+
+        self.webView_exploration.setHtml(
+            self.fig_exploration.to_html(include_plotlyjs="cdn", config=self.config)
+        )
         
-        # print("exploration info calculated and plotted.")
+        print("exploration info calculated and plotted.")
     
 
 
@@ -1145,6 +1204,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             title=f"Time Series - {self.series_indice.currentText()} - {self.mMapLayerComboBox.currentText()}",
             xaxis_title=None,  # Remove x-axis label
         )
+        fig.update_layout(hovermode='x unified')
         self.fig_2 = fig
 
         self.webView_3.setHtml(
@@ -1378,6 +1438,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
         name = (
             f"{self.series_indice.currentText()}_{self.mMapLayerComboBox.currentText()}_time_series_points.csv"
         )
+        save_utils.save(df, name, self)
+
+    def salvar_exploration_clicked(self):
+        df = self.df_exploration
+        name = (
+            f"exploration_mode_{self.indice_exploration_mode.currentText()}_time_series_points.csv"
+        )
+
         save_utils.save(df, name, self)
 
     def salvar_nasa_clicked(self):
@@ -1628,6 +1696,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             title=f"Time Series - {self.series_indice.currentText()} - Points",
             xaxis_title=None,  # Remove x-axis label
         )
+        fig.update_layout(hovermode='x unified')
         
         self.fig_3 = fig
         #fig.show()
@@ -1780,6 +1849,9 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         if _programmatic_tab_change:
             return
+
+        if index != 1:
+            self.checkBox_captureCoordinates_2.setChecked(False)
 
         if index == 2:
             self.combobox_update()
@@ -2492,11 +2564,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         return final_image
 
-    def calculate_timeseries_exploration_mode(self, aoi):
+    def calculate_timeseries_exploration_mode(self, aoi, name):
         """Calculates the time series of the selected vegetation index for a specific point."""
         print("Calculating time series in exploration mode...")
-        vegetation_index = "NDVI"
-        name = "Novo ponto"
+        vegetation_index = self.indice_exploration_mode.currentText()
 
         result = self.sentinel2_point_collection.map(lambda image: self.calculate_index_with_mean(image, vegetation_index, aoi))
         result = result.filter(ee.Filter.notNull(["mean_index"]))
@@ -3039,15 +3110,18 @@ class RAVIDialog(QDialog, FORM_CLASS):
             print(f"File selected: {file_path}")
             self.output_folder = file_path
             self.folder_set = True
-            self.QPushButton_next_4.setEnabled(True)
+            #self.QPushButton_next_4.setEnabled(True)
             
             # Save the selected file path to QGIS settings for persistence
             QSettings().setValue("ravi_plugin/last_output_folder", file_path)
             print(f"Last output folder saved: {file_path}")
+            
         else:
             print("No file selected.")
             self.folder_set = False
-            self.QPushButton_next_4.setEnabled(False)
+            #self.QPushButton_next_4.setEnabled(False)
+
+        self.aoi_checked_function()
 
     def load_last_output_folder(self):
         """Loads the last selected output folder from QGIS settings."""
@@ -3750,7 +3824,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         operations.
         """
         print("Filtering to unique days using Earth Engine...")
-        print("Original collection size:", sentinel2.size().getInfo())
+        # print("Original collection size:", sentinel2.size().getInfo())
 
         def process_date(date):
             """Finds the image with the highest coverage for a given date."""
@@ -4104,40 +4178,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             hovertemplate="date = %{x|%Y-%m-%d}<br>average_ndvi = %{y:.2f}<extra></extra>"
         )
 
-        # Configurations for the Plotly plot
-        self.config = {
-            "displaylogo": False,
-            "modeBarButtonsToRemove": [
-                "toImage",
-                "sendDataToCloud",
-                "zoom2d",
-                "pan2d",
-                "select2d",
-                "lasso2d",
-                "zoomIn2d",
-                "zoomOut2d",
-                "autoScale2d",
-                "resetScale2d",
-                "hoverClosestCartesian",
-                "hoverCompareCartesian",
-                "zoom3d",
-                "pan3d",
-                "orbitRotation",
-                "tableRotation",
-                "resetCameraLastSave",
-                "resetCameraDefault3d",
-                "hoverClosest3d",
-                "zoomInGeo",
-                "zoomOutGeo",
-                "resetGeo",
-                "hoverClosestGeo",
-                "hoverClosestGl2d",
-                "hoverClosestPie",
-                "toggleHover",
-                "toggleSpikelines",
-                "resetViews",
-            ],
-        }
+
 
         if isinstance(self.df_nasa, pd.DataFrame):
             # Add bar plot (set below the line explicitly)
@@ -4317,6 +4358,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
         
         try:
             self.fig_3.show()
+        except:
+            self.pop_warning("No data to plot")
+
+    def open_browser_exploration(self):
+        """Opens the exploration plot in a web browser."""
+        """Abre o gráfico de exploração em um navegador da web."""
+        try:
+            self.fig_exploration.show()
         except:
             self.pop_warning("No data to plot")
 
