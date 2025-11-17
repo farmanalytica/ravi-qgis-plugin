@@ -98,11 +98,15 @@ class CoordinateCaptureTool_2(QgsMapToolEmitPoint):
     def display_dot(self, point):
         """
         Displays a colored dot on the map canvas at the given point.
+        Clears any previous markers before adding the new one.
 
         Args:
             point: The point (QgsPointXY) in the project's CRS where the dot
                 should be displayed.
         """
+        # Clear previous markers
+        self.clear_markers()
+        
         # Use a fixed red 'X' marker instead of colored dot
         marker = QgsVertexMarker(self.canvas)
         try:
@@ -141,6 +145,21 @@ class CoordinateCaptureTool_2(QgsMapToolEmitPoint):
 
         # Display the dot on the canvas
         self.display_dot(point_project)
+
+    def clear_markers(self):
+        """
+        Removes all markers from the canvas and clears the rubber_bands list.
+        """
+        for marker in self.rubber_bands:
+            try:
+                self.canvas.scene().removeItem(marker)
+            except Exception:
+                try:
+                    marker.hide()
+                except Exception:
+                    pass
+        self.rubber_bands.clear()
+        self.canvas.refresh()
 
     def deactivate(self):
         """

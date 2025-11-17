@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1311</width>
-    <height>783</height>
+    <height>851</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -248,48 +248,6 @@ p, li { white-space: pre-wrap; }
     <attribute name="title">
      <string>Step 2</string>
     </attribute>
-    <widget class="QGroupBox" name="groupBox_10">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>90</y>
-       <width>741</width>
-       <height>91</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>Select output folder (generated files will be saved in this folder):</string>
-     </property>
-     <widget class="QgsFileWidget" name="mQgsFileWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>721</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="storageMode">
-       <enum>QgsFileWidget::GetDirectory</enum>
-      </property>
-     </widget>
-    </widget>
     <widget class="QPushButton" name="QPushButton_back_4">
      <property name="enabled">
       <bool>true</bool>
@@ -340,6 +298,243 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/icons8-forward-button-50.png</normaloff>../medias/icons8-forward-button-50.png</iconset>
      </property>
     </widget>
+    <widget class="QGroupBox" name="groupBox_25">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>741</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>151</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>quick view mode</string>
+      </property>
+     </widget>
+     <widget class="QWebView" name="webView_exploration" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>721</width>
+        <height>221</height>
+       </rect>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="locale">
+       <locale language="Portuguese" country="Brazil"/>
+      </property>
+      <property name="url" stdset="0">
+       <url>
+        <string/>
+       </url>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="hybrid_2">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>10</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Google Maps</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="navegador_exploration">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>10</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="salvar_exploration">
+      <property name="geometry">
+       <rect>
+        <x>690</x>
+        <y>10</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../medias/diskette.png</normaloff>../medias/diskette.png</iconset>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="indice_exploration_mode">
+      <property name="geometry">
+       <rect>
+        <x>204</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="QComboBox_goback_months">
+      <property name="geometry">
+       <rect>
+        <x>411</x>
+        <y>10</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="ok">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>8</y>
+        <width>71</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Latest</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="ok_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>10</y>
+        <width>31</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>VI:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>30</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>(click on canva)</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>30</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>(months)</string>
+      </property>
+     </widget>
+     <zorder>label_16</zorder>
+     <zorder>webView_exploration</zorder>
+     <zorder>hybrid_2</zorder>
+     <zorder>navegador_exploration</zorder>
+     <zorder>salvar_exploration</zorder>
+     <zorder>indice_exploration_mode</zorder>
+     <zorder>checkBox_captureCoordinates_2</zorder>
+     <zorder>QComboBox_goback_months</zorder>
+     <zorder>ok</zorder>
+     <zorder>ok_2</zorder>
+     <zorder>label_17</zorder>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_4">
     <attribute name="title">
@@ -374,9 +569,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>60</y>
        <width>741</width>
-       <height>91</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
@@ -393,7 +588,7 @@ p, li { white-space: pre-wrap; }
         <x>10</x>
         <y>30</y>
         <width>721</width>
-        <height>41</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -407,9 +602,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
-       <width>431</width>
-       <height>111</height>
+       <y>150</y>
+       <width>741</width>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
@@ -425,13 +620,13 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>411</width>
+        <width>301</width>
         <height>51</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="text">
@@ -441,8 +636,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="drawing">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>70</y>
+        <x>390</x>
+        <y>40</y>
         <width>361</width>
         <height>17</height>
        </rect>
@@ -578,13 +773,37 @@ p, li { white-space: pre-wrap; }
       <string>Load Google Maps Layer</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_captureCoordinates_2">
+    <widget class="QgsFileWidget" name="mQgsFileWidget">
      <property name="geometry">
       <rect>
-       <x>500</x>
-       <y>170</y>
-       <width>241</width>
-       <height>17</height>
+       <x>160</x>
+       <y>10</y>
+       <width>591</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="storageMode">
+      <enum>QgsFileWidget::GetDirectory</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>9</y>
+       <width>171</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -593,7 +812,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Explor mode</string>
+      <string>Select output folder:</string>
      </property>
     </widget>
    </widget>
@@ -992,26 +1211,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_index_explain">
       <property name="geometry">
@@ -2189,7 +2388,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="title">
-      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering)</string>
+      <string>Valid Pixel Percentage inside the AOI: (Higher value applies stricter filtering) - Step 9</string>
      </property>
      <widget class="QSlider" name="horizontalSlider_local_pixel_limit_2">
       <property name="enabled">
@@ -2264,7 +2463,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="title">
-       <string> SCL classes to include: (Classes to count as invalid inside the AOI) Step 9</string>
+       <string> SCL classes to include: (Classes to count as invalid inside the AOI) </string>
       </property>
       <widget class="QCheckBox" name="mask_class9_2">
        <property name="geometry">
@@ -2765,26 +2964,6 @@ p, li { white-space: pre-wrap; }
         <pointsize>12</pointsize>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>NDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>GNDVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>EVI</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>SAVI</string>
-       </property>
-      </item>
      </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox_22">

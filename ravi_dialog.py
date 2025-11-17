@@ -368,7 +368,6 @@ class RAVIDialog(QDialog, FORM_CLASS):
             "SWIR1-NIR-SWIR2",
         ])
 
-
         # Configurations for the Plotly plot
         self.config = {
             "displaylogo": False,
@@ -403,6 +402,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 "resetViews",
             ],
         }
+
+        self.QComboBox_goback_months.addItems(
+            ["1", "3", "6", "12", "24", "36", "60", "80"]
+        )
 
     def connect_signals(self):
         """Connect UI signals to their respective slots."""
@@ -673,76 +676,63 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.expressionTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression", default_expression))
                 self.expression_nameTextEdit.setPlainText(settings.value("ravi_plugin/custom_expression_name", default_name))
                 
-                self.expression = None # add a variable
+                self.expression = None
                 self.expression_name = None
+                
             def add_custom_index_clicked(self):
-                # Retrieve the custom expression and name from the dialog
                 expression = self.expressionTextEdit.toPlainText()
                 expression_name = self.expression_nameTextEdit.toPlainText()
-                    
                 self.expression = expression
                 self.expression_name = expression_name
-                    
-                self.accept() # close dialog
+                self.accept()
+
         # Create and show the dialog
-        dialog = CustomIndexDialog(self)  # Pass RAVIDialog instance as parent
-        dialog.exec() # Run and await
+        dialog = CustomIndexDialog(self)
+        dialog.exec()
 
         if dialog.result():
-        # Store expression and name in settings
+            # Store expression and name in settings
             settings = QSettings()
             settings.setValue("ravi_plugin/custom_expression", dialog.expression)
-            settings.setValue("ravi_plugin/custom_expression_name",  dialog.expression_name)
+            settings.setValue("ravi_plugin/custom_expression_name", dialog.expression_name)
 
-            # Add the custom name, avoid repeat custom indexes
             custom_index_name = dialog.expression_name + " (custom)"
             
-            # Check if the name already exists
-            vegetation_index = [
-                "NDVI",
-                "EVI",
-                'EVI2',
-                "SAVI",
-                "GNDVI",
-                "MSAVI",
-                "SFDVI",
-                "CIgreen",
-                "NDRE",
-                "ARVI",
-                "NDMI",
-                "NBR",
-                "SIPI",
-                "NDWI",
-                "ReCI",
-                "MTCI",
-                "MCARI",
-                "VARI",
-                "TVI",
-                custom_index_name
-                ]
-            self.imagem_unica_indice.clear()
-            self.indice_composicao.clear()
-            self.series_indice_2.clear()
-            self.series_indice_3.clear()
-            self.series_indice.clear()
-
-            self.imagem_unica_indice.addItems(vegetation_index)
-            self.indice_composicao.addItems(vegetation_index)
-            self.series_indice_2.addItems(vegetation_index)
-            self.series_indice_3.addItems(vegetation_index)
-            self.series_indice.addItems(vegetation_index)
-            # Add the custom index to all dropdowns
-            self.imagem_unica_indice.setCurrentIndex(self.imagem_unica_indice.count() - 1)
-            self.indice_composicao.setCurrentIndex(self.indice_composicao.count() - 1)
-            self.series_indice_2.setCurrentIndex(self.series_indice_2.count() - 1)
-            self.series_indice_3.setCurrentIndex(self.series_indice_3.count() - 1)
-            self.series_indice.setCurrentIndex(self.series_indice.count() - 1)
+            # Get current items from any combobox to preserve existing custom indices
+            current_items = [self.series_indice.itemText(i) for i in range(self.series_indice.count())]
+            
+            # Check if this exact custom index already exists
+            if custom_index_name in current_items:
+                if self.language == "pt":
+                    self.pop_warning("Este índice personalizado já existe!")
+                else:
+                    self.pop_warning("This custom index already exists!")
+                return
+            
+            # Add the new custom index to existing items
+            current_items.append(custom_index_name)
+            
+            # Update all comboboxes with the complete list
+            for combo in [self.imagem_unica_indice, self.indice_composicao, 
+                         self.series_indice, self.series_indice_2, self.series_indice_3]:
+                current_selection = combo.currentText()
+                combo.clear()
+                combo.addItems(current_items)
+                
+                # Restore previous selection or set to new custom index
+                if current_selection and combo.findText(current_selection) >= 0:
+                    combo.setCurrentText(current_selection)
+                else:
+                    combo.setCurrentIndex(combo.count() - 1)
+            
+            # Store the custom expression for later use
             self.custom_expression = dialog.expression
             self.custom_expression_name = dialog.expression_name
+            
             if self.language == "pt":
                 self.pop_warning("Índice personalizado adicionado com sucesso!")
             else:
-                self.pop_warning(f"Custom index added successfully!")
+                self.pop_warning("Custom index added successfully!")
 
     def toggle_coordinate_capture_tool(self, state):
         print("toggle_coordinate_capture_tool called")
@@ -963,8 +953,21 @@ class RAVIDialog(QDialog, FORM_CLASS):
             aoi_circle = ee.FeatureCollection([aoi_feat])
 
             # Use full range from 2017-01-01 to today
-            start_date = "2017-01-01"
+            
             end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+            # number of months to go back (replace with desired value or fetch from UI)
+            months_to_subtract = self.QComboBox_goback_months.currentText()
+            months_to_subtract = int(months_to_subtract)
+            end_dt = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+            # Subtract months to get the start date (previous behavior added months,
+            # which inverted the date interval and caused empty ranges)
+            start_dt = end_dt - relativedelta(months=months_to_subtract)
+            # Ensure start is not after end (safety check)
+            if start_dt > end_dt:
+                start_dt, end_dt = end_dt, start_dt
+            start_date = start_dt.strftime("%Y-%m-%d")
+            # keep end_date in sync with end_dt (string)
+            end_date = end_dt.strftime("%Y-%m-%d")
 
             sentinel2_point_collection = (
                 ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -1060,6 +1063,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
         self.attributes_id.clear()
         self.attributes_id.addItems(sorted(unique_fields))
+
+
 
     def QPushButton_features_clicked(self):
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
