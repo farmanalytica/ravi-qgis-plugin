@@ -5,14 +5,14 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Iterator, Sequence
 import contextlib
 import json
 import platform
 import re
 import sys
 import threading
-from typing import Any
+from typing import Any, Callable, Optional, Union
 import uuid
 import warnings
 
@@ -112,7 +112,7 @@ class _ThreadLocals(threading.local):
     # and the user would have to modify each call to profile, rather than
     # enabling profiling as a wrapper around the entire program (with
     # ee.data.profiling, defined below).
-    self.profile_hook: Callable[[str], None] | None = None
+    self.profile_hook: Optional[Callable[[str], None]] = None
 
 
 _thread_locals = _ThreadLocals()
@@ -125,11 +125,11 @@ def _get_state() -> _state.EEState:
 
 def initialize(
     credentials: Any = None,
-    api_base_url: str | None = None,
-    tile_base_url: str | None = None,
-    cloud_api_base_url: str | None = None,
-    cloud_api_key: str | None = None,
-    project: str | None = None,
+    api_base_url: Optional[str] = None,
+    tile_base_url: Optional[str] = None,
+    cloud_api_base_url: Optional[str] = None,
+    cloud_api_key: Optional[str] = None,
+    project: Optional[str] = None,
     http_transport: Any = None,
 ) -> None:
   """Initializes the data module, setting credentials and base URLs.
@@ -297,7 +297,7 @@ def _get_cloud_projects_raw() -> Any:
   return state.cloud_api_resource_raw.projects()
 
 
-def _make_request_headers() -> dict[str, Any] | None:
+def _make_request_headers() -> Optional[dict[str, Any]]:
   """Adds headers based on client context."""
   state = _get_state()
   headers: dict[str, Any] = {}
@@ -329,7 +329,7 @@ def _handle_profiling_response(response: httplib2.Response) -> None:
 
 
 def _execute_cloud_call(
-    call: googleapiclient.http.HttpRequest, num_retries: int | None = None
+    call: googleapiclient.http.HttpRequest, num_retries: Optional[int] = None
 ) -> Any:
   """Executes a Cloud API call and translates errors to EEExceptions.
 
@@ -399,7 +399,7 @@ def setUserAgent(user_agent: str) -> None:
   _get_state().user_agent = user_agent
 
 
-def getUserAgent() -> str | None:
+def getUserAgent() -> Optional[str]:
   return _get_state().user_agent
 
 
@@ -449,7 +449,7 @@ def profiling(hook: Any) -> Iterator[None]:
 
 
 @deprecation.Deprecated('Use getAsset')
-def getInfo(asset_id: str) -> Any | None:
+def getInfo(asset_id: str) -> Optional[Any]:
   """Load info for an asset, given an asset id.
 
   Args:
@@ -512,8 +512,8 @@ def getList(params: dict[str, Any]) -> Any:
 
 
 def listImages(
-    params: str | dict[str, Any],
-) -> dict[str, list[Any] | None]:
+    params: Union[str, dict[str, Any]],
+) -> dict[str, Optional[list[Any]]]:
   """Returns the images in an image collection or folder.
 
   Args:
@@ -550,7 +550,7 @@ def listImages(
   return images
 
 
-def listAssets(params: str | dict[str, Any]) -> dict[str, list[Any]]:
+def listAssets(params: Union[str, dict[str, Any]]) -> dict[str, list[Any]]:
   """Returns the assets in a folder.
 
   Args:
@@ -603,7 +603,7 @@ def listAssets(params: str | dict[str, Any]) -> dict[str, list[Any]]:
   return assets
 
 
-def listBuckets(project: str | None = None) -> Any:
+def listBuckets(project: Optional[str] = None) -> Any:
   """Returns top-level assets and folders for the Cloud Project or user.
 
   Args:
@@ -689,7 +689,7 @@ def getMapId(params: dict[str, Any]) -> dict[str, Any]:
   )
   state = _get_state()
   map_name = result['name']
-  url_format = '{}/{}/{}/tiles/{{z}}/{{x}}/{{y}}'.format(
+  url_format = '%s/%s/%s/tiles/{z}/{x}/{y}' % (
       state.tile_base_url, _cloud_api_utils.VERSION, map_name)
   if state.cloud_api_key:
     url_format += f'?key={state.cloud_api_key}'
@@ -738,7 +738,7 @@ def getFeatureViewTilesKey(params: dict[str, Any]) -> dict[str, Any]:
   }
 
 
-def _extract_table_converter(params: dict[str, Any]) -> Any | None:
+def _extract_table_converter(params: dict[str, Any]) -> Optional[Any]:
   if 'fileFormat' in params:
     file_format = params.get('fileFormat')
     converter = table_converter.from_file_format(file_format)
@@ -1070,7 +1070,7 @@ def computeValue(obj: computedobject.ComputedObject) -> Any:
 
 @deprecation.Deprecated('Use getThumbId and makeThumbUrl')
 def getThumbnail(
-    params: dict[str, Any], thumbType: str | None = None
+    params: dict[str, Any], thumbType: Optional[str] = None
 ) -> Any:
   """Get a Thumbnail for a given asset.
 
@@ -1105,7 +1105,7 @@ def getThumbnail(
 
 
 def getThumbId(
-    params: dict[str, Any], thumbType: str | None = None
+    params: dict[str, Any], thumbType: Optional[str] = None
 ) -> dict[str, str]:
   """Get a Thumbnail ID for a given asset.
 
@@ -1442,8 +1442,8 @@ def getAlgorithms() -> Any:
 @_utils.accept_opt_prefix('opt_path', 'opt_force', 'opt_properties')
 def createAsset(
     value: dict[str, Any],
-    path: str | None = None,
-    properties: dict[str, Any] | None = None,
+    path: Optional[str] = None,
+    properties: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
   """Creates an asset from a JSON value.
 
@@ -1589,7 +1589,7 @@ def getTaskList() -> list[Any]:
           for o in listOperations()]
 
 
-def listOperations(project: str | None = None) -> list[Any]:
+def listOperations(project: Optional[str] = None) -> list[Any]:
   """Retrieves a list of the user's tasks.
 
   Args:
@@ -1616,7 +1616,7 @@ def listOperations(project: str | None = None) -> list[Any]:
 
 
 @deprecation.Deprecated('Use getOperation')
-def getTaskStatus(taskId: list[str] | str) -> list[Any]:
+def getTaskStatus(taskId: Union[list[str], str]) -> list[Any]:
   """Retrieve status of one or more long-running tasks.
 
   Args:
@@ -1868,7 +1868,7 @@ def _startIngestion(
     request_id: Any,
     params: dict[str, Any],
     allow_overwrite: bool = False,
-    import_mode: str | None = _INTERNAL_IMPORT,
+    import_mode: Optional[str] = _INTERNAL_IMPORT,
 ) -> dict[str, Any]:
   """Starts an ingestion task or creates an external image."""
   request = {
@@ -2126,7 +2126,7 @@ def getIamPolicy(asset_id: str) -> Any:
 
 
 @deprecation.Deprecated('Use setIamPolicy')
-def setAssetAcl(assetId: str, aclUpdate: str | dict[str, Any]) -> None:
+def setAssetAcl(assetId: str, aclUpdate: Union[str, dict[str, Any]]) -> None:
   """Sets the access control list of the asset with the given ID.
 
   The owner ACL cannot be changed, and the final ACL of the asset
@@ -2160,7 +2160,6 @@ def setIamPolicy(asset_id: str, policy: Any) -> None:
       .assets()
       .setIamPolicy(resource=name, body={'policy': policy}, prettyPrint=False)
   )
-
 
 @deprecation.Deprecated('Use ee.data.updateAsset().')
 def setAssetProperties(assetId: str, properties: dict[str, Any]) -> None:
@@ -2240,7 +2239,7 @@ def getProjectConfig() -> dict[str, Any]:
 
 
 def updateProjectConfig(
-    project_config: dict[str, Any], update_mask: Sequence[str] | None = None
+    project_config: dict[str, Any], update_mask: Optional[Sequence[str]] = None
 ) -> dict[str, Any]:
   """Updates the project config for the current project.
 
@@ -2312,12 +2311,12 @@ def convert_asset_id_to_asset_name(asset_id: str) -> str:
   return _cloud_api_utils.convert_asset_id_to_asset_name(asset_id)
 
 
-def getWorkloadTag() -> int | str | None:
+def getWorkloadTag() -> Optional[Union[int, str]]:
   """Returns the currently set workload tag."""
   return _get_state().workload_tag.get()
 
 
-def setWorkloadTag(tag: int | str | None) -> None:
+def setWorkloadTag(tag: Optional[Union[int, str]]) -> None:
   """Sets the workload tag, used to label computation and exports.
 
   Workload tag must be 1 - 63 characters, beginning and ending with an
@@ -2331,7 +2330,7 @@ def setWorkloadTag(tag: int | str | None) -> None:
 
 
 @contextlib.contextmanager
-def workloadTagContext(tag: int | str | None) -> Iterator[None]:
+def workloadTagContext(tag: Optional[Union[int, str]]) -> Iterator[None]:
   """Produces a context manager which sets the workload tag, then resets it.
 
   Workload tag must be 1 - 63 characters, beginning and ending with an
@@ -2351,7 +2350,7 @@ def workloadTagContext(tag: int | str | None) -> Iterator[None]:
     resetWorkloadTag()
 
 
-def setDefaultWorkloadTag(tag: int | str | None) -> None:
+def setDefaultWorkloadTag(tag: Optional[Union[int, str]]) -> None:
   """Sets the workload tag, and as the default for which to reset back to.
 
   For example, calling `ee.data.resetWorkloadTag()` will reset the workload tag

@@ -1,8 +1,8 @@
 [general]
 name=RAVI
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.40
 description=Analysis of Vegetation Indices Time Series and download of multispectral imagery
-version=4.2
+version=5.0
 author=Caio Arantes, Isabella Cunha, Bruna Ribeiro, Lucas Amaral
 email=caio.arantes@farmanalytica.com.br
 
@@ -17,6 +17,7 @@ repository=https://github.com/caioarantes/ravi-qgis-plugin
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 changelog=
+    5.0 - new feature - SYSI generation
     4.1 - fix for selected VI menu
     4.0 - proxy setttings, and Digital Elevation Model added
     3.2 - Batch download feature added

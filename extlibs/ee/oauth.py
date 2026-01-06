@@ -9,7 +9,6 @@ Typical use-case consists of:
 """
 
 import base64
-from collections.abc import Sequence
 import errno
 import hashlib
 import http.server
@@ -18,7 +17,8 @@ import os
 import shutil
 import subprocess
 import sys
-from typing import Any
+from typing import Any, Optional, Union
+from collections.abc import Sequence
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -101,13 +101,13 @@ def get_credentials_arguments() -> dict[str, Any]:
     return args
 
 
-def is_sdk_credentials(credentials: Any | None) -> bool:
+def is_sdk_credentials(credentials: Optional[Any]) -> bool:
   return is_sdk_project(project_number_from_credentials(credentials))
 
 
 def project_number_from_credentials(
-    credentials: Any | None,
-) -> str | None:
+    credentials: Optional[Any],
+) -> Optional[str]:
   client_id = credentials and getattr(credentials, 'client_id', None)
   return _project_number_from_client_id(client_id)
 
@@ -116,7 +116,7 @@ def is_sdk_project(project: str) -> bool:
   return project in SDK_PROJECTS
 
 
-def get_appdefault_project() -> str | None:
+def get_appdefault_project() -> Optional[str]:
   try:
     adc_path = _cloud_sdk.get_application_default_credentials_path()
     with open(adc_path) as adc_json:
@@ -134,7 +134,7 @@ def _valid_credentials_exist() -> bool:
     return False
 
 
-def is_valid_credentials(credentials: Any | None) -> bool:
+def is_valid_credentials(credentials: Optional[Any]) -> bool:
   if credentials is None:
     return False
   try:
@@ -146,8 +146,8 @@ def is_valid_credentials(credentials: Any | None) -> bool:
 
 def get_authorization_url(
     code_challenge: str,
-    scopes: Sequence[str] | None = None,
-    redirect_uri: str | None = None,
+    scopes: Optional[Sequence[str]] = None,
+    redirect_uri: Optional[str] = None,
 ) -> str:
   """Returns a URL to generate an auth code."""
 
@@ -164,9 +164,9 @@ def get_authorization_url(
 def request_token(
     auth_code: str,
     code_verifier: str,
-    client_id: str | None = None,
-    client_secret: str | None = None,
-    redirect_uri: str | None = None,
+    client_id: Optional[str] = None,
+    client_secret: Optional[str] = None,
+    redirect_uri: Optional[str] = None,
 ) -> str:
   """Uses authorization code to request tokens."""
 
@@ -201,7 +201,7 @@ def write_private_json(json_path: str, info_dict: dict[str, Any]) -> None:
   except OSError as e:
     if e.errno != errno.EEXIST:
       # pylint:disable=broad-exception-raised,raise-missing-from
-      raise Exception(f'Error creating directory {dirname}: {e}')
+      raise Exception('Error creating directory {}: {}'.format(dirname, e))
       # pylint:enable=broad-exception-raised,raise-missing-from
 
   file_content = json.dumps(info_dict)
@@ -226,7 +226,7 @@ def _in_jupyter_shell() -> bool:
   """Tests if the code is being executed within Jupyter."""
   try:
     import ipykernel.zmqshell
-    return isinstance(IPython.get_ipython(),  # pylint: disable=undefined-variable
+    return isinstance(IPython.get_ipython(),
                       ipykernel.zmqshell.ZMQInteractiveShell)
   except ImportError:
     return False
@@ -234,7 +234,7 @@ def _in_jupyter_shell() -> bool:
     return False
 
 
-def _project_number_from_client_id(client_id: str | None) -> str | None:
+def _project_number_from_client_id(client_id: Optional[str]) -> Optional[str]:
   """Returns the project number associated with the given OAuth client ID."""
   # Client IDs are of the form:
   # PROJECTNUMBER-BASE32STUFF.apps.googleusercontent.com.
@@ -243,10 +243,10 @@ def _project_number_from_client_id(client_id: str | None) -> str | None:
 
 
 def _obtain_and_write_token(
-    auth_code: str | None = None,
-    code_verifier: str | None = None,
-    scopes: Sequence[str] | None = None,
-    redirect_uri: str | None = None,
+    auth_code: Optional[str] = None,
+    code_verifier: Optional[str] = None,
+    scopes: Optional[Sequence[str]] = None,
+    redirect_uri: Optional[str] = None,
 ) -> None:
   """Obtains and writes credentials token based on an authorization code."""
   fetch_data = {}
@@ -283,7 +283,7 @@ def _obtain_and_write_token(
 
 
 def _display_auth_instructions_for_noninteractive(
-    auth_url: str, code_verifier: bytes | str
+    auth_url: str, code_verifier: Union[bytes, str]
 ) -> None:
   """Displays instructions for authenticating without blocking for user input."""
   # Python 3 `bytes` should be decoded to `str` if used as an argument of
@@ -310,7 +310,7 @@ def _display_auth_instructions_for_noninteractive(
 
 
 def _display_auth_instructions_with_print(
-    auth_url: str, coda: str | None = None
+    auth_url: str, coda: Optional[str] = None
 ) -> None:
   """Displays instructions for authenticating using a print statement."""
   print(
@@ -325,11 +325,11 @@ def _display_auth_instructions_with_print(
 
 
 def _display_auth_instructions_with_html(
-    auth_url: str, coda: str | None = None
+    auth_url: str, coda: Optional[str] = None
 ) -> None:
   """Displays instructions for authenticating using HTML code."""
   try:
-    IPython.display.display(IPython.display.HTML(  # pylint: disable=undefined-variable
+    IPython.display.display(IPython.display.HTML(
         """<p>To authorize access needed by Earth Engine, open the following
         URL in a web browser and follow the instructions:</p>
         <p><a href={0}>{0}</a></p>
@@ -382,8 +382,8 @@ def _no_gcloud() -> bool:
 
 
 def _load_gcloud_credentials(
-    scopes: Sequence[str] | None = None,
-    quiet: bool | None = None,
+    scopes: Optional[Sequence[str]] = None,
+    quiet: Optional[bool] = None,
     run_gcloud_legacy: bool = False,
 ) -> None:
   """Initializes credentials by running gcloud flows."""
@@ -435,7 +435,7 @@ def _start_server(port: int):
   class Handler(http.server.BaseHTTPRequestHandler):
     """Handles the OAuth callback and reports a success page."""
 
-    code: str | None = None
+    code: Optional[str] = None
 
     def do_GET(self) -> None:  # pylint: disable=invalid-name
       Handler.code = urllib.parse.parse_qs(
@@ -460,7 +460,7 @@ def _start_server(port: int):
       self.server = http.server.HTTPServer(('localhost', port), Handler)
       self.url = 'http://localhost:%s' % self.server.server_address[1]
 
-    def fetch_code(self) -> str | None:
+    def fetch_code(self) -> Optional[str]:
       self.server.handle_request()  # Blocks until a single request arrives.
       self.server.server_close()
       return Handler.code
@@ -469,13 +469,13 @@ def _start_server(port: int):
 
 
 def authenticate(
-    cli_authorization_code: str | None = None,
-    quiet: bool | None = None,
-    cli_code_verifier: str | None = None,
-    auth_mode: str | None = None,
-    scopes: Sequence[str] | None = None,
+    cli_authorization_code: Optional[str] = None,
+    quiet: Optional[bool] = None,
+    cli_code_verifier: Optional[str] = None,
+    auth_mode: Optional[str] = None,
+    scopes: Optional[Sequence[str]] = None,
     force: bool = False,
-) -> bool | None:
+) -> Optional[bool]:
   """Prompts the user to authorize access to Earth Engine via OAuth2.
 
   Args:
@@ -564,11 +564,11 @@ class Flow:
   """Holds state for auth flows."""
   code_verifier: str
   scopes: Sequence[str]
-  server: Any | None
+  server: Optional[Any]
   auth_url: str
 
   def __init__(
-      self, auth_mode: str = 'notebook', scopes: Sequence[str] | None = None
+      self, auth_mode: str = 'notebook', scopes: Optional[Sequence[str]] = None
   ):
     """Initializes auth URL and PKCE verifier, for use in save_code().
 
@@ -601,7 +601,7 @@ class Flow:
       # pylint:disable-next=broad-exception-raised
       raise ee_exception.EEException('Unknown auth_mode "%s"' % auth_mode)
 
-  def save_code(self, code: str | None = None) -> None:
+  def save_code(self, code: Optional[str] = None) -> None:
     """Fetches auth code if not given, and saves the generated credentials."""
     redirect_uri = None
     if self.server and not code:
@@ -609,7 +609,7 @@ class Flow:
       code = self.server.fetch_code()  # Waits for oauth callback
     _obtain_and_write_token(code, self.code_verifier, self.scopes, redirect_uri)
 
-  def display_instructions(self, quiet: bool | None = None) -> bool:
+  def display_instructions(self, quiet: Optional[bool] = None) -> bool:
     """Prints to stdout, and returns True if a browser should be opened."""
 
     if quiet:

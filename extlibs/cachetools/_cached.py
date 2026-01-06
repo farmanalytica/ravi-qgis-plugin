@@ -63,9 +63,7 @@ def _locked_info(func, cache, key, lock, info):
         v = func(*args, **kwargs)
         with lock:
             try:
-                # In case of a race condition, i.e. if another thread
-                # stored a value for this key while we were calling
-                # func(), prefer the cached value.
+                # in case of a race, prefer the item already in the cache
                 return cache.setdefault(k, v)
             except ValueError:
                 return v  # value too large
@@ -109,11 +107,8 @@ def _unlocked_info(func, cache, key, info):
         cache.clear()
         hits = misses = 0
 
-    def cache_info():
-        return info(hits, misses)
-
     wrapper.cache_clear = cache_clear
-    wrapper.cache_info = cache_info
+    wrapper.cache_info = lambda: info(hits, misses)
     return wrapper
 
 
@@ -178,7 +173,7 @@ def _locked(func, cache, key, lock):
         v = func(*args, **kwargs)
         with lock:
             try:
-                # possible race condition: see above
+                # in case of a race, prefer the item already in the cache
                 return cache.setdefault(k, v)
             except ValueError:
                 return v  # value too large

@@ -6,13 +6,13 @@ parameters and result values.
 """
 
 import calendar
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 import copy
 import datetime
 import json
 import os
 import re
-from typing import Any
+from typing import Any, Callable, Optional, Type, Union
 import warnings
 
 import google_auth_httplib2
@@ -23,7 +23,6 @@ import httplib2
 import requests
 
 from ee import ee_exception
-
 
 # The Cloud API version.
 VERSION = os.environ.get('EE_CLOUD_API_VERSION', 'v1')
@@ -50,10 +49,10 @@ TASK_TO_OPERATION_STATE = {
 class _Http:
   """A httplib2.Http-like object based on requests."""
   _session: requests.Session
-  _timeout: float | None
+  _timeout: Optional[float]
 
   def __init__(
-      self, session: requests.Session, timeout: float | None = None
+      self, session: requests.Session, timeout: Optional[float] = None
   ):
     self._timeout = timeout
     self._session = session
@@ -62,10 +61,10 @@ class _Http:
       self,
       uri: str,
       method: str = 'GET',
-      body: str | None = None,
-      headers: dict[str, str] | None = None,
-      redirections: int | None = None,
-      connection_type: type[Any] | None = None,
+      body: Optional[str] = None,
+      headers: Optional[dict[str, str]] = None,
+      redirections: Optional[int] = None,
+      connection_type: Optional[type[Any]] = None,
   ) -> tuple[httplib2.Response, Any]:
     """Makes an HTTP request using httplib2 semantics."""
     del connection_type  # Ignored
@@ -118,10 +117,10 @@ def _wrap_request(
       postproc: Callable[..., Any],
       uri: str,
       method: str = 'GET',
-      body: Any | None = None,
-      headers: Any | None = None,
-      methodId: Any | None = None,
-      resumable: Any | None = None,
+      body: Optional[Any] = None,
+      headers: Optional[Any] = None,
+      methodId: Optional[Any] = None,
+      resumable: Optional[Any] = None,
   ) -> http.HttpRequest:
     """Builds an HttpRequest, adding headers and response inspection."""
     additional_headers = headers_supplier()
@@ -147,14 +146,14 @@ def _wrap_request(
 def build_cloud_resource(
     api_base_url: str,
     session: requests.Session,
-    api_key: str | None = None,
-    credentials: Any | None = None,
-    timeout: float | None = None,
+    api_key: Optional[str] = None,
+    credentials: Optional[Any] = None,
+    timeout: Optional[float] = None,
     num_retries: int = 1,
-    headers_supplier: Callable[[], dict[str, Any]] | None = None,
-    response_inspector: Callable[[Any], None] | None = None,
-    http_transport: Any | None = None,
-    raw: bool | None = False,
+    headers_supplier: Optional[Callable[[], dict[str, Any]]] = None,
+    response_inspector: Optional[Callable[[Any], None]] = None,
+    http_transport: Optional[Any] = None,
+    raw: Optional[bool] = False,
 ) -> Any:
   """Builds an Earth Engine Cloud API resource.
 
@@ -226,9 +225,9 @@ def build_cloud_resource(
 
 def build_cloud_resource_from_document(
     discovery_document: Any,
-    http_transport: httplib2.Http | None = None,
-    headers_supplier: Callable[..., Any] | None = None,
-    response_inspector: Callable[..., Any] | None = None,
+    http_transport: Optional[httplib2.Http] = None,
+    headers_supplier: Optional[Callable[..., Any]] = None,
+    response_inspector: Optional[Callable[..., Any]] = None,
     raw: bool = False,
 ) -> discovery.Resource:
   """Builds an Earth Engine Cloud API resource from a description of the API.
@@ -262,7 +261,7 @@ def build_cloud_resource_from_document(
 def _convert_dict(
     to_convert: dict[str, Any],
     conversions: dict[str, Any],
-    defaults: dict[str, Any] | None = None,
+    defaults: Optional[dict[str, Any]] = None,
     key_warnings: bool = False,
     retain_keys: bool = False,
 ) -> dict[str, Any]:
@@ -619,7 +618,7 @@ def convert_sources_to_one_platform_sources(sources: list[Any]) -> list[Any]:
   return converted_sources
 
 
-def encode_number_as_cloud_value(number: float) -> dict[str, float | str]:
+def encode_number_as_cloud_value(number: float) -> dict[str, Union[float, str]]:
   # Numeric values in constantValue-style nodes end up stored in doubles. If the
   # input is an integer that loses precision as a double, use the int64 slot
   # ("integerValue") in ValueNode.
@@ -700,7 +699,7 @@ def _convert_algorithm_argument(arg: dict[str, Any]) -> dict[str, Any]:
       })
 
 
-def convert_to_image_file_format(format_str: str | None) -> str:
+def convert_to_image_file_format(format_str: Optional[str]) -> str:
   """Converts a legacy file format string to an ImageFileFormat enum value.
 
   Args:
@@ -727,7 +726,7 @@ def convert_to_image_file_format(format_str: str | None) -> str:
     return format_str
 
 
-def convert_to_table_file_format(format_str: str | None) -> str:
+def convert_to_table_file_format(format_str: Optional[str]) -> str:
   """Converts a legacy file format string to a TableFileFormat enum value.
 
   Args:
@@ -750,7 +749,7 @@ def convert_to_table_file_format(format_str: str | None) -> str:
     return format_str
 
 
-def convert_to_band_list(bands: list[str] | None | str) -> list[str]:
+def convert_to_band_list(bands: Union[list[str], None, str]) -> list[str]:
   """Converts a band list, possibly as CSV, to a real list of bands.
 
   Args:
@@ -927,7 +926,7 @@ def convert_acl_to_iam_policy(acl: dict[str, Any]) -> dict[str, Any]:
 
 
 def convert_to_grid_dimensions(
-    dimensions: float | Sequence[float]
+    dimensions: Union[float, Sequence[float]]
 ) -> dict[str, float]:
   """Converts an input value to GridDimensions.
 

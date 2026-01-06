@@ -1,5 +1,7 @@
 """A wrapper for Models."""
 
+from typing import Optional
+
 from ee import _arg_types
 from ee import apifunction
 from ee import computedobject
@@ -64,26 +66,26 @@ class Model(computedobject.ComputedObject):
   @deprecation.Deprecated('Migrate to Vertex AI')
   def fromAiPlatformPredictor(
       # pylint: disable=invalid-name
-      projectName: _arg_types.Any | None = None,
-      projectId: _arg_types.String | None = None,
-      modelName: _arg_types.String | None = None,
+      projectName: Optional[_arg_types.Any] = None,
+      projectId: Optional[_arg_types.String] = None,
+      modelName: Optional[_arg_types.String] = None,
       # pylint: enable=invalid-name
-      version: _arg_types.String | None = None,
-      region: _arg_types.String | None = None,
+      version: Optional[_arg_types.String] = None,
+      region: Optional[_arg_types.String] = None,
       # pylint: disable=invalid-name
-      inputProperties: _arg_types.List | None = None,
-      inputTypeOverride: _arg_types.Dictionary | None = None,
-      inputShapes: _arg_types.Dictionary | None = None,
+      inputProperties: Optional[_arg_types.List] = None,
+      inputTypeOverride: Optional[_arg_types.Dictionary] = None,
+      inputShapes: Optional[_arg_types.Dictionary] = None,
       # pylint: enable=invalid-name
-      proj: _arg_types.Projection | None = None,
+      proj: Optional[_arg_types.Projection] = None,
       # pylint: disable=invalid-name
-      fixInputProj: _arg_types.Bool | None = None,
-      inputTileSize: _arg_types.List | None = None,
-      inputOverlapSize: _arg_types.List | None = None,
-      outputTileSize: _arg_types.List | None = None,
-      outputBands: _arg_types.Dictionary | None = None,
-      outputProperties: _arg_types.Dictionary | None = None,
-      outputMultiplier: _arg_types.Number | None = None,
+      fixInputProj: Optional[_arg_types.Bool] = None,
+      inputTileSize: Optional[_arg_types.List] = None,
+      inputOverlapSize: Optional[_arg_types.List] = None,
+      outputTileSize: Optional[_arg_types.List] = None,
+      outputBands: Optional[_arg_types.Dictionary] = None,
+      outputProperties: Optional[_arg_types.Dictionary] = None,
+      outputMultiplier: Optional[_arg_types.Number] = None,
       # pylint: enable=invalid-name
   ) -> 'Model':
     """Returns an ee.Model from a description of an AI Platform prediction model.
@@ -166,21 +168,21 @@ class Model(computedobject.ComputedObject):
   def fromVertexAi(
       endpoint: _arg_types.String,
       # pylint: disable=invalid-name
-      inputProperties: _arg_types.List | None = None,
-      inputTypeOverride: _arg_types.Dictionary | None = None,
-      inputShapes: _arg_types.Dictionary | None = None,
+      inputProperties: Optional[_arg_types.List] = None,
+      inputTypeOverride: Optional[_arg_types.Dictionary] = None,
+      inputShapes: Optional[_arg_types.Dictionary] = None,
       # pylint: enable=invalid-name
-      proj: _arg_types.Projection | None = None,
+      proj: Optional[_arg_types.Projection] = None,
       # pylint: disable=invalid-name
-      fixInputProj: _arg_types.Bool | None = None,
-      inputTileSize: _arg_types.List | None = None,
-      inputOverlapSize: _arg_types.List | None = None,
-      outputTileSize: _arg_types.List | None = None,
-      outputBands: _arg_types.Dictionary | None = None,
-      outputProperties: _arg_types.Dictionary | None = None,
-      outputMultiplier: _arg_types.Number | None = None,
-      maxPayloadBytes: _arg_types.Integer | None = None,
-      payloadFormat: _arg_types.String | None = None,
+      fixInputProj: Optional[_arg_types.Bool] = None,
+      inputTileSize: Optional[_arg_types.List] = None,
+      inputOverlapSize: Optional[_arg_types.List] = None,
+      outputTileSize: Optional[_arg_types.List] = None,
+      outputBands: Optional[_arg_types.Dictionary] = None,
+      outputProperties: Optional[_arg_types.Dictionary] = None,
+      outputMultiplier: Optional[_arg_types.Number] = None,
+      maxPayloadBytes: Optional[_arg_types.Integer] = None,
+      payloadFormat: Optional[_arg_types.String] = None,
       # pylint: enable=invalid-name
   ) -> 'Model':
     """Returns an ee.Model from a description of a Vertex AI model endpoint.

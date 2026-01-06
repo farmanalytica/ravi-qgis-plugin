@@ -12,7 +12,7 @@ __all__ = (
     "cachedmethod",
 )
 
-__version__ = "6.2.3"
+__version__ = "6.2.1"
 
 import collections
 import collections.abc
@@ -27,13 +27,13 @@ from . import keys
 class _DefaultSize:
     __slots__ = ()
 
-    def __getitem__(self, _key):
+    def __getitem__(self, _):
         return 1
 
-    def __setitem__(self, _key, _value):
-        pass
+    def __setitem__(self, _, value):
+        assert value == 1
 
-    def pop(self, _key):
+    def pop(self, _):
         return 1
 
 
@@ -55,7 +55,7 @@ class Cache(collections.abc.MutableMapping):
 
     def __repr__(self):
         return "%s(%s, maxsize=%r, currsize=%r)" % (
-            type(self).__name__,
+            self.__class__.__name__,
             repr(self.__data),
             self.__maxsize,
             self.__currsize,
@@ -99,12 +99,6 @@ class Cache(collections.abc.MutableMapping):
 
     def __len__(self):
         return len(self.__data)
-
-    # Note that we cannot simply inherit get(), pop() and setdefault()
-    # from MutableMapping, since these rely on __getitem__ throwing a
-    # KeyError on cache miss.  This is not the case if __missing__ is
-    # implemented for a Cache subclass, so we have to roll our own,
-    # somewhat less elegant versions.
 
     def get(self, key, default=None):
         if key in self:
@@ -154,9 +148,9 @@ class FIFOCache(Cache):
 
     def __setitem__(self, key, value, cache_setitem=Cache.__setitem__):
         cache_setitem(self, key, value)
-        if key in self.__order:
+        try:
             self.__order.move_to_end(key)
-        else:
+        except KeyError:
             self.__order[key] = None
 
     def __delitem__(self, key, cache_delitem=Cache.__delitem__):
@@ -204,8 +198,7 @@ class LFUCache(Cache):
     def __setitem__(self, key, value, cache_setitem=Cache.__setitem__):
         cache_setitem(self, key, value)
         if key in self.__links:
-            self.__touch(key)
-            return
+            return self.__touch(key)
         root = self.__root
         link = root.next
         if link.count != 1:
@@ -649,7 +642,7 @@ class TLRUCache(_TimedCache):
             try:
                 key = next(iter(self.__items))
             except StopIteration:
-                raise KeyError("%s is empty" % type(self).__name__) from None
+                raise KeyError("%s is empty" % self.__class__.__name__) from None
             else:
                 return (key, self.pop(key))
 

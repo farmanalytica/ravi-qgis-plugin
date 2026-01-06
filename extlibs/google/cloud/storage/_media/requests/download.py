@@ -711,7 +711,7 @@ class _GzipDecoder(urllib3.response.GzipDecoder):
         super().__init__()
         self._checksum = checksum
 
-    def decompress(self, data, max_length=-1):
+    def decompress(self, data):
         """Decompress the bytes.
 
         Args:
@@ -721,11 +721,7 @@ class _GzipDecoder(urllib3.response.GzipDecoder):
             bytes: The decompressed bytes from ``data``.
         """
         self._checksum.update(data)
-        try:
-            return super().decompress(data, max_length=max_length)
-        except TypeError:
-            # Fallback for urllib3 < 2.6.0 which lacks `max_length` support.
-            return super().decompress(data)
+        return super().decompress(data)
 
 
 # urllib3.response.BrotliDecoder might not exist depending on whether brotli is
@@ -751,7 +747,7 @@ if hasattr(urllib3.response, "BrotliDecoder"):
             self._decoder = urllib3.response.BrotliDecoder()
             self._checksum = checksum
 
-        def decompress(self, data, max_length=-1):
+        def decompress(self, data):
             """Decompress the bytes.
 
             Args:
@@ -761,19 +757,10 @@ if hasattr(urllib3.response, "BrotliDecoder"):
                 bytes: The decompressed bytes from ``data``.
             """
             self._checksum.update(data)
-            try:
-                return self._decoder.decompress(data, max_length=max_length)
-            except TypeError:
-                # Fallback for urllib3 < 2.6.0 which lacks `max_length` support.
-                return self._decoder.decompress(data)
+            return self._decoder.decompress(data)
 
         def flush(self):
             return self._decoder.flush()
-
-        @property
-        def has_unconsumed_tail(self) -> bool:
-            return self._decoder.has_unconsumed_tail
-
 
 else:  # pragma: NO COVER
     _BrotliDecoder = None  # type: ignore # pragma: NO COVER
