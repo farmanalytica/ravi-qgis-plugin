@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>611</width>
-    <height>452</height>
+    <width>615</width>
+    <height>503</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,10 +54,10 @@
   <widget class="QPushButton" name="QPushButton_sysi">
    <property name="geometry">
     <rect>
-     <x>460</x>
-     <y>390</y>
-     <width>141</width>
-     <height>51</height>
+     <x>10</x>
+     <y>450</y>
+     <width>591</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -90,6 +90,43 @@
    <property name="readOnly">
     <bool>true</bool>
    </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;SYSI Generation Description&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-size:large; font-weight:600; color:#2c3e50;&quot;&gt;Generation of Synthetic Soil Image (SYSI) via GEOS3&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-size:large; font-weight:600; color:#333333;&quot;&gt; &lt;/span&gt;&lt;/h3&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-style:italic; color:#666666;&quot;&gt;Overview: The process begins with seasonal and cloud filtering of the Sentinel-2 collection, followed by the calculation of spectral indices. The GEOS3 mask, based on Demattê et al. (2018), is applied to isolate bare soil pixels, which are subsequently aggregated by the temporal median to generate the final synthetic image containing Blue, Green, Red, Red Edge, NIR, SWIR1, SWIR2, and NDVI bands. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-weight:600; color:#2c3e50;&quot;&gt;Functionality Description: &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;This feature aims to generate a vegetation-free and cloud-free Synthetic Soil Image (SYSI), allowing for the visualization of the pedological variability within the area of interest. The method is based on the &lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-weight:600; color:#333333;&quot;&gt;Geospatial Soil Sensing System (GEOS3)&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt; algorithm proposed by Demattê et al. (2018), which employs data mining techniques on satellite image time series to identify and isolate bare soil pixels. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;The processing is executed in the cloud via Google Earth Engine (GEE) following four main steps: &lt;/span&gt;&lt;/p&gt;
+&lt;ol style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:12px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Collection Selection and Pre-processing&lt;/span&gt; &lt;/li&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;Initially, the system defines the Area of Interest (AOI) and selects the Sentinel-2 collection (&lt;/span&gt;&lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;COPERNICUS/S2_SR_HARMONIZED&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;) within the year range defined by the user. To ensure data quality, the following filters are applied: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 2;&quot;&gt;&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Spatial Filtering:&lt;/span&gt; Restricting images to the AOI boundaries. &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Cloud Filtering:&lt;/span&gt; Removal of images with excessive cloud cover (parameter &lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;CLOUDY_PIXEL_PERCENTAGE&lt;/span&gt;) and application of the &lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;QA60&lt;/span&gt; quality mask to remove opaque clouds and cirrus on a pixel-by-pixel basis. &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:20px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Seasonal Filtering:&lt;/span&gt; Selection of only specific months indicated by the user in the interface (e.g., off-season months), aiming to maximize the occurrence of bare soil. &lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Calculation of Spectral Indices and Scale Factors&lt;/span&gt; &lt;/li&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;For each image in the filtered collection, spectral indices essential for soil discrimination are calculated according to the GEOS3 methodology. In addition to applying scale factors (division by 10,000 for surface reflectance), the following are generated: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 2;&quot;&gt;&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;NDVI:&lt;/span&gt; Normalized Difference Vegetation Index. &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;NBR2:&lt;/span&gt; Normalized Burn Ratio 2, sensitive to straw and non-photosynthetic residues. &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Band Differences:&lt;/span&gt; Difference between Green and Blue bands (&lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;grbl&lt;/span&gt;) and Red and Green bands (&lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;regr&lt;/span&gt;). &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:20px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;VNSIR:&lt;/span&gt; Visible-to-Shortwave-Infrared tendency index, calculated using the formula adapted from Demattê et al. (2018):&lt;br /&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;VNSIR = 1 - (2 × Red - Green - Blue + 3 × (NIR - Red))&lt;/span&gt; &lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GEOS3 Mask Application&lt;/span&gt; &lt;/li&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;The core of the algorithm consists of applying a logical mask to identify bare soil pixels. A pixel is classified as soil (GEOS3 = 1) if it simultaneously satisfies the following conditions, whose thresholds are adjustable by the user via the RAVI interface: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 2;&quot;&gt;&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;NDVI&lt;/span&gt;&lt;span style=&quot; font-style:italic; vertical-align:sub;&quot;&gt;min&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt; ≤ NDVI ≤ NDVI&lt;/span&gt;&lt;span style=&quot; font-style:italic; vertical-align:sub;&quot;&gt;max&lt;/span&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;NBR2&lt;/span&gt;&lt;span style=&quot; font-style:italic; vertical-align:sub;&quot;&gt;min&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt; ≤ NBR2 ≤ NBR2&lt;/span&gt;&lt;span style=&quot; font-style:italic; vertical-align:sub;&quot;&gt;max&lt;/span&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;VNSIR ≤ 0.9&lt;/span&gt; &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:20px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GRBL &amp;gt; 0&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;REGR &amp;gt; 0&lt;/span&gt; &lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:20px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Temporal Aggregation (TESS) and Post-Processing&lt;/span&gt; &lt;/li&gt;&lt;/ol&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;After classification, the mask is applied to the collection, retaining only the pixels identified as soil. To compose the final image (SYSI), a statistical &lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-weight:600; color:#333333;&quot;&gt;median&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt; reducer (&lt;/span&gt;&lt;span style=&quot; font-family:'monospace'; color:#c7254e; background-color:#f4f4f4;&quot;&gt;median()&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;) is used over the temporal stack of valid pixels. This process removes transient variations (such as temporary moisture) and fills gaps left by clouds or vegetation. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;The resulting product is a multispectral image composed of &lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-weight:600; color:#333333;&quot;&gt;8 bands&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;: &lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 2;&quot;&gt;&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Visible:&lt;/span&gt; Blue, Green, and Red; &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Vegetation and Near-Infrared:&lt;/span&gt; Red Edge and Near-Infrared (NIR); &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shortwave Infrared:&lt;/span&gt; SWIR1 and SWIR2; &lt;/li&gt;
+&lt;li style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot; style=&quot; margin-top:0px; margin-bottom:20px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Index:&lt;/span&gt; The calculated NDVI band. &lt;/li&gt;&lt;/ul&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px; line-height:160%;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#333333;&quot;&gt;Finally, the resulting image is clipped precisely to the AOI geometry, automatically downloaded, and loaded into QGIS with a contrast rendering adjusted to the visualized extent. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:20px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:160%; background-color:#f9f9f9;&quot;&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-weight:600; color:#555555;&quot;&gt;Reference:&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#555555;&quot;&gt;&lt;br /&gt;[1] DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. Geospatial Soil Sensing System (GEOS3): A powerful data mining procedure to retrieve soil spectral reflectance from satellite images. &lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; font-style:italic; color:#555555;&quot;&gt;Remote Sensing of Environment&lt;/span&gt;&lt;span style=&quot; font-family:'Arial','sans-serif'; color:#555555;&quot;&gt;, v. 212, p. 161–175, 2018. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="overwriteMode">
     <bool>true</bool>
    </property>
@@ -100,9 +137,9 @@
   <widget class="QGroupBox" name="groupBox_30">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>290</x>
      <y>380</y>
-     <width>441</width>
+     <width>311</width>
      <height>61</height>
     </rect>
    </property>
@@ -112,12 +149,12 @@
     </font>
    </property>
    <property name="title">
-    <string>Buffer</string>
+    <string>Buffer (applied on clipped resulted raster)</string>
    </property>
    <widget class="QLabel" name="label_buffer">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>250</x>
       <y>30</y>
       <width>51</width>
       <height>21</height>
@@ -140,7 +177,7 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>341</width>
+      <width>221</width>
       <height>21</height>
      </rect>
     </property>
@@ -179,7 +216,7 @@
      <x>10</x>
      <y>260</y>
      <width>591</width>
-     <height>101</height>
+     <height>111</height>
     </rect>
    </property>
    <property name="font">
@@ -188,25 +225,25 @@
     </font>
    </property>
    <property name="title">
-    <string>Treshold</string>
+    <string>Thresholds</string>
    </property>
-   <widget class="QSlider" name="horizontalSlider">
+   <widget class="QSlider" name="horizontalSlider_ndvi_inf">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>40</y>
-      <width>51</width>
+      <x>120</x>
+      <y>35</y>
+      <width>201</width>
       <height>22</height>
      </rect>
     </property>
     <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
+     <enum>Qt::RightToLeft</enum>
     </property>
     <property name="minimum">
-     <number>-1</number>
+     <number>-100</number>
     </property>
     <property name="maximum">
-     <number>1</number>
+     <number>100</number>
     </property>
     <property name="singleStep">
      <number>1</number>
@@ -215,23 +252,35 @@
      <number>0</number>
     </property>
     <property name="value">
-     <number>-1</number>
+     <number>25</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_2">
+   <widget class="QSlider" name="horizontalSlider_ndvi_sup">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>40</y>
-      <width>51</width>
+      <x>320</x>
+      <y>35</y>
+      <width>201</width>
       <height>22</height>
      </rect>
     </property>
     <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="minimum">
+     <number>-100</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="pageStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>25</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -241,7 +290,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>40</y>
+      <y>35</y>
       <width>131</width>
       <height>21</height>
      </rect>
@@ -255,11 +304,11 @@
      <string>NDVI:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_16">
+   <widget class="QLabel" name="Qlabel_ndvi_inf">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>40</y>
+      <x>67</x>
+      <y>34</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -270,14 +319,14 @@
      </font>
     </property>
     <property name="text">
-     <string>0.3</string>
+     <string>-0.25</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_17">
+   <widget class="QLabel" name="Qlabel_ndvi_sup">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>40</y>
+      <x>530</x>
+      <y>35</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -288,31 +337,43 @@
      </font>
     </property>
     <property name="text">
-     <string>0.8</string>
+     <string>0.25</string>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_3">
+   <widget class="QSlider" name="horizontalSlider_nbr_inf">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>70</y>
-      <width>51</width>
+      <x>120</x>
+      <y>65</y>
+      <width>201</width>
       <height>22</height>
      </rect>
     </property>
     <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="minimum">
+     <number>-150</number>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+    <property name="value">
+     <number>30</number>
+    </property>
+    <property name="sliderPosition">
+     <number>30</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_18">
+   <widget class="QLabel" name="Qlabel">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
-      <width>131</width>
+      <y>65</y>
+      <width>41</width>
       <height>21</height>
      </rect>
     </property>
@@ -325,27 +386,36 @@
      <string>NBR:</string>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_4">
+   <widget class="QSlider" name="horizontalSlider_nbr_sup">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>70</y>
-      <width>51</width>
+      <x>320</x>
+      <y>65</y>
+      <width>201</width>
       <height>22</height>
      </rect>
     </property>
     <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="minimum">
+     <number>-50</number>
+    </property>
+    <property name="maximum">
+     <number>150</number>
+    </property>
+    <property name="value">
+     <number>10</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_19">
+   <widget class="QLabel" name="Qlabel_nbr_sup">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>70</y>
+      <x>530</x>
+      <y>65</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -356,14 +426,14 @@
      </font>
     </property>
     <property name="text">
-     <string>0.8</string>
+     <string>0.10</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_20">
+   <widget class="QLabel" name="Qlabel_nbr_inf">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>70</y>
+      <x>66</x>
+      <y>66</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -374,7 +444,46 @@
      </font>
     </property>
     <property name="text">
-     <string>0.3</string>
+     <string>-0.30</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>0</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Inferior</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_22">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>0</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Superior</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_23">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>90</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Keep Inferior &lt; Superior</string>
     </property>
    </widget>
   </widget>
@@ -403,13 +512,450 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>71</width>
+     <width>141</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Timerange</string>
+    <string>Time Range (mm/dd/yyyy)</string>
    </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_1">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Included months:</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_2">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_3">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_4">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_5">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_6">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>3</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>4</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>5</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>6</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_7">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>9</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>7</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_8">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_9">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_10">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>8</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>11</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>12</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_11">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>30</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>10</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_12">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>40</y>
+     <width>21</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_31">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>380</y>
+     <width>271</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="title">
+    <string>Cloud Pixel Percentage (Tile)</string>
+   </property>
+   <widget class="QLabel" name="Qlabel_clouds">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>10%</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_clouds">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>191</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="singleStep">
+     <number>10</number>
+    </property>
+    <property name="pageStep">
+     <number>30</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+    <property name="sliderPosition">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksBothSides</enum>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -2597,26 +2597,22 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
             # Set contrast enhancement for each band (Red, Green, Blue)
             try:
+                # Prefer local cumulative-cut stretch (uses current canvas extent
+                # histogram/estimates). Fallback to minimum-maximum if not
+                # available in this QGIS version.
+                if hasattr(QgsContrastEnhancement, "StretchToCumulativeCut"):
+                    alg = QgsContrastEnhancement.StretchToCumulativeCut
+                else:
+                    alg = QgsContrastEnhancement.StretchToMinimumMaximum
+
                 red_ce = QgsContrastEnhancement(layer.dataProvider().dataType(4))
-                red_ce.setMinimumValue(min_val)
-                red_ce.setMaximumValue(max_val)
-                red_ce.setContrastEnhancementAlgorithm(
-                    QgsContrastEnhancement.StretchToMinimumMaximum
-                )
+                red_ce.setContrastEnhancementAlgorithm(alg)
 
                 green_ce = QgsContrastEnhancement(layer.dataProvider().dataType(3))
-                green_ce.setMinimumValue(min_val)
-                green_ce.setMaximumValue(max_val)
-                green_ce.setContrastEnhancementAlgorithm(
-                    QgsContrastEnhancement.StretchToMinimumMaximum
-                )
+                green_ce.setContrastEnhancementAlgorithm(alg)
 
                 blue_ce = QgsContrastEnhancement(layer.dataProvider().dataType(2))
-                blue_ce.setMinimumValue(min_val)
-                blue_ce.setMaximumValue(max_val)
-                blue_ce.setContrastEnhancementAlgorithm(
-                    QgsContrastEnhancement.StretchToMinimumMaximum
-                )
+                blue_ce.setContrastEnhancementAlgorithm(alg)
 
                 renderer.setRedContrastEnhancement(red_ce)
                 renderer.setGreenContrastEnhancement(green_ce)
@@ -3417,6 +3413,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.QPushButton_skip.setEnabled(True)
             self.QPushButton_fast.setEnabled(True)
             self.QPushButton_easy.setEnabled(True)
+            self.QPushButton_sysi.setEnabled(True)
             self.loadtimeseries.setEnabled(True)
             self.loadtimeseries_2.setEnabled(True)
             self.QPushButton_features.setEnabled(True)
@@ -3426,6 +3423,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             self.QPushButton_skip.setEnabled(False)
             self.QPushButton_fast.setEnabled(False)
             self.QPushButton_easy.setEnabled(False)
+            self.QPushButton_sysi.setEnabled(False)
             self.loadtimeseries.setEnabled(False)
             self.loadtimeseries_2.setEnabled(False)
             self.QPushButton_features.setEnabled(False)
@@ -4345,7 +4343,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         })
 
                         response = requests.get(url)
-                        output_path = self.parent().get_unique_filename(safe_dem_source_id)
+                        # Ensure the downloaded DEM has a .tif extension
+                        output_path = self.parent().get_unique_filename(f"{safe_dem_source_id}.tif")
                         with open(output_path, 'wb') as file:
                             file.write(response.content)
                         print(f"DEM image downloaded to: {output_path}")
@@ -4479,6 +4478,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.dateEdit_final.setDate(QDate.fromString(today, "yyyy-MM-dd"))
                 self.dateEdit_inicio.setDate(QDate.fromString(since, "yyyy-MM-dd"))
 
+                self.horizontalSlider_ndvi_inf.valueChanged.connect(self.update_labels)
+                self.horizontalSlider_ndvi_sup.valueChanged.connect(self.update_labels)
+                self.horizontalSlider_nbr_inf.valueChanged.connect(self.update_labels)
+                self.horizontalSlider_nbr_sup.valueChanged.connect(self.update_labels)
+                self.horizontalSlider_clouds.valueChanged.connect(self.update_labels)
+
+
+
             def open_link(self, url):
                 """Open the clicked link in the default web browser."""
                 print(f"Opening URL: {url.toString()}")
@@ -4488,6 +4495,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 """Updates the text of several labels based on the values of horizontal
                 sliders."""
                 self.label_buffer.setText(f"{self.horizontalSlider_buffer.value()}m")
+                self.Qlabel_ndvi_inf.setText(f"{-self.horizontalSlider_ndvi_inf.value()/100:.2f}")
+                self.Qlabel_ndvi_sup.setText(f"{self.horizontalSlider_ndvi_sup.value()/100:.2f}")
+                self.Qlabel_nbr_inf.setText(f"{-self.horizontalSlider_nbr_inf.value()/100:.2f}")
+                self.Qlabel_nbr_sup.setText(f"{self.horizontalSlider_nbr_sup.value()/100:.2f}")
+                self.Qlabel_clouds.setText(f"{self.horizontalSlider_clouds.value()}%")
 
             def pop_aviso(self, aviso):
                 QApplication.restoreOverrideCursor()
@@ -4538,7 +4550,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
                 # --- Definição de Variáveis e Listas ---
                 s2_names = ['B2', 'B3', 'B4', 'B6', 'B8','B11','B12','QA60']
-                b_names = ['blue', 'green', 'red','rededge', 'nir', 'swir1', 'swir2', 'QA60']
+                b_names = ['Blue', 'Green', 'Red','Rededge', 'NIR', 'SWIR1', 'SWIR2', 'QA60']
 
                 # --- Funções de Processamento ---
 
@@ -4552,15 +4564,15 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     return image.updateMask(mask)
 
                 def add_indexes(img):
-                    ndvi = img.normalizedDifference(['nir', 'red']) 
-                    nbr2 = img.normalizedDifference(['swir1', 'swir2'])
-                    grbl = img.select('green').subtract(img.select('blue'))
-                    regr = img.select('red').subtract(img.select('green'))
+                    ndvi = img.normalizedDifference(['NIR', 'Red']) 
+                    nbr2 = img.normalizedDifference(['SWIR1', 'SWIR2'])
+                    grbl = img.select('Green').subtract(img.select('Blue'))
+                    regr = img.select('Red').subtract(img.select('Green'))
                     
-                    img = img.addBands(ndvi.rename('ndvi')) \
-                            .addBands(nbr2.rename('nbr2')) \
-                            .addBands(grbl.rename('grbl')) \
-                            .addBands(regr.rename('regr'))
+                    img = img.addBands(ndvi.rename('NDVI')) \
+                            .addBands(nbr2.rename('NBR2')) \
+                            .addBands(grbl.rename('GRBL')) \
+                            .addBands(regr.rename('REGR'))
                     return img
 
                 def applyScaleFactors(image):
@@ -4579,16 +4591,16 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
                     # Índice de tendência Visible-to-shortwave-infrared
                     vnsir = ee.Image(1).subtract(
-                        ee.Image(2).multiply(img.select('red'))
-                        .subtract(img.select('green')).subtract(img.select('blue'))
-                        .add(ee.Image(3).multiply(img.select('nir').subtract(img.select('red'))))
+                        ee.Image(2).multiply(img.select('Red'))
+                        .subtract(img.select('Green')).subtract(img.select('Blue'))
+                        .add(ee.Image(3).multiply(img.select('NIR').subtract(img.select('Red'))))
                     )
                             
                     # Lógica GEOS3
-                    geos3 = img.select('ndvi').gte(ndvi_thres[0]).And(img.select('ndvi').lte(ndvi_thres[1])) \
-                        .And(img.select('nbr2').gte(nbr_thres[0]).And(img.select('nbr2').lte(nbr_thres[1]))) \
+                    geos3 = img.select('NDVI').gte(ndvi_thres[0]).And(img.select('NDVI').lte(ndvi_thres[1])) \
+                        .And(img.select('NBR2').gte(nbr_thres[0]).And(img.select('NBR2').lte(nbr_thres[1]))) \
                         .And(vnsir.lte(vnsir_thres)) \
-                        .And(img.select('grbl').gt(0)).And(img.select('regr').gt(0))
+                        .And(img.select('GRBL').gt(0)).And(img.select('REGR').gt(0))
                             
                     img = img.addBands(geos3.rename('GEOS3'))
                     return img
@@ -4597,38 +4609,80 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     # Cria máscara onde GEOS3 é verdadeiro (1)
                     mask_geos3 = image.select('GEOS3').eq(1)
                     # Removendo linhas pretas/bordas
-                    mask_swir = image.select('swir2').gte(0)
-                    mask_green = image.select('green').gte(0)
-                    mask_red = image.select('red').gte(0)
-                    mask_blue = image.select('blue').gte(0)
+                    mask_swir = image.select('SWIR2').gte(0)
+                    mask_green = image.select('Green').gte(0)
+                    mask_red = image.select('Red').gte(0)
+                    mask_blue = image.select('Blue').gte(0)
                     
                     mask = mask_geos3.And(mask_swir).And(mask_green).And(mask_red).And(mask_blue)
                     return image.updateMask(mask)
                 
-                def maskByndvi(image):
-                    mask_ndvi_v1 = image.select('ndvi').gte(0.00)
-                    mask_ndvi_v2 = image.select('ndvi').lte(0.20)
-                    mask = mask_ndvi_v1.And(mask_ndvi_v2)
-                    return image.updateMask(mask)
+                # def maskByndvi(image):
+                #     mask_ndvi_v1 = image.select('NDVI').gte(0.00)
+                #     mask_ndvi_v2 = image.select('NDVI').lte(0.20)
+                #     mask = mask_ndvi_v1.And(mask_ndvi_v2)
+                #     return image.updateMask(mask)
 
                 def calculateMean(image, region):
                     return image.reduceRegion(
                         reducer=ee.Reducer.mean(),
                         geometry=region,
-                        scale=30,
+                        scale=10,
                         maxPixels=1e8
                     )
 
                 # --- Fluxo Principal de Execução ---
+                start = self.dateEdit_inicio.date().toString("yyyy-MM-dd")
+                end = self.dateEdit_final.date().toString("yyyy-MM-dd")
+                cloud_threshold = self.horizontalSlider_clouds.value()
 
                 # 1. Carregar Coleção e Filtragem Inicial
                 dataset_s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED') \
+                    .filterDate(start, end) \
                     .filterBounds(aoi2) \
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10)) \
-                    .filter(ee.Filter.lt('WATER_PERCENTAGE', 2)) \
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', cloud_threshold)) \
                     .map(maskS2clouds) \
-                    .map(lambda image: image.clip(aoi2)) \
                     .select(s2_names, b_names)
+                
+                jan = self.checkBox_1.isChecked()
+                fev = self.checkBox_2.isChecked()
+                mar = self.checkBox_3.isChecked()
+                abr = self.checkBox_4.isChecked()
+                mai = self.checkBox_5.isChecked()
+                jun = self.checkBox_6.isChecked()
+                jul = self.checkBox_7.isChecked()
+                ago = self.checkBox_8.isChecked()
+                set = self.checkBox_9.isChecked()
+                out = self.checkBox_10.isChecked()
+                nov = self.checkBox_11.isChecked()
+                dez = self.checkBox_12.isChecked()
+                # Filter collection by selected months (1 = Jan, 12 = Dec)
+                selected_months = []
+                if jan: selected_months.append(1)
+                if fev: selected_months.append(2)
+                if mar: selected_months.append(3)
+                if abr: selected_months.append(4)
+                if mai: selected_months.append(5)
+                if jun: selected_months.append(6)
+                if jul: selected_months.append(7)
+                if ago: selected_months.append(8)
+                if set: selected_months.append(9)
+                if out: selected_months.append(10)
+                if nov: selected_months.append(11)
+                if dez: selected_months.append(12)
+
+                print(f"Selected months for filtering: {selected_months}")
+                if len(selected_months) == 0:
+                    self.pop_aviso("Please select at least one month.")
+                    return
+
+                # Add month property and filter the collection
+                def _add_month(image):
+                    month = ee.Date(image.get('system:time_start')).get('month')
+                    return image.set('month', month)
+
+                dataset_s2 = dataset_s2.map(_add_month)
+                dataset_s2 = dataset_s2.filter(ee.Filter.inList('month', ee.List(selected_months)))
 
                 # 2. Adicionar Índices e Fatores de Escala
                 s2_indexes = dataset_s2.map(add_indexes)
@@ -4638,8 +4692,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 # Opções fixas conforme o script original
                 geos3_options = {
                     'rescale_flag': 0, 
-                    'ndvi_thres': [-0.25, 0.25], 
-                    'nbr_thres': [-0.3, 0.100], 
+                    'ndvi_thres': [-self.horizontalSlider_ndvi_inf.value()/100, self.horizontalSlider_ndvi_sup.value()/100], #-1 - 1
+                    'nbr_thres': [-self.horizontalSlider_nbr_inf.value()/100, self.horizontalSlider_nbr_sup.value()/100], #-0.5 - 1.3
                     'vnsir_thres': 0.9
                 }
 
@@ -4649,16 +4703,16 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 tess_v1_collection = sent_collection_geos3.map(maskByGEOS3)
                 tess_v1 = tess_v1_collection.median()
 
-                tess_v2 = maskByndvi(tess_v1)
+                #tess_v2 = maskByndvi(tess_v1)
 
 
                 # Etapa 6: Seleciona as bandas finais para o pós-processamento
-                bands_to_export = ['blue', 'green', 'red', 'rededge', 'nir', 'swir1', 'swir2', 'ndvi']
+                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI']
                 # Etapa 7: Chama o método de pós-processamento com a imagem final
-                self.sysi_processing(tess_v2.select(bands_to_export), "final v2")
-                self.sysi_processing(tess_v1.select(bands_to_export), "final v1")
+                # self.sysi_processing(tess_v2.select(bands_to_export), "final v2")
+                self.sysi_processing(tess_v1.select(bands_to_export))
 
-            def sysi_processing(self, imageToDownload, sufix):
+            def sysi_processing(self, imageToDownload):
                 print("Starting SYSI soil image download and load...")
                         
                 final_image = imageToDownload.toFloat()
@@ -4679,7 +4733,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 # 3. Define the download region using the BOUNDING BOX of the AOI.
                 # This ensures the downloaded GeoTIFF is a rectangle that fully covers the AOI.
                 # The actual clipping to the irregular shape is handled by updateMask.
-                download_region = aoi.geometry().bounds().getInfo()
+                download_region = aoi.geometry().bounds().getInfo()["coordinates"]
 
 
                 # Download the selected composite (all selected bands) and load as a raster layer
@@ -4694,11 +4748,11 @@ class RAVIDialog(QDialog, FORM_CLASS):
                             }
                         )
                     except Exception as e:
-                        self.pop_warning(f"Failed to generate download URL: {e}")
+                        self.parent().pop_warning(f"Failed to generate download URL: {e}")
                         return
 
-                    base_output_file = f"Sentinel2_Soil_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.tiff"
-                    output_file = self.parent().get_unique_filename(base_output_file, temporary=True)
+                    base_output_file = f"Sentinel2_SYSI.tiff"
+                    output_file = self.parent().get_unique_filename(base_output_file, temporary=False)
 
                     try:
                         response = requests.get(url, stream=True)
@@ -4709,81 +4763,127 @@ class RAVIDialog(QDialog, FORM_CLASS):
                                     f.write(chunk)
                         print(f"Image downloaded to {output_file}")
                     except requests.exceptions.RequestException as e:
-                        self.pop_warning(f"Error downloading image: {e}")
+                        self.parent().pop_warning(f"Error downloading image: {e}")
                         return
-
-                    # Add the image as a raster layer in QGIS
-                    layer_name = f"Sentinel-2 SYSI {sufix}"
-                    layer = QgsRasterLayer(output_file, layer_name)
-                    if not layer.isValid():
-                        self.pop_warning(f"Failed to load the layer: {output_file}")
-                        return
-
-                    # Configure local contrast/stretch using the current map canvas extent.
-                    # Prefer a cumulative-cut algorithm when available, fallback to
-                    # StretchToMinimumMaximum otherwise. Compute stats using the
-                    # current extent so the stretch is local to the visible area.
-                    provider = layer.dataProvider()
-                    canvas_extent = iface.mapCanvas().extent()
-
-                    def _band_stats(band):
-                        try:
-                            s = provider.bandStatistics(band, QgsRasterBandStats.All, canvas_extent, 0)
-                            return s.minimumValue, s.maximumValue
-                        except Exception:
-                            s = provider.bandStatistics(band)
-                            return s.minimumValue, s.maximumValue
-
-                    # Band indices for the renderer (preserve order red=3, green=2, blue=1)
-                    red_band, green_band, blue_band = 3, 2, 1
-
-                    rmin, rmax = _band_stats(red_band)
-                    gmin, gmax = _band_stats(green_band)
-                    bmin, bmax = _band_stats(blue_band)
-
-                    renderer = QgsMultiBandColorRenderer(provider, red_band, green_band, blue_band)
-
-                    # Select the best available contrast algorithm
-                    alg = None
-                    for name in ("StretchToCumulativeCut", "CumulativeCut", "StretchToCumulative", "StretchToMinimumMaximum"):
-                        if hasattr(QgsContrastEnhancement, name):
-                            alg = getattr(QgsContrastEnhancement, name)
-                            break
-                    if alg is None:
-                        alg = QgsContrastEnhancement.StretchToMinimumMaximum
 
                     try:
-                        red_ce = QgsContrastEnhancement(provider.dataType(red_band))
-                        red_ce.setMinimumValue(rmin)
-                        red_ce.setMaximumValue(rmax)
-                        red_ce.setContrastEnhancementAlgorithm(alg)
+                        # Add descriptive band names to the downloaded GeoTIFF (same technique as load_rgb)
+                        src_ds = gdal.Open(output_file)
+                        if not src_ds:
+                            self.parent().pop_warning(f"Failed to open the downloaded file: {output_file}")
+                            return
 
-                        green_ce = QgsContrastEnhancement(provider.dataType(green_band))
-                        green_ce.setMinimumValue(gmin)
-                        green_ce.setMaximumValue(gmax)
-                        green_ce.setContrastEnhancementAlgorithm(alg)
+                        band_count = src_ds.RasterCount
+                        driver = gdal.GetDriverByName("GTiff")
+                        temp_file = output_file + "_temp.tiff"
+                        dst_ds = driver.CreateCopy(temp_file, src_ds, strict=1)
 
-                        blue_ce = QgsContrastEnhancement(provider.dataType(blue_band))
-                        blue_ce.setMinimumValue(bmin)
-                        blue_ce.setMaximumValue(bmax)
-                        blue_ce.setContrastEnhancementAlgorithm(alg)
+                        # Expected SYSI band order used earlier in the workflow
+                        band_names = ["Blue", "Green", "Red", "Rededge", "NIR", "SWIR1", "SWIR2", "NDVI"]
 
-                        renderer.setRedContrastEnhancement(red_ce)
-                        renderer.setGreenContrastEnhancement(green_ce)
-                        renderer.setBlueContrastEnhancement(blue_ce)
+                        for i in range(min(band_count, len(band_names))):
+                            band = dst_ds.GetRasterBand(i + 1)  # 1-based indexing
+                            try:
+                                band.SetDescription(band_names[i])
+                            except Exception:
+                                # ignore per-band failures but continue
+                                pass
+
+                        # Close datasets to flush changes
+                        dst_ds = None
+                        src_ds = None
+
+                        # Replace original file with the modified one
+                        os.remove(output_file)
+                        os.rename(temp_file, output_file)
+                        print(f"Created GeoTIFF with named bands: {output_file}")
+
                     except Exception as e:
-                        print(f"Error configuring contrast enhancements: {e}")
+                        self.parent().pop_warning(f"Error modifying GeoTIFF: {e}")
+                        print(traceback.format_exc())
+                        try:
+                            if os.path.exists(temp_file):
+                                os.remove(temp_file)
+                        except Exception:
+                            pass
 
-                    layer.setRenderer(renderer)
+                    self.sysi_render_image(output_file)
 
+                except Exception as e:
+                    print(f"Error in soil_image download: {e}")
+                    self.parent().pop_warning(f"An error occurred while exporting the soil image: {e}")
+
+            def sysi_render_image(self, output_file):
+                try:
+                    """Loads the SYSI soil image with appropriate band rendering and contrast stretch."""
+                    
+                    # 1. Load the layer
+                    layer_name = f"Sentinel-2 SYSI"
+                    layer = QgsRasterLayer(output_file, layer_name)
+                    if not layer.isValid():
+                        self.parent().pop_warning(f"Failed to load the layer: {output_file}")
+                        return
+
+                    # 2. Add to QGIS Project (Essential for it to be visible)
                     QgsProject.instance().addMapLayer(layer, addToLegend=False)
                     root = QgsProject.instance().layerTreeRoot()
                     root.insertChildNode(0, QgsLayerTreeLayer(layer))
                     iface.setActiveLayer(layer)
 
+                    # 3. Configure Contrast Stretch
+                    provider = layer.dataProvider()
+                    canvas = iface.mapCanvas()
+                    extent = canvas.extent()
+                    
+                    # Safety Check: If zoomed out or panning, the canvas extent might not 
+                    # cover the new layer. If they don't intersect, use the layer's full extent.
+                    if not extent.intersects(layer.extent()):
+                        extent = layer.extent()
+
+                    # Define Bands (1=Blue, 2=Green, 3=Red)
+                    red_band = 3
+                    green_band = 2
+                    blue_band = 1
+
+                    # Initialize Renderer
+                    renderer = QgsMultiBandColorRenderer(provider, red_band, green_band, blue_band)
+
+                    # Loop through bands to apply Cumulative Cut (2% - 98%)
+                    bands_config = [
+                        (red_band, renderer.setRedContrastEnhancement),
+                        (green_band, renderer.setGreenContrastEnhancement),
+                        (blue_band, renderer.setBlueContrastEnhancement)
+                    ]
+
+                    for band_index, set_enhancement_func in bands_config:
+                        # Calculate 2% and 98% stats. 
+                        # FIX: cumulativeCut returns a simple tuple (min, max), not an object.
+                        min_max_tuple = provider.cumulativeCut(band_index, 0.02, 0.98, extent, 250000)
+                        
+                        val_min = min_max_tuple[0]
+                        val_max = min_max_tuple[1]
+                        
+                        # Create Contrast Enhancement Object
+                        ce = QgsContrastEnhancement(provider.dataType(band_index))
+                        
+                        # Set Algorithm to "StretchToMinimumMaximum" using our calculated limits
+                        ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+                        ce.setMinimumValue(val_min)
+                        ce.setMaximumValue(val_max)
+                        
+                        # Apply to renderer
+                        set_enhancement_func(ce)
+
+                    # 4. Finalize and Refresh
+                    layer.setRenderer(renderer)
+                    layer.triggerRepaint() 
+                    iface.layerTreeView().refreshLayerSymbology(layer.id())
+
                 except Exception as e:
-                    print(f"Error in soil_image download/load: {e}")
-                    self.parent().pop_warning(f"An error occurred while exporting/loading the soil image: {e}")
+                    print(f"Error in soil_image render: {e}")
+                    import traceback
+                    print(traceback.format_exc())
+                    self.parent().pop_warning(f"An error occurred while rendering the soil image: {e}")
 
         dialog = SysiDialog(self)
         dialog.exec()

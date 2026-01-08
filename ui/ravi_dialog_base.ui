@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>10</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -579,6 +579,9 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QPushButton" name="QPushButton_sysi">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>450</x>
