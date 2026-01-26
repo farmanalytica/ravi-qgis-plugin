@@ -2595,30 +2595,47 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 render_channels[2],  # Blue channel
             )
 
-            # Set contrast enhancement for each band (Red, Green, Blue)
+            # Apply contrast enhancement using cumulative cut (2% - 98%)
+            # similar to the SYSI rendering strategy
             try:
-                # Prefer local cumulative-cut stretch (uses current canvas extent
-                # histogram/estimates). Fallback to minimum-maximum if not
-                # available in this QGIS version.
-                if hasattr(QgsContrastEnhancement, "StretchToCumulativeCut"):
-                    alg = QgsContrastEnhancement.StretchToCumulativeCut
-                else:
-                    alg = QgsContrastEnhancement.StretchToMinimumMaximum
-
-                red_ce = QgsContrastEnhancement(layer.dataProvider().dataType(4))
-                red_ce.setContrastEnhancementAlgorithm(alg)
-
-                green_ce = QgsContrastEnhancement(layer.dataProvider().dataType(3))
-                green_ce.setContrastEnhancementAlgorithm(alg)
-
-                blue_ce = QgsContrastEnhancement(layer.dataProvider().dataType(2))
-                blue_ce.setContrastEnhancementAlgorithm(alg)
-
-                renderer.setRedContrastEnhancement(red_ce)
-                renderer.setGreenContrastEnhancement(green_ce)
-                renderer.setBlueContrastEnhancement(blue_ce)
+                provider = layer.dataProvider()
+                canvas = iface.mapCanvas()
+                extent = canvas.extent()
+                
+                # Safety Check: If zoomed out or panning, use the layer's full extent
+                if not extent.intersects(layer.extent()):
+                    extent = layer.extent()
+                
+                # Define band indices for RGB rendering
+                red_band = render_channels[0]
+                green_band = render_channels[1]
+                blue_band = render_channels[2]
+                
+                # Loop through bands to apply Cumulative Cut (2% - 98%)
+                bands_config = [
+                    (red_band, renderer.setRedContrastEnhancement),
+                    (green_band, renderer.setGreenContrastEnhancement),
+                    (blue_band, renderer.setBlueContrastEnhancement)
+                ]
+                
+                for band_index, set_enhancement_func in bands_config:
+                    # Calculate 2% and 98% cumulative cut stats
+                    min_max_tuple = provider.cumulativeCut(band_index, 0.02, 0.98, extent, 250000)
+                    
+                    val_min = min_max_tuple[0]
+                    val_max = min_max_tuple[1]
+                    
+                    # Create Contrast Enhancement Object
+                    ce = QgsContrastEnhancement(provider.dataType(band_index))
+                    ce.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
+                    ce.setMinimumValue(val_min)
+                    ce.setMaximumValue(val_max)
+                    
+                    # Apply to renderer
+                    set_enhancement_func(ce)
+                
             except Exception as e:
-                print(f"Error configuring renderer: {e}")
+                print(f"Error configuring contrast enhancement: {e}")
                 return
 
             # Set the renderer to the layer
@@ -2629,6 +2646,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
             root = QgsProject.instance().layerTreeRoot()
             root.insertChildNode(0, QgsLayerTreeLayer(layer))
             iface.setActiveLayer(layer)
+            layer.triggerRepaint()
 
         except Exception as e:
             self.pop_warning(f"An error occurred: {e}")

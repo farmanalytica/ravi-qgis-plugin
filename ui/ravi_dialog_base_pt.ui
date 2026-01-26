@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1205</width>
-    <height>1076</height>
+    <height>1074</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -169,9 +169,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QgsPasswordLineEdit" name="project_QgsPasswordLineEdit">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>130</x>
        <y>290</y>
-       <width>231</width>
+       <width>341</width>
        <height>41</height>
       </rect>
      </property>
@@ -192,7 +192,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>300</y>
-       <width>231</width>
+       <width>111</width>
        <height>31</height>
       </rect>
      </property>
@@ -202,7 +202,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>ID do projeto (Google Cloud):</string>
+      <string>ID do projeto:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
@@ -218,7 +218,7 @@ p, li { white-space: pre-wrap; }
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>icon.png</pixmap>
+      <pixmap>../medias/vetor.svg</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -244,6 +244,19 @@ p, li { white-space: pre-wrap; }
      <property name="icon">
       <iconset>
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>160</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>www.raviqgis.org</string>
      </property>
     </widget>
    </widget>

@@ -1,0 +1,3 @@
+[console_scripts]
+agl_tm = agrigee_lite.tgui_task_manager:main
+test_service_account = agrigee_lite.check_service_account:main
