@@ -6,7 +6,7 @@ An usage guide is available via GitHub Pages here:
 [https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
 
 ## Reporting Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section or contact me directly [caiosimplicioarantes@gmail.com](mailto:caiosimplicioarantes@gmail.com).
+If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section or contact me directly [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
 
 ## RAVI - Remote Analysis of Vegetation Indices
 Este repositório contém o código-fonte do complemento **RAVI** para QGIS, que integra a API Python do Google Earth Engine (GEE) para processar e visualizar dados geoespaciais utilizando o catálogo de reflectância de superfície harmonizada da missão Copernicus Sentinel-2. O RAVI é uma ferramenta para estudantes, pesquisadores, produtores rurais e profissionais que atuam em agricultura, monitoramento territorial ou gestão ambiental.

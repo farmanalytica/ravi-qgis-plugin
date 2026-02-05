@@ -40,6 +40,64 @@ class FilterTest(apitestcase.ApiTestCase):
     copy = ee.Filter(from_static_method)
     self.assertEqual(from_static_method, copy)
 
+  def test_constructor_no_args(self):
+    # This is code to be avoided, but since it has been this way for a long
+    # time, this captures the current behavior.
+    # Please do not use `ee.Filter()` to access static methods like `Or`.
+    # Instead, call them directly on the class, e.g., `ee.Filter.Or(...)`.
+    a_filter = ee.Filter()
+    self.assertEqual(a_filter.predicateCount(), 0)
+
+    self.assertTrue(a_filter.isVariable())
+
+    # Not very intuitive error message.
+    with self.assertRaisesRegex(ee.EEException, 'arguments cannot be used'):
+      a_filter.serialize()
+
+    # Not very intuitive error message.
+    with self.assertRaisesRegex(ee.EEException, 'arguments cannot be used'):
+      str(a_filter)
+
+  def test_empty_list_filter(self):
+    with self.assertRaisesRegex(
+        ee.EEException, 'Empty list specified for ee.Filter().'
+    ):
+      ee.Filter([])
+
+  def test_list_of_filters(self):
+    f1 = ee.Filter.eq('x', 1)
+    f2 = ee.Filter.eq('y', 2)
+    filters = [f1, f2]
+    multi_filter = ee.Filter(filters)
+    self.assertEqual(tuple(filters), multi_filter._filter)
+    self.assertEqual(ee.ApiFunction.lookup('Filter.and'), multi_filter.func)
+    self.assertEqual({'filters': tuple(filters)}, multi_filter.args)
+
+  def test_invalid_argument(self):
+    with self.assertRaisesRegex(
+        ee.EEException, 'Invalid argument specified for ee.Filter().*'
+    ):
+      ee.Filter(123)  # pytype: disable=wrong-arg-types
+
+  def test_predicate_count(self):
+    self.assertEqual(0, ee.Filter().predicateCount())
+    self.assertEqual(1, ee.Filter(ee.Filter.eq('x', 1)).predicateCount())
+    self.assertEqual(1, ee.Filter([ee.Filter.eq('x', 1)]).predicateCount())
+    self.assertEqual(
+        2,
+        ee.Filter(
+            [ee.Filter.eq('x', 1), ee.Filter.eq('y', 2)]
+        ).predicateCount(),
+    )
+    self.assertEqual(
+        3,
+        ee.Filter([
+            ee.Filter.eq('x', 1),
+            ee.Filter.eq('y', 2),
+            ee.Filter.eq('z', 3),
+        ]).predicateCount(),
+    )
+
   def test_metadata(self):
     """Verifies that the metadata_() method works."""
     self.assertEqual(

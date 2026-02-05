@@ -4725,7 +4725,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
 
                 # Etapa 6: Seleciona as bandas finais para o pós-processamento
-                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI']
+                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NBR2']
                 # Etapa 7: Chama o método de pós-processamento com a imagem final
                 # self.sysi_processing(tess_v2.select(bands_to_export), "final v2")
                 self.sysi_processing(tess_v1.select(bands_to_export))

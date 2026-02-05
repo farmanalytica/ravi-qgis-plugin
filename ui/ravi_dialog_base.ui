@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1297</width>
-    <height>782</height>
+    <width>769</width>
+    <height>378</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,9 +141,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QgsPasswordLineEdit" name="project_QgsPasswordLineEdit">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>90</x>
        <y>290</y>
-       <width>411</width>
+       <width>421</width>
        <height>41</height>
       </rect>
      </property>
@@ -205,10 +205,10 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="learn">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>230</y>
+       <x>20</x>
+       <y>240</y>
        <width>141</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -224,13 +224,55 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
      </property>
     </widget>
-    <widget class="QLabel" name="label_14">
+    <widget class="QTextBrowser" name="QTextBrowser_2">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>151</width>
-       <height>151</height>
+       <width>161</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="overwriteMode">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+     <property name="openLinks">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>27</x>
+       <y>160</y>
+       <width>141</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>www.farmanalytica.com.br</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>61</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="text">
@@ -243,11 +285,30 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_15">
+    <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>150</y>
+       <y>90</y>
+       <width>101</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../medias/vertical2.svg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>60</y>
        <width>101</width>
        <height>16</height>
       </rect>
@@ -256,6 +317,17 @@ p, li { white-space: pre-wrap; }
       <string>www.raviqgis.org</string>
      </property>
     </widget>
+    <zorder>autenticacao</zorder>
+    <zorder>QTextBrowser</zorder>
+    <zorder>project_QgsPasswordLineEdit</zorder>
+    <zorder>label_2</zorder>
+    <zorder>desautenticacao</zorder>
+    <zorder>QTextBrowser_2</zorder>
+    <zorder>label_17</zorder>
+    <zorder>label_14</zorder>
+    <zorder>label_16</zorder>
+    <zorder>learn</zorder>
+    <zorder>label_15</zorder>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">

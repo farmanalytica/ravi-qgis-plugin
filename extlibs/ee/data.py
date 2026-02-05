@@ -143,9 +143,9 @@ def initialize(
 
   Args:
     credentials: The OAuth2 credentials.
-    api_base_url: The EarthEngine REST API endpoint.
-    tile_base_url: The EarthEngine REST tile endpoint.
-    cloud_api_base_url: The EarthEngine Cloud API endpoint.
+    api_base_url: The Earth Engine REST API endpoint.
+    tile_base_url: The Earth Engine REST tile endpoint.
+    cloud_api_base_url: The Earth Engine Cloud API endpoint.
     cloud_api_key: The API key to use with the Cloud API.
     project: The client project ID or number to use when making API calls.
     http_transport: The http transport to use
@@ -689,8 +689,10 @@ def getMapId(params: dict[str, Any]) -> dict[str, Any]:
   )
   state = _get_state()
   map_name = result['name']
-  url_format = '{}/{}/{}/tiles/{{z}}/{{x}}/{{y}}'.format(
-      state.tile_base_url, _cloud_api_utils.VERSION, map_name)
+  version = _cloud_api_utils.VERSION
+  url_format = (
+      f'{state.tile_base_url}/{version}/{map_name}/tiles/{{z}}/{{x}}/{{y}}'
+  )
   if state.cloud_api_key:
     url_format += f'?key={state.cloud_api_key}'
 
@@ -1199,9 +1201,9 @@ def makeThumbUrl(thumbId: dict[str, str]) -> str:
     A URL from which the thumbnail can be obtained.
   """
   state = _get_state()
-  url = '{}/{}/{}:getPixels'.format(
-      state.tile_base_url, _cloud_api_utils.VERSION, thumbId['thumbid']
-  )
+  version = _cloud_api_utils.VERSION
+  thumb_id = thumbId['thumbid']
+  url =  f'{state.tile_base_url}/{version}/{thumb_id}:getPixels'
   if state.cloud_api_key:
     url += f'?key={state.cloud_api_key}'
   return url
@@ -1332,9 +1334,10 @@ def makeDownloadUrl(downloadId: dict[str, str]) -> str:
   Returns:
     A URL from which the download can be obtained.
   """
-  return '{}/{}/{}:getPixels'.format(
-      _get_state().tile_base_url, _cloud_api_utils.VERSION, downloadId['docid']
-  )
+  title_base_url = _get_state().tile_base_url
+  version = _cloud_api_utils.VERSION
+  docid = downloadId['docid']
+  return f'{title_base_url}/{version}/{docid}:getPixels'
 
 
 def getTableDownloadId(params: dict[str, Any]) -> dict[str, str]:
@@ -1395,10 +1398,10 @@ def makeTableDownloadUrl(downloadId: dict[str, str]) -> str:
   Returns:
     A Url from which the download can be obtained.
   """
-  return '{}/{}/{}:getFeatures'.format(
-      _get_state().tile_base_url, _cloud_api_utils.VERSION, downloadId['docid']
-  )
-
+  title_base_url = _get_state().tile_base_url
+  version = _cloud_api_utils.VERSION
+  docid = downloadId['docid']
+  return f'{title_base_url}/{version}/{docid}:getFeatures'
 
 def getAlgorithms() -> Any:
   """Get the list of algorithms.
