@@ -4583,12 +4583,12 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
                 def add_indexes(img):
                     ndvi = img.normalizedDifference(['NIR', 'Red']) 
-                    nbr2 = img.normalizedDifference(['SWIR1', 'SWIR2'])
+                    nbr = img.normalizedDifference(['SWIR1', 'SWIR2'])
                     grbl = img.select('Green').subtract(img.select('Blue'))
                     regr = img.select('Red').subtract(img.select('Green'))
                     
                     img = img.addBands(ndvi.rename('NDVI')) \
-                            .addBands(nbr2.rename('NBR2')) \
+                            .addBands(nbr.rename('NBR')) \
                             .addBands(grbl.rename('GRBL')) \
                             .addBands(regr.rename('REGR'))
                     return img
@@ -4616,7 +4616,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                             
                     # Lógica GEOS3
                     geos3 = img.select('NDVI').gte(ndvi_thres[0]).And(img.select('NDVI').lte(ndvi_thres[1])) \
-                        .And(img.select('NBR2').gte(nbr_thres[0]).And(img.select('NBR2').lte(nbr_thres[1]))) \
+                        .And(img.select('NBR').gte(nbr_thres[0]).And(img.select('NBR').lte(nbr_thres[1]))) \
                         .And(vnsir.lte(vnsir_thres)) \
                         .And(img.select('GRBL').gt(0)).And(img.select('REGR').gt(0))
                             
@@ -4725,7 +4725,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
 
                 # Etapa 6: Seleciona as bandas finais para o pós-processamento
-                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NBR2']
+                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NBR']
                 # Etapa 7: Chama o método de pós-processamento com a imagem final
                 # self.sysi_processing(tess_v2.select(bands_to_export), "final v2")
                 self.sysi_processing(tess_v1.select(bands_to_export))
@@ -4797,7 +4797,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         dst_ds = driver.CreateCopy(temp_file, src_ds, strict=1)
 
                         # Expected SYSI band order used earlier in the workflow
-                        band_names = ["Blue", "Green", "Red", "Rededge", "NIR", "SWIR1", "SWIR2", "NDVI"]
+                        band_names = ["Blue", "Green", "Red", "Rededge", "NIR", "SWIR1", "SWIR2", "NDVI", "NBR"]
 
                         for i in range(min(band_count, len(band_names))):
                             band = dst_ds.GetRasterBand(i + 1)  # 1-based indexing
