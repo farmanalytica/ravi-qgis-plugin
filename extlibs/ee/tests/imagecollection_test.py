@@ -84,6 +84,13 @@ class ImageCollectionTest(apitestcase.ApiTestCase):
         ee.ComputedObject(None, {'x': 'y'}))
     self.assertEqual({'x': 'y'}, from_computed_object.args)
 
+  def test_unrecognized_type(self):
+    with self.assertRaisesRegex(
+        ee.EEException,
+        'Unrecognized argument type to convert to an ImageCollection: 123',
+    ):
+      ee.ImageCollection(123)
+
   def test_imperative_functions(self):
     """Verifies that imperative functions return ready values."""
     image_collection = ee.ImageCollection(ee.Image(1))
@@ -135,6 +142,18 @@ class ImageCollectionTest(apitestcase.ApiTestCase):
           collection.serialize(for_cloud_api=True))
       self.assertEqual({}, params)
 
+  def test_filmstrip_thumb_url_invalid_format(self):
+    """Verifies correct thumbnailing behavior."""
+    message = r'Invalid format specified for thumbnail: "gif"'
+    with self.assertRaisesRegex(ee.EEException, message):
+      ee.ImageCollection(ee.Image(1)).getFilmstripThumbURL({'format': 'gif'})
+
+  def test_video_thumb_url_invalid_format(self):
+    """Verifies correct thumbnailing behavior."""
+    message = r'Invalid format specified for thumbnail: "png"'
+    with self.assertRaisesRegex(ee.EEException, message):
+      ee.ImageCollection(ee.Image(1)).getVideoThumbURL({'format': 'png'})
+
   def test_select_opt_params(self):
     result = (
         ee.ImageCollection([])
@@ -142,6 +161,56 @@ class ImageCollectionTest(apitestcase.ApiTestCase):
         .serialize()
     )
     self.assertIn('"newNames": {"constantValue": ["name_a", "name_b"]}', result)
+
+  def test_link_collection_all_args(self):
+    image_collection_1 = ee.ImageCollection('a')
+    image_collection_2 = ee.ImageCollection('b')
+    linked_bands = ['b1', 'b2']
+    linked_properties = ['p1', 'p2']
+    match_property_name = 'p3'
+    result = image_collection_1.linkCollection(
+        image_collection_2,
+        linked_bands,
+        linked_properties,
+        match_property_name,
+    )
+    self.assertIsInstance(result, ee.ImageCollection)
+    self.assertEqual(ee.ApiFunction.lookup('Collection.map'), result.func)
+    self.assertEqual(image_collection_1, result.args['collection'])
+    self.assertIsInstance(result.args['baseAlgorithm'], ee.Function)
+
+    serialized = result.serialize()
+    self.assertIn('"functionName": "ImageCollection.load"', serialized)
+    self.assertIn('"id": {"constantValue": "a"}', serialized)
+    self.assertIn('"functionName": "Image.linkCollection"', serialized)
+    self.assertIn('"id": {"constantValue": "b"}', serialized)
+    self.assertIn('"linkedBands": {"constantValue": ["b1", "b2"]}', serialized)
+    self.assertIn(
+        '"linkedProperties": {"constantValue": ["p1", "p2"]}', serialized
+    )
+    self.assertIn('"matchPropertyName": {"constantValue": "p3"}', serialized)
+
+  def test_link_collection_necessary_args(self):
+    image_collection_1 = ee.ImageCollection('a')
+    image_collection_2 = ee.ImageCollection('b')
+    linked_bands = ['b1', 'b2']
+    result = image_collection_1.linkCollection(
+        image_collection_2,
+        linkedBands=linked_bands,
+    )
+    self.assertIsInstance(result, ee.ImageCollection)
+    self.assertEqual(ee.ApiFunction.lookup('Collection.map'), result.func)
+    self.assertEqual(image_collection_1, result.args['collection'])
+    self.assertIsInstance(result.args['baseAlgorithm'], ee.Function)
+
+    serialized = result.serialize()
+    self.assertIn('"functionName": "ImageCollection.load"', serialized)
+    self.assertIn('"id": {"constantValue": "a"}', serialized)
+    self.assertIn('"functionName": "Image.linkCollection"', serialized)
+    self.assertIn('"id": {"constantValue": "b"}', serialized)
+    self.assertIn('"linkedBands": {"constantValue": ["b1", "b2"]}', serialized)
+    self.assertNotIn('"linkedProperties"', serialized)
+    self.assertNotIn('"matchPropertyName"', serialized)
 
   def test_aggregate_array(self):
     property_name = 'property name'
@@ -653,7 +722,38 @@ class ImageCollectionTest(apitestcase.ApiTestCase):
     result = json.loads(expression.serialize())
     self.assertEqual(expect, result)
 
-  # fromImages already tested in other tests.
+  def test_from_images(self):
+    images = [ee.Image(1), ee.Image(2)]
+    expect = make_expression_graph({
+        'arguments': {
+            'images': {
+                'arrayValue': {
+                    'values': [
+                        {
+                            'functionInvocationValue': {
+                                'functionName': 'Image.constant',
+                                'arguments': {'value': {'constantValue': 1}},
+                            }
+                        },
+                        {
+                            'functionInvocationValue': {
+                                'functionName': 'Image.constant',
+                                'arguments': {'value': {'constantValue': 2}},
+                            }
+                        },
+                    ]
+                }
+            }
+        },
+        'functionName': 'ImageCollection.fromImages',
+    })
+    expression = ee.ImageCollection.fromImages(images)
+    result = json.loads(expression.serialize())
+    self.assertEqual(expect, result)
+
+    expression = ee.ImageCollection.fromImages(images=images)
+    result = json.loads(expression.serialize())
+    self.assertEqual(expect, result)
 
   def test_geometry(self):
     max_error = 1.1
