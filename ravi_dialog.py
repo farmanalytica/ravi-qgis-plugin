@@ -515,6 +515,21 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.setup_custom.clicked.connect(self.setup_custom_clicked)
         self.QPushButton_aglgis.clicked.connect(self.open_aglgis)
 
+        self.label_ravi.setText(
+            '<a href="https://www.raviqgis.org">www.raviqgis.org</a>'
+        )
+        self.label_ravi.setTextFormat(Qt.RichText)
+        self.label_ravi.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.label_ravi.setOpenExternalLinks(True)
+
+        self.label_farm.setText(
+            '<a href="https://www.farmanalytica.com.br">www.farmanalytica.com.br</a>'
+        )
+        self.label_farm.setTextFormat(Qt.RichText)
+        self.label_farm.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.label_farm.setOpenExternalLinks(True)
+
+
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [

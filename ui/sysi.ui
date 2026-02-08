@@ -383,7 +383,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>NBR:</string>
+     <string>NBR2:</string>
     </property>
    </widget>
    <widget class="QSlider" name="horizontalSlider_nbr_sup">

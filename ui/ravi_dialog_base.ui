@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -253,13 +253,13 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_17">
+    <widget class="QLabel" name="label_farm">
      <property name="geometry">
       <rect>
-       <x>27</x>
-       <y>160</y>
+       <x>26</x>
+       <y>190</y>
        <width>141</width>
-       <height>81</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -304,7 +304,7 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_15">
+    <widget class="QLabel" name="label_ravi">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -323,11 +323,11 @@ p, li { white-space: pre-wrap; }
     <zorder>label_2</zorder>
     <zorder>desautenticacao</zorder>
     <zorder>QTextBrowser_2</zorder>
-    <zorder>label_17</zorder>
+    <zorder>label_farm</zorder>
     <zorder>label_14</zorder>
     <zorder>label_16</zorder>
     <zorder>learn</zorder>
-    <zorder>label_15</zorder>
+    <zorder>label_ravi</zorder>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">

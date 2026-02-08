@@ -181,7 +181,7 @@ from qgis.utils import iface
 # =============================================================================
 # LOCAL MODULE IMPORTS
 # =============================================================================
-from .modules import (
+from ..modules import (
     map_tools,
     save_utils,
     authentication,
