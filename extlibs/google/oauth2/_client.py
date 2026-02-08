@@ -256,11 +256,7 @@ def _token_endpoint_request(
             an error.
     """
 
-    (
-        response_status_ok,
-        response_data,
-        retryable_error,
-    ) = _token_endpoint_request_no_throw(
+    response_status_ok, response_data, retryable_error = _token_endpoint_request_no_throw(
         request,
         token_uri,
         body,
@@ -368,7 +364,7 @@ def call_iam_generate_id_token_endpoint(
         raise new_exc from caught_exc
 
     payload = jwt.decode(id_token, verify=False)
-    expiry = _helpers.utcfromtimestamp(payload["exp"])
+    expiry = datetime.datetime.utcfromtimestamp(payload["exp"])
 
     return id_token, expiry
 
@@ -420,7 +416,7 @@ def id_token_jwt_grant(request, token_uri, assertion, can_retry=True):
         raise new_exc from caught_exc
 
     payload = jwt.decode(id_token, verify=False)
-    expiry = _helpers.utcfromtimestamp(payload["exp"])
+    expiry = datetime.datetime.utcfromtimestamp(payload["exp"])
 
     return id_token, expiry, response_data
 
@@ -572,11 +568,9 @@ def _lookup_trust_boundary_request(request, url, can_retry=True, headers=None):
         google.auth.exceptions.RefreshError: If the token endpoint returned
             an error.
     """
-    (
-        response_status_ok,
-        response_data,
-        retryable_error,
-    ) = _lookup_trust_boundary_request_no_throw(request, url, can_retry, headers)
+    response_status_ok, response_data, retryable_error = _lookup_trust_boundary_request_no_throw(
+        request, url, can_retry, headers
+    )
     if not response_status_ok:
         _handle_error_response(response_data, retryable_error)
     return response_data

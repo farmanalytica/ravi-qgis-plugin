@@ -913,7 +913,7 @@
 }
 }
 },
-"revision": "20260126",
+"revision": "20251015",
 "rootUrl": "https://accessapproval.googleapis.com/",
 "schemas": {
 "AccessApprovalServiceAccount": {
@@ -943,14 +943,6 @@
 "description": "Output only. This field is read only (not settable via UpdateAccessApprovalSettings method). If the field is true, that indicates that an ancestor of this Project or Folder has set active_key_version (this field will always be unset for the organization since organizations do not have ancestors).",
 "readOnly": true,
 "type": "boolean"
-},
-"ancestorsEnrolledServices": {
-"description": "Output only. Field to differentiate ancestor enrolled services from locally enrolled services.",
-"items": {
-"$ref": "EnrolledService"
-},
-"readOnly": true,
-"type": "array"
 },
 "approvalPolicy": {
 "$ref": "CustomerApprovalApprovalPolicy",
@@ -1348,10 +1340,7 @@
 "PQ_SIGN_ML_DSA_65",
 "PQ_SIGN_ML_DSA_87",
 "PQ_SIGN_SLH_DSA_SHA2_128S",
-"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256",
-"PQ_SIGN_ML_DSA_44_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_65_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_87_EXTERNAL_MU"
+"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256"
 ],
 "enumDescriptions": [
 "Not specified.",
@@ -1397,10 +1386,7 @@
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version.",
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version.",
 "The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized version.",
-"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 1. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version supporting externally-computed message representatives."
+"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests."
 ],
 "type": "string"
 },

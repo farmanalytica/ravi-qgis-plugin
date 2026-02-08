@@ -1,8 +1,8 @@
 [general]
 name=RAVI
-qgisMinimumVersion=3.16
+qgisMinimumVersion=3.0
 description=Analysis of Vegetation Indices Time Series and download of multispectral imagery
-version=5.0
+version=5.1
 author=FARM Analytica
 email=caio.arantes@farmanalytica.com.br
 
@@ -17,7 +17,7 @@ repository=https://github.com/farmanalytica/ravi-qgis-plugin
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 changelog=
-    5.0 - New feature - synthetic soil image (SYSI) generation
+    5.1 - New feature - synthetic soil image (SYSI) generation
     4.1 - fix for selected VI menu
     4.0 - proxy setttings, and Digital Elevation Model added
     3.2 - Batch download feature added

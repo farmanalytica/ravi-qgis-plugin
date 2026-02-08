@@ -36,16 +36,6 @@
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.asia-northeast1.rep.googleapis.com/",
-"location": "asia-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.asia-northeast2.rep.googleapis.com/",
-"location": "asia-northeast2"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://dataflow.asia-northeast3.rep.googleapis.com/",
 "location": "asia-northeast3"
 },
@@ -58,16 +48,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://dataflow.asia-south2.rep.googleapis.com/",
 "location": "asia-south2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.asia-southeast1.rep.googleapis.com/",
-"location": "asia-southeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.asia-southeast2.rep.googleapis.com/",
-"location": "asia-southeast2"
 },
 {
 "description": "Regional Endpoint",
@@ -96,28 +76,13 @@
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.europe-west1.rep.googleapis.com/",
-"location": "europe-west1"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://dataflow.europe-west10.rep.googleapis.com/",
 "location": "europe-west10"
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.europe-west12.rep.googleapis.com/",
-"location": "europe-west12"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://dataflow.europe-west3.rep.googleapis.com/",
 "location": "europe-west3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.europe-west6.rep.googleapis.com/",
-"location": "europe-west6"
 },
 {
 "description": "Regional Endpoint",
@@ -148,11 +113,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://dataflow.northamerica-northeast1.rep.googleapis.com/",
 "location": "northamerica-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://dataflow.northamerica-northeast2.rep.googleapis.com/",
-"location": "northamerica-northeast2"
 },
 {
 "description": "Regional Endpoint",
@@ -2375,7 +2335,7 @@
 }
 }
 },
-"revision": "20260118",
+"revision": "20251026",
 "rootUrl": "https://dataflow.googleapis.com/",
 "schemas": {
 "ApproximateProgress": {
@@ -5945,11 +5905,6 @@ false
 "description": "Additional job parameters that can only be updated during runtime using the projects.jobs.update method. These fields have no effect when specified during job creation.",
 "id": "RuntimeUpdatableParams",
 "properties": {
-"acceptableBacklogDuration": {
-"description": "Optional. The backlog threshold duration in seconds for autoscaling. Value must be non-negative.",
-"format": "google-duration",
-"type": "string"
-},
 "maxNumWorkers": {
 "description": "The maximum number of workers to cap autoscaling at. This field is currently only supported for Streaming Engine jobs.",
 "format": "int32",
@@ -7138,11 +7093,6 @@ false
 "$ref": "StreamingComputationConfig"
 },
 "type": "array"
-},
-"streamingEngineStateTagEncodingVersion": {
-"description": "Optional. The state tag encoding format version for streaming engine jobs.",
-"format": "int32",
-"type": "integer"
 },
 "userStepToStateFamilyNameMap": {
 "additionalProperties": {

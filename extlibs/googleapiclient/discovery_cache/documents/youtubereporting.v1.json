@@ -411,7 +411,7 @@
 }
 }
 },
-"revision": "20260113",
+"revision": "20240707",
 "rootUrl": "https://youtubereporting.googleapis.com/",
 "schemas": {
 "Empty": {
@@ -433,11 +433,6 @@
 "description": "gdata",
 "type": "string"
 },
-"downloadExternalReadToken": {
-"description": "gdata",
-"format": "byte",
-"type": "string"
-},
 "downloadReadHandle": {
 "description": "gdata",
 "format": "byte",
@@ -445,11 +440,6 @@
 },
 "readToken": {
 "description": "gdata",
-"type": "string"
-},
-"uploadFragmentListCreationInfo": {
-"description": "gdata",
-"format": "byte",
 "type": "string"
 },
 "uploadMetadataContainer": {

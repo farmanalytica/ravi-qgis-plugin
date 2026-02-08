@@ -1,8 +1,7 @@
 """General decorators and helper methods which should not import ee."""
 
 import functools
-from typing import Any
-from collections.abc import Callable
+from typing import Any, Callable
 
 
 def accept_opt_prefix(*opt_args) -> Callable[..., Any]:

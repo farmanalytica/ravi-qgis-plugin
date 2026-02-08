@@ -454,7 +454,7 @@
 }
 }
 },
-"revision": "20251111",
+"revision": "20251003",
 "rootUrl": "https://testing.googleapis.com/",
 "schemas": {
 "Account": {
@@ -805,15 +805,10 @@
 "ROBO_VERSION_1",
 "ROBO_VERSION_2"
 ],
-"enumDeprecated": [
-false,
-false,
-true
-],
 "enumDescriptions": [
 "This means that the server should choose the mode. Recommended.",
 "Runs Robo in UIAutomator-only mode without app resigning",
-"Deprecated: Use ROBO_VERSION_1 instead for all use cases. Runs Robo in standard Espresso with UIAutomator fallback"
+"Runs Robo in standard Espresso with UIAutomator fallback"
 ],
 "type": "string"
 },

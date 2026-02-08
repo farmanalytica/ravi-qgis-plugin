@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """Tests for the table_converter module."""
 
-import builtins
-from typing import Any
-from unittest import mock
+from typing import Any, Optional
 
 from absl.testing import parameterized
 import geopandas
@@ -30,8 +28,8 @@ class TableConverterTest(parameterized.TestCase):
   def test_from_file_format(
       self,
       data_format: str,
-      expected: type[table_converter.TableConverter] | None,
-  ):
+      expected: Optional[type[table_converter.TableConverter]],
+  ) -> None:
     """Verifies `from_file_format` returns the correct converter class."""
     if expected is None:
       self.assertIsNone(table_converter.from_file_format(data_format))
@@ -40,17 +38,7 @@ class TableConverterTest(parameterized.TestCase):
           table_converter.from_file_format(data_format), expected
       )
 
-  def test_from_file_format_instance(self):
-    """Verifies `from_file_format` returns the same instance."""
-    converter = table_converter.PandasConverter()
-    self.assertIs(table_converter.from_file_format(converter), converter)
-
-  def test_table_converter_fails(self):
-    """Verifies `TableConverter` cannot be used for conversion."""
-    with self.assertRaises(NotImplementedError):
-      table_converter.TableConverter().do_conversion(iter([]))
-
-  def test_pandas_converter(self):
+  def test_pandas_converter(self) -> None:
     """Verifies `PandasConverter` does the correct conversion."""
     converter = table_converter.PandasConverter()
 
@@ -81,23 +69,7 @@ class TableConverterTest(parameterized.TestCase):
         ]),
     )
 
-  def test_pandas_converter_importerror(self):
-    """Ensures ImportError is raised when pandas is not available."""
-    real_import = builtins.__import__
-
-    def mock_import(name, globals=None, locals=None, fromlist=(), level=0):
-      if name == 'pandas':
-        raise ImportError
-      return real_import(name, globals, locals, fromlist, level)
-
-    with mock.patch('builtins.__import__', mock_import):
-      converter = table_converter.PandasConverter()
-      with self.assertRaisesRegex(
-          ImportError, 'Using format PANDAS_DATAFRAME requires pandas.'
-      ):
-        converter.do_conversion(iter([]))
-
-  def test_geopandas_converter(self):
+  def test_geopandas_converter(self) -> None:
     """Verifies `GeoPandasConverter` does the correct conversion."""
     converter = table_converter.GeoPandasConverter()
 
@@ -132,22 +104,6 @@ class TableConverterTest(parameterized.TestCase):
         dataframe,
         geopandas.GeoDataFrame.from_features(feature_coll),
     )
-
-  def test_geopandas_converter_importerror(self):
-    """Ensures ImportError is raised when geopandas is not available."""
-    real_import = builtins.__import__
-
-    def mock_import(name, globals=None, locals=None, fromlist=(), level=0):
-      if name == 'geopandas':
-        raise ImportError
-      return real_import(name, globals, locals, fromlist, level)
-
-    with mock.patch('builtins.__import__', mock_import):
-      converter = table_converter.GeoPandasConverter()
-      with self.assertRaisesRegex(
-          ImportError, 'Using format GEOPANDAS_GEODATAFRAME requires geopandas.'
-      ):
-        converter.do_conversion(iter([]))
 
 
 if __name__ == '__main__':

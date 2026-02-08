@@ -5,7 +5,7 @@ import contextlib
 import copy
 import json
 import os
-from typing import Any
+from typing import Any, Optional
 
 from googleapiclient import discovery
 
@@ -16,7 +16,7 @@ from ee import _state
 
 
 # Cached algorithms list
-_algorithms_cache: dict[str, Any] | None = None
+_algorithms_cache: Optional[dict[str, Any]] = None
 
 
 def GetAlgorithms() -> dict[str, Any]:
@@ -40,10 +40,10 @@ def GetAlgorithms() -> dict[str, Any]:
 
 class ApiTestCase(unittest.TestCase):
   """A TestCase that initializes the library with standard API methods."""
-  last_download_call: Any | None
-  last_thumb_call: Any | None
-  last_table_call: Any | None
-  last_mapid_call: Any | None
+  last_download_call: Optional[Any]
+  last_thumb_call: Optional[Any]
+  last_table_call: Optional[Any]
+  last_mapid_call: Optional[Any]
 
   def setUp(self):
     super().setUp()
@@ -89,6 +89,7 @@ class ApiTestCase(unittest.TestCase):
     ee.data.computeValue = lambda x: {'value': 'fakeValue'}
     ee.data.getMapId = self._MockMapId
     ee.data.getDownloadId = self._MockDownloadUrl
+    ee.data.getThumbId = self._MockThumbUrl
     ee.data.getTableDownloadId = self._MockTableDownload
     # pylint: disable-next=protected-access
     ee.deprecation._FetchDataCatalogStac = self._MockFetchDataCatalogStac
@@ -102,6 +103,17 @@ class ApiTestCase(unittest.TestCase):
   def _MockDownloadUrl(self, params: dict[str, Any]) -> dict[str, str]:
     self.last_download_call = {'url': '/download', 'data': params}
     return {'docid': '1', 'token': '2'}
+
+  def _MockThumbUrl(
+      self,
+      params: dict[str, Any],
+      # pylint: disable-next=invalid-name
+      thumbType: Optional[str] = None,
+  ) -> dict[str, str]:
+    del thumbType  # Unused.
+    # Hang on to the call arguments.
+    self.last_thumb_call = {'url': '/thumb', 'data': params}
+    return {'thumbid': '3', 'token': '4'}
 
   def _MockTableDownload(self, params: dict[str, Any]) -> dict[str, str]:
     self.last_table_call = {'url': '/table', 'data': params}
@@ -129,9 +141,9 @@ def _GenerateCloudApiResource(mock_http: Any, raw: Any) -> discovery.Resource:
 
 @contextlib.contextmanager  # pytype: disable=wrong-arg-types
 def UsingCloudApi(
-    cloud_api_resource: Any | None = None,
-    cloud_api_resource_raw: Any | None = None,
-    mock_http: Any | None = None,
+    cloud_api_resource: Optional[Any] = None,
+    cloud_api_resource_raw: Optional[Any] = None,
+    mock_http: Optional[Any] = None,
 ) -> Iterable[Any]:  # pytype: disable=wrong-arg-types
   """Returns a context manager under which the Cloud API is enabled."""
   # pylint: disable=protected-access

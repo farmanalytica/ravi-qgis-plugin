@@ -16,22 +16,16 @@
 
 Implements application default credentials and project ID detection.
 """
-from __future__ import annotations
 
 import io
 import json
 import logging
 import os
-from typing import Optional, Sequence, TYPE_CHECKING
 import warnings
 
 from google.auth import environment_vars
 from google.auth import exceptions
 import google.auth.transport._http_client
-
-if TYPE_CHECKING:  # pragma: NO COVER
-    from google.auth.credentials import Credentials  # noqa: F401
-    from google.auth.transport import Request  # noqa: F401
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -330,24 +324,23 @@ def _get_explicit_environ_credentials(quota_project_id=None):
     from google.auth import _cloud_sdk
 
     cloud_sdk_adc_path = _cloud_sdk.get_application_default_credentials_path()
-    explicit_file = os.environ.get(environment_vars.CREDENTIALS, "")
+    explicit_file = os.environ.get(environment_vars.CREDENTIALS)
 
     _LOGGER.debug(
-        "Checking '%s' for explicit credentials as part of auth process...",
-        explicit_file,
+        "Checking %s for explicit credentials as part of auth process...", explicit_file
     )
 
-    if explicit_file != "" and explicit_file == cloud_sdk_adc_path:
+    if explicit_file is not None and explicit_file == cloud_sdk_adc_path:
         # Cloud sdk flow calls gcloud to fetch project id, so if the explicit
         # file path is cloud sdk credentials path, then we should fall back
         # to cloud sdk flow, otherwise project id cannot be obtained.
         _LOGGER.debug(
-            "Explicit credentials path '%s' is the same as Cloud SDK credentials path, fall back to Cloud SDK credentials flow...",
+            "Explicit credentials path %s is the same as Cloud SDK credentials path, fall back to Cloud SDK credentials flow...",
             explicit_file,
         )
         return _get_gcloud_sdk_credentials(quota_project_id=quota_project_id)
 
-    if explicit_file != "":
+    if explicit_file is not None:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
             credentials, project_id = load_credentials_from_file(
@@ -355,6 +348,7 @@ def _get_explicit_environ_credentials(quota_project_id=None):
                 quota_project_id=quota_project_id,
             )
             credentials._cred_file_path = f"{explicit_file} file via the GOOGLE_APPLICATION_CREDENTIALS environment variable"
+
             return credentials, project_id
 
     else:
@@ -544,10 +538,8 @@ def _get_impersonated_service_account_credentials(filename, info, scopes):
     from google.auth import impersonated_credentials
 
     try:
-        credentials = (
-            impersonated_credentials.Credentials.from_impersonated_service_account_info(
-                info, scopes=scopes
-            )
+        credentials = impersonated_credentials.Credentials.from_impersonated_service_account_info(
+            info, scopes=scopes
         )
     except ValueError as caught_exc:
         msg = "Failed to load impersonated service account credentials from {}".format(
@@ -562,8 +554,8 @@ def _get_gdch_service_account_credentials(filename, info):
     from google.oauth2 import gdch_credentials
 
     try:
-        credentials = (
-            gdch_credentials.ServiceAccountCredentials.from_service_account_info(info)
+        credentials = gdch_credentials.ServiceAccountCredentials.from_service_account_info(
+            info
         )
     except ValueError as caught_exc:
         msg = "Failed to load GDCH service account credentials from {}".format(filename)
@@ -594,12 +586,7 @@ def _apply_quota_project_id(credentials, quota_project_id):
     return credentials
 
 
-def default(
-    scopes: Optional[Sequence[str]] = None,
-    request: Optional["google.auth.transport.Request"] = None,
-    quota_project_id: Optional[str] = None,
-    default_scopes: Optional[Sequence[str]] = None,
-) -> tuple["google.auth.credentials.Credentials", Optional[str]]:
+def default(scopes=None, request=None, quota_project_id=None, default_scopes=None):
     """Gets the default credentials for the current environment.
 
     `Application Default Credentials`_ provides an easy way to obtain

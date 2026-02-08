@@ -135,7 +135,7 @@
 ]
 },
 "list": {
-"description": "Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id}/locations`. This may include public locations as well as private or other locations specifically visible to the project.",
+"description": "Lists information about the supported locations for this service.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations",
 "httpMethod": "GET",
 "id": "tpu.projects.locations.list",
@@ -144,7 +144,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -184,10 +184,8 @@
 },
 "resources": {
 "acceleratorTypes": {
-"deprecated": true,
 "methods": {
 "get": {
-"deprecated": true,
 "description": "Gets AcceleratorType.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/acceleratorTypes/{acceleratorTypesId}",
 "httpMethod": "GET",
@@ -213,7 +211,6 @@
 ]
 },
 "list": {
-"deprecated": true,
 "description": "Lists accelerator types supported by this API.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/acceleratorTypes",
 "httpMethod": "GET",
@@ -262,10 +259,8 @@
 }
 },
 "nodes": {
-"deprecated": true,
 "methods": {
 "create": {
-"deprecated": true,
 "description": "Creates a node.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes",
 "httpMethod": "POST",
@@ -304,7 +299,6 @@
 ]
 },
 "delete": {
-"deprecated": true,
 "description": "Deletes a node.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes/{nodesId}",
 "httpMethod": "DELETE",
@@ -335,7 +329,6 @@
 ]
 },
 "get": {
-"deprecated": true,
 "description": "Gets the details of a node.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes/{nodesId}",
 "httpMethod": "GET",
@@ -361,7 +354,6 @@
 ]
 },
 "list": {
-"deprecated": true,
 "description": "Lists nodes.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes",
 "httpMethod": "GET",
@@ -398,7 +390,6 @@
 ]
 },
 "reimage": {
-"deprecated": true,
 "description": "Reimages a node's OS.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes/{nodesId}:reimage",
 "httpMethod": "POST",
@@ -427,7 +418,6 @@
 ]
 },
 "start": {
-"deprecated": true,
 "description": "Starts a node.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes/{nodesId}:start",
 "httpMethod": "POST",
@@ -456,7 +446,6 @@
 ]
 },
 "stop": {
-"deprecated": true,
 "description": "Stops a node. This operation is only available with single TPU nodes.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/nodes/{nodesId}:stop",
 "httpMethod": "POST",
@@ -596,7 +585,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -612,10 +601,8 @@
 }
 },
 "tensorflowVersions": {
-"deprecated": true,
 "methods": {
 "get": {
-"deprecated": true,
 "description": "Gets TensorFlow Version.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/tensorflowVersions/{tensorflowVersionsId}",
 "httpMethod": "GET",
@@ -641,7 +628,6 @@
 ]
 },
 "list": {
-"deprecated": true,
 "description": "Lists TensorFlow versions supported by this API.",
 "flatPath": "v1alpha1/projects/{projectsId}/locations/{locationsId}/tensorflowVersions",
 "httpMethod": "GET",
@@ -694,12 +680,11 @@
 }
 }
 },
-"revision": "20260127",
+"revision": "20251005",
 "rootUrl": "https://tpu.googleapis.com/",
 "schemas": {
 "AcceleratorType": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. A accelerator type that a Node can be configured with.",
+"description": "A accelerator type that a Node can be configured with.",
 "id": "AcceleratorType",
 "properties": {
 "name": {
@@ -720,8 +705,7 @@
 "type": "object"
 },
 "ListAcceleratorTypesResponse": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Response for ListAcceleratorTypes.",
+"description": "Response for ListAcceleratorTypes.",
 "id": "ListAcceleratorTypesResponse",
 "properties": {
 "acceleratorTypes": {
@@ -764,8 +748,7 @@
 "type": "object"
 },
 "ListNodesResponse": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Response for ListNodes.",
+"description": "Response for ListNodes.",
 "id": "ListNodesResponse",
 "properties": {
 "nextPageToken": {
@@ -805,7 +788,7 @@
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },
@@ -815,8 +798,7 @@
 "type": "object"
 },
 "ListTensorFlowVersionsResponse": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Response for ListTensorFlowVersions.",
+"description": "Response for ListTensorFlowVersions.",
 "id": "ListTensorFlowVersionsResponse",
 "properties": {
 "nextPageToken": {
@@ -875,8 +857,7 @@
 "type": "object"
 },
 "NetworkEndpoint": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. A network endpoint over which a TPU worker can be reached.",
+"description": "A network endpoint over which a TPU worker can be reached.",
 "id": "NetworkEndpoint",
 "properties": {
 "ipAddress": {
@@ -892,8 +873,7 @@
 "type": "object"
 },
 "Node": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. A TPU instance.",
+"description": "A TPU instance.",
 "id": "Node",
 "properties": {
 "acceleratorType": {
@@ -1095,8 +1075,7 @@
 "type": "object"
 },
 "OperationMetadata": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Metadata describing an Operation",
+"description": "Metadata describing an Operation",
 "id": "OperationMetadata",
 "properties": {
 "apiVersion": {
@@ -1133,8 +1112,7 @@
 "type": "object"
 },
 "ReimageNodeRequest": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Request for ReimageNode.",
+"description": "Request for ReimageNode.",
 "id": "ReimageNodeRequest",
 "properties": {
 "tensorflowVersion": {
@@ -1145,8 +1123,7 @@
 "type": "object"
 },
 "SchedulingConfig": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Sets the scheduling options for this node.",
+"description": "Sets the scheduling options for this node.",
 "id": "SchedulingConfig",
 "properties": {
 "preemptible": {
@@ -1161,8 +1138,7 @@
 "type": "object"
 },
 "StartNodeRequest": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Request for StartNode.",
+"description": "Request for StartNode.",
 "id": "StartNodeRequest",
 "properties": {},
 "type": "object"
@@ -1195,15 +1171,13 @@
 "type": "object"
 },
 "StopNodeRequest": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. Request for StopNode.",
+"description": "Request for StopNode.",
 "id": "StopNodeRequest",
 "properties": {},
 "type": "object"
 },
 "Symptom": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. A Symptom instance.",
+"description": "A Symptom instance.",
 "id": "Symptom",
 "properties": {
 "createTime": {
@@ -1245,8 +1219,7 @@
 "type": "object"
 },
 "TensorFlowVersion": {
-"deprecated": true,
-"description": "DEPRECATED: Please use TPU API v2alpha1 instead. A tensorflow version that a Node can be configured with.",
+"description": "A tensorflow version that a Node can be configured with.",
 "id": "TensorFlowVersion",
 "properties": {
 "name": {

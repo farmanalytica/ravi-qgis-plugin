@@ -40,7 +40,7 @@ like this:
 
 from __future__ import annotations
 
-import OpenSSL.SSL  # type: ignore[import-not-found]
+import OpenSSL.SSL  # type: ignore[import-untyped]
 from cryptography import x509
 
 try:
@@ -61,7 +61,7 @@ from socket import timeout
 from .. import util
 
 if typing.TYPE_CHECKING:
-    from OpenSSL.crypto import X509  # type: ignore[import-not-found]
+    from OpenSSL.crypto import X509  # type: ignore[import-untyped]
 
 
 __all__ = ["inject_into_urllib3", "extract_from_urllib3"]

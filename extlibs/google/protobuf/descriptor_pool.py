@@ -738,10 +738,7 @@ class DescriptorPool(object):
               ),
           )
       )
-    if (
-        edition > self._edition_defaults.maximum_edition
-        and edition != descriptor_pb2.EDITION_UNSTABLE
-    ):
+    if edition > self._edition_defaults.maximum_edition:
       raise TypeError(
           'Edition %s is later than the maximum supported edition %s!'
           % (

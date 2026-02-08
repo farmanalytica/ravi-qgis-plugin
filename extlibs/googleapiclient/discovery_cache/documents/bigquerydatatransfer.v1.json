@@ -49,11 +49,6 @@
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://bigquerydatatransfer.europe-west4.rep.googleapis.com/",
-"location": "europe-west4"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://bigquerydatatransfer.europe-west6.rep.googleapis.com/",
 "location": "europe-west6"
 },
@@ -71,16 +66,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://bigquerydatatransfer.me-central2.rep.googleapis.com/",
 "location": "me-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://bigquerydatatransfer.northamerica-northeast1.rep.googleapis.com/",
-"location": "northamerica-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://bigquerydatatransfer.northamerica-northeast2.rep.googleapis.com/",
-"location": "northamerica-northeast2"
 },
 {
 "description": "Regional Endpoint",
@@ -433,7 +418,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -1503,7 +1488,7 @@
 }
 }
 },
-"revision": "20260112",
+"revision": "20251020",
 "rootUrl": "https://bigquerydatatransfer.googleapis.com/",
 "schemas": {
 "CheckValidCredsRequest": {

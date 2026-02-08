@@ -242,7 +242,7 @@
 }
 }
 },
-"revision": "20260111",
+"revision": "20251012",
 "rootUrl": "https://kmsinventory.googleapis.com/",
 "schemas": {
 "GoogleCloudKmsInventoryV1ListCryptoKeysResponse": {
@@ -392,7 +392,7 @@
 "type": "string"
 },
 "cryptoKeyBackend": {
-"description": "Immutable. The resource name of the backend environment where the key material for all CryptoKeyVersions associated with this CryptoKey reside and where all related cryptographic operations are performed. Only applicable if CryptoKeyVersions have a ProtectionLevel of EXTERNAL_VPC, with the resource name in the format `projects/*/locations/*/ekmConnections/*`. Only applicable if CryptoKeyVersions have a ProtectionLevel of HSM_SINGLE_TENANT, with the resource name in the format `projects/*/locations/*/singleTenantHsmInstances/*`. Note, this list is non-exhaustive and may apply to additional ProtectionLevels in the future.",
+"description": "Immutable. The resource name of the backend environment where the key material for all CryptoKeyVersions associated with this CryptoKey reside and where all related cryptographic operations are performed. Only applicable if CryptoKeyVersions have a ProtectionLevel of EXTERNAL_VPC, with the resource name in the format `projects/*/locations/*/ekmConnections/*`. Note, this list is non-exhaustive and may apply to additional ProtectionLevels in the future.",
 "type": "string"
 },
 "destroyScheduledDuration": {
@@ -514,10 +514,7 @@
 "PQ_SIGN_ML_DSA_65",
 "PQ_SIGN_ML_DSA_87",
 "PQ_SIGN_SLH_DSA_SHA2_128S",
-"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256",
-"PQ_SIGN_ML_DSA_44_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_65_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_87_EXTERNAL_MU"
+"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256"
 ],
 "enumDescriptions": [
 "Not specified.",
@@ -563,10 +560,7 @@
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version.",
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version.",
 "The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized version.",
-"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 1. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version supporting externally-computed message representatives."
+"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests."
 ],
 "readOnly": true,
 "type": "string"
@@ -642,16 +636,14 @@
 "SOFTWARE",
 "HSM",
 "EXTERNAL",
-"EXTERNAL_VPC",
-"HSM_SINGLE_TENANT"
+"EXTERNAL_VPC"
 ],
 "enumDescriptions": [
 "Not specified.",
 "Crypto operations are performed in software.",
 "Crypto operations are performed in a Hardware Security Module.",
 "Crypto operations are performed by an external key manager.",
-"Crypto operations are performed in an EKM-over-VPC backend.",
-"Crypto operations are performed in a single-tenant HSM."
+"Crypto operations are performed in an EKM-over-VPC backend."
 ],
 "readOnly": true,
 "type": "string"
@@ -744,10 +736,7 @@
 "PQ_SIGN_ML_DSA_65",
 "PQ_SIGN_ML_DSA_87",
 "PQ_SIGN_SLH_DSA_SHA2_128S",
-"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256",
-"PQ_SIGN_ML_DSA_44_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_65_EXTERNAL_MU",
-"PQ_SIGN_ML_DSA_87_EXTERNAL_MU"
+"PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256"
 ],
 "enumDescriptions": [
 "Not specified.",
@@ -793,10 +782,7 @@
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version.",
 "The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version.",
 "The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized version.",
-"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 1. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 3. Randomized version supporting externally-computed message representatives.",
-"The post-quantum Module-Lattice-Based Digital Signature Algorithm, at security level 5. Randomized version supporting externally-computed message representatives."
+"The post-quantum stateless hash-based digital signature algorithm, at security level 1. Randomized pre-hash version supporting SHA256 digests."
 ],
 "type": "string"
 },
@@ -807,16 +793,14 @@
 "SOFTWARE",
 "HSM",
 "EXTERNAL",
-"EXTERNAL_VPC",
-"HSM_SINGLE_TENANT"
+"EXTERNAL_VPC"
 ],
 "enumDescriptions": [
 "Not specified.",
 "Crypto operations are performed in software.",
 "Crypto operations are performed in a Hardware Security Module.",
 "Crypto operations are performed by an external key manager.",
-"Crypto operations are performed in an EKM-over-VPC backend.",
-"Crypto operations are performed in a single-tenant HSM."
+"Crypto operations are performed in an EKM-over-VPC backend."
 ],
 "type": "string"
 }
@@ -859,20 +843,6 @@
 "GOOGLE_RESPONSE_TO_PRODUCTION_ALERT",
 "CUSTOMER_AUTHORIZED_WORKFLOW_SERVICING"
 ],
-"enumDeprecated": [
-false,
-false,
-false,
-false,
-false,
-false,
-false,
-false,
-true,
-true,
-false,
-false
-],
 "enumDescriptions": [
 "Unspecified access reason.",
 "Customer-initiated support.",
@@ -882,8 +852,8 @@ false
 "Customer uses their account to perform any access to their own data which their IAM policy authorizes.",
 "Google systems access customer data to help optimize the structure of the data or quality for future uses by the customer.",
 "No reason is expected for this key request.",
-"Deprecated: This code is no longer generated by Google Cloud. The GOOGLE_RESPONSE_TO_PRODUCTION_ALERT justification codes available in both Key Access Justifications and Access Transparency logs provide customer-visible signals of emergency access in more precise contexts. Customer uses their account to perform any access to their own data which their IAM policy authorizes, and one of the following is true: * A Google administrator has reset the root-access account associated with the user's organization within the past 7 days. * A Google-initiated emergency access operation has interacted with a resource in the same project or folder as the currently accessed resource within the past 7 days.",
-"Deprecated: This code is no longer generated by Google Cloud. The GOOGLE_RESPONSE_TO_PRODUCTION_ALERT justification codes available in both Key Access Justifications and Access Transparency logs provide customer-visible signals of emergency access in more precise contexts. Google systems access customer data to help optimize the structure of the data or quality for future uses by the customer, and one of the following is true: * A Google administrator has reset the root-access account associated with the user's organization within the past 7 days. * A Google-initiated emergency access operation has interacted with a resource in the same project or folder as the currently accessed resource within the past 7 days.",
+"Customer uses their account to perform any access to their own data which their IAM policy authorizes, and one of the following is true: * A Google administrator has reset the root-access account associated with the user's organization within the past 7 days. * A Google-initiated emergency access operation has interacted with a resource in the same project or folder as the currently accessed resource within the past 7 days.",
+"Google systems access customer data to help optimize the structure of the data or quality for future uses by the customer, and one of the following is true: * A Google administrator has reset the root-access account associated with the user's organization within the past 7 days. * A Google-initiated emergency access operation has interacted with a resource in the same project or folder as the currently accessed resource within the past 7 days.",
 "Google-initiated access to maintain system reliability.",
 "One of the following operations is being executed while simultaneously encountering an internal technical issue which prevented a more precise justification code from being generated: * Your account has been used to perform any access to your own data which your IAM policy authorizes. * An automated Google system operates on encrypted customer data which your IAM policy authorizes. * Customer-initiated Google support access. * Google-initiated support access to protect system reliability."
 ],

@@ -40,7 +40,6 @@ class EmscriptenHTTPConnection:
     is_verified: bool = False
     proxy_is_verified: bool | None = None
 
-    response_class: type[BaseHTTPResponse] = EmscriptenHttpResponseWrapper
     _response: EmscriptenResponse | None
 
     def __init__(
@@ -99,12 +98,8 @@ class EmscriptenHTTPConnection:
     ) -> None:
         self._closed = False
         if url.startswith("/"):
-            if self.port is not None:
-                port = f":{self.port}"
-            else:
-                port = ""
             # no scheme / host / port included, make a full url
-            url = f"{self.scheme}://{self.host}{port}{url}"
+            url = f"{self.scheme}://{self.host}:{self.port}" + url
         request = EmscriptenRequest(
             url=url,
             method=method,

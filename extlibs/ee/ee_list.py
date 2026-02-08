@@ -422,10 +422,8 @@ class List(computedobject.ComputedObject):
   # TODO: Improve the type of `baseAlgorithm`.
   def map(
       self,
-      # pylint: disable=invalid-name
-      baseAlgorithm: _arg_types.Any,
+      baseAlgorithm: _arg_types.Any,  # pylint: disable=invalid-name
       dropNulls: _arg_types.Bool = False,
-      # pylint: enable=invalid-name
   ) -> List:
     """Map an algorithm over a list.
 

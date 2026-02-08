@@ -5,19 +5,19 @@ let Status = {
   ERROR_EXCEPTION: -4,
 };
 
-let connections = new Map();
+let connections = {};
 let nextConnectionID = 1;
 const encoder = new TextEncoder();
 
 self.addEventListener("message", async function (event) {
   if (event.data.close) {
     let connectionID = event.data.close;
-    connections.delete(connectionID);
+    delete connections[connectionID];
     return;
   } else if (event.data.getMore) {
     let connectionID = event.data.getMore;
     let { curOffset, value, reader, intBuffer, byteBuffer } =
-      connections.get(connectionID);
+      connections[connectionID];
     // if we still have some in buffer, then just send it back straight away
     if (!value || curOffset >= value.length) {
       // read another buffer if required
@@ -26,7 +26,7 @@ self.addEventListener("message", async function (event) {
 
         if (readResponse.done) {
           // read everything - clear connection and return
-          connections.delete(connectionID);
+          delete connections[connectionID];
           Atomics.store(intBuffer, 0, Status.SUCCESS_EOF);
           Atomics.notify(intBuffer, 0);
           // finished reading successfully
@@ -34,7 +34,7 @@ self.addEventListener("message", async function (event) {
           return;
         }
         curOffset = 0;
-        connections.get(connectionID).value = readResponse.value;
+        connections[connectionID].value = readResponse.value;
         value = readResponse.value;
       } catch (error) {
         console.log("Request exception:", error);
@@ -57,7 +57,7 @@ self.addEventListener("message", async function (event) {
     Atomics.store(intBuffer, 0, curLen); // store current length in bytes
     Atomics.notify(intBuffer, 0);
     curOffset += curLen;
-    connections.get(connectionID).curOffset = curOffset;
+    connections[connectionID].curOffset = curOffset;
 
     return;
   } else {
@@ -84,13 +84,13 @@ self.addEventListener("message", async function (event) {
       byteBuffer.set(headerBytes);
       intBuffer[1] = written;
       // make a connection
-      connections.set(connectionID, {
+      connections[connectionID] = {
         reader: response.body.getReader(),
         intBuffer: intBuffer,
         byteBuffer: byteBuffer,
         value: undefined,
         curOffset: 0,
-      });
+      };
       // set header ready
       Atomics.store(intBuffer, 0, Status.SUCCESS_HEADER);
       Atomics.notify(intBuffer, 0);
