@@ -2108,7 +2108,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -2747,7 +2747,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -2824,7 +2824,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -2874,7 +2874,7 @@
 }
 }
 },
-"revision": "20260122",
+"revision": "20251023",
 "rootUrl": "https://retail.googleapis.com/",
 "schemas": {
 "GoogleApiHttpBody": {
@@ -3948,7 +3948,7 @@
 "type": "string"
 },
 "productCountStats": {
-"description": "Output only. Statistics for number of products in the branch, provided for different scopes. This field is not populated in BranchView.BRANCH_VIEW_BASIC view.",
+"description": "Output only. Statistics for number of products in the branch, provided for different scopes. This field is not populated in BranchView.BASIC view.",
 "items": {
 "$ref": "GoogleCloudRetailV2alphaBranchProductCountStatistic"
 },
@@ -3956,7 +3956,7 @@
 "type": "array"
 },
 "qualityMetrics": {
-"description": "Output only. The quality metrics measured among products of this branch. See QualityMetric.requirement_key for supported metrics. Metrics could be missing if failed to retrieve. This field is not populated in BranchView.BRANCH_VIEW_BASIC view.",
+"description": "Output only. The quality metrics measured among products of this branch. See QualityMetric.requirement_key for supported metrics. Metrics could be missing if failed to retrieve. This field is not populated in BranchView.BASIC view.",
 "items": {
 "$ref": "GoogleCloudRetailV2alphaBranchQualityMetric"
 },
@@ -4750,7 +4750,7 @@
 "type": "string"
 },
 "sortBy": {
-"description": "Optional. The sort string to specify the sorting of search results. The syntax of the sort string is the same as SearchRequest.order_by.",
+"description": "Optional. The sort string to specify the sorting of search results. The syntax of the sort string is the same as SearchRequest.sort.",
 "type": "string"
 }
 },
@@ -4762,7 +4762,7 @@
 "properties": {
 "selectedAnswer": {
 "$ref": "GoogleCloudRetailV2alphaConversationalSearchRequestUserAnswerSelectedAnswer",
-"description": "Optional. This field specifies the selected answer during the conversational search. This should be a subset of ConversationalSearchResponse.FollowupQuestion.SuggestedAnswer."
+"description": "Optional. This field specifies the selected answer during the conversational search. This should be a subset of ConversationalSearchResponse.followup_question.suggested_answers."
 },
 "textAnswer": {
 "description": "This field specifies the incremental input text from the user during the conversational search.",
@@ -4840,7 +4840,7 @@
 "properties": {
 "additionalFilter": {
 "$ref": "GoogleCloudRetailV2alphaConversationalSearchResponseConversationalFilteringResultAdditionalFilter",
-"description": "This is the incremental additional filters implied from the current user answer. User should add the suggested addition filters to the previous ConversationalSearchRequest.SearchParams.filter and SearchRequest.filter, and use the merged filter in the follow up requests."
+"description": "This is the incremental additional filters implied from the current user answer. User should add the suggested addition filters to the previous ConversationalSearchRequest.search_params.filter and SearchRequest.filter, and use the merged filter in the follow up requests."
 },
 "followupQuestion": {
 "$ref": "GoogleCloudRetailV2alphaConversationalSearchResponseFollowupQuestion",
@@ -5063,7 +5063,7 @@
 },
 "outputConfig": {
 "$ref": "GoogleCloudRetailV2alphaOutputConfig",
-"description": "Required. The output location of the data. Only `bigquery_destination` is supported, and `bigquery_destination.table_type` must be set to `view`."
+"description": "Required. The output location of the data."
 }
 },
 "type": "object"
@@ -5124,12 +5124,12 @@
 "properties": {
 "filter": {
 "deprecated": true,
-"description": "Deprecated: This field is deprecated. Any filter provided will be ignored.",
+"description": "This field is deprecated. Any filter provided will be ignored.",
 "type": "string"
 },
 "outputConfig": {
 "$ref": "GoogleCloudRetailV2alphaOutputConfig",
-"description": "Required. The output location of the data. Only `bigquery_destination` is supported, and `bigquery_destination.table_type` must be set to `view`."
+"description": "Required. The output location of the data."
 }
 },
 "type": "object"
@@ -5161,13 +5161,12 @@
 "id": "GoogleCloudRetailV2alphaExportUserEventsRequest",
 "properties": {
 "filter": {
-"deprecated": true,
-"description": "Deprecated: This field is deprecated. Any filter provided will be ignored.",
+"description": "A filtering expression to specify restrictions on returned events. The expression is a sequence of terms. Each term applies a restriction to the returned user events. Use this expression to restrict results to a specific time range or to filter events by eventType. For example, `eventTime > \"2012-04-23T18:25:43.511Z\" eventsMissingCatalogItems eventTime<\"2012-04-23T18:25:43.511Z\" eventType=search` We expect only three types of fields: * `eventTime`: This can be specified twice, once with a less than operator and once with a greater than operator. The `eventTime` restriction should result in one, contiguous, valid, `eventTime` range. * `eventType`: Boolean operators `OR` and `NOT` are supported if the expression is enclosed in parentheses and the operators are separated from the tag values by a space. * `eventsMissingCatalogItems`: This restricts results to events for which catalog items were not found in the catalog. The default behavior is to return only those events for which catalog items were found. Some examples of valid filters expressions: * Example 1: `eventTime > \"2012-04-23T18:25:43.511Z\" eventTime < \"2012-04-23T18:30:43.511Z\"` * Example 2: `eventTime > \"2012-04-23T18:25:43.511Z\" eventType = detail-page-view` * Example 3: `eventsMissingCatalogItems eventType = (NOT search) eventTime < \"2018-04-23T18:30:43.511Z\"` * Example 4: `eventTime > \"2012-04-23T18:25:43.511Z\"` * Example 5: `eventType = (detail-page-view OR search)` * Example 6: `eventsMissingCatalogItems`",
 "type": "string"
 },
 "outputConfig": {
 "$ref": "GoogleCloudRetailV2alphaOutputConfig",
-"description": "Required. The output location of the data. Only `bigquery_destination` is supported, and `bigquery_destination.table_type` must be set to `view`."
+"description": "Required. The output location of the data."
 }
 },
 "type": "object"
@@ -7818,7 +7817,7 @@
 "id": "GoogleCloudRetailV2alphaSearchRequestConversationalSearchSpec",
 "properties": {
 "conversationId": {
-"description": "This field specifies the conversation id, which maintains the state of the conversation between client side and server side. Use the value from the previous SearchResponse.ConversationalSearchResult.conversation_id. For the initial request, this should be empty.",
+"description": "This field specifies the conversation id, which maintains the state of the conversation between client side and server side. Use the value from the previous ConversationalSearchResult.conversation_id. For the initial request, this should be empty.",
 "type": "string"
 },
 "followupConversationRequested": {
@@ -7838,7 +7837,7 @@
 "properties": {
 "selectedAnswer": {
 "$ref": "GoogleCloudRetailV2alphaSearchRequestConversationalSearchSpecUserAnswerSelectedAnswer",
-"description": "This field specifies the selected attributes during the conversational search. This should be a subset of SearchResponse.ConversationalSearchResult.suggested_answers."
+"description": "This field specifies the selected attributes during the conversational search. This should be a subset of ConversationalSearchResult.suggested_answers."
 },
 "textAnswer": {
 "description": "This field specifies the incremental input text from the user during the conversational search.",
@@ -9416,7 +9415,7 @@
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },

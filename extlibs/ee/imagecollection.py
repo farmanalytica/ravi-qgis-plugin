@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
-from typing import Any
+from collections.abc import Sequence
+from typing import Any, Callable
 
 from ee import _arg_types
 from ee import _utils
@@ -299,8 +299,7 @@ class ImageCollection(collection.Collection[image.Image]):
     request['format'] = params.get('format', valid_formats[0])
     if request['format'] not in valid_formats:
       raise ee_exception.EEException(
-          f'Invalid format specified for thumbnail: "{request["format"]}"'
-      )
+          'Invalid format specified for thumbnail. ' + str(params['format']))
 
     if params and 'framesPerSecond' in params:
       request['framesPerSecond'] = params.get('framesPerSecond')

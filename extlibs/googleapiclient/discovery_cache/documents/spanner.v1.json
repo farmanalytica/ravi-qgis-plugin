@@ -9,7 +9,7 @@
 "description": "Administer your Spanner databases"
 },
 "https://www.googleapis.com/auth/spanner.data": {
-"description": "See, edit, configure, and delete your Google Cloud Spanner data and see the email address for your Google Account"
+"description": "View and manage the contents of your Spanner databases"
 }
 }
 }
@@ -503,11 +503,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -634,11 +629,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -1408,11 +1398,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -2343,11 +2328,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -3221,11 +3201,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -3352,11 +3327,6 @@
 "description": "The standard list page token.",
 "location": "query",
 "type": "string"
-},
-"returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
-"location": "query",
-"type": "boolean"
 }
 },
 "path": "v1/{+name}",
@@ -3436,31 +3406,9 @@
 }
 }
 },
-"revision": "20260122",
+"revision": "20251014",
 "rootUrl": "https://spanner.googleapis.com/",
 "schemas": {
-"Ack": {
-"description": "Arguments to ack operations.",
-"id": "Ack",
-"properties": {
-"ignoreNotFound": {
-"description": "By default, an attempt to ack a message that does not exist will fail with a `NOT_FOUND` error. With `ignore_not_found` set to true, the ack will succeed even if the message does not exist. This is useful for unconditionally acking a message, even if it is missing or has already been acked.",
-"type": "boolean"
-},
-"key": {
-"description": "Required. The primary key of the message to be acked.",
-"items": {
-"type": "any"
-},
-"type": "array"
-},
-"queue": {
-"description": "Required. The queue where the message to be acked is stored.",
-"type": "string"
-}
-},
-"type": "object"
-},
 "AdaptMessageRequest": {
 "description": "Message sent by the client to the adapter.",
 "id": "AdaptMessageRequest",
@@ -3591,19 +3539,6 @@
 "description": "Optional. If specified, overrides the autoscaling target high_priority_cpu_utilization_percent in the top-level autoscaling configuration for the selected replicas.",
 "format": "int32",
 "type": "integer"
-},
-"autoscalingTargetTotalCpuUtilizationPercent": {
-"description": "Optional. If specified, overrides the autoscaling target `total_cpu_utilization_percent` in the top-level autoscaling configuration for the selected replicas.",
-"format": "int32",
-"type": "integer"
-},
-"disableHighPriorityCpuAutoscaling": {
-"description": "Optional. If true, disables high priority CPU autoscaling for the selected replicas and ignores high_priority_cpu_utilization_percent in the top-level autoscaling configuration. When setting this field to true, setting autoscaling_target_high_priority_cpu_utilization_percent field to a non-zero value for the same replica is not supported. If false, the autoscaling_target_high_priority_cpu_utilization_percent field in the replica will be used if set to a non-zero value. Otherwise, the high_priority_cpu_utilization_percent field in the top-level autoscaling configuration will be used. Setting both disable_high_priority_cpu_autoscaling and disable_total_cpu_autoscaling to true for the same replica is not supported.",
-"type": "boolean"
-},
-"disableTotalCpuAutoscaling": {
-"description": "Optional. If true, disables total CPU autoscaling for the selected replicas and ignores total_cpu_utilization_percent in the top-level autoscaling configuration. When setting this field to true, setting autoscaling_target_total_cpu_utilization_percent field to a non-zero value for the same replica is not supported. If false, the autoscaling_target_total_cpu_utilization_percent field in the replica will be used if set to a non-zero value. Otherwise, the total_cpu_utilization_percent field in the top-level autoscaling configuration will be used. Setting both disable_high_priority_cpu_autoscaling and disable_total_cpu_autoscaling to true for the same replica is not supported.",
-"type": "boolean"
 }
 },
 "type": "object"
@@ -3640,17 +3575,12 @@
 "id": "AutoscalingTargets",
 "properties": {
 "highPriorityCpuUtilizationPercent": {
-"description": "Optional. The target high priority cpu utilization percentage that the autoscaler should be trying to achieve for the instance. This number is on a scale from 0 (no utilization) to 100 (full utilization). The valid range is [10, 90] inclusive. If not specified or set to 0, the autoscaler skips scaling based on high priority CPU utilization.",
+"description": "Required. The target high priority cpu utilization percentage that the autoscaler should be trying to achieve for the instance. This number is on a scale from 0 (no utilization) to 100 (full utilization). The valid range is [10, 90] inclusive.",
 "format": "int32",
 "type": "integer"
 },
 "storageUtilizationPercent": {
 "description": "Required. The target storage utilization percentage that the autoscaler should be trying to achieve for the instance. This number is on a scale from 0 (no utilization) to 100 (full utilization). The valid range is [10, 99] inclusive.",
-"format": "int32",
-"type": "integer"
-},
-"totalCpuUtilizationPercent": {
-"description": "Optional. The target total CPU utilization percentage that the autoscaler should be trying to achieve for the instance. This number is on a scale from 0 (no utilization) to 100 (full utilization). The valid range is [10, 90] inclusive. If not specified or set to 0, the autoscaler skips scaling based on total CPU utilization. If both `high_priority_cpu_utilization_percent` and `total_cpu_utilization_percent` are specified, the autoscaler provisions the larger of the two required compute capacities to satisfy both targets.",
 "format": "int32",
 "type": "integer"
 }
@@ -3740,23 +3670,6 @@
 "maxExpireTime": {
 "description": "Output only. The max allowed expiration time of the backup, with microseconds granularity. A backup's expiration time can be configured in multiple APIs: CreateBackup, UpdateBackup, CopyBackup. When updating or copying an existing backup, the expiration time specified must be less than `Backup.max_expire_time`.",
 "format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"minimumRestorableEdition": {
-"description": "Output only. The minimum edition required to successfully restore the backup. Populated only if the edition is Enterprise or Enterprise Plus.",
-"enum": [
-"EDITION_UNSPECIFIED",
-"STANDARD",
-"ENTERPRISE",
-"ENTERPRISE_PLUS"
-],
-"enumDescriptions": [
-"Edition not specified.",
-"Standard edition.",
-"Enterprise edition.",
-"Enterprise Plus edition."
-],
 "readOnly": true,
 "type": "string"
 },
@@ -3905,7 +3818,7 @@
 "id": "BatchCreateSessionsRequest",
 "properties": {
 "sessionCount": {
-"description": "Required. The number of sessions to be created in this batch call. At least one session is created. The API can return fewer than the requested number of sessions. If a specific number of sessions are desired, the client can make additional calls to `BatchCreateSessions` (adjusting session_count as necessary).",
+"description": "Required. The number of sessions to be created in this batch call. The API can return fewer than the requested number of sessions. If a specific number of sessions are desired, the client can make additional calls to `BatchCreateSessions` (adjusting session_count as necessary).",
 "format": "int32",
 "type": "integer"
 },
@@ -4104,20 +4017,6 @@
 },
 "type": "object"
 },
-"ClientContext": {
-"description": "Container for various pieces of client-owned context attached to a request.",
-"id": "ClientContext",
-"properties": {
-"secureContext": {
-"additionalProperties": {
-"type": "any"
-},
-"description": "Optional. Map of parameter name to value for this request. These values will be returned by any SECURE_CONTEXT() calls invoked by this request (e.g., by queries against Parameterized Secure Views).",
-"type": "object"
-}
-},
-"type": "object"
-},
 "ColumnMetadata": {
 "description": "Metadata for a column.",
 "id": "ColumnMetadata",
@@ -4215,29 +4114,6 @@
 "description": "The total number of mutations for the transaction. Knowing the `mutation_count` value can help you maximize the number of mutations in a transaction and minimize the number of API round trips. You can also monitor this value to prevent transactions from exceeding the system [limit](https://cloud.google.com/spanner/quotas#limits_for_creating_reading_updating_and_deleting_data). If the number of mutations exceeds the limit, the server returns [INVALID_ARGUMENT](https://cloud.google.com/spanner/docs/reference/rest/v1/Code#ENUM_VALUES.INVALID_ARGUMENT).",
 "format": "int64",
 "type": "string"
-}
-},
-"type": "object"
-},
-"CompactDatabaseMetadata": {
-"description": "Metadata type for the long-running operation returned by `CALL compact_all()`, which can be executed using ExecuteSql or ExecuteStreamingSql APIs.",
-"id": "CompactDatabaseMetadata",
-"properties": {
-"cancelTime": {
-"description": "Output only. The time at which cancellation of this operation was received. Operations.CancelOperation starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"database": {
-"description": "Output only. The database being compacted.",
-"readOnly": true,
-"type": "string"
-},
-"progress": {
-"$ref": "OperationProgress",
-"description": "Output only. The progress of the compaction operation.",
-"readOnly": true
 }
 },
 "type": "object"
@@ -5683,10 +5559,6 @@
 "description": "An isolated set of Cloud Spanner resources that databases can define placements on.",
 "id": "InstancePartition",
 "properties": {
-"autoscalingConfig": {
-"$ref": "AutoscalingConfig",
-"description": "Optional. The autoscaling configuration. Autoscaling is enabled if this field is set. When autoscaling is enabled, fields in compute_capacity are treated as OUTPUT_ONLY fields and reflect the current compute capacity allocated to the instance partition."
-},
 "config": {
 "description": "Required. The name of the instance partition's configuration. Values are of the form `projects//instanceConfigs/`. See also InstanceConfig and ListInstanceConfigs.",
 "type": "string"
@@ -6151,13 +6023,6 @@
 "$ref": "Operation"
 },
 "type": "array"
-},
-"unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
-"items": {
-"type": "string"
-},
-"type": "array"
 }
 },
 "type": "object"
@@ -6426,10 +6291,6 @@
 "description": "A modification to one or more Cloud Spanner rows. Mutations can be applied to a Cloud Spanner database by sending them in a Commit call.",
 "id": "Mutation",
 "properties": {
-"ack": {
-"$ref": "Ack",
-"description": "Ack a message from a queue."
-},
 "delete": {
 "$ref": "Delete",
 "description": "Delete rows from a table. Succeeds whether or not the named rows were present."
@@ -6445,10 +6306,6 @@
 "replace": {
 "$ref": "Write",
 "description": "Like insert, except that if the row already exists, it is deleted, and the column values provided are inserted instead. Unlike insert_or_update, this means any values not explicitly written become `NULL`. In an interleaved table, if you create the child table with the `ON DELETE CASCADE` annotation, then replacing a parent row also deletes the child rows. Otherwise, you must delete the child rows before you replace the parent row."
-},
-"send": {
-"$ref": "Send",
-"description": "Send a message to a queue."
 },
 "update": {
 "$ref": "Write",
@@ -6673,7 +6530,7 @@
 "additionalProperties": {
 "$ref": "Type"
 },
-"description": "Optional. It isn't always possible for Cloud Spanner to infer the right SQL type from a JSON value. For example, values of type `BYTES` and values of type `STRING` both appear in params as JSON strings. In these cases, `param_types` can be used to specify the exact SQL type for some or all of the SQL query parameters. See the definition of Type for more information about SQL types.",
+"description": "It isn't always possible for Cloud Spanner to infer the right SQL type from a JSON value. For example, values of type `BYTES` and values of type `STRING` both appear in params as JSON strings. In these cases, `param_types` can be used to specify the exact SQL type for some or all of the SQL query parameters. See the definition of Type for more information about SQL types.",
 "type": "object"
 },
 "params": {
@@ -6681,7 +6538,7 @@
 "description": "Properties of the object.",
 "type": "any"
 },
-"description": "Optional. Parameter names and values that bind to placeholders in the SQL string. A parameter placeholder consists of the `@` character followed by the parameter name (for example, `@firstName`). Parameter names can contain letters, numbers, and underscores. Parameters can appear anywhere that a literal value is expected. The same parameter name can be used more than once, for example: `\"WHERE id > @msg_id AND id < @msg_id + 100\"` It's an error to execute a SQL statement with unbound parameters.",
+"description": "Parameter names and values that bind to placeholders in the SQL string. A parameter placeholder consists of the `@` character followed by the parameter name (for example, `@firstName`). Parameter names can contain letters, numbers, and underscores. Parameters can appear anywhere that a literal value is expected. The same parameter name can be used more than once, for example: `\"WHERE id > @msg_id AND id < @msg_id + 100\"` It's an error to execute a SQL statement with unbound parameters.",
 "type": "object"
 },
 "partitionOptions": {
@@ -7217,10 +7074,6 @@
 "description": "Common request options for various APIs.",
 "id": "RequestOptions",
 "properties": {
-"clientContext": {
-"$ref": "ClientContext",
-"description": "Optional. Optional context that may be needed for some requests."
-},
 "priority": {
 "description": "Priority for the request.",
 "enum": [
@@ -7242,7 +7095,7 @@
 "type": "string"
 },
 "transactionTag": {
-"description": "A tag used for statistics collection about this transaction. Both `request_tag` and `transaction_tag` can be specified for a read or query that belongs to a transaction. To enable tagging on a transaction, `transaction_tag` must be set to the same value for all requests belonging to the same transaction, including BeginTransaction. If this request doesn't belong to any transaction, `transaction_tag` is ignored. Legal characters for `transaction_tag` values are all printable characters (ASCII 32 - 126) and the length of a `transaction_tag` is limited to 50 characters. Values that exceed this limit are truncated. Any leading underscore (_) characters are removed from the string.",
+"description": "A tag used for statistics collection about this transaction. Both `request_tag` and `transaction_tag` can be specified for a read or query that belongs to a transaction. The value of transaction_tag should be the same for all requests belonging to the same transaction. If this request doesn't belong to any transaction, `transaction_tag` is ignored. Legal characters for `transaction_tag` values are all printable characters (ASCII 32 - 126) and the length of a `transaction_tag` is limited to 50 characters. Values that exceed this limit are truncated. Any leading underscore (_) characters are removed from the string.",
 "type": "string"
 }
 },
@@ -7508,33 +7361,6 @@
 },
 "type": "object"
 },
-"Send": {
-"description": "Arguments to send operations.",
-"id": "Send",
-"properties": {
-"deliverTime": {
-"description": "The time at which Spanner will begin attempting to deliver the message. If `deliver_time` is not set, Spanner will deliver the message immediately. If `deliver_time` is in the past, Spanner will replace it with a value closer to the current time.",
-"format": "google-datetime",
-"type": "string"
-},
-"key": {
-"description": "Required. The primary key of the message to be sent.",
-"items": {
-"type": "any"
-},
-"type": "array"
-},
-"payload": {
-"description": "The payload of the message.",
-"type": "any"
-},
-"queue": {
-"description": "Required. The queue to which the message will be sent.",
-"type": "string"
-}
-},
-"type": "object"
-},
 "Session": {
 "description": "A session in the Cloud Spanner API.",
 "id": "Session",
@@ -7563,7 +7389,7 @@
 "type": "object"
 },
 "multiplexed": {
-"description": "Optional. If `true`, specifies a multiplexed session. Use a multiplexed session for multiple, concurrent operations including any combination of read-only and read-write transactions. Use `sessions.create` to create multiplexed sessions. Don't use BatchCreateSessions to create a multiplexed session. You can't delete or list multiplexed sessions.",
+"description": "Optional. If `true`, specifies a multiplexed session. Use a multiplexed session for multiple, concurrent read-only operations. Don't use them for read-write transactions, partitioned reads, or partitioned queries. Use `sessions.create` to create multiplexed sessions. Don't use BatchCreateSessions to create a multiplexed session. You can't delete or list multiplexed sessions.",
 "type": "boolean"
 },
 "name": {
@@ -7776,7 +7602,7 @@
 "enumDescriptions": [
 "Default value. If the value is not specified, the `SERIALIZABLE` isolation level is used.",
 "All transactions appear as if they executed in a serial order, even if some of the reads, writes, and other operations of distinct transactions actually occurred in parallel. Spanner assigns commit timestamps that reflect the order of committed transactions to implement this property. Spanner offers a stronger guarantee than serializability called external consistency. For more information, see [TrueTime and external consistency](https://cloud.google.com/spanner/docs/true-time-external-consistency#serializability).",
-"All reads performed during the transaction observe a consistent snapshot of the database, and the transaction is only successfully committed in the absence of conflicts between its updates and any concurrent updates that have occurred since that snapshot. Consequently, in contrast to `SERIALIZABLE` transactions, only write-write conflicts are detected in snapshot transactions. This isolation level does not support read-only and partitioned DML transactions. When `REPEATABLE_READ` is specified on a read-write transaction, the locking semantics default to `OPTIMISTIC`."
+"All reads performed during the transaction observe a consistent snapshot of the database, and the transaction is only successfully committed in the absence of conflicts between its updates and any concurrent updates that have occurred since that snapshot. Consequently, in contrast to `SERIALIZABLE` transactions, only write-write conflicts are detected in snapshot transactions. This isolation level does not support Read-only and Partitioned DML transactions. When `REPEATABLE_READ` is specified on a read-write transaction, the locking semantics default to `OPTIMISTIC`."
 ],
 "type": "string"
 },

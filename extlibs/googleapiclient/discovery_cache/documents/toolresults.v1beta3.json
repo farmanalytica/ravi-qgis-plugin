@@ -1464,7 +1464,7 @@
 }
 }
 },
-"revision": "20260108",
+"revision": "20250204",
 "rootUrl": "https://toolresults.googleapis.com/",
 "schemas": {
 "ANR": {
@@ -3675,7 +3675,7 @@
 ],
 "type": "string"
 },
-"warning_migration": {
+"warning": {
 "$ref": "Any",
 "description": "Warning message with additional details of the issue. Should always be a message from com.google.devtools.toolresults.v1.warnings"
 }

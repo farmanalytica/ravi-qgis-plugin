@@ -127,7 +127,7 @@ _CLASS_CONVERSION_MAP = {
     oauth2client.contrib.gce.AppAssertionCredentials: _convert_gce_app_assertion_credentials,
 }
 
-if _HAS_APPENGINE:  # pragma: no cover
+if _HAS_APPENGINE:
     _CLASS_CONVERSION_MAP[
         oauth2client.contrib.appengine.AppAssertionCredentials
     ] = _convert_appengine_app_assertion_credentials

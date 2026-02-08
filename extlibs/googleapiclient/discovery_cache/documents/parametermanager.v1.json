@@ -240,26 +240,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://parametermanager.europe-west15.rep.googleapis.com/",
 "location": "europe-west15"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://parametermanager.us.rep.googleapis.com/",
-"location": "us"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://parametermanager.eu.rep.googleapis.com/",
-"location": "eu"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://parametermanager.ca.rep.googleapis.com/",
-"location": "ca"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://parametermanager.in.rep.googleapis.com/",
-"location": "in"
 }
 ],
 "fullyEncodeReservedExpansion": true,
@@ -551,7 +531,7 @@
 "type": "integer"
 },
 "pageToken": {
-"description": "Optional. A page token, received from a previous `ListParameters` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListParameters` must match the call that provided the page token.",
+"description": "Optional. A token identifying a page of results the server should return.",
 "location": "query",
 "type": "string"
 },
@@ -706,7 +686,7 @@
 "FULL"
 ],
 "enumDescriptions": [
-"The default / unset value. The API will default to the FULL view.",
+"The default / unset value. The API will default to the FULL view..",
 "Include only the metadata for the resource.",
 "Include metadata & other relevant payload data as well. This is the default view."
 ],
@@ -748,7 +728,7 @@
 "type": "integer"
 },
 "pageToken": {
-"description": "Optional. A page token, received from a previous `ListParameterVersions` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListParameterVersions` must match the call that provided the page token.",
+"description": "Optional. A token identifying a page of results the server should return.",
 "location": "query",
 "type": "string"
 },
@@ -841,7 +821,7 @@
 }
 }
 },
-"revision": "20260107",
+"revision": "20251025",
 "rootUrl": "https://parametermanager.googleapis.com/",
 "schemas": {
 "Empty": {

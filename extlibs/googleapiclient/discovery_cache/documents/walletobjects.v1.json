@@ -2711,7 +2711,7 @@
 }
 }
 },
-"revision": "20260113",
+"revision": "20250909",
 "rootUrl": "https://walletobjects.googleapis.com/",
 "schemas": {
 "ActivationOptions": {
@@ -3026,11 +3026,6 @@ true
 "description": "The blob id, e.g., /blobstore/prod/playground/scotty",
 "type": "string"
 },
-"downloadExternalReadToken": {
-"description": "A serialized External Read Token passed from Bigstore -> Scotty for a GCS download. This field must never be consumed outside of Bigstore, and is not applicable to non-GCS media uploads.",
-"format": "byte",
-"type": "string"
-},
 "downloadReadHandle": {
 "description": "Read handle passed from Bigstore -> Scotty for a GCS download. This is a signed, serialized blobstore2.ReadHandle proto which must never be set outside of Bigstore, and is not applicable to non-GCS media downloads.",
 "format": "byte",
@@ -3038,11 +3033,6 @@ true
 },
 "readToken": {
 "description": "The blob read token. Needed to read blobs that have not been replicated. Might not be available until the final call.",
-"type": "string"
-},
-"uploadFragmentListCreationInfo": {
-"description": "A serialized Object Fragment List Creation Info passed from Bigstore -> Scotty for a GCS upload. This field must never be consumed outside of Bigstore, and is not applicable to non-GCS media uploads.",
-"format": "byte",
 "type": "string"
 },
 "uploadMetadataContainer": {

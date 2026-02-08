@@ -408,7 +408,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -730,7 +730,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -1052,7 +1052,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -1072,7 +1072,7 @@
 }
 }
 },
-"revision": "20260108",
+"revision": "20250928",
 "rootUrl": "https://osconfig.googleapis.com/",
 "schemas": {
 "CancelOperationRequest": {
@@ -1100,138 +1100,6 @@
 "description": "Specifies the relative value defined as a percentage, which will be multiplied by a reference value.",
 "format": "int32",
 "type": "integer"
-}
-},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
-}
-},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1alpha__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1alpha__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
-}
-},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1main__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1main__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
 }
 },
 "type": "object"
@@ -1649,7 +1517,7 @@
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },

@@ -185,31 +185,6 @@
 "resources": {
 "discoveredprofiles": {
 "methods": {
-"get": {
-"description": "Gets details of a discovered workload profile.",
-"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/discoveredprofiles/{discoveredprofilesId}",
-"httpMethod": "GET",
-"id": "workloadmanager.projects.locations.discoveredprofiles.get",
-"parameterOrder": [
-"name"
-],
-"parameters": {
-"name": {
-"description": "Required. Name of the resource",
-"location": "path",
-"pattern": "^projects/[^/]+/locations/[^/]+/discoveredprofiles/[^/]+$",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1/{+name}",
-"response": {
-"$ref": "WorkloadProfile"
-},
-"scopes": [
-"https://www.googleapis.com/auth/cloud-platform"
-]
-},
 "list": {
 "description": "List discovered workload profiles",
 "flatPath": "v1/projects/{projectsId}/locations/{locationsId}/discoveredprofiles",
@@ -250,37 +225,6 @@
 "scopes": [
 "https://www.googleapis.com/auth/cloud-platform"
 ]
-}
-},
-"resources": {
-"health": {
-"methods": {
-"get": {
-"description": "Get the health of a discovered workload profile.",
-"flatPath": "v1/projects/{projectsId}/locations/{locationsId}/discoveredprofiles/{discoveredprofilesId}/health/{healthId}",
-"httpMethod": "GET",
-"id": "workloadmanager.projects.locations.discoveredprofiles.health.get",
-"parameterOrder": [
-"name"
-],
-"parameters": {
-"name": {
-"description": "Required. The resource name",
-"location": "path",
-"pattern": "^projects/[^/]+/locations/[^/]+/discoveredprofiles/[^/]+/health/[^/]+$",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1/{+name}",
-"response": {
-"$ref": "WorkloadProfileHealth"
-},
-"scopes": [
-"https://www.googleapis.com/auth/cloud-platform"
-]
-}
-}
 }
 }
 },
@@ -883,7 +827,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -979,7 +923,7 @@ true
 }
 }
 },
-"revision": "20260121",
+"revision": "20251022",
 "rootUrl": "https://workloadmanager.googleapis.com/",
 "schemas": {
 "AgentCommand": {
@@ -1410,67 +1354,6 @@ true
 },
 "type": "object"
 },
-"ComponentHealth": {
-"description": "HealthCondition contains the detailed health check of each component.",
-"id": "ComponentHealth",
-"properties": {
-"component": {
-"description": "The component of a workload.",
-"type": "string"
-},
-"componentHealthChecks": {
-"description": "The detailed health checks of the component.",
-"items": {
-"$ref": "HealthCheck"
-},
-"type": "array"
-},
-"componentHealthType": {
-"description": "Output only. The type of the component health.",
-"enum": [
-"TYPE_UNSPECIFIED",
-"TYPE_REQUIRED",
-"TYPE_OPTIONAL",
-"TYPE_SPECIAL"
-],
-"enumDescriptions": [
-"Unspecified",
-"required",
-"optional",
-"special"
-],
-"readOnly": true,
-"type": "string"
-},
-"state": {
-"description": "Output only. The health state of the component.",
-"enum": [
-"HEALTH_STATE_UNSPECIFIED",
-"HEALTHY",
-"UNHEALTHY",
-"CRITICAL",
-"UNSUPPORTED"
-],
-"enumDescriptions": [
-"Unspecified.",
-"Healthy workload.",
-"Unhealthy workload.",
-"Has critical issues.",
-"Unsupported."
-],
-"readOnly": true,
-"type": "string"
-},
-"subComponentsHealth": {
-"description": "Sub component health.",
-"items": {
-"$ref": "ComponentHealth"
-},
-"type": "array"
-}
-},
-"type": "object"
-},
 "DatabaseProperties": {
 "description": "Database Properties.",
 "id": "DatabaseProperties",
@@ -1481,7 +1364,7 @@ true
 "readOnly": true
 },
 "databaseType": {
-"description": "Output only. Type of the database. `HANA`, `DB2`, etc.",
+"description": "Output only. Type of the database. HANA, DB2, etc.",
 "enum": [
 "DATABASE_TYPE_UNSPECIFIED",
 "HANA",
@@ -1782,7 +1665,7 @@ true
 "id": "ExternalDataSources",
 "properties": {
 "assetType": {
-"description": "Required. The asset type of the external data source. This can be a supported Cloud Asset Inventory asset type (see https://cloud.google.com/asset-inventory/docs/supported-asset-types) to override the default asset type, or it can be a custom type defined by the user.",
+"description": "Required. The asset type of the external data source this can be one of go/cai-asset-types to override the default asset type or it can be a custom type defined by the user custom type must match the asset type in the rule",
 "type": "string"
 },
 "name": {
@@ -1818,54 +1701,6 @@ true
 "type": "string"
 },
 "type": "array"
-}
-},
-"type": "object"
-},
-"HealthCheck": {
-"description": "HealthCheck contains the detailed health check of a component based on asource.",
-"id": "HealthCheck",
-"properties": {
-"message": {
-"description": "Output only. The message of the health check.",
-"readOnly": true,
-"type": "string"
-},
-"metric": {
-"description": "Output only. The health check source metric name.",
-"readOnly": true,
-"type": "string"
-},
-"resource": {
-"$ref": "CloudResource",
-"description": "Output only. The resource the check performs on.",
-"readOnly": true
-},
-"source": {
-"description": "Output only. The source of the health check.",
-"readOnly": true,
-"type": "string"
-},
-"state": {
-"description": "Output only. The state of the health check.",
-"enum": [
-"STATE_UNSPECIFIED",
-"PASSED",
-"FAILED",
-"DEGRADED",
-"SKIPPED",
-"UNSUPPORTED"
-],
-"enumDescriptions": [
-"Unspecified",
-"passed",
-"failed",
-"degraded",
-"skipped",
-"unsupported"
-],
-"readOnly": true,
-"type": "string"
 }
 },
 "type": "object"
@@ -2144,7 +1979,7 @@ true
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },
@@ -2334,7 +2169,7 @@ true
 "type": "object"
 },
 "Product": {
-"description": "Contains the details of a product.",
+"description": "Product contains the details of a product.",
 "id": "Product",
 "properties": {
 "name": {
@@ -2545,26 +2380,6 @@ true
 },
 "type": "object"
 },
-"RuleOutput": {
-"description": "The rule output of the violation.",
-"id": "RuleOutput",
-"properties": {
-"details": {
-"additionalProperties": {
-"type": "string"
-},
-"description": "Output only. Violation details generated by rule.",
-"readOnly": true,
-"type": "object"
-},
-"message": {
-"description": "Output only. The message generated by rule.",
-"readOnly": true,
-"type": "string"
-}
-},
-"type": "object"
-},
 "RunEvaluationRequest": {
 "description": "Message for creating a Execution",
 "id": "RunEvaluationRequest",
@@ -2594,7 +2409,7 @@ true
 "readOnly": true
 },
 "haHosts": {
-"description": "List of host URIs that are part of the HA configuration if present. An empty list indicates the component is not configured for HA.",
+"description": "A list of host URIs that are part of the HA configuration if present. An empty list indicates the component is not configured for HA.",
 "items": {
 "type": "string"
 },
@@ -3271,11 +3086,11 @@ true
 "properties": {
 "application": {
 "$ref": "SapComponent",
-"description": "Output only. application component",
+"description": "Output only. the acsc componment",
 "readOnly": true
 },
 "architecture": {
-"description": "Output only. The architecture.",
+"description": "Output only. the architecture",
 "enum": [
 "ARCHITECTURE_UNSPECIFIED",
 "INVALID",
@@ -3299,7 +3114,7 @@ true
 },
 "database": {
 "$ref": "SapComponent",
-"description": "Output only. database component",
+"description": "Output only. the database componment",
 "readOnly": true
 },
 "metadata": {
@@ -3311,7 +3126,7 @@ true
 "type": "object"
 },
 "products": {
-"description": "Output only. The products on this workload.",
+"description": "Output only. the products on this workload.",
 "items": {
 "$ref": "Product"
 },
@@ -3588,7 +3403,7 @@ true
 "type": "string"
 },
 "onHostMaintenance": {
-"description": "Optional. Instance maintenance behavior. Could be `MIGRATE` or `TERMINATE`.",
+"description": "Optional. Instance maintenance behavior. Could be \"MIGRATE\" or \"TERMINATE\".",
 "type": "string"
 },
 "startTime": {
@@ -3615,16 +3430,8 @@ true
 "additionalProperties": {
 "type": "string"
 },
-"description": "Details of the violation.",
+"description": "Details of the violation. TODO(b/452163887)",
 "type": "object"
-},
-"ruleOutput": {
-"description": "Output only. The rule output of the violation.",
-"items": {
-"$ref": "RuleOutput"
-},
-"readOnly": true,
-"type": "array"
 },
 "serviceAccount": {
 "description": "The service account associated with the resource.",
@@ -3634,7 +3441,7 @@ true
 "type": "object"
 },
 "WorkloadProfile": {
-"description": "Workload resource.",
+"description": "workload resource",
 "id": "WorkloadProfile",
 "properties": {
 "labels": {
@@ -3667,44 +3474,6 @@ true
 "unspecified workload type",
 "running sap workload s4/hana"
 ],
-"type": "string"
-}
-},
-"type": "object"
-},
-"WorkloadProfileHealth": {
-"description": "WorkloadProfileHealth contains the detailed health check of workload.",
-"id": "WorkloadProfileHealth",
-"properties": {
-"checkTime": {
-"description": "The time when the health check was performed.",
-"format": "google-datetime",
-"type": "string"
-},
-"componentsHealth": {
-"description": "The detailed condition reports of each component.",
-"items": {
-"$ref": "ComponentHealth"
-},
-"type": "array"
-},
-"state": {
-"description": "Output only. The health state of the workload.",
-"enum": [
-"HEALTH_STATE_UNSPECIFIED",
-"HEALTHY",
-"UNHEALTHY",
-"CRITICAL",
-"UNSUPPORTED"
-],
-"enumDescriptions": [
-"Unspecified.",
-"Healthy workload.",
-"Unhealthy workload.",
-"Has critical issues.",
-"Unsupported."
-],
-"readOnly": true,
 "type": "string"
 }
 },

@@ -565,7 +565,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections. For example, when parent is set to \"projects/example/locations/-\".This field is not supported by default and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections e.g. when parent is set to \"projects/example/locations/-\".This field is not by default supported and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -1807,7 +1807,7 @@
 }
 }
 },
-"revision": "20260122",
+"revision": "20251023",
 "rootUrl": "https://metastore.googleapis.com/",
 "schemas": {
 "AlterMetadataResourceLocationRequest": {
@@ -2208,8 +2208,7 @@
 "type": "object"
 },
 "CustomRegionConfig": {
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. Custom configuration used to specify regions that the metastore service runs in. Currently only supported in the us multi-region.",
+"description": "Custom configuration used to specify regions that the metastore service runs in. Currently only supported in the us multi-region.",
 "id": "CustomRegionConfig",
 "properties": {
 "readOnlyRegions": {
@@ -2230,8 +2229,7 @@
 "type": "object"
 },
 "CustomRegionMetadata": {
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. Metadata about a custom region. This is only populated if the region is a custom region. For single/multi regions, it will be empty.",
+"description": "Metadata about a custom region. This is only populated if the region is a custom region. For single/multi regions, it will be empty.",
 "id": "CustomRegionMetadata",
 "properties": {
 "optionalReadOnlyRegions": {
@@ -2777,7 +2775,7 @@
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },
@@ -2850,8 +2848,7 @@
 "id": "LocationMetadata",
 "properties": {
 "customRegionMetadata": {
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. Possible configurations supported if the current region is a custom region.",
+"description": "Possible configurations supported if the current region is a custom region.",
 "items": {
 "$ref": "CustomRegionMetadata"
 },
@@ -2859,8 +2856,7 @@
 },
 "multiRegionMetadata": {
 "$ref": "MultiRegionMetadata",
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. The multi-region metadata if the current region is a multi-region."
+"description": "The multi-region metadata if the current region is a multi-region."
 },
 "supportedHiveMetastoreVersions": {
 "description": "The versions of Hive Metastore that can be used when creating a new metastore service in this location. The server guarantees that exactly one HiveMetastoreVersion in the list will set is_default.",
@@ -3168,13 +3164,12 @@
 "type": "object"
 },
 "MultiRegionConfig": {
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. The multi-region config for the Dataproc Metastore service.",
+"description": "The multi-region config for the Dataproc Metastore service.",
 "id": "MultiRegionConfig",
 "properties": {
 "certificates": {
 "deprecated": true,
-"description": "Output only. Deprecated: Use a single region service instead. The list of root CA certificates that a gRPC client uses to connect to a multi-regional Dataproc Metastore service.",
+"description": "Output only. The list of root CA certificates that a gRPC client uses to connect to a multi-regional Dataproc Metastore service.",
 "items": {
 "$ref": "RootCACertificate"
 },
@@ -3182,16 +3177,13 @@
 "type": "array"
 },
 "customRegionConfig": {
-"$ref": "CustomRegionConfig",
-"deprecated": true,
-"description": "Immutable. Deprecated: Use a single region service instead."
+"$ref": "CustomRegionConfig"
 }
 },
 "type": "object"
 },
 "MultiRegionMetadata": {
-"deprecated": true,
-"description": "Deprecated: Use a single region service instead. The metadata for the multi-region that includes the constituent regions. The metadata is only populated if the region is multi-region. For single region or custom dual region, it will be empty.",
+"description": "The metadata for the multi-region that includes the constituent regions. The metadata is only populated if the region is multi-region. For single region or custom dual region, it will be empty.",
 "id": "MultiRegionMetadata",
 "properties": {
 "constituentRegions": {
@@ -3486,17 +3478,17 @@
 },
 "RootCACertificate": {
 "deprecated": true,
-"description": "Deprecated: Use a single region service instead. A gRPC client must install all root CA certificates to connect to a multi-regional Dataproc Metastore service and achieve failover.",
+"description": "A gRPC client must install all root CA certificates to connect to a multi-regional Dataproc Metastore service and achieve failover.",
 "id": "RootCACertificate",
 "properties": {
 "certificate": {
 "deprecated": true,
-"description": "Deprecated: Use a single region service instead. The root CA certificate in PEM format. The maximum length is 65536 bytes.",
+"description": "The root CA certificate in PEM format. The maximum length is 65536 bytes.",
 "type": "string"
 },
 "expirationTime": {
 "deprecated": true,
-"description": "Deprecated: Use a single region service instead. The certificate expiration time in timestamp format.",
+"description": "The certificate expiration time in timestamp format.",
 "format": "google-datetime",
 "type": "string"
 }
@@ -3652,8 +3644,7 @@
 },
 "multiRegionConfig": {
 "$ref": "MultiRegionConfig",
-"deprecated": true,
-"description": "Optional. Deprecated: Use a single region service instead. Specifies the multi-region configuration information for the Hive metastore service."
+"description": "Optional. Specifies the multi-region configuration information for the Hive metastore service."
 },
 "name": {
 "description": "Immutable. Identifier. The relative resource name of the metastore service, in the following format:projects/{project_number}/locations/{location_id}/services/{service_id}.",

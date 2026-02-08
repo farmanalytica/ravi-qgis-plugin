@@ -289,9 +289,6 @@ class CloudApiUtilsTest(unittest.TestCase):
                      _cloud_api_utils.convert_to_image_file_format('GeoTIFF'))
     self.assertEqual('TF_RECORD_IMAGE',
                      _cloud_api_utils.convert_to_image_file_format('TFRecord'))
-    self.assertEqual(
-        'NPY', _cloud_api_utils.convert_to_image_file_format('numpy')
-    )
 
   def test_convert_to_table_file_format(self):
     self.assertEqual('CSV',

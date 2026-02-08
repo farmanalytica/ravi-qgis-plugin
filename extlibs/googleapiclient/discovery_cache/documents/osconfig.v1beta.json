@@ -689,7 +689,7 @@
 }
 }
 },
-"revision": "20260108",
+"revision": "20250511",
 "rootUrl": "https://osconfig.googleapis.com/",
 "schemas": {
 "AptRepository": {
@@ -1073,138 +1073,6 @@
 "description": "Googet patching is performed by running `googet update`.",
 "id": "GooSettings",
 "properties": {},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
-}
-},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1alpha__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1alpha__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
-}
-},
-"type": "object"
-},
-"GoogleCloudOsconfigCommonV1main__OperationMetadata": {
-"description": "Represents the metadata of a generic long-running operation.",
-"id": "GoogleCloudOsconfigCommonV1main__OperationMetadata",
-"properties": {
-"apiVersion": {
-"description": "Output only. API version used to start the operation.",
-"readOnly": true,
-"type": "string"
-},
-"createTime": {
-"description": "Output only. The time the operation was created.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"endTime": {
-"description": "Output only. The time the operation finished running.",
-"format": "google-datetime",
-"readOnly": true,
-"type": "string"
-},
-"requestedCancellation": {
-"description": "Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`.",
-"readOnly": true,
-"type": "boolean"
-},
-"statusMessage": {
-"description": "Output only. Human-readable status of the operation, if any.",
-"readOnly": true,
-"type": "string"
-},
-"target": {
-"description": "Output only. Server-defined resource path for the target of the operation.",
-"readOnly": true,
-"type": "string"
-},
-"verb": {
-"description": "Output only. Name of the verb executed by the operation.",
-"readOnly": true,
-"type": "string"
-}
-},
 "type": "object"
 },
 "GoogleCloudOsconfigV1__OSPolicyAssignmentOperationMetadata": {
@@ -1697,10 +1565,6 @@
 ],
 "type": "string"
 },
-"skipUnpatchableVms": {
-"description": "Optional. Enables enhanced reporting for the patch job: 1. Allows the patch job to skip unpatchable instances, reporting them as `SKIPPED`. An instance can be unpatchable for two reasons: 1. The instance runs Container-Optimized OS (COS), which cannot be patched. 2. The instance is part of a managed instance group (MIG), and patching MIG instances is disabled in the patch job's configuration (PatchConfig.migInstancesAllowed is `false`). 2. Reports the patch job as `SUCCEEDED` if it completes without errors, even if some instances were `SKIPPED`. 3. Reports the patch job as `COMPLETED_WITH_INACTIVE_VMS` if it completes without errors, but some instances were `INACTIVE` and were not patched.",
-"type": "boolean"
-},
 "windowsUpdate": {
 "$ref": "WindowsUpdateSettings",
 "description": "Windows update settings. Use this override the default windows patch rules."
@@ -1910,7 +1774,6 @@
 "INSTANCE_LOOKUP",
 "PATCHING",
 "SUCCEEDED",
-"COMPLETED_WITH_INACTIVE_VMS",
 "COMPLETED_WITH_ERRORS",
 "CANCELED",
 "TIMED_OUT"
@@ -1921,7 +1784,6 @@
 "The patch job is looking up instances to run the patch on.",
 "Instances are being patched.",
 "Patch job completed successfully.",
-"The patch job completed without errors, but some instances were inactive and therefore not patched.",
 "Patch job completed but there were errors.",
 "The patch job was canceled.",
 "The patch job timed out."
@@ -1975,8 +1837,7 @@
 "TIMED_OUT",
 "RUNNING_PRE_PATCH_STEP",
 "RUNNING_POST_PATCH_STEP",
-"NO_AGENT_DETECTED",
-"SKIPPED"
+"NO_AGENT_DETECTED"
 ],
 "enumDescriptions": [
 "Unspecified.",
@@ -1994,8 +1855,7 @@
 "The instance exceeded the time out while applying the patch.",
 "The instance is running the pre-patch step.",
 "The instance is running the post-patch step.",
-"The service could not detect the presence of the agent. Check to ensure that the agent is installed, running, and able to communicate with the service.",
-"The instance was skipped during patching due to one of two reasons: 1. The instance runs Container-Optimized OS (COS), which cannot be patched. 2. The patch job's configuration prohibits patching on Managed Instance Groups (MIGs), and the instance is part of one."
+"The service could not detect the presence of the agent. Check to ensure that the agent is installed, running, and able to communicate with the service."
 ],
 "type": "string"
 }
@@ -2058,11 +1918,6 @@
 },
 "rebootingInstanceCount": {
 "description": "Number of instances rebooting.",
-"format": "int64",
-"type": "string"
-},
-"skippedInstanceCount": {
-"description": "Number of instances that were skipped during patching.",
 "format": "int64",
 "type": "string"
 },

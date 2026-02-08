@@ -1316,14 +1316,14 @@
 },
 "visibility": {
 "default": "DEFAULT",
-"description": "The visibility of the new file. Permissions are still inherited from parent folders. This parameter is only relevant when the source is not a Google Doc file and when `convert=false`.",
+"description": "The visibility of the new file. This parameter is only relevant when the source is not a native Google Doc and convert=false.",
 "enum": [
 "DEFAULT",
 "PRIVATE"
 ],
 "enumDescriptions": [
-"The visibility of the new file is determined by the user's default visibility or sharing policies.",
-"The user's default visibility or sharing policies are ignored, and the new file is only visible to the owner and any users with permissions inherited from the parent folder."
+"The visibility of the new file is determined by the user's default visibility/sharing policies.",
+"The new file will be visible to only the owner."
 ],
 "location": "query",
 "type": "string"
@@ -1667,14 +1667,14 @@
 },
 "visibility": {
 "default": "DEFAULT",
-"description": "The visibility of the new file. Permissions are still inherited from parent folders. This parameter is only relevant when `convert=false`.",
+"description": "The visibility of the new file. This parameter is only relevant when convert=false.",
 "enum": [
 "DEFAULT",
 "PRIVATE"
 ],
 "enumDescriptions": [
-"The visibility of the new file is determined by the user's default visibility or sharing policies.",
-"The user's default visibility or sharing policies are ignored, and the new file is only visible to the owner and any users with permissions inherited from the parent folder."
+"The visibility of the new file is determined by the user's default visibility/sharing policies.",
+"The new file will be visible to only the owner."
 ],
 "location": "query",
 "type": "string"
@@ -3616,7 +3616,7 @@
 ]
 },
 "list": {
-"description": "Lists a file's revisions. **Important:** The list of revisions returned by this method might be incomplete for files with a large revision history, including frequently edited Google Docs, Sheets, and Slides. Older revisions might be omitted from the response, meaning the first revision returned may not be the oldest existing revision. The revision history visible in the Workspace editor user interface might be more complete than the list returned by the API.",
+"description": "Lists a file's revisions.",
 "flatPath": "files/{fileId}/revisions",
 "httpMethod": "GET",
 "id": "drive.revisions.list",
@@ -3893,7 +3893,7 @@
 }
 }
 },
-"revision": "20260118",
+"revision": "20250829",
 "rootUrl": "https://www.googleapis.com/",
 "schemas": {
 "About": {

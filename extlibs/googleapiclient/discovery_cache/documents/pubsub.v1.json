@@ -21,36 +21,6 @@
 "endpoints": [
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.africa-south1.rep.googleapis.com/",
-"location": "africa-south1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-east1.rep.googleapis.com/",
-"location": "asia-east1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-east2.rep.googleapis.com/",
-"location": "asia-east2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-northeast1.rep.googleapis.com/",
-"location": "asia-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-northeast2.rep.googleapis.com/",
-"location": "asia-northeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-northeast3.rep.googleapis.com/",
-"location": "asia-northeast3"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://pubsub.asia-south1.rep.googleapis.com/",
 "location": "asia-south1"
 },
@@ -61,73 +31,13 @@
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-southeast1.rep.googleapis.com/",
-"location": "asia-southeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-southeast2.rep.googleapis.com/",
-"location": "asia-southeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.asia-southeast3.rep.googleapis.com/",
-"location": "asia-southeast3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.australia-southeast1.rep.googleapis.com/",
-"location": "australia-southeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.australia-southeast2.rep.googleapis.com/",
-"location": "australia-southeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-central2.rep.googleapis.com/",
-"location": "europe-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-north1.rep.googleapis.com/",
-"location": "europe-north1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-north2.rep.googleapis.com/",
-"location": "europe-north2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-southwest1.rep.googleapis.com/",
-"location": "europe-southwest1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west1.rep.googleapis.com/",
-"location": "europe-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west2.rep.googleapis.com/",
-"location": "europe-west2"
+"endpointUrl": "https://pubsub.me-central2.rep.googleapis.com/",
+"location": "me-central2"
 },
 {
 "description": "Regional Endpoint",
 "endpointUrl": "https://pubsub.europe-west3.rep.googleapis.com/",
 "location": "europe-west3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west4.rep.googleapis.com/",
-"location": "europe-west4"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west6.rep.googleapis.com/",
-"location": "europe-west6"
 },
 {
 "description": "Regional Endpoint",
@@ -138,56 +48,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://pubsub.europe-west9.rep.googleapis.com/",
 "location": "europe-west9"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west10.rep.googleapis.com/",
-"location": "europe-west10"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.europe-west12.rep.googleapis.com/",
-"location": "europe-west12"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.me-central1.rep.googleapis.com/",
-"location": "me-central1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.me-central2.rep.googleapis.com/",
-"location": "me-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.me-west1.rep.googleapis.com/",
-"location": "me-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.northamerica-northeast1.rep.googleapis.com/",
-"location": "northamerica-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.northamerica-northeast2.rep.googleapis.com/",
-"location": "northamerica-northeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.northamerica-south1.rep.googleapis.com/",
-"location": "northamerica-south1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.southamerica-east1.rep.googleapis.com/",
-"location": "southamerica-east1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.southamerica-west1.rep.googleapis.com/",
-"location": "southamerica-west1"
 },
 {
 "description": "Regional Endpoint",
@@ -216,11 +76,6 @@
 },
 {
 "description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.us-east7.rep.googleapis.com/",
-"location": "us-east7"
-},
-{
-"description": "Regional Endpoint",
 "endpointUrl": "https://pubsub.us-south1.rep.googleapis.com/",
 "location": "us-south1"
 },
@@ -243,11 +98,6 @@
 "description": "Regional Endpoint",
 "endpointUrl": "https://pubsub.us-west4.rep.googleapis.com/",
 "location": "us-west4"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://pubsub.us-west8.rep.googleapis.com/",
-"location": "us-west8"
 }
 ],
 "icons": {
@@ -1070,7 +920,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Required. Identifier. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "location": "path",
 "pattern": "^projects/[^/]+/subscriptions/[^/]+$",
 "required": true,
@@ -1304,7 +1154,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Required. Identifier. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "location": "path",
 "pattern": "^projects/[^/]+/subscriptions/[^/]+$",
 "required": true,
@@ -1453,7 +1303,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Required. Identifier. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "location": "path",
 "pattern": "^projects/[^/]+/topics/[^/]+$",
 "required": true,
@@ -1603,7 +1453,7 @@
 ],
 "parameters": {
 "name": {
-"description": "Required. Identifier. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "location": "path",
 "pattern": "^projects/[^/]+/topics/[^/]+$",
 "required": true,
@@ -1798,28 +1648,9 @@
 }
 }
 },
-"revision": "20260116",
+"revision": "20251025",
 "rootUrl": "https://pubsub.googleapis.com/",
 "schemas": {
-"AIInference": {
-"description": "Configuration for making inference requests against Vertex AI models.",
-"id": "AIInference",
-"properties": {
-"endpoint": {
-"description": "Required. An endpoint to a Vertex AI model of the form `projects/{project}/locations/{location}/endpoints/{endpoint}` or `projects/{project}/locations/{location}/publishers/{publisher}/models/{model}`. Vertex AI API requests will be sent to this endpoint.",
-"type": "string"
-},
-"serviceAccountEmail": {
-"description": "Optional. The service account to use to make prediction requests against endpoints. The resource creator or updater that specifies this field must have `iam.serviceAccounts.actAs` permission on the service account. If not specified, the Pub/Sub [service agent]({$universe.dns_names.final_documentation_domain}/iam/docs/service-agents), service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com, is used.",
-"type": "string"
-},
-"unstructuredInference": {
-"$ref": "UnstructuredInference",
-"description": "Optional. Requests and responses can be any arbitrary JSON object."
-}
-},
-"type": "object"
-},
 "AcknowledgeRequest": {
 "description": "Request for the Acknowledge method.",
 "id": "AcknowledgeRequest",
@@ -2038,8 +1869,7 @@
 "PERMISSION_DENIED",
 "NOT_FOUND",
 "SCHEMA_MISMATCH",
-"IN_TRANSIT_LOCATION_RESTRICTION",
-"VERTEX_AI_LOCATION_RESTRICTION"
+"IN_TRANSIT_LOCATION_RESTRICTION"
 ],
 "enumDescriptions": [
 "Default value. This value is unused.",
@@ -2047,8 +1877,7 @@
 "Cannot write to the BigQuery table because of permission denied errors. This can happen if - Pub/Sub SA has not been granted the [appropriate BigQuery IAM permissions](https://cloud.google.com/pubsub/docs/create-subscription#assign_bigquery_service_account) - bigquery.googleapis.com API is not enabled for the project ([instructions](https://cloud.google.com/service-usage/docs/enable-disable))",
 "Cannot write to the BigQuery table because it does not exist.",
 "Cannot write to the BigQuery table due to a schema mismatch.",
-"Cannot write to the destination because enforce_in_transit is set to true and the destination locations are not in the allowed regions.",
-"Cannot write to the BigQuery table because the table is not in the same location as where Vertex AI models used in `message_transform`s are deployed."
+"Cannot write to the destination because enforce_in_transit is set to true and the destination locations are not in the allowed regions."
 ],
 "readOnly": true,
 "type": "string"
@@ -2198,8 +2027,7 @@
 "PERMISSION_DENIED",
 "NOT_FOUND",
 "IN_TRANSIT_LOCATION_RESTRICTION",
-"SCHEMA_MISMATCH",
-"VERTEX_AI_LOCATION_RESTRICTION"
+"SCHEMA_MISMATCH"
 ],
 "enumDescriptions": [
 "Default value. This value is unused.",
@@ -2207,8 +2035,7 @@
 "Cannot write to the Cloud Storage bucket because of permission denied errors.",
 "Cannot write to the Cloud Storage bucket because it does not exist.",
 "Cannot write to the destination because enforce_in_transit is set to true and the destination locations are not in the allowed regions.",
-"Cannot write to the Cloud Storage bucket due to an incompatibility between the topic schema and subscription settings.",
-"Cannot write to the Cloud Storage bucket because the bucket is not in the same location as where Vertex AI models used in `message_transform`s are deployed."
+"Cannot write to the Cloud Storage bucket due to an incompatibility between the topic schema and subscription settings."
 ],
 "readOnly": true,
 "type": "string"
@@ -2563,10 +2390,6 @@
 "description": "All supported message transforms types.",
 "id": "MessageTransform",
 "properties": {
-"aiInference": {
-"$ref": "AIInference",
-"description": "Optional. AI Inference. Specifies the Vertex AI endpoint that inference requests built from the Pub/Sub message data and provided parameters will be sent to."
-},
 "disabled": {
 "description": "Optional. If true, the transform is disabled and will not be applied to messages. Defaults to `false`.",
 "type": "boolean"
@@ -3015,7 +2838,7 @@
 },
 "analyticsHubSubscriptionInfo": {
 "$ref": "AnalyticsHubSubscriptionInfo",
-"description": "Output only. Information about the associated Analytics Hub subscription. Only set if the subscription is created by Analytics Hub.",
+"description": "Output only. Information about the associated Analytics Hub subscription. Only set if the subscritpion is created by Analytics Hub.",
 "readOnly": true
 },
 "bigqueryConfig": {
@@ -3070,7 +2893,7 @@
 "type": "array"
 },
 "name": {
-"description": "Required. Identifier. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the subscription. It must have the format `\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "type": "string"
 },
 "pushConfig": {
@@ -3201,7 +3024,7 @@
 "type": "array"
 },
 "name": {
-"description": "Required. Identifier. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
+"description": "Required. The name of the topic. It must have the format `\"projects/{project}/topics/{topic}\"`. `{topic}` must start with a letter, and contain only letters (`[A-Za-z]`), numbers (`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`), plus (`+`) or percent signs (`%`). It must be between 3 and 255 characters in length, and it must not start with `\"goog\"`.",
 "type": "string"
 },
 "satisfiesPzs": {
@@ -3232,21 +3055,6 @@
 "type": "string"
 },
 "description": "Optional. Input only. Immutable. Tag keys/values directly bound to this resource. For example: \"123/environment\": \"production\", \"123/costCenter\": \"marketing\"",
-"type": "object"
-}
-},
-"type": "object"
-},
-"UnstructuredInference": {
-"description": "Configuration for making inferences using arbitrary JSON payloads.",
-"id": "UnstructuredInference",
-"properties": {
-"parameters": {
-"additionalProperties": {
-"description": "Properties of the object.",
-"type": "any"
-},
-"description": "Optional. A parameters object to be included in each inference request. The parameters object is combined with the data field of the Pub/Sub message to form the inference request.",
 "type": "object"
 }
 },

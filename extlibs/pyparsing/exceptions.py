@@ -5,15 +5,12 @@ import copy
 import re
 import sys
 import typing
-import warnings
 from functools import cached_property
 
-from .warnings import PyparsingDeprecationWarning
 from .unicode import pyparsing_unicode as ppu
 from .util import (
     _collapse_string_to_ranges,
     col,
-    deprecate_argument,
     line,
     lineno,
     replaced_by_pep8,
@@ -27,7 +24,7 @@ class _ExceptionWordUnicodeSet(
 
 
 _extract_alphanums = _collapse_string_to_ranges(_ExceptionWordUnicodeSet.alphanums)
-_exception_word_extractor = re.compile(fr"([{_extract_alphanums}]{{1,16}})|.")
+_exception_word_extractor = re.compile("([" + _extract_alphanums + "]{1,16})|.")
 
 
 class ParseBaseException(Exception):
@@ -176,7 +173,7 @@ class ParseBaseException(Exception):
         # pull out next word at error location
         found_match = _exception_word_extractor.match(self.pstr, self.loc)
         if found_match is not None:
-            found_text = found_match[0]
+            found_text = found_match.group(0)
         else:
             found_text = self.pstr[self.loc : self.loc + 1]
 
@@ -185,20 +182,10 @@ class ParseBaseException(Exception):
     # pre-PEP8 compatibility
     @property
     def parserElement(self):
-        warnings.warn(
-            "parserElement is deprecated, use parser_element",
-            PyparsingDeprecationWarning,
-            stacklevel=2,
-        )
         return self.parser_element
 
     @parserElement.setter
     def parserElement(self, elem):
-        warnings.warn(
-            "parserElement is deprecated, use parser_element",
-            PyparsingDeprecationWarning,
-            stacklevel=2,
-        )
         self.parser_element = elem
 
     def copy(self):
@@ -219,26 +206,18 @@ class ParseBaseException(Exception):
         .. versionchanged:: 3.2.0
            Now uses :meth:`formatted_message` to format message.
         """
-        try:
-            return self.formatted_message()
-        except Exception as ex:
-            return (
-                f"{type(self).__name__}: {self.msg}"
-                f" ({type(ex).__name__}: {ex} while formatting message)"
-            )
+        return self.formatted_message()
 
     def __repr__(self):
         return str(self)
 
     def mark_input_line(
-        self, marker_string: typing.Optional[str] = None, **kwargs
+        self, marker_string: typing.Optional[str] = None, *, markerString: str = ">!<"
     ) -> str:
         """
         Extracts the exception line from the input string, and marks
         the location of the exception with a special symbol.
         """
-        markerString: str = deprecate_argument(kwargs, "markerString", ">!<")
-
         markerString = marker_string if marker_string is not None else markerString
         line_str = self.line
         line_column = self.column - 1

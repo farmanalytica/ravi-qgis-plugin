@@ -944,7 +944,7 @@
 ]
 },
 "list": {
-"description": "Lists information about the supported locations for this service. This method can be called in two ways: List all public locations: Use the path GET /v1/locations. List project-visible locations: Use the path GET /v1/projects/{project_id}/locations. This may include public locations as well as private or other locations specifically visible to the project.",
+"description": "Lists information about the supported locations for this service.",
 "flatPath": "v1beta/apps/{appsId}/locations",
 "httpMethod": "GET",
 "id": "appengine.apps.locations.list",
@@ -959,7 +959,7 @@
 "type": "string"
 },
 "extraLocationTypes": {
-"description": "Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -1060,7 +1060,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections. For example, when parent is set to \"projects/example/locations/-\".This field is not supported by default and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections e.g. when parent is set to \"projects/example/locations/-\".This field is not by default supported and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -1729,7 +1729,7 @@
 ]
 },
 "list": {
-"description": "Lists information about the supported locations for this service. This method can be called in two ways: List all public locations: Use the path GET /v1/locations. List project-visible locations: Use the path GET /v1/projects/{project_id}/locations. This may include public locations as well as private or other locations specifically visible to the project.",
+"description": "Lists information about the supported locations for this service.",
 "flatPath": "v1beta/projects/{projectsId}/locations",
 "httpMethod": "GET",
 "id": "appengine.projects.locations.list",
@@ -1738,7 +1738,7 @@
 ],
 "parameters": {
 "extraLocationTypes": {
-"description": "Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.",
+"description": "Optional. Unless explicitly documented otherwise, don't use this unsupported field which is primarily intended for internal usage.",
 "location": "query",
 "repeated": true,
 "type": "string"
@@ -2302,57 +2302,6 @@
 "https://www.googleapis.com/auth/cloud-platform.read-only"
 ]
 },
-"list": {
-"description": "Lists the domain mappings on an application.",
-"flatPath": "v1beta/projects/{projectsId}/locations/{locationsId}/applications/{applicationsId}/domainMappings",
-"httpMethod": "GET",
-"id": "appengine.projects.locations.applications.domainMappings.list",
-"parameterOrder": [
-"projectsId",
-"locationsId",
-"applicationsId"
-],
-"parameters": {
-"applicationsId": {
-"description": "Part of `parent`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"locationsId": {
-"description": "Part of `parent`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"pageSize": {
-"description": "Maximum results to return per page.",
-"format": "int32",
-"location": "query",
-"type": "integer"
-},
-"pageToken": {
-"description": "Continuation token for fetching the next page of results.",
-"location": "query",
-"type": "string"
-},
-"projectsId": {
-"description": "Part of `parent`. Required. Name of the parent Application resource. Example: apps/myapp.",
-"location": "path",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1beta/projects/{projectsId}/locations/{locationsId}/applications/{applicationsId}/domainMappings",
-"response": {
-"$ref": "ListDomainMappingsResponse"
-},
-"scopes": [
-"https://www.googleapis.com/auth/appengine.admin",
-"https://www.googleapis.com/auth/cloud-platform",
-"https://www.googleapis.com/auth/cloud-platform.read-only"
-]
-},
 "patch": {
 "description": "Updates the specified domain mapping. To map an SSL certificate to a domain mapping, update certificate_id to point to an AuthorizedCertificate resource. A user must be authorized to administer the associated domain in order to update a DomainMapping resource.",
 "flatPath": "v1beta/projects/{projectsId}/locations/{locationsId}/applications/{applicationsId}/domainMappings/{domainMappingsId}",
@@ -2632,74 +2581,6 @@
 "https://www.googleapis.com/auth/cloud-platform"
 ]
 }
-},
-"resources": {
-"instances": {
-"methods": {
-"debug": {
-"description": "Enables debugging on a VM instance. This allows you to use the SSH command to connect to the virtual machine where the instance lives. While in \"debug mode\", the instance continues to serve live traffic. You should delete the instance when you are done debugging and then allow the system to take over and determine if another instance should be started.Only applicable for instances in App Engine flexible environment.",
-"flatPath": "v1beta/projects/{projectsId}/locations/{locationsId}/applications/{applicationsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}:debug",
-"httpMethod": "POST",
-"id": "appengine.projects.locations.applications.services.versions.instances.debug",
-"parameterOrder": [
-"projectsId",
-"locationsId",
-"applicationsId",
-"servicesId",
-"versionsId",
-"instancesId"
-],
-"parameters": {
-"applicationsId": {
-"description": "Part of `name`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"instancesId": {
-"description": "Part of `name`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"locationsId": {
-"description": "Part of `name`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"projectsId": {
-"description": "Part of `name`. Required. Name of the resource requested. Example: apps/myapp/services/default/versions/v1/instances/instance-1.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"servicesId": {
-"description": "Part of `name`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-},
-"versionsId": {
-"description": "Part of `name`. See documentation of `projectsId`.",
-"location": "path",
-"required": true,
-"type": "string"
-}
-},
-"path": "v1beta/projects/{projectsId}/locations/{locationsId}/applications/{applicationsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}:debug",
-"request": {
-"$ref": "DebugInstanceRequest"
-},
-"response": {
-"$ref": "Operation"
-},
-"scopes": [
-"https://www.googleapis.com/auth/cloud-platform"
-]
-}
-}
-}
 }
 }
 }
@@ -2787,7 +2668,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections. For example, when parent is set to \"projects/example/locations/-\".This field is not supported by default and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to true, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field.This can only be true when reading across collections e.g. when parent is set to \"projects/example/locations/-\".This field is not by default supported and will result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -2809,7 +2690,7 @@
 }
 }
 },
-"revision": "20260126",
+"revision": "20251005",
 "rootUrl": "https://appengine.googleapis.com/",
 "schemas": {
 "ApiConfigHandler": {
@@ -3024,11 +2905,10 @@
 "type": "integer"
 },
 "domainNames": {
-"description": "Output only. Topmost applicable domains of this certificate. This certificate applies to these domains and their subdomains. Example: example.com.@OutputOnly",
+"description": "Topmost applicable domains of this certificate. This certificate applies to these domains and their subdomains. Example: example.com.@OutputOnly",
 "items": {
 "type": "string"
 },
-"readOnly": true,
 "type": "array"
 },
 "expireTime": {
@@ -3037,8 +2917,7 @@
 "type": "string"
 },
 "id": {
-"description": "Output only. Relative name of the certificate. This is a unique value autogenerated on AuthorizedCertificate resource creation. Example: 12345.@OutputOnly",
-"readOnly": true,
+"description": "Relative name of the certificate. This is a unique value autogenerated on AuthorizedCertificate resource creation. Example: 12345.@OutputOnly",
 "type": "string"
 },
 "managedCertificate": {
@@ -3046,16 +2925,14 @@
 "description": "Only applicable if this certificate is managed by App Engine. Managed certificates are tied to the lifecycle of a DomainMapping and cannot be updated or deleted via the AuthorizedCertificates API. If this certificate is manually administered by the user, this field will be empty.@OutputOnly"
 },
 "name": {
-"description": "Output only. Full path to the AuthorizedCertificate resource in the API. Example: apps/myapp/authorizedCertificates/12345.@OutputOnly",
-"readOnly": true,
+"description": "Full path to the AuthorizedCertificate resource in the API. Example: apps/myapp/authorizedCertificates/12345.@OutputOnly",
 "type": "string"
 },
 "visibleDomainMappings": {
-"description": "Output only. The full paths to user visible Domain Mapping resources that have this certificate mapped. Example: apps/myapp/domainMappings/example.com.This may not represent the full list of mapped domain mappings if the user does not have VIEWER permissions on all of the applications that have this certificate mapped. See domain_mappings_count for a complete count.Only returned by GET or LIST requests when specifically requested by the view=FULL_CERTIFICATE option.@OutputOnly",
+"description": "The full paths to user visible Domain Mapping resources that have this certificate mapped. Example: apps/myapp/domainMappings/example.com.This may not represent the full list of mapped domain mappings if the user does not have VIEWER permissions on all of the applications that have this certificate mapped. See domain_mappings_count for a complete count.Only returned by GET or LIST requests when specifically requested by the view=FULL_CERTIFICATE option.@OutputOnly",
 "items": {
 "type": "string"
 },
-"readOnly": true,
 "type": "array"
 }
 },
@@ -3456,16 +3333,14 @@
 "type": "string"
 },
 "name": {
-"description": "Output only. Full path to the DomainMapping resource in the API. Example: apps/myapp/domainMapping/example.com.@OutputOnly",
-"readOnly": true,
+"description": "Full path to the DomainMapping resource in the API. Example: apps/myapp/domainMapping/example.com.@OutputOnly",
 "type": "string"
 },
 "resourceRecords": {
-"description": "Output only. The resource records required to configure this domain mapping. These records must be added to the domain's DNS configuration in order to serve the application via this domain mapping.@OutputOnly",
+"description": "The resource records required to configure this domain mapping. These records must be added to the domain's DNS configuration in order to serve the application via this domain mapping.@OutputOnly",
 "items": {
 "$ref": "ResourceRecord"
 },
-"readOnly": true,
 "type": "array"
 },
 "sslSettings": {
@@ -4005,7 +3880,7 @@
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },
@@ -4535,11 +4410,6 @@
 },
 "type": "array"
 },
-"isGceProjectDeprovisioning": {
-"deprecated": true,
-"description": "DEPRECATED: Indicates whether the GCE project is in the DEPROVISIONING state. This field is a temporary workaround (see b/475310865) to allow GCE extensions to bypass certain checks during deprovisioning. It will be replaced by a permanent solution in the future.",
-"type": "boolean"
-},
 "p4ServiceAccount": {
 "description": "The service account authorized to operate on the consumer project. Note: CCFE only propagates P4SA with default tag to CLH.",
 "type": "string"
@@ -4949,8 +4819,7 @@ true
 "type": "string"
 },
 "pendingManagedCertificateId": {
-"description": "Output only. ID of the managed AuthorizedCertificate resource currently being provisioned, if applicable. Until the new managed certificate has been successfully provisioned, the previous SSL state will be preserved. Once the provisioning process completes, the certificate_id field will reflect the new managed certificate and this field will be left empty. To remove SSL support while there is still a pending managed certificate, clear the certificate_id field with an UpdateDomainMappingRequest.@OutputOnly",
-"readOnly": true,
+"description": "ID of the managed AuthorizedCertificate resource currently being provisioned, if applicable. Until the new managed certificate has been successfully provisioned, the previous SSL state will be preserved. Once the provisioning process completes, the certificate_id field will reflect the new managed certificate and this field will be left empty. To remove SSL support while there is still a pending managed certificate, clear the certificate_id field with an UpdateDomainMappingRequest.@OutputOnly",
 "type": "string"
 },
 "sslManagementType": {
@@ -5228,49 +5097,6 @@ true
 "description": "Allows App Engine second generation runtimes to access the legacy bundled services.",
 "type": "boolean"
 },
-"appEngineBundledServices": {
-"description": "List of specific App Engine Bundled Services that are enabled for this Version.",
-"items": {
-"enum": [
-"BUNDLED_SERVICE_TYPE_UNSPECIFIED",
-"BUNDLED_SERVICE_TYPE_APP_IDENTITY_SERVICE",
-"BUNDLED_SERVICE_TYPE_BLOBSTORE",
-"BUNDLED_SERVICE_TYPE_CAPABILITY_SERVICE",
-"BUNDLED_SERVICE_TYPE_DATASTORE_V3",
-"BUNDLED_SERVICE_TYPE_DEFERRED",
-"BUNDLED_SERVICE_TYPE_IMAGES",
-"BUNDLED_SERVICE_TYPE_MAIL",
-"BUNDLED_SERVICE_TYPE_MEMCACHE",
-"BUNDLED_SERVICE_TYPE_MODULES",
-"BUNDLED_SERVICE_TYPE_NAMESPACES",
-"BUNDLED_SERVICE_TYPE_NDB",
-"BUNDLED_SERVICE_TYPE_SEARCH",
-"BUNDLED_SERVICE_TYPE_TASKQUEUES",
-"BUNDLED_SERVICE_TYPE_URLFETCH",
-"BUNDLED_SERVICE_TYPE_USERS"
-],
-"enumDescriptions": [
-"Default, invalid value",
-"App Identity Service",
-"Blobstore",
-"Capability Service",
-"Datastore V3",
-"Deferred",
-"Images",
-"Mail",
-"Memcache",
-"Modules",
-"Namespaces",
-"NDB",
-"Search",
-"Task Queues",
-"URL Fetch",
-"Users"
-],
-"type": "string"
-},
-"type": "array"
-},
 "automaticScaling": {
 "$ref": "AutomaticScaling",
 "description": "Automatic scaling is based on request rate, response latencies, and other application metrics. Instances are dynamically created and destroyed as needed in order to handle traffic."
@@ -5487,18 +5313,13 @@ true
 "description": "Whether to deploy this version in a container on a virtual machine.",
 "type": "boolean"
 },
-"vpcAccess": {
-"$ref": "VpcAccess",
-"description": "Enables VPC access connectivity for standard apps."
-},
 "vpcAccessConnector": {
 "$ref": "VpcAccessConnector",
 "description": "Enables VPC connectivity for standard apps."
 },
 "vpcEgress": {
 "$ref": "VpcEgress",
-"deprecated": true,
-"description": "Deprecated: Use vpc_access instead. Enables VPC egress connectivity for standard apps."
+"description": "Enables VPC egress connectivity for standard apps."
 },
 "zones": {
 "description": "The Google Compute Engine zones that are supported by this version in the App Engine flexible environment. Deprecated.",
@@ -5530,34 +5351,6 @@ true
 },
 "type": "object"
 },
-"VpcAccess": {
-"description": "VPC Access settings",
-"id": "VpcAccess",
-"properties": {
-"networkInterfaces": {
-"description": "The Direct VPC configuration. Currently only single network interface is supported.",
-"items": {
-"$ref": "VpcNetworkInterface"
-},
-"type": "array"
-},
-"vpcEgress": {
-"description": "The traffic egress setting for the VPC network interface, controlling what traffic is diverted through it.",
-"enum": [
-"VPC_EGRESS_UNSPECIFIED",
-"ALL_TRAFFIC",
-"PRIVATE_IP_RANGES"
-],
-"enumDescriptions": [
-"No value set; apply default behavior",
-"Force all traffic to egress through the NetworkInterface (and configured VPC Network)",
-"Force all Private IP Space traffic to egress through NetworkInterface (and configured VPC Network)"
-],
-"type": "string"
-}
-},
-"type": "object"
-},
 "VpcAccessConnector": {
 "description": "VPC access connector specification.",
 "id": "VpcAccessConnector",
@@ -5584,8 +5377,7 @@ true
 "type": "object"
 },
 "VpcEgress": {
-"deprecated": true,
-"description": "Deprecated: Use VpcAccess instead. Vpc Egress configuration.",
+"description": "Vpc Egress configuration.",
 "id": "VpcEgress",
 "properties": {
 "egressSetting": {
@@ -5612,28 +5404,6 @@ true
 "subnetworkKey": {
 "$ref": "SubnetworkKey",
 "description": "The subnetwork key."
-}
-},
-"type": "object"
-},
-"VpcNetworkInterface": {
-"description": "Network interface key message.",
-"id": "VpcNetworkInterface",
-"properties": {
-"network": {
-"description": "Optional. The VPC network that the App Engine resource will be able to send traffic to. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If network is not specified, it will be looked up from the subnetwork. Could be either a short name or a full path. e.g. {VPC_NETWORK} or projects/{HOST_PROJECT_ID}/global/networks/{VPC_NETWORK}",
-"type": "string"
-},
-"subnet": {
-"description": "Optional. The VPC subnetwork that the App Engine resource will get IPs from. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If subnetwork is not specified, the subnetwork with the same name with the network will be used. Could be either a short name or a full path. e.g. {SUBNET_NAME} or projects/{HOST_PROJECT_ID}/regions/{REGION}/subnetworks/{SUBNET_NAME}",
-"type": "string"
-},
-"tags": {
-"description": "Optional. The network tags that will be applied to this App Engine resource.",
-"items": {
-"type": "string"
-},
-"type": "array"
 }
 },
 "type": "object"

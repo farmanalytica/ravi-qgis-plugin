@@ -230,6 +230,16 @@
 },
 {
 "description": "Regional Endpoint",
+"endpointUrl": "https://datastore.us-east7.rep.googleapis.com/",
+"location": "us-east7"
+},
+{
+"description": "Regional Endpoint",
+"endpointUrl": "https://datastore.us-west8.rep.googleapis.com/",
+"location": "us-west8"
+},
+{
+"description": "Regional Endpoint",
 "endpointUrl": "https://batch-datastore.africa-south1.rep.googleapis.com/",
 "location": "africa-south1"
 },
@@ -440,6 +450,16 @@
 },
 {
 "description": "Regional Endpoint",
+"endpointUrl": "https://batch-datastore.us-east7.rep.googleapis.com/",
+"location": "us-east7"
+},
+{
+"description": "Regional Endpoint",
+"endpointUrl": "https://batch-datastore.us-west8.rep.googleapis.com/",
+"location": "us-west8"
+},
+{
+"description": "Regional Endpoint",
 "endpointUrl": "https://datastore.eu.rep.googleapis.com/",
 "location": "eu"
 },
@@ -610,7 +630,7 @@
 }
 }
 },
-"revision": "20260105",
+"revision": "20251014",
 "rootUrl": "https://datastore.googleapis.com/",
 "schemas": {
 "GoogleDatastoreAdminV1CommonMetadata": {

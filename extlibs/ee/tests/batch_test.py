@@ -2,7 +2,7 @@
 """Test for the ee.batch module."""
 
 import json
-from typing import Any
+from typing import Any, Optional
 import unittest
 from unittest import mock
 
@@ -201,8 +201,8 @@ class ExportTest(unittest.TestCase):
 class BatchTestCase(apitestcase.ApiTestCase):
   """A test case for batch functionality."""
 
-  start_call_params: Any | None
-  update_call_params: Any | None
+  start_call_params: Optional[Any]
+  update_call_params: Optional[Any]
 
   def setUp(self):
     super().setUp()
@@ -274,7 +274,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   }
               },
               'description': 'myExportImageTask',
@@ -426,7 +425,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   },
                   'pyramidingPolicyOverrides': {'B1': 'MIN'},
               },
@@ -453,7 +451,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   },
                   'tileSize': {'value': 4},
               },
@@ -461,43 +458,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
               'maxWorkers': {'value': 100},
           },
           task_ordered.config,
-      )
-
-      task_with_overwrite = ee.batch.Export.image.toAsset(
-          image=config['image'],
-          assetId=config['assetId'],
-          overwrite=True,
-      )
-      self.assertTrue(
-          task_with_overwrite.config['assetExportOptions'][
-              'earthEngineDestination'
-          ]['overwrite']
-      )
-
-      task_with_priority = ee.batch.Export.image.toAsset(
-          image=config['image'],
-          assetId=config['assetId'],
-          priority=999,
-      )
-      self.assertIsNone(task_with_priority.id)
-      self.assertIsNone(task_with_priority.name)
-      self.assertEqual('EXPORT_IMAGE', task_with_priority.task_type)
-      self.assertEqual('UNSUBMITTED', task_with_priority.state)
-      self.assertEqual(
-          {
-              'expression': expected_expression,
-              'description': 'myExportImageTask',
-              'assetExportOptions': {
-                  'earthEngineDestination': {
-                      'name': (
-                          'projects/earthengine-legacy/assets/users/foo/bar'
-                      ),
-                      'overwrite': False,
-                  }
-              },
-              'priority': {'value': 999},
-          },
-          task_with_priority.config,
       )
 
   def test_export_image_to_asset_cloud_api_with_tile_size(self):
@@ -529,7 +489,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   },
                   'tileSize': {'value': 4},
               },
@@ -1174,25 +1133,11 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   }
               },
           },
           task.config,
       )
-
-      task_with_overwrite = ee.batch.Export.table.toAsset(
-          collection=ee.FeatureCollection('foo'),
-          description='foo',
-          assetId='users/foo/bar',
-          overwrite=True,
-      )
-      self.assertTrue(
-          task_with_overwrite.config['assetExportOptions'][
-              'earthEngineDestination'
-          ]['overwrite']
-      )
-
       task_with_priority = ee.batch.Export.table.toAsset(
           collection=ee.FeatureCollection('foo'),
           description='foo',
@@ -1208,7 +1153,6 @@ class BatchTestCase(apitestcase.ApiTestCase):
                       'name': (
                           'projects/earthengine-legacy/assets/users/foo/bar'
                       ),
-                      'overwrite': False,
                   }
               },
               'priority': {'value': 999},

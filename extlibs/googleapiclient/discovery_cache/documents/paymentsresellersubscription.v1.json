@@ -272,7 +272,7 @@
 "type": "string"
 },
 "subscriptionId": {
-"description": "Required. Identifies the subscription resource on the Partner side. The value is restricted to 63 ASCII characters at the maximum. If a subscription with the same ID already exists, the creation fails with an `ALREADY_EXISTS` error.",
+"description": "Required. Identifies the subscription resource on the Partner side. The value is restricted to 63 ASCII characters at the maximum. If a subscription was previously created with the same subscription_id, we will directly return that one.",
 "location": "query",
 "type": "string"
 }
@@ -409,7 +409,7 @@
 "type": "string"
 },
 "subscriptionId": {
-"description": "Required. Identifies the subscription resource on the Partner side. The value is restricted to 63 ASCII characters at the maximum. If a subscription with the same ID already exists, the creation fails with an `ALREADY_EXISTS` error.",
+"description": "Required. Identifies the subscription resource on the Partner side. The value is restricted to 63 ASCII characters at the maximum. If a subscription was previously created with the same subscription_id, we will directly return that one.",
 "location": "query",
 "type": "string"
 }
@@ -586,7 +586,7 @@
 }
 }
 },
-"revision": "20260119",
+"revision": "20251026",
 "rootUrl": "https://paymentsresellersubscription.googleapis.com/",
 "schemas": {
 "Amount": {
@@ -1330,20 +1330,6 @@
 "cycleOptions": {
 "$ref": "CycleOptions",
 "description": "Optional. The cycle options for the subscription."
-},
-"resumeMode": {
-"description": "Required. The mode to resume the subscription.",
-"enum": [
-"RESUME_MODE_UNSPECIFIED",
-"RESUME_MODE_CYCLE_OPTIONS",
-"RESUME_MODE_RESTORE_EXISTING_BILLING_SCHEDULE"
-],
-"enumDescriptions": [
-"Reserved for invalid or unexpected value. Do not use.",
-"Resume the subscription using the input from `cycle_options`.",
-"Resume the subscription with the existing billing schedule. The subscription's next renewal time must still be in the future for this mode to be applicable."
-],
-"type": "string"
 }
 },
 "type": "object"
@@ -1773,7 +1759,7 @@
 "Billing cycle spec is not specified.",
 "The billing cycle of the new subscription starts immediately but aligns with the previous subscription it upgrades or downgrades from. First cycle of the new subscription will be prorated.",
 "The billing cycle of the new subscription starts immediately.",
-"The new subscription will have the same `renewalTime` as the previous subscription, while the previous subscription is scheduled for cancellation at that same time."
+"The billing cycle starts at the end of the previous subscription's billing cycle and aligns with the previous subscription's billing cycle."
 ],
 "type": "string"
 },

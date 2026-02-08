@@ -7,6 +7,7 @@ Example usage:
      .lt('time', value)
 """
 
+# Using lowercase function naming to match the JavaScript names.
 # pylint: disable=g-bad-name
 
 from __future__ import annotations
@@ -69,8 +70,9 @@ class Filter(computedobject.ComputedObject):
       super().__init__(filter_.func, filter_.args, filter_.varName)
       self._filter = (filter_,)
     elif filter_ is None:
-      # A call with no arguments left for backward-compatibility.
-      # Encoding such a filter is expected to fail.
+      # A silly call with no arguments left for backward-compatibility.
+      # Encoding such a filter is expected to fail, but it can be composed
+      # by calling the various methods that end up in _append().
       super().__init__(None, None)
       self._filter = ()
     else:
@@ -99,6 +101,31 @@ class Filter(computedobject.ComputedObject):
       This does not count nested predicates.
     """
     return len(self._filter)
+
+  def _append(self, new_filter: _arg_types.Filter) -> Filter:
+    """Append a predicate to this filter.
+
+    These are implicitly ANDed.
+
+    Args:
+      new_filter: The filter to append to this one. Possible types are:
+          1) another fully constructed Filter,
+          2) a JSON representation of a filter,
+          3) an array of 1 or 2.
+
+    Returns:
+      A new filter that is the combination of both.
+    """
+    if new_filter is None:
+      raise ValueError('new_filter should never be None')
+    prev = list(self._filter)
+    if isinstance(new_filter, Filter):
+      prev.extend(new_filter._filter)  # pylint: disable=protected-access
+    elif isinstance(new_filter, list):
+      prev.extend(new_filter)
+    else:
+      prev.append(new_filter)
+    return Filter(prev)
 
   @staticmethod
   def metadata_(name: str, operator: str, value: _arg_types.Any) -> Filter:

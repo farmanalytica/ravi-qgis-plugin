@@ -15,228 +15,6 @@
 "description": "AlloyDB for PostgreSQL is an open source-compatible database service that provides a powerful option for migrating, modernizing, or building commercial-grade applications. It offers full compatibility with standard PostgreSQL, and is more than 4x faster for transactional workloads and up to 100x faster for analytical queries than standard PostgreSQL in our performance tests. AlloyDB for PostgreSQL offers a 99.99 percent availability SLA inclusive of maintenance. AlloyDB is optimized for the most demanding use cases, allowing you to build new applications that require high transaction throughput, large database sizes, or multiple read resources; scale existing PostgreSQL workloads with no application changes; and modernize legacy proprietary databases. ",
 "discoveryVersion": "v1",
 "documentationLink": "https://cloud.google.com/alloydb/",
-"endpoints": [
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-central2.rep.googleapis.com/",
-"location": "us-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-east7.rep.googleapis.com/",
-"location": "us-east7"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.northamerica-northeast1.rep.googleapis.com/",
-"location": "northamerica-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.northamerica-northeast2.rep.googleapis.com/",
-"location": "northamerica-northeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.northamerica-south1.rep.googleapis.com/",
-"location": "northamerica-south1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.southamerica-east1.rep.googleapis.com/",
-"location": "southamerica-east1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.southamerica-west1.rep.googleapis.com/",
-"location": "southamerica-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-central1.rep.googleapis.com/",
-"location": "us-central1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-east1.rep.googleapis.com/",
-"location": "us-east1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-east4.rep.googleapis.com/",
-"location": "us-east4"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-east5.rep.googleapis.com/",
-"location": "us-east5"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-south1.rep.googleapis.com/",
-"location": "us-south1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-west1.rep.googleapis.com/",
-"location": "us-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-west2.rep.googleapis.com/",
-"location": "us-west2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-west3.rep.googleapis.com/",
-"location": "us-west3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.us-west4.rep.googleapis.com/",
-"location": "us-west4"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-central2.rep.googleapis.com/",
-"location": "europe-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-southwest1.rep.googleapis.com/",
-"location": "europe-southwest1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-north1.rep.googleapis.com/",
-"location": "europe-north1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-north2.rep.googleapis.com/",
-"location": "europe-north2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west1.rep.googleapis.com/",
-"location": "europe-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west2.rep.googleapis.com/",
-"location": "europe-west2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west3.rep.googleapis.com/",
-"location": "europe-west3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west4.rep.googleapis.com/",
-"location": "europe-west4"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west6.rep.googleapis.com/",
-"location": "europe-west6"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west8.rep.googleapis.com/",
-"location": "europe-west8"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west9.rep.googleapis.com/",
-"location": "europe-west9"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west10.rep.googleapis.com/",
-"location": "europe-west10"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.europe-west12.rep.googleapis.com/",
-"location": "europe-west12"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-east1.rep.googleapis.com/",
-"location": "asia-east1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-east2.rep.googleapis.com/",
-"location": "asia-east2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-northeast1.rep.googleapis.com/",
-"location": "asia-northeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-northeast2.rep.googleapis.com/",
-"location": "asia-northeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-northeast3.rep.googleapis.com/",
-"location": "asia-northeast3"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-south1.rep.googleapis.com/",
-"location": "asia-south1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-south2.rep.googleapis.com/",
-"location": "asia-south2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-southeast1.rep.googleapis.com/",
-"location": "asia-southeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.asia-southeast2.rep.googleapis.com/",
-"location": "asia-southeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.australia-southeast1.rep.googleapis.com/",
-"location": "australia-southeast1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.australia-southeast2.rep.googleapis.com/",
-"location": "australia-southeast2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.me-central1.rep.googleapis.com/",
-"location": "me-central1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.me-central2.rep.googleapis.com/",
-"location": "me-central2"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.me-west1.rep.googleapis.com/",
-"location": "me-west1"
-},
-{
-"description": "Regional Endpoint",
-"endpointUrl": "https://alloydb.africa-south1.rep.googleapis.com/",
-"location": "africa-south1"
-}
-],
 "fullyEncodeReservedExpansion": true,
 "icons": {
 "x16": "http://www.google.com/images/icons/product/search-16.gif",
@@ -505,21 +283,6 @@
 "pattern": "^projects/[^/]+/locations/[^/]+/backups/[^/]+$",
 "required": true,
 "type": "string"
-},
-"view": {
-"description": "Optional. The view of the backup to return.",
-"enum": [
-"BACKUP_VIEW_UNSPECIFIED",
-"BACKUP_VIEW_BASIC",
-"BACKUP_VIEW_CLUSTER_DELETED"
-],
-"enumDescriptions": [
-"Value unspecified, equivalent to BASIC.",
-"Responses include all fields that aren't explicitly gated behind another view.",
-"Response include all the field from BASIC plus the field cluster_deleted, which specifies if the cluster corresponding to this backup is deleted."
-],
-"location": "query",
-"type": "string"
 }
 },
 "path": "v1alpha/{+name}",
@@ -565,21 +328,6 @@
 "location": "path",
 "pattern": "^projects/[^/]+/locations/[^/]+$",
 "required": true,
-"type": "string"
-},
-"view": {
-"description": "Optional. The view of the backup to return.",
-"enum": [
-"BACKUP_VIEW_UNSPECIFIED",
-"BACKUP_VIEW_BASIC",
-"BACKUP_VIEW_CLUSTER_DELETED"
-],
-"enumDescriptions": [
-"Value unspecified, equivalent to BASIC.",
-"Responses include all fields that aren't explicitly gated behind another view.",
-"Response include all the field from BASIC plus the field cluster_deleted, which specifies if the cluster corresponding to this backup is deleted."
-],
-"location": "query",
 "type": "string"
 }
 },
@@ -1804,7 +1552,7 @@
 "type": "string"
 },
 "returnPartialSuccess": {
-"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+"description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
 "location": "query",
 "type": "boolean"
 }
@@ -1879,7 +1627,7 @@
 }
 }
 },
-"revision": "20260122",
+"revision": "20251023",
 "rootUrl": "https://alloydb.googleapis.com/",
 "schemas": {
 "AuthorizedNetwork": {
@@ -1965,11 +1713,6 @@
 "description": "Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels. https://google.aip.dev/128",
 "type": "object"
 },
-"clusterDeleted": {
-"description": "Output only. Set to true if the cluster corresponding to this backup is deleted. This field is only populated for when using the BACKUP_VIEW_CLUSTER_DELETED view.",
-"readOnly": true,
-"type": "boolean"
-},
 "clusterName": {
 "description": "Required. The full resource name of the backup source cluster (e.g., projects/{project}/locations/{region}/clusters/{cluster_id}).",
 "type": "string"
@@ -1999,13 +1742,11 @@
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -2017,8 +1758,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "readOnly": true,
 "type": "string"
@@ -2404,13 +2144,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -2422,8 +2160,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 },
@@ -2561,8 +2298,7 @@ false
 "FAILED",
 "BOOTSTRAPPING",
 "MAINTENANCE",
-"PROMOTING",
-"SWITCHOVER"
+"PROMOTING"
 ],
 "enumDescriptions": [
 "The state of the cluster is unknown.",
@@ -2574,8 +2310,7 @@ false
 "The creation of the cluster failed.",
 "The cluster is bootstrapping with data from some other source. Direct mutations to the cluster (e.g. adding read pool) are not allowed.",
 "The cluster is under maintenance. AlloyDB regularly performs maintenance and upgrades on customer clusters. Updates on the cluster are not allowed while the cluster is in this state.",
-"The cluster is being promoted.",
-"The cluster has entered switchover state. All updates on cluster and its associated instances are restricted while the cluster is in this state."
+"The cluster is being promoted."
 ],
 "readOnly": true,
 "type": "string"
@@ -2646,13 +2381,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -2664,8 +2397,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 },
@@ -3377,20 +3109,6 @@ false
 "readOnly": true,
 "type": "string"
 },
-"dataApiAccess": {
-"description": "Optional. Controls whether the Data API is enabled for this instance. When enabled, this allows authorized users to connect to the instance from the public internet using the `executeSql` API, even for private IP instances. If this is not specified, the data API is enabled by default for Google internal services like AlloyDB Studio. Disable it explicitly to disallow Google internal services as well.",
-"enum": [
-"DEFAULT_DATA_API_ENABLED_FOR_GOOGLE_CLOUD_SERVICES",
-"DISABLED",
-"ENABLED"
-],
-"enumDescriptions": [
-"DEFAULT_DATA_API_ENABLED_FOR_GOOGLE_CLOUD_SERVICES is a default value that allows Google internal services like AlloyDB Studio to access the instance.",
-"Data API access is disabled for this instance.",
-"Data API access is enabled for this instance. For private IP instances, this allows authorized users to access the instance from the public internet using the ExecuteSql API."
-],
-"type": "string"
-},
 "databaseFlags": {
 "additionalProperties": {
 "type": "string"
@@ -3457,11 +3175,6 @@ false
 "machineConfig": {
 "$ref": "MachineConfig",
 "description": "Configurations for the machines that host the underlying database engine."
-},
-"maintenanceVersionName": {
-"description": "Output only. Maintenance version of the instance, for example: POSTGRES_15.2025_07_15.04_00. Output only. Update this field via the parent cluster's maintenance_version field(s).",
-"readOnly": true,
-"type": "string"
 },
 "name": {
 "description": "Output only. The name of the instance resource with the format: * projects/{project}/locations/{region}/clusters/{cluster_id}/instances/{instance_id} where the cluster and instance ID segments should satisfy the regex expression `[a-z]([a-z0-9-]{0,61}[a-z0-9])?`, e.g. 1-63 characters of lowercase letters, numbers, and dashes, starting with a letter, and ending with a letter or number. For more details see https://google.aip.dev/122. The prefix of the instance resource name is the name of the parent resource: * projects/{project}/locations/{region}/clusters/{cluster_id}",
@@ -3535,10 +3248,7 @@ false
 "MAINTENANCE",
 "FAILED",
 "BOOTSTRAPPING",
-"PROMOTING",
-"SWITCHOVER",
-"STOPPING",
-"STARTING"
+"PROMOTING"
 ],
 "enumDescriptions": [
 "The state of the instance is unknown.",
@@ -3549,10 +3259,7 @@ false
 "The instance is down for maintenance.",
 "The creation of the instance failed or a fatal error occurred during an operation on the instance. Note: Instances in this state would tried to be auto-repaired. And Customers should be able to restart, update or delete these instances.",
 "The instance has been configured to sync data from some other source.",
-"The instance is being promoted.",
-"The instance has entered switchover state. All updates on instance are restricted while the instance is in this state.",
-"The instance is being stopped.",
-"The instance is being started."
+"The instance is being promoted."
 ],
 "readOnly": true,
 "type": "string"
@@ -3770,7 +3477,7 @@ false
 "type": "array"
 },
 "unreachable": {
-"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
+"description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
 "items": {
 "type": "string"
 },
@@ -4910,8 +4617,7 @@ false
 "SIGNAL_TYPE_NO_ROOT_PASSWORD",
 "SIGNAL_TYPE_EXPOSED_TO_PUBLIC_ACCESS",
 "SIGNAL_TYPE_UNENCRYPTED_CONNECTIONS",
-"SIGNAL_TYPE_EXTENDED_SUPPORT",
-"SIGNAL_TYPE_NO_AUTOMATED_BACKUP_POLICY"
+"SIGNAL_TYPE_EXTENDED_SUPPORT"
 ],
 "enumDescriptions": [
 "Unspecified signal type.",
@@ -4920,8 +4626,7 @@ false
 "Represents if a database has a password configured for the root account or not.",
 "Represents if a resource is exposed to public access.",
 "Represents if a resources requires all incoming connections to use SSL or not.",
-"Represents if a resource version is in extended support.",
-"Represents if a resource has no automated backup policy."
+"Represents if a resource version is in extended support."
 ],
 "type": "string"
 }
@@ -5230,8 +4935,7 @@ false
 "SIGNAL_TYPE_OUTDATED_CLIENT",
 "SIGNAL_TYPE_DATABOOST_DISABLED",
 "SIGNAL_TYPE_RECOMMENDED_MAINTENANCE_POLICIES",
-"SIGNAL_TYPE_EXTENDED_SUPPORT",
-"SIGNAL_TYPE_PERFORMANCE_KPI_CHANGE"
+"SIGNAL_TYPE_EXTENDED_SUPPORT"
 ],
 "enumDeprecated": [
 false,
@@ -5282,7 +4986,6 @@ false,
 false,
 false,
 false,
-true,
 false,
 false,
 false,
@@ -5332,7 +5035,7 @@ false,
 false,
 false,
 false,
-true,
+false,
 false,
 false,
 false,
@@ -5446,8 +5149,7 @@ false
 "Outdated client.",
 "Databoost is disabled.",
 "Recommended maintenance policy.",
-"Resource version is in extended support.",
-"Change in performance KPIs."
+"Resource version is in extended support."
 ],
 "type": "string"
 },
@@ -5511,7 +5213,7 @@ false
 "type": "object"
 },
 "StorageDatabasecenterPartnerapiV1mainDatabaseResourceMetadata": {
-"description": "Common model for database resource instance metadata. Next ID: 30",
+"description": "Common model for database resource instance metadata. Next ID: 29",
 "id": "StorageDatabasecenterPartnerapiV1mainDatabaseResourceMetadata",
 "properties": {
 "availabilityConfiguration": {
@@ -5653,10 +5355,6 @@ false
 "For rest of the other categories."
 ],
 "type": "string"
-},
-"isDeletionProtectionEnabled": {
-"description": "Optional. Whether deletion protection is enabled for this resource.",
-"type": "boolean"
 },
 "location": {
 "description": "The resource location. REQUIRED",
@@ -5892,8 +5590,7 @@ false
 "SIGNAL_TYPE_OUTDATED_CLIENT",
 "SIGNAL_TYPE_DATABOOST_DISABLED",
 "SIGNAL_TYPE_RECOMMENDED_MAINTENANCE_POLICIES",
-"SIGNAL_TYPE_EXTENDED_SUPPORT",
-"SIGNAL_TYPE_PERFORMANCE_KPI_CHANGE"
+"SIGNAL_TYPE_EXTENDED_SUPPORT"
 ],
 "enumDeprecated": [
 false,
@@ -5944,7 +5641,6 @@ false,
 false,
 false,
 false,
-true,
 false,
 false,
 false,
@@ -5994,7 +5690,7 @@ false,
 false,
 false,
 false,
-true,
+false,
 false,
 false,
 false,
@@ -6108,8 +5804,7 @@ false
 "Outdated client.",
 "Databoost is disabled.",
 "Recommended maintenance policy.",
-"Resource version is in extended support.",
-"Change in performance KPIs."
+"Resource version is in extended support."
 ],
 "type": "string"
 }
@@ -6163,8 +5858,7 @@ false
 "SIGNAL_TYPE_NO_ROOT_PASSWORD",
 "SIGNAL_TYPE_EXPOSED_TO_PUBLIC_ACCESS",
 "SIGNAL_TYPE_UNENCRYPTED_CONNECTIONS",
-"SIGNAL_TYPE_EXTENDED_SUPPORT",
-"SIGNAL_TYPE_NO_AUTOMATED_BACKUP_POLICY"
+"SIGNAL_TYPE_EXTENDED_SUPPORT"
 ],
 "enumDescriptions": [
 "Unspecified signal type.",
@@ -6173,8 +5867,7 @@ false
 "Represents if a database has a password configured for the root account or not.",
 "Represents if a resource is exposed to public access.",
 "Represents if a resources requires all incoming connections to use SSL or not.",
-"Represents if a resource version is in extended support.",
-"Represents if a resource has no automated backup policy."
+"Represents if a resource version is in extended support."
 ],
 "type": "string"
 }
@@ -6268,21 +5961,11 @@ false
 "description": "MachineConfiguration describes the configuration of a machine specific to Database Resource.",
 "id": "StorageDatabasecenterPartnerapiV1mainMachineConfiguration",
 "properties": {
-"baselineSlots": {
-"description": "Optional. Baseline slots for BigQuery Reservations. Baseline slots are in increments of 50.",
-"format": "int64",
-"type": "string"
-},
 "cpuCount": {
 "deprecated": true,
 "description": "The number of CPUs. Deprecated. Use vcpu_count instead. TODO(b/342344482) add proto validations again after bug fix.",
 "format": "int32",
 "type": "integer"
-},
-"maxReservationSlots": {
-"description": "Optional. Max slots for BigQuery Reservations. Max slots are in increments of 50.",
-"format": "int64",
-"type": "string"
 },
 "memorySizeInBytes": {
 "description": "Memory size in bytes. TODO(b/342344482) add proto validations again after bug fix.",
@@ -6435,36 +6118,9 @@ false
 "$ref": "StorageDatabasecenterPartnerapiV1mainResourceMaintenanceSchedule",
 "description": "Optional. Maintenance window for the database resource."
 },
-"maintenanceState": {
-"description": "Output only. Current state of maintenance on the database resource.",
-"enum": [
-"MAINTENANCE_STATE_UNSPECIFIED",
-"CREATING",
-"READY",
-"UPDATING",
-"REPAIRING",
-"DELETING",
-"ERROR"
-],
-"enumDescriptions": [
-"Unspecified state.",
-"Database resource is being created.",
-"Database resource has been created and is ready to use.",
-"Database resource is being updated.",
-"Database resource is unheathy and under repair.",
-"Database resource is being deleted.",
-"Database resource encountered an error and is in indeterministic state."
-],
-"readOnly": true,
-"type": "string"
-},
 "maintenanceVersion": {
 "description": "Optional. Current Maintenance version of the database resource. Example: \"MYSQL_8_0_41.R20250531.01_15\"",
 "type": "string"
-},
-"upcomingMaintenance": {
-"$ref": "StorageDatabasecenterPartnerapiV1mainUpcomingMaintenance",
-"description": "Optional. Upcoming maintenance for the database resource. This field is populated once SLM generates and publishes upcoming maintenance window."
 }
 },
 "type": "object"
@@ -6576,23 +6232,6 @@ false
 },
 "description": "The Tag key/value mappings.",
 "type": "object"
-}
-},
-"type": "object"
-},
-"StorageDatabasecenterPartnerapiV1mainUpcomingMaintenance": {
-"description": "Upcoming maintenance for the database resource. This is generated by SLM once the upcoming maintenance schedule is published.",
-"id": "StorageDatabasecenterPartnerapiV1mainUpcomingMaintenance",
-"properties": {
-"endTime": {
-"description": "Optional. The end time of the upcoming maintenance.",
-"format": "google-datetime",
-"type": "string"
-},
-"startTime": {
-"description": "Optional. The start time of the upcoming maintenance.",
-"format": "google-datetime",
-"type": "string"
 }
 },
 "type": "object"
@@ -6846,13 +6485,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -6864,8 +6501,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 },
@@ -6990,13 +6626,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -7008,8 +6642,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 }
@@ -7074,13 +6707,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -7092,8 +6723,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 },
@@ -7136,13 +6766,11 @@ false
 "POSTGRES_14",
 "POSTGRES_15",
 "POSTGRES_16",
-"POSTGRES_17",
-"POSTGRES_18"
+"POSTGRES_17"
 ],
 "enumDeprecated": [
 false,
 true,
-false,
 false,
 false,
 false,
@@ -7154,8 +6782,7 @@ false
 "The database version is Postgres 14.",
 "The database version is Postgres 15.",
 "The database version is Postgres 16.",
-"The database version is Postgres 17.",
-"The database version is Postgres 18."
+"The database version is Postgres 17."
 ],
 "type": "string"
 }
