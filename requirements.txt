@@ -1,2 +1,3 @@
 #earthengine-api>=0.1.335
 ee-s1-ard>=1.0.5
+#agrigee-lite>=0.1.0

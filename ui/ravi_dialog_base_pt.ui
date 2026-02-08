@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1306</width>
-    <height>1074</height>
+    <width>803</width>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -690,7 +690,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>180</y>
+       <y>360</y>
        <width>281</width>
        <height>41</height>
       </rect>
@@ -701,7 +701,7 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>RADAR (Sentinel-1)</string>
+      <string>Get SAR Imagery (Sentinel-1) </string>
      </property>
     </widget>
    </widget>

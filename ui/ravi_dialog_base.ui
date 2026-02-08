@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>769</width>
-    <height>378</height>
+    <width>839</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -682,6 +682,24 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Get Synthetic Soil Image (SYSI)</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="QPushButton_aglgis">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>350</y>
+       <width>301</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Get SAR Imagery (Sentinel-1)</string>
      </property>
     </widget>
    </widget>
