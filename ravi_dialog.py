@@ -138,7 +138,7 @@ from qgis.core import (
     QgsField,
     QgsMapLayerProxyModel
 )
-from qgis.PyQt.QtGui import QFont, QColor
+from qgis.PyQt.QtGui import QFont, QColor, QDesktopServices
 from qgis.PyQt.QtCore import QDate, Qt, QVariant, QSettings, QTimer, QEvent
 from qgis.PyQt.QtWidgets import (
     QApplication,
@@ -173,7 +173,7 @@ from qgis.gui import (
     QgsMapToolPan,
 )
 from qgis.utils import iface
-
+from qgis.PyQt.QtGui import QDesktopServices
 from .modules import (
     map_tools,
     nasa_power,
@@ -363,10 +363,14 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Configuração inicial da UI."""
         self.QTextBrowser.setReadOnly(True)  # Prevent editing / Impede a edição
         self.QTextBrowser.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
+        self.QTextBrowser.setOpenLinks(False)
+        self.QTextBrowser.setOpenExternalLinks(False)
         self.textBrowser_valid_pixels.setReadOnly(True)
         self.textBrowser_valid_pixels.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextBrowserInteraction
         )
+        self.textBrowser_valid_pixels.setOpenLinks(False)
+        self.textBrowser_valid_pixels.setOpenExternalLinks(False)
         self.project_QgsPasswordLineEdit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Normal)
 
         vegetation_index = [
@@ -510,6 +514,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
         self.QPushButton_sysi.clicked.connect(self.open_sysi)
         self.setup_custom.clicked.connect(self.setup_custom_clicked)
         self.QPushButton_aglgis.clicked.connect(self.open_aglgis)
+
 
         # Create a list of primary and secondary checkboxes
         self.primary_masks = [
@@ -1235,7 +1240,10 @@ class RAVIDialog(QDialog, FORM_CLASS):
         """Open the clicked link in the default web browser."""
         """Abre o link clicado no navegador padrão."""
         print(f"Opening URL: {url.toString()}")
-        webbrowser.open(url.toString())
+        if not url or not url.isValid():
+            return
+        if not QDesktopServices.openUrl(url):
+            webbrowser.open(url.toString())
 
     def last_clicked(self, months):
         today = datetime.datetime.today().strftime("%Y-%m-%d")
@@ -4635,7 +4643,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                     regr = img.select('Red').subtract(img.select('Green'))
                     
                     img = img.addBands(ndvi.rename('NDVI')) \
-                            .addBands(nbr.rename('NBR')) \
+                            .addBands(nbr.rename('NBR2')) \
                             .addBands(grbl.rename('GRBL')) \
                             .addBands(regr.rename('REGR'))
                     return img
@@ -4663,7 +4671,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                             
                     # Lógica GEOS3
                     geos3 = img.select('NDVI').gte(ndvi_thres[0]).And(img.select('NDVI').lte(ndvi_thres[1])) \
-                        .And(img.select('NBR').gte(nbr_thres[0]).And(img.select('NBR').lte(nbr_thres[1]))) \
+                        .And(img.select('NBR2').gte(nbr_thres[0]).And(img.select('NBR2').lte(nbr_thres[1]))) \
                         .And(vnsir.lte(vnsir_thres)) \
                         .And(img.select('GRBL').gt(0)).And(img.select('REGR').gt(0))
                             
@@ -4772,7 +4780,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
 
 
                 # Etapa 6: Seleciona as bandas finais para o pós-processamento
-                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NBR']
+                bands_to_export = ['Blue', 'Green', 'Red', 'Rededge', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NBR2']
                 # Etapa 7: Chama o método de pós-processamento com a imagem final
                 # self.sysi_processing(tess_v2.select(bands_to_export), "final v2")
                 self.sysi_processing(tess_v1.select(bands_to_export))
@@ -4844,7 +4852,7 @@ class RAVIDialog(QDialog, FORM_CLASS):
                         dst_ds = driver.CreateCopy(temp_file, src_ds, strict=1)
 
                         # Expected SYSI band order used earlier in the workflow
-                        band_names = ["Blue", "Green", "Red", "Rededge", "NIR", "SWIR1", "SWIR2", "NDVI", "NBR"]
+                        band_names = ["Blue", "Green", "Red", "Rededge", "NIR", "SWIR1", "SWIR2", "NDVI", "NBR2"]
 
                         for i in range(min(band_count, len(band_names))):
                             band = dst_ds.GetRasterBand(i + 1)  # 1-based indexing
@@ -5109,6 +5117,8 @@ class RAVIDialog(QDialog, FORM_CLASS):
                 self.datasrecorte.clicked.connect(self.datasrecorte_clicked)
                 self.salvar.clicked.connect(self.salvar_clicked)
                 self.QTextBrowser.anchorClicked.connect(self.open_link)
+                self.QTextBrowser.setOpenExternalLinks(False)
+                self.setOpenLinks(False)
                 
                 # UI interaction signals
                 self.navegador.clicked.connect(self.open_browser)
