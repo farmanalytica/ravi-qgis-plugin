@@ -81,7 +81,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
        <normaloff>../medias/open-in-browser.svg</normaloff>../medias/open-in-browser.svg</iconset>
      </property>
     </widget>
-    <widget class="QLabel" name="label_15">
+    <widget class="QLabel" name="label_ravi">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -278,7 +278,7 @@ p, li { white-space: pre-wrap; }
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_17">
+    <widget class="QLabel" name="label_farm">
      <property name="geometry">
       <rect>
        <x>27</x>
@@ -328,9 +328,9 @@ p, li { white-space: pre-wrap; }
     <zorder>label_2</zorder>
     <zorder>label_14</zorder>
     <zorder>learn</zorder>
-    <zorder>label_15</zorder>
+    <zorder>label_ravi</zorder>
     <zorder>label_16</zorder>
-    <zorder>label_17</zorder>
+    <zorder>label_farm</zorder>
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
