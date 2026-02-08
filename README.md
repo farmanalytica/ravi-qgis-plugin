@@ -3,17 +3,18 @@ This repository contains the source code for the **RAVI** plugin for QGIS, which
 
 ## Tutorial
 An usage guide is available via GitHub Pages here:  
-[https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
+[https://raviqgis.org](https:raviqgis.org)  
 
 ## Reporting Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) section or contact me directly [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
+If you encounter any issues or have suggestions for improvements, please open an issue in the [GitHub Issues](https://github.com/farmanalytica/ravi-qgis-plugin/issues) section or contact me directly [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
 
 ## RAVI - Remote Analysis of Vegetation Indices
 Este repositório contém o código-fonte do complemento **RAVI** para QGIS, que integra a API Python do Google Earth Engine (GEE) para processar e visualizar dados geoespaciais utilizando o catálogo de reflectância de superfície harmonizada da missão Copernicus Sentinel-2. O RAVI é uma ferramenta para estudantes, pesquisadores, produtores rurais e profissionais que atuam em agricultura, monitoramento territorial ou gestão ambiental.
 
 ## Tutorial
 Um guia de uso está disponível via GitHub Pages em:  
-[https://caioarantes.github.io/ravi-qgis-plugin/](https://caioarantes.github.io/ravi-qgis-plugin/)  
+[https://raviqgis.org](https://raviqgis.org)  
 
 ## Relato de Problemas
-Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/caioarantes/ravi-qgis-plugin/issues) ou entre em contato direto, envie um e-mail para [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
+
+Se você encontrar algum problema ou tiver sugestões de melhorias, abra uma issue na seção [GitHub Issues](https://github.com/farmanalytica/ravi-qgis-plugin/issues) ou entre em contato direto, envie um e-mail para [caio.arantes@farmanalytica.com.br](mailto:caio.arantes@farmanalytica.com.br).
