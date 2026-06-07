@@ -34,8 +34,10 @@ if os.path.isdir(_extlibs_path) and _extlibs_path not in sys.path:
 
 
 def classFactory(interface):
-    if not os.path.isdir(_extlibs_path) or not os.listdir(_extlibs_path):
-        from . import extlibs_manager
+    from . import extlibs_manager
+    # Provision (or re-provision after a QGIS Python upgrade) the deps matching
+    # the running interpreter; tag-aware so a stale build triggers a refresh.
+    if extlibs_manager.needs_provision():
         extlibs_manager.start_download()
 
     from .ravi import RAVI
