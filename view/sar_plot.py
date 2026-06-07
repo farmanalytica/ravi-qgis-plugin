@@ -1,0 +1,130 @@
+# -*- coding: utf-8 -*-
+"""
+SAR timeseries chart renderer for the RAVI plugin.
+
+A single ``render_chart_html`` builds a self-contained page (plotly.js embedded
+inline) used for BOTH the in-plugin QWebView and the "open in browser" action,
+so the chart is byte-for-byte identical in both. Load it from a ``file://`` URL.
+"""
+
+import json
+import os
+
+import plotly.express as px
+
+
+_PLOTLY_JS_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "assets",
+    "plotly-1.58.5.min.js",
+)
+_plotly_js_cache = None
+
+
+def _plotly_js():
+    global _plotly_js_cache
+    if _plotly_js_cache is None:
+        with open(_PLOTLY_JS_PATH, "r", encoding="utf-8") as f:
+            _plotly_js_cache = f.read()
+    return _plotly_js_cache
+
+
+def _build_figure(dataframe, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean"):
+    """Build the spectral-index time-series figure."""
+    fig = px.line(
+        dataframe,
+        x="dates",
+        y="AOI_average",
+        markers=True,
+        title=title,
+    )
+    fig.update_layout(
+        xaxis_title="Date",
+        yaxis_title=ylabel,
+        yaxis=dict(tickformat=".3f"),
+        margin=dict(l=80, r=20, t=40, b=40),
+    )
+    return fig
+
+
+def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean"):
+    """Return a self-contained page that renders the figure with the vendored
+    plotly.js v1.58 (QtWebKit-compatible), fed the figure JSON via Plotly.newPlot.
+
+    Args:
+        dataframe: The time-series data to plot.
+        hide_toolbar: If True, hide toolbar buttons (for in-plugin view).
+                     If False, show toolbar (for browser export).
+                     Defaults to True for in-plugin use.
+        title: Chart title (default: "VV/VH Ratio Mean Time Series").
+        ylabel: Y-axis label (default: "VV/VH Ratio Mean").
+
+    The default v6 template is dropped so the JSON stays within what the old
+    engine understands. Intended to be written to a temp file and loaded from a
+    ``file://`` URL.
+    """
+    fig = _build_figure(dataframe, title=title, ylabel=ylabel)
+    fig.update_layout(template="none")
+    fig_dict = fig.to_dict()
+    pairs = sorted(
+        zip(dataframe["dates"].tolist(), dataframe["AOI_average"].tolist()),
+        key=lambda p: p[0],
+    )
+    x = [p[0] for p in pairs]
+    y = [float(p[1]) for p in pairs]
+    for trace in fig_dict.get("data", []):
+        trace["x"] = x
+        trace["y"] = y
+    fig_json = json.dumps(fig_dict)
+
+    config = {
+        "displaylogo": False,
+        "responsive": True,
+    }
+
+    if hide_toolbar:
+        config["modeBarButtonsToRemove"] = [
+            "toImage",
+            "sendDataToCloud",
+            "zoom2d",
+            "pan2d",
+            "select2d",
+            "lasso2d",
+            "zoomIn2d",
+            "zoomOut2d",
+            "autoScale2d",
+            "resetScale2d",
+            "hoverClosestCartesian",
+            "hoverCompareCartesian",
+            "zoom3d",
+            "pan3d",
+            "orbitRotation",
+            "tableRotation",
+            "resetCameraLastSave",
+            "resetCameraDefault3d",
+            "hoverClosest3d",
+            "zoomInGeo",
+            "zoomOutGeo",
+            "resetGeo",
+            "hoverClosestGeo",
+            "hoverClosestGl2d",
+            "hoverClosestPie",
+            "toggleHover",
+            "toggleSpikelines",
+            "resetViews",
+        ]
+
+    config_json = json.dumps(config)
+    return f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>html,body{{height:100%;width:100%;margin:0;padding:0}}#chart{{width:100%;height:100%}}</style>
+<script>{_plotly_js()}</script>
+</head><body>
+<div id="chart"></div>
+<script>
+var fig = {fig_json};
+var config = {config_json};
+Plotly.newPlot('chart', fig.data, fig.layout, config);
+window.addEventListener('resize', function(){{ Plotly.Plots.resize('chart'); }});
+</script>
+</body></html>"""
