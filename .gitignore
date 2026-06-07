@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+extlibs/
+dist/
+.venv
+resources_rc.py
+CLAUDE.md
+ISSUES.md
+.claude
+.codex
+.vscode/
+dev/*.tif
+dev/*.tiff

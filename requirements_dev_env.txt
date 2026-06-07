@@ -1,0 +1,7 @@
+ee-s1-ard>=1.0.5
+earthengine-api
+geopandas
+nbformat>=4.2.0
+pandas
+plotly
+requests

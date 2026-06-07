@@ -28,7 +28,7 @@ tags=python
 
 homepage=https://www.raviqgis.org
 category=Plugins
-icon=media/icon.png
+icon=icon.png
 # experimental flag
 experimental=False
 
