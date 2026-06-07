@@ -41,7 +41,9 @@ from qgis.PyQt.QtWidgets import (
 
 from .view.auth import setup_auth_page
 from .view.download_dem import setup_download_dem_page
+from .view.optical import setup_optical_page
 from .view.radar import setup_radar_page
+from .view.sysi import setup_sysi_page
 from .view.sidebar import Sidebar
 from .view.styles import STYLE_DIALOG, STYLE_BTN_HELP
 
@@ -155,6 +157,8 @@ class RAVIDialog(QDialog):
 
         self.sidebar = Sidebar()
         self.sidebar.auth_requested.connect(self._nav_to_auth)
+        self.sidebar.optical_requested.connect(self._nav_to_optical)
+        self.sidebar.sysi_requested.connect(self._nav_to_sysi)
         self.sidebar.radar_requested.connect(self._nav_to_radar)
         self.sidebar.dem_requested.connect(self._nav_to_dem)
         body_layout.addWidget(self.sidebar)
@@ -178,15 +182,21 @@ class RAVIDialog(QDialog):
 
         self.loading_page = self._build_loading_page()
         self.auth_page = QWidget()
+        self.optical_page = QWidget()
+        self.sysi_page = QWidget()
         self.radar_page = QWidget()
         self.dem_page = QWidget()
 
         setup_auth_page(self, self.auth_page)
+        setup_optical_page(self, self.optical_page)
+        setup_sysi_page(self, self.sysi_page)
         setup_radar_page(self, self.radar_page)
         setup_download_dem_page(self, self.dem_page)
 
         self.stack.addWidget(self.loading_page)
         self.stack.addWidget(self.auth_page)
+        self.stack.addWidget(self.optical_page)
+        self.stack.addWidget(self.sysi_page)
         self.stack.addWidget(self.radar_page)
         self.stack.addWidget(self.dem_page)
         self.stack.currentChanged.connect(self._sync_page_state)
@@ -356,6 +366,14 @@ class RAVIDialog(QDialog):
         """Switch the stacked widget to the authentication page."""
         self.stack.setCurrentWidget(self.auth_page)
 
+    def show_optical_page(self):
+        """Switch the stacked widget to the Optical (Sentinel-2) page."""
+        self.stack.setCurrentWidget(self.optical_page)
+
+    def show_sysi_page(self):
+        """Switch the stacked widget to the SYSI page."""
+        self.stack.setCurrentWidget(self.sysi_page)
+
     def show_radar_page(self):
         """Switch the stacked widget to the Radar (SAR) page."""
         self.stack.setCurrentWidget(self.radar_page)
@@ -363,6 +381,14 @@ class RAVIDialog(QDialog):
     def _nav_to_auth(self):
         """Sidebar auth button — always navigates to the auth page."""
         self.show_auth_page()
+
+    def _nav_to_optical(self):
+        """Sidebar optical button — always navigates to the Optical page."""
+        self.show_optical_page()
+
+    def _nav_to_sysi(self):
+        """Sidebar SYSI button — always navigates to the SYSI page."""
+        self.show_sysi_page()
 
     def _nav_to_radar(self):
         """Sidebar radar button — always navigates to the radar page."""
@@ -389,6 +415,18 @@ class RAVIDialog(QDialog):
             self._header_title.setText(_tr("GEE Configuration"))
             self.sidebar.set_active_page("auth")
             self.footer.setVisible(True)
+            return
+
+        if current is self.optical_page:
+            self._header_title.setText(_tr("Optical Imagery (Sentinel-2)"))
+            self.sidebar.set_active_page("optical")
+            self.footer.setVisible(False)
+            return
+
+        if current is self.sysi_page:
+            self._header_title.setText(_tr("Synthetic Soil Image (SYSI)"))
+            self.sidebar.set_active_page("sysi")
+            self.footer.setVisible(False)
             return
 
         if current is self.radar_page:

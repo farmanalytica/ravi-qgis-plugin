@@ -75,11 +75,15 @@ class Sidebar(QFrame):
 
     Signals:
         auth_requested: emitted when the user clicks Auth.
+        optical_requested: emitted when the user clicks Optical (Sentinel-2).
+        sysi_requested: emitted when the user clicks SYSI.
         radar_requested: emitted when the user clicks Radar (SAR) data.
         dem_requested: emitted when the user clicks Download DEM.
     """
 
     auth_requested = pyqtSignal()
+    optical_requested = pyqtSignal()
+    sysi_requested = pyqtSignal()
     radar_requested = pyqtSignal()
     dem_requested = pyqtSignal()
 
@@ -133,6 +137,14 @@ class Sidebar(QFrame):
         self.btn_auth.clicked.connect(self.auth_requested.emit)
         lay.addWidget(self.btn_auth)
 
+        self.btn_optical = self._make_button(_tr("Optical (Sentinel-2)"), "optical")
+        self.btn_optical.clicked.connect(self.optical_requested.emit)
+        lay.addWidget(self.btn_optical)
+
+        self.btn_sysi = self._make_button(_tr("SYSI"), "sysi")
+        self.btn_sysi.clicked.connect(self.sysi_requested.emit)
+        lay.addWidget(self.btn_sysi)
+
         self.btn_radar = self._make_button(_tr("Radar (SAR) data"), "radar")
         self.btn_radar.clicked.connect(self.radar_requested.emit)
         lay.addWidget(self.btn_radar)
@@ -144,6 +156,8 @@ class Sidebar(QFrame):
         self._group = QButtonGroup(self)
         self._group.setExclusive(True)
         self._group.addButton(self.btn_auth)
+        self._group.addButton(self.btn_optical)
+        self._group.addButton(self.btn_sysi)
         self._group.addButton(self.btn_radar)
         self._group.addButton(self.btn_download)
 
@@ -216,9 +230,11 @@ class Sidebar(QFrame):
         return btn
 
     def set_active_page(self, page: str) -> None:
-        """Highlight the button matching ``page`` (``'auth'``, ``'radar'`` or ``'download'``)."""
+        """Highlight the button matching ``page`` (``'auth'``, ``'optical'``, ``'sysi'``, ``'radar'`` or ``'download'``)."""
         self._active_page = page
         self.btn_auth.setChecked(page == "auth")
+        self.btn_optical.setChecked(page == "optical")
+        self.btn_sysi.setChecked(page == "sysi")
         self.btn_radar.setChecked(page == "radar")
         self.btn_download.setChecked(page == "download")
         self._sync_brand_visibility()
@@ -238,7 +254,7 @@ class Sidebar(QFrame):
         side_margin = 14 if expanded else 11
         self._layout.setContentsMargins(side_margin, 18, side_margin, 18)
 
-        for btn in (self.btn_auth, self.btn_radar, self.btn_download):
+        for btn in (self.btn_auth, self.btn_optical, self.btn_sysi, self.btn_radar, self.btn_download):
             btn.setText(btn.property("navText") if expanded else "")
             btn.setToolTip("" if expanded else btn.property("navText"))
             btn.setFixedWidth(156 if expanded else 42)
@@ -383,6 +399,24 @@ class Sidebar(QFrame):
 
         if kind == "auth":
             painter.setPen(Qt.PenStyle.NoPen)
+        elif kind == "optical":
+            # Leaf with a midrib — evokes optical vegetation analysis.
+            painter.setPen(pen)
+            path = QPainterPath()
+            path.moveTo(4, 16)
+            path.cubicTo(5, 7, 11, 4, 16, 4)
+            path.cubicTo(16, 11, 13, 16, 4, 16)
+            painter.drawPath(path)
+            painter.drawLine(6, 14, 15, 5)
+        elif kind == "sysi":
+            # Stacked soil strata with a sprout — evokes a bare-soil image.
+            painter.setPen(pen)
+            painter.drawLine(3, 11, 17, 11)
+            painter.drawLine(3, 14, 17, 14)
+            painter.drawLine(3, 17, 17, 17)
+            painter.drawLine(10, 8, 10, 3)
+            painter.drawLine(10, 6, 7, 4)
+            painter.drawLine(10, 6, 13, 4)
         elif kind == "radar":
             painter.setPen(pen)
             painter.drawArc(QRectF(2, 2, 14, 14), 0 * 16, 90 * 16)
