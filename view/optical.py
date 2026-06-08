@@ -177,7 +177,6 @@ def _build_intro_tab(_dialog, parent):
         _tr("<b>Vegetation Index Time Series:</b> 19 built-in indices plus a custom index builder"),
         _tr("<b>Index Explanations:</b> Description and formula for every index"),
         _tr("<b>True-Color &amp; False-Color Imagery:</b> Download styled RGB rasters for any date"),
-        _tr("<b>Custom RGB Composite:</b> Map any three Sentinel-2 bands to R/G/B"),
         _tr("<b>Synthetic Composite:</b> Aggregate the series (mean, median, AUC, …) into one image"),
         _tr("<b>Batch Download &amp; CSV Export:</b> Pull every selected date and export the table"),
         _tr("<b>Live Filtering:</b> Cloud %, SCL classes, AOI coverage, date selection and "
@@ -206,7 +205,6 @@ def _build_intro_tab(_dialog, parent):
     lay.addStretch(1)
     scroll.setWidget(w)
     outer.addWidget(scroll, 1)
-
 
 def _build_inputs_tab(dialog, parent):
     outer = QVBoxLayout(parent)
@@ -433,7 +431,6 @@ def _build_inputs_tab(dialog, parent):
     lay.addStretch(1)
     scroll.setWidget(scroll_w)
     outer.addWidget(scroll)
-
 
 def _build_results_tab(dialog, parent):
     outer = QVBoxLayout(parent)
@@ -830,7 +827,6 @@ def _build_results_tab(dialog, parent):
     dialog.s2_results_splitter.setStretchFactor(1, 0)
     outer.addWidget(dialog.s2_results_splitter)
 
-
 def _wire_filter_dialog(dialog):
     """Attach the lazy openers for the client-side filter popup and the per-date
     selection dialog.
@@ -863,7 +859,6 @@ def _wire_filter_dialog(dialog):
     dialog.open_optical_date_filter = _open_dates
     dialog.s2_btn_adjust_filter.clicked.connect(_open_filter)
     dialog.s2_btn_filter_dates.clicked.connect(_open_dates)
-
 
 def setup_optical_page(dialog, page):
     """
