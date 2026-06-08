@@ -10,10 +10,12 @@ before porting it into a controller/service.
 
 Each notebook is self-contained:
 
-1. Set `PROJECT_ID` to your Google Cloud project in the setup cell.
-2. Uncomment `ee.Authenticate()` on first run.
-3. Run all cells. A small sample AOI (near Ribeirão Preto, BR) and a 1-year date
-   range are defined up front — edit them freely.
+1. Authenticate via a service-account key — set the `GEE` env var to the key
+   path; the setup cell calls `ee.ServiceAccountCredentials(None, os.environ["GEE"])`
+   then `ee.Initialize(credentials)` (same as `testing.ipynb`).
+2. Run all cells. The AOI is loaded from `contorno_area_total.zip` via
+   `load_aoi_from_shapefile(...)` (same area as `testing.ipynb`); each notebook's
+   date range is defined up front — edit it freely.
 
 Dependencies vary per notebook: `earthengine-api` (all but #09), `pandas`,
 `plotly`/`matplotlib`, `scipy` (#04), `requests` (#05/#06/#09). `geemap` is
