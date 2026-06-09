@@ -14,7 +14,6 @@ in the time-series controls on the Results tab, not here.
 
 from qgis.PyQt.QtCore import Qt, QCoreApplication, pyqtSignal
 from qgis.PyQt.QtWidgets import (
-    QCheckBox,
     QDialog,
     QDialogButtonBox,
     QFrame,
@@ -205,7 +204,7 @@ class OpticalFilterDialog(QDialog):
 
         lay.addWidget(self._explain(_tr(
             "Require each scene's footprint to cover at least this share of the "
-            "AOI, and optionally keep only one image per acquisition date."
+            "AOI."
         )))
         lay.addWidget(QLabel(_tr("Min AOI coverage %")))
         self.coverage_slider = self._pct_slider(0)
@@ -214,12 +213,6 @@ class OpticalFilterDialog(QDialog):
         self.coverage_slider.valueChanged.connect(
             lambda v: (self.coverage_value.setText(f"{v}%"), self._emit())
         )
-
-        self.chk_unique_day = QCheckBox(_tr("Keep one image per date"))
-        self.chk_unique_day.setChecked(True)
-        self.chk_unique_day.setStyleSheet(STYLE_CHECKBOX)
-        self.chk_unique_day.stateChanged.connect(lambda _s: self._emit())
-        lay.addWidget(self.chk_unique_day)
         return frame
 
     # -- behavior ---------------------------------------------------------
@@ -240,7 +233,6 @@ class OpticalFilterDialog(QDialog):
             "cloud_scene_max": self.cloud_scene_slider.value(),
             "valid_pixel_min": self.valid_pixel_slider.value(),
             "coverage_min": self.coverage_slider.value(),
-            "unique_day": self.chk_unique_day.isChecked(),
         }
 
     def set_settings(self, settings):
@@ -249,5 +241,4 @@ class OpticalFilterDialog(QDialog):
         self.cloud_scene_slider.setValue(settings.get("cloud_scene_max", 100))
         self.valid_pixel_slider.setValue(settings.get("valid_pixel_min", 0))
         self.coverage_slider.setValue(settings.get("coverage_min", 0))
-        self.chk_unique_day.setChecked(settings.get("unique_day", True))
         self._building = False
