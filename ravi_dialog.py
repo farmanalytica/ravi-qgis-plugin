@@ -41,6 +41,7 @@ from qgis.PyQt.QtWidgets import (
 
 from .view.auth import setup_auth_page
 from .view.download_dem import setup_download_dem_page
+from .view.landsat import setup_landsat_page
 from .view.optical import setup_optical_page
 from .view.radar import setup_radar_page
 from .view.sysi import setup_sysi_page
@@ -161,6 +162,7 @@ class RAVIDialog(QDialog):
         self.sidebar.sysi_requested.connect(self._nav_to_sysi)
         self.sidebar.radar_requested.connect(self._nav_to_radar)
         self.sidebar.dem_requested.connect(self._nav_to_dem)
+        self.sidebar.landsat_requested.connect(self._nav_to_landsat)
         body_layout.addWidget(self.sidebar)
 
         content_container = QWidget()
@@ -186,12 +188,14 @@ class RAVIDialog(QDialog):
         self.sysi_page = QWidget()
         self.radar_page = QWidget()
         self.dem_page = QWidget()
+        self.landsat_page = QWidget()
 
         setup_auth_page(self, self.auth_page)
         setup_optical_page(self, self.optical_page)
         setup_sysi_page(self, self.sysi_page)
         setup_radar_page(self, self.radar_page)
         setup_download_dem_page(self, self.dem_page)
+        setup_landsat_page(self, self.landsat_page)
 
         self.stack.addWidget(self.loading_page)
         self.stack.addWidget(self.auth_page)
@@ -199,6 +203,7 @@ class RAVIDialog(QDialog):
         self.stack.addWidget(self.sysi_page)
         self.stack.addWidget(self.radar_page)
         self.stack.addWidget(self.dem_page)
+        self.stack.addWidget(self.landsat_page)
         self.stack.currentChanged.connect(self._sync_page_state)
 
         self.stack.setCurrentWidget(self.auth_page)
@@ -378,6 +383,10 @@ class RAVIDialog(QDialog):
         """Switch the stacked widget to the Radar (SAR) page."""
         self.stack.setCurrentWidget(self.radar_page)
 
+    def show_landsat_page(self):
+        """Switch the stacked widget to the Landsat Super-Resolution page."""
+        self.stack.setCurrentWidget(self.landsat_page)
+
     def _nav_to_auth(self):
         """Sidebar auth button — always navigates to the auth page."""
         self.show_auth_page()
@@ -400,6 +409,10 @@ class RAVIDialog(QDialog):
             self.btn_go_to_aoi.click()
             return
         self.show_dem_page()
+
+    def _nav_to_landsat(self):
+        """Sidebar Landsat button — always navigates to the Landsat page."""
+        self.show_landsat_page()
 
     def _sync_page_state(self, index):
         """Keep header and sidebar state aligned with the current stack page."""
@@ -438,6 +451,12 @@ class RAVIDialog(QDialog):
         if current is self.dem_page:
             self._header_title.setText(_tr("Inputs & Parameters"))
             self.sidebar.set_active_page("download")
+            self.footer.setVisible(False)
+            return
+
+        if current is self.landsat_page:
+            self._header_title.setText(_tr("Landsat Super-Resolution"))
+            self.sidebar.set_active_page("landsat")
             self.footer.setVisible(False)
 
 

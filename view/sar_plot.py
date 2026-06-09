@@ -115,6 +115,27 @@ def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time
         ]
 
     config_json = json.dumps(config)
+    return _chart_page(fig_json, config_json)
+
+
+def _toolbar_config(hide_toolbar):
+    """Shared plotly modebar config (hide most buttons for the in-plugin view)."""
+    config = {"displaylogo": False, "responsive": True}
+    if hide_toolbar:
+        config["modeBarButtonsToRemove"] = [
+            "toImage", "sendDataToCloud", "zoom2d", "pan2d", "select2d",
+            "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
+            "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d",
+            "orbitRotation", "tableRotation", "resetCameraLastSave",
+            "resetCameraDefault3d", "hoverClosest3d", "zoomInGeo", "zoomOutGeo",
+            "resetGeo", "hoverClosestGeo", "hoverClosestGl2d", "hoverClosestPie",
+            "toggleHover", "toggleSpikelines", "resetViews",
+        ]
+    return config
+
+
+def _chart_page(fig_json, config_json):
+    """Self-contained HTML page embedding the vendored plotly.js v1.58."""
     return f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8">
 <style>html,body{{height:100%;width:100%;margin:0;padding:0}}#chart{{width:100%;height:100%}}</style>
@@ -128,3 +149,57 @@ Plotly.newPlot('chart', fig.data, fig.layout, config);
 window.addEventListener('resize', function(){{ Plotly.Plots.resize('chart'); }});
 </script>
 </body></html>"""
+
+
+_MULTISERIES_PALETTE = ["#1b6b39", "#d98f00", "#2a5d84", "#b71c1c", "#6a1b9a", "#00838f"]
+
+
+def render_multiseries_chart_html(
+    dataframe,
+    group_col,
+    hide_toolbar=True,
+    title="Time Series",
+    ylabel="Value",
+    colors=None,
+):
+    """Multi-trace time-series page: one coloured line per ``group_col`` value
+    (e.g. one per Landsat mission), sharing the x-axis.
+
+    Trace dicts are built by hand — NOT via plotly express — so the JSON stays
+    within what the vendored plotly.js v1.58 understands (same reason the
+    single-series renderer reconstructs its trace). A px figure from a modern
+    plotly carries attributes the old engine silently fails to render, leaving a
+    blank chart.
+
+    Args:
+        dataframe: rows with ``dates``, ``AOI_average`` and ``group_col``.
+        group_col: column whose distinct values become separate traces.
+        hide_toolbar: hide modebar buttons (in-plugin view) vs show (browser).
+        title, ylabel: chart labels.
+        colors: optional {group_value: css_color} discrete map.
+    """
+    colors = colors or {}
+    traces = []
+    for i, (name, group) in enumerate(dataframe.groupby(group_col, sort=False)):
+        group = group.sort_values("dates")
+        color = colors.get(name) or _MULTISERIES_PALETTE[i % len(_MULTISERIES_PALETTE)]
+        traces.append({
+            "type": "scatter",
+            "mode": "lines+markers",
+            "name": str(name),
+            "x": group["dates"].astype(str).tolist(),
+            "y": [float(v) for v in group["AOI_average"].tolist()],
+            "line": {"color": color},
+            "marker": {"color": color},
+        })
+
+    layout = {
+        "title": title,
+        "xaxis": {"title": "Date"},
+        "yaxis": {"title": ylabel, "tickformat": ".3f"},
+        "margin": {"l": 80, "r": 20, "t": 40, "b": 40},
+        "legend": {"orientation": "h"},
+    }
+    fig_json = json.dumps({"data": traces, "layout": layout})
+    config_json = json.dumps(_toolbar_config(hide_toolbar))
+    return _chart_page(fig_json, config_json)

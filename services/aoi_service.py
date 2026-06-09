@@ -61,12 +61,13 @@ class AOIService:
         return QgsGeometry.unaryUnion(geometries)
 
     @staticmethod
-    def _layer_to_ee_feature_collection(layer, use_selected_features=True):
+    def _layer_to_geojson_4326(layer, use_selected_features=True):
         """
-        Convert a QGIS layer's to an Earth Engine FeatureCollection, assuring
-        compatibility (2D and EPSG:4326)
+        Dissolve a layer's features into one 2D, EPSG:4326 GeoJSON geometry.
 
-        Returns a tuple of FeatureCollection and Bounding Box [min_x, min_y, max_x, max_y]
+        Returns a tuple of the GeoJSON dict and the Bounding Box
+        [min_x, min_y, max_x, max_y]. Shared by the Earth Engine and shapely
+        converters so both stay in sync.
         """
         geometry = AOIService._get_dissolved_geometry(layer, use_selected_features)
 
@@ -101,7 +102,17 @@ class AOIService:
 
         geojson = json.loads(geojson_str)
         geojson["coordinates"] = _remove_z_dimension(geojson["coordinates"])
+        return geojson, bbox
 
+    @staticmethod
+    def _layer_to_ee_feature_collection(layer, use_selected_features=True):
+        """
+        Convert a QGIS layer to an Earth Engine FeatureCollection, assuring
+        compatibility (2D and EPSG:4326)
+
+        Returns a tuple of FeatureCollection and Bounding Box [min_x, min_y, max_x, max_y]
+        """
+        geojson, bbox = AOIService._layer_to_geojson_4326(layer, use_selected_features)
         ee_geometry = ee.Geometry(geojson)
         return ee.FeatureCollection([ee.Feature(ee_geometry)]), bbox
 
@@ -110,6 +121,21 @@ class AOIService:
 
         AOIService._validate_vector_polygon_layer(layer)
         return AOIService._layer_to_ee_feature_collection(layer, use_selected_features)
+
+    @staticmethod
+    def get_shapely_geometry_from_layer(layer, use_selected_features=True):
+        """
+        Dissolved AOI as a shapely geometry in EPSG:4326.
+
+        agrigee_lite's ``get.sits`` builds its ee.Feature from a shapely
+        geometry via ``__geo_interface__``, so the time-series path needs the
+        AOI in shapely form rather than as an ee object.
+        """
+        from shapely.geometry import shape
+
+        AOIService._validate_vector_polygon_layer(layer)
+        geojson, _bbox = AOIService._layer_to_geojson_4326(layer, use_selected_features)
+        return shape(geojson)
 
     @staticmethod
     def get_ee_feature_colection_from_layer_id(layer_id, use_selected_features=True):

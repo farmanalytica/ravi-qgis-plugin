@@ -79,6 +79,7 @@ class Sidebar(QFrame):
         sysi_requested: emitted when the user clicks SYSI.
         radar_requested: emitted when the user clicks Radar (SAR) data.
         dem_requested: emitted when the user clicks Download DEM.
+        landsat_requested: emitted when the user clicks Landsat (Super-Res).
     """
 
     auth_requested = pyqtSignal()
@@ -86,6 +87,7 @@ class Sidebar(QFrame):
     sysi_requested = pyqtSignal()
     radar_requested = pyqtSignal()
     dem_requested = pyqtSignal()
+    landsat_requested = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -153,6 +155,10 @@ class Sidebar(QFrame):
         self.btn_download.clicked.connect(self.dem_requested.emit)
         lay.addWidget(self.btn_download)
 
+        self.btn_landsat = self._make_button(_tr("Landsat (Super-Res)"), "landsat")
+        self.btn_landsat.clicked.connect(self.landsat_requested.emit)
+        lay.addWidget(self.btn_landsat)
+
         self._group = QButtonGroup(self)
         self._group.setExclusive(True)
         self._group.addButton(self.btn_auth)
@@ -160,6 +166,7 @@ class Sidebar(QFrame):
         self._group.addButton(self.btn_sysi)
         self._group.addButton(self.btn_radar)
         self._group.addButton(self.btn_download)
+        self._group.addButton(self.btn_landsat)
 
         lay.addStretch()
 
@@ -230,13 +237,14 @@ class Sidebar(QFrame):
         return btn
 
     def set_active_page(self, page: str) -> None:
-        """Highlight the button matching ``page`` (``'auth'``, ``'optical'``, ``'sysi'``, ``'radar'`` or ``'download'``)."""
+        """Highlight the button matching ``page`` (``'auth'``, ``'optical'``, ``'sysi'``, ``'radar'``, ``'download'`` or ``'landsat'``)."""
         self._active_page = page
         self.btn_auth.setChecked(page == "auth")
         self.btn_optical.setChecked(page == "optical")
         self.btn_sysi.setChecked(page == "sysi")
         self.btn_radar.setChecked(page == "radar")
         self.btn_download.setChecked(page == "download")
+        self.btn_landsat.setChecked(page == "landsat")
         self._sync_brand_visibility()
 
     def enterEvent(self, event) -> None:
@@ -254,7 +262,7 @@ class Sidebar(QFrame):
         side_margin = 14 if expanded else 11
         self._layout.setContentsMargins(side_margin, 18, side_margin, 18)
 
-        for btn in (self.btn_auth, self.btn_optical, self.btn_sysi, self.btn_radar, self.btn_download):
+        for btn in (self.btn_auth, self.btn_optical, self.btn_sysi, self.btn_radar, self.btn_download, self.btn_landsat):
             btn.setText(btn.property("navText") if expanded else "")
             btn.setToolTip("" if expanded else btn.property("navText"))
             btn.setFixedWidth(156 if expanded else 42)
@@ -425,6 +433,14 @@ class Sidebar(QFrame):
             painter.setPen(Qt.PenStyle.NoPen)
             painter.setBrush(QColor(color))
             painter.drawEllipse(QPointF(9, 9), 1.4, 1.4)
+        elif kind == "landsat":
+            # Pixel grid sharpened by a magnifier — evokes super-resolution.
+            painter.setPen(pen)
+            painter.drawRect(QRectF(3, 3, 8, 8))
+            painter.drawLine(7, 3, 7, 11)
+            painter.drawLine(3, 7, 11, 7)
+            painter.drawArc(QRectF(10, 10, 6, 6), 0, 360 * 16)
+            painter.drawLine(15, 15, 18, 18)
         else:
             painter.setPen(pen)
             painter.drawLine(10, 3, 10, 12)
