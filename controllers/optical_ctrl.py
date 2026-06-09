@@ -506,7 +506,7 @@ class OpticalCtrl:
             set_enhancement(ce)
 
         layer.setRenderer(renderer)
-        QgsProject.instance().addMapLayer(layer)
+        RasterRendererUtils.add_layer_to_project(layer, at_top=True)
         layer.triggerRepaint()
 
     # -- single-date image (preview / download) ---------------------------

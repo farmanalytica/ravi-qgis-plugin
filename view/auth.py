@@ -34,6 +34,8 @@ _URL_CAIO = "https://www.linkedin.com/in/caioarantes/"
 _URL_LUCAS = "https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/"
 _URL_FARM = "https://farmanalytica.com.br"
 _URL_SITE = "https://www.raviqgis.org"
+_URL_MATEUS = "https://www.linkedin.com/in/mateuspinto/"
+_URL_AGRIGEE = "https://github.com/mateuspinto/AgriGEE.lite"
 _LINK_STYLE = "color:#1b6b39; font-weight:bold; text-decoration:none;"
 
 # Feature overview shown on the Auth page. Each entry is (name, one-line what).
@@ -48,6 +50,9 @@ _FEATURES = [
      "Reduce a series to one image (mean, median, max, AUC…) for a clean snapshot"),
     ("Multispectral RGB",
      "True- and false-colour composites for any acquisition date, styled in QGIS"),
+    ("Landsat super-resolution",
+     "Pan-sharpened 15 m Landsat 7/8/9 imagery, with a multi-mission vegetation-index "
+     "time series — powered by AgriGEE.lite"),
     ("SYSI — synthetic soil image",
      "Bare-soil reflectance composite (GEOS3) from cloud-free pixels for soil mapping"),
     ("Radar (SAR)",
@@ -132,6 +137,22 @@ def _build_intro_section():
         col.setStyleSheet("font-size: 12px;")
         columns.addWidget(col, 1)
     lay.addLayout(columns)
+
+    collab = QLabel(
+        _tr(
+            "🛰️ Landsat super-resolution is built on "
+            "<a href='{agrigee}' style='{ls}'>AgriGEE.lite</a>, in collaboration "
+            "with its author <a href='{mateus}' style='{ls}'>Mateus Pinto</a>."
+        ).format(agrigee=_URL_AGRIGEE, mateus=_URL_MATEUS, ls=_LINK_STYLE)
+    )
+    collab.setWordWrap(True)
+    collab.setTextFormat(Qt.TextFormat.RichText)
+    collab.setOpenExternalLinks(True)
+    collab.setStyleSheet(
+        "color: #1b5e20; font-size: 11px; background: #e8f5e9;"
+        " border-radius: 4px; padding: 8px 10px;"
+    )
+    lay.addWidget(collab)
 
     footer = QLabel(
         _tr(

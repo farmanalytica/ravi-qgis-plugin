@@ -149,6 +149,7 @@ class RAVI:
         from .controllers.auth_ctrl import AuthCtrl
         from .controllers.sar_ctrl import SARCtrl
         from .controllers.optical_ctrl import OpticalCtrl
+        from .controllers.landsat_ctrl import LandsatCtrl
 
         self._services_ready = True
         self.gee_service = GEEService()
@@ -156,6 +157,9 @@ class RAVI:
         self.auth_ctrl = AuthCtrl(self.dialog, self.gee_service)
         self.sar_ctrl = SARCtrl(self.dialog, self.interface, self.gee_service)
         self.optical_ctrl = OpticalCtrl(
+            self.dialog, self.interface, self.gee_service
+        )
+        self.landsat_ctrl = LandsatCtrl(
             self.dialog, self.interface, self.gee_service
         )
 
@@ -264,6 +268,43 @@ class RAVI:
         )
         self.dialog.sar_layer_combo.layerChanged.connect(
             self.sar_ctrl.handle_layer_changed
+        )
+
+        self.dialog.ls_btn_hybrid_layer.clicked.connect(
+            self.dem_ctrl.handle_hybrid_layer
+        )
+        self.dialog.ls_btn_draw_aoi.clicked.connect(
+            self.landsat_ctrl.handle_draw_aoi
+        )
+        self.dialog.ls_layer_combo.layerChanged.connect(
+            self.landsat_ctrl.handle_layer_changed
+        )
+        self.dialog.ls_btn_run.clicked.connect(
+            self.landsat_ctrl.handle_landsat_run
+        )
+        self.dialog.ls_btn_sr_preview.clicked.connect(
+            self.landsat_ctrl.handle_sr_preview
+        )
+        self.dialog.ls_btn_sr_download.clicked.connect(
+            self.landsat_ctrl.handle_sr_download
+        )
+        self.dialog.ls_btn_sr_batch.clicked.connect(
+            self.landsat_ctrl.handle_batch_download
+        )
+        self.dialog.ls_btn_index_preview.clicked.connect(
+            self.landsat_ctrl.handle_index_preview
+        )
+        self.dialog.ls_btn_index_download.clicked.connect(
+            self.landsat_ctrl.handle_index_download
+        )
+        self.dialog.ls_btn_ms_preview.clicked.connect(
+            self.landsat_ctrl.handle_ms_preview
+        )
+        self.dialog.ls_btn_ms_download.clicked.connect(
+            self.landsat_ctrl.handle_ms_download
+        )
+        self.dialog.ls_btn_ts_browser.clicked.connect(
+            self.landsat_ctrl.handle_open_browser
         )
 
         self.auth_ctrl.refresh_auth_status()
