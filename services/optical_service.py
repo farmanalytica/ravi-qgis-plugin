@@ -22,6 +22,7 @@ class OpticalService:
     ) -> List[Dict[str, Any]]:
 
         collection = OpticalService._build_base_collection(aoi, date_start, date_end)
+        collection = OpticalService._keep_one_image_per_date(collection, aoi)
 
         def process_image(image):
             processed_image = OpticalService._add_vegetation_index(image, index_name)
@@ -48,6 +49,45 @@ class OpticalService:
             .filterBounds(aoi)
             .filterDate(date_start, date_end)
         )
+
+    @staticmethod
+    def _keep_one_image_per_date(
+        collection: ee.ImageCollection, aoi: ee.FeatureCollection
+    ) -> ee.ImageCollection:
+        """Keep a single image per acquisition date (always on).
+
+        Criteria: highest AOI footprint coverage first, cloud cover as the
+        tiebreaker. Both come from cheap geometry/metadata (no reduceRegion), so
+        the expensive per-image statistics are computed for the kept images
+        alone -- unlike the legacy approach, which derived stats before
+        deduplicating. Footprint coverage uses image.geometry() (the full MGRS
+        tile for Sentinel-2), so single-tile AOIs tie at full coverage and the
+        cloud tiebreaker decides.
+        """
+        geometry = aoi.geometry()
+        aoi_area = geometry.area()
+
+        def tag(image):
+            coverage = (
+                image.geometry()
+                .intersection(geometry, ee.ErrorMargin(1))
+                .area()
+                .divide(aoi_area)
+            )
+            cloud = ee.Number(image.get("CLOUDY_PIXEL_PERCENTAGE"))
+            # Composite descending score: coverage dominates, low cloud breaks
+            # ties (coverage in [0,1] scaled by 1000 outweighs cloud in [0,100]).
+            score = coverage.multiply(1000).subtract(cloud.divide(100))
+            return image.set(
+                {
+                    "date": ee.Date(image.get("system:time_start")).format(
+                        "YYYY-MM-dd"
+                    ),
+                    "dedup_score": score,
+                }
+            )
+
+        return collection.map(tag).sort("dedup_score", False).distinct("date")
 
     @staticmethod
     def _build_valid_scl_mask(
