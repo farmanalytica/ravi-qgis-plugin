@@ -17,6 +17,7 @@ from qgis.core import QgsCoordinateTransform, QgsProject
 
 from ..services.aoi_service import AOIService
 from ..tools.aoi_draw_tool import start_draw_aoi
+from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL
 from ..view.sar_plot import render_chart_html
 from ..workers.optical_worker import OpticalWorker
@@ -53,6 +54,13 @@ class OpticalCtrl:
         self._run_btn_text: str | None = None
         self._draw_tool = None
         self._plot_path: str | None = None
+        self._filter_settings = dict(DEFAULT_FILTER_SETTINGS)
+
+        # The "Adjust filter" dialog shows a live image count (cheap) and only
+        # re-renders the plot when the user clicks OK.
+        self.dialog.optical_filter_count_fn = self.count_matching
+        self.dialog.on_optical_filter_applied = self.apply_filter_settings
+        self.dialog.s2_filter_settings = dict(DEFAULT_FILTER_SETTINGS)
 
     def _release_worker(self):
         worker, self._optical_worker = self._optical_worker, None
@@ -210,10 +218,34 @@ class OpticalCtrl:
         self._render_timeseries()
         self.dialog.s2_set_tab(2)
 
+    def apply_filter_settings(self, settings: dict):
+        """Re-render the plot with new filter settings (called on dialog OK)."""
+        self._filter_settings = dict(settings)
+        if self.dataframe is not None and not self.dataframe.empty:
+            self._render_timeseries()
+
+    def count_matching(self, settings: dict) -> int:
+        """Count cached images passing the given thresholds (live, no render)."""
+        if self.dataframe is None or self.dataframe.empty:
+            return 0
+        return int(self._filter_mask(self.dataframe, settings).sum())
+
+    @staticmethod
+    def _filter_mask(df, s):
+        return (
+            (df["cloud_pct"] <= s["cloud_scene_max"])
+            & (df["valid_pixel_pct"] >= s["valid_pixel_min"])
+            & (df["coverage_pct"] >= s["coverage_min"])
+        )
+
+    def _filtered_dataframe(self) -> pd.DataFrame:
+        """Apply the current threshold filters to the cached time series."""
+        return self.dataframe[self._filter_mask(self.dataframe, self._filter_settings)]
+
     def _render_timeseries(self):
         """Plot the AOI-average time series into the optical results web view."""
         index_name = self._current_index
-        plot_df = self.dataframe.rename(columns={"date": "dates"})
+        plot_df = self._filtered_dataframe().rename(columns={"date": "dates"})
         plot_df = plot_df.dropna(subset=["dates", "AOI_average"])
 
         html = render_chart_html(

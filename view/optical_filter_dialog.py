@@ -32,6 +32,17 @@ def _tr(text):
     return QCoreApplication.translate("RAVI", text)
 
 
+# Legacy default thresholds (from ravi_dialog_base.ui sliders):
+#   cloud_scene_max  <- total_pixel_limit (40)  -> keep cloud_pct <= 40
+#   valid_pixel_min  <- local_pixel_limit (80)  -> keep valid_pixel_pct >= 80
+#   coverage_min     <- aio_cover         (90)  -> keep coverage_pct >= 90
+DEFAULT_FILTER_SETTINGS = {
+    "cloud_scene_max": 40,
+    "valid_pixel_min": 80,
+    "coverage_min": 90,
+}
+
+
 _DIALOG_STYLE = (
     "QDialog { background-color: #ffffff; color: #212121; }"
     "QLabel { background: transparent; border: none; }"
@@ -52,15 +63,16 @@ QSlider::handle:horizontal:hover { background: #15532d; }
 class OpticalFilterDialog(QDialog):
     """Popup that adjusts the optical time-series filter client-side.
 
-    ``filter_changed`` carries the full settings dict (see :meth:`get_settings`)
-    and fires on every change so the plot can refresh live. ``dates`` is the
-    list of available acquisition dates used by the per-date checklist; it may
-    be empty before a series has been generated.
+    Filters are applied to the plot only when the user clicks OK. While the
+    sliders move, ``count_fn`` (if given) is called with the current settings
+    to show how many cached images would pass -- a cheap row count, not a plot
+    re-render. ``filter_changed`` still fires on every change for any listener
+    that wants it.
     """
 
     filter_changed = pyqtSignal(dict)
 
-    def __init__(self, settings=None, parent=None):
+    def __init__(self, settings=None, count_fn=None, parent=None):
         super().__init__(parent)
         self.setWindowTitle(_tr("Adjust Filter"))
         self.setMinimumWidth(480)
@@ -69,12 +81,14 @@ class OpticalFilterDialog(QDialog):
         self.setStyleSheet(_DIALOG_STYLE)
 
         self._initial = settings
+        self._count_fn = count_fn
         self._building = True
 
         self._build_ui()
         if settings:
             self.set_settings(settings)
         self._building = False
+        self._update_count()
 
     # -- construction -----------------------------------------------------
     def _build_ui(self):
@@ -84,8 +98,8 @@ class OpticalFilterDialog(QDialog):
 
         intro = QLabel(
             _tr(
-                "Adjust how the cached image series is filtered. Changes update "
-                "the plot immediately — no new Earth Engine request is made."
+                "Adjust how the cached image series is filtered. The plot updates "
+                "when you click OK — no new Earth Engine request is made."
             )
         )
         intro.setWordWrap(True)
@@ -110,6 +124,13 @@ class OpticalFilterDialog(QDialog):
 
         scroll.setWidget(content)
         main.addWidget(scroll, 1)
+
+        self.count_label = QLabel("")
+        self.count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.count_label.setStyleSheet(
+            "color: #1b6b39; font-size: 12px; font-weight: bold;"
+        )
+        main.addWidget(self.count_label)
 
         button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
@@ -179,8 +200,12 @@ class OpticalFilterDialog(QDialog):
         )))
 
         lay.addWidget(QLabel(_tr("Max scene cloud %")))
-        self.cloud_scene_slider = self._pct_slider(100)
-        self.cloud_scene_value = QLabel("100%")
+        self.cloud_scene_slider = self._pct_slider(
+            DEFAULT_FILTER_SETTINGS["cloud_scene_max"]
+        )
+        self.cloud_scene_value = QLabel(
+            f"{DEFAULT_FILTER_SETTINGS['cloud_scene_max']}%"
+        )
         lay.addLayout(self._slider_row(self.cloud_scene_slider, self.cloud_scene_value))
         self.cloud_scene_slider.valueChanged.connect(
             lambda v: (self.cloud_scene_value.setText(f"{v}%"), self._emit())
@@ -195,8 +220,12 @@ class OpticalFilterDialog(QDialog):
             "Inputs tab; this slider only re-thresholds the cached counts."
         )))
         lay.addWidget(QLabel(_tr("Min valid pixels in AOI %")))
-        self.valid_pixel_slider = self._pct_slider(0)
-        self.valid_pixel_value = QLabel("0%")
+        self.valid_pixel_slider = self._pct_slider(
+            DEFAULT_FILTER_SETTINGS["valid_pixel_min"]
+        )
+        self.valid_pixel_value = QLabel(
+            f"{DEFAULT_FILTER_SETTINGS['valid_pixel_min']}%"
+        )
         lay.addLayout(self._slider_row(self.valid_pixel_slider, self.valid_pixel_value))
         self.valid_pixel_slider.valueChanged.connect(
             lambda v: (self.valid_pixel_value.setText(f"{v}%"), self._emit())
@@ -207,8 +236,12 @@ class OpticalFilterDialog(QDialog):
             "AOI."
         )))
         lay.addWidget(QLabel(_tr("Min AOI coverage %")))
-        self.coverage_slider = self._pct_slider(0)
-        self.coverage_value = QLabel("0%")
+        self.coverage_slider = self._pct_slider(
+            DEFAULT_FILTER_SETTINGS["coverage_min"]
+        )
+        self.coverage_value = QLabel(
+            f"{DEFAULT_FILTER_SETTINGS['coverage_min']}%"
+        )
         lay.addLayout(self._slider_row(self.coverage_slider, self.coverage_value))
         self.coverage_slider.valueChanged.connect(
             lambda v: (self.coverage_value.setText(f"{v}%"), self._emit())
@@ -219,7 +252,16 @@ class OpticalFilterDialog(QDialog):
     def _emit(self):
         if self._building:
             return
+        self._update_count()
         self.filter_changed.emit(self.get_settings())
+
+    def _update_count(self):
+        """Show how many cached images pass the current thresholds."""
+        if self._count_fn is None:
+            self.count_label.setText("")
+            return
+        n = self._count_fn(self.get_settings())
+        self.count_label.setText(_tr("%d images match") % n)
 
     def _on_cancel(self):
         if self._initial is not None:
@@ -238,7 +280,13 @@ class OpticalFilterDialog(QDialog):
     def set_settings(self, settings):
         """Apply a previously captured settings dict to the widgets."""
         self._building = True
-        self.cloud_scene_slider.setValue(settings.get("cloud_scene_max", 100))
-        self.valid_pixel_slider.setValue(settings.get("valid_pixel_min", 0))
-        self.coverage_slider.setValue(settings.get("coverage_min", 0))
+        self.cloud_scene_slider.setValue(
+            settings.get("cloud_scene_max", DEFAULT_FILTER_SETTINGS["cloud_scene_max"])
+        )
+        self.valid_pixel_slider.setValue(
+            settings.get("valid_pixel_min", DEFAULT_FILTER_SETTINGS["valid_pixel_min"])
+        )
+        self.coverage_slider.setValue(
+            settings.get("coverage_min", DEFAULT_FILTER_SETTINGS["coverage_min"])
+        )
         self._building = False
