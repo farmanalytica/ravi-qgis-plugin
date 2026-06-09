@@ -552,16 +552,9 @@ def _build_results_tab(dialog, parent):
     # --- Single-date image (shared date; RGB or VI output) --------------
     single_panel = _section_panel()
     single_lay = QVBoxLayout(single_panel)
-    single_lay.setContentsMargins(16, 14, 16, 14)
-    single_lay.setSpacing(10)
+    single_lay.setContentsMargins(16, 12, 16, 12)
+    single_lay.setSpacing(6)
     single_lay.addWidget(_caption(_tr("SINGLE-DATE IMAGE")))
-    single_hint = QLabel(_tr(
-        "Download the image for one date as a multispectral RGB composite or as "
-        "a single-band vegetation index."
-    ))
-    single_hint.setWordWrap(True)
-    single_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
-    single_lay.addWidget(single_hint)
 
     dialog.s2_result_date_combo = QComboBox()
     _prepare_field(dialog.s2_result_date_combo, 30)
@@ -569,38 +562,52 @@ def _build_results_tab(dialog, parent):
     dialog.s2_result_date_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
     dialog.s2_result_date_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
 
-    dialog.s2_output_type_combo = QComboBox()
-    _prepare_field(dialog.s2_output_type_combo, 30)
-    dialog.s2_output_type_combo.addItem(_tr("Multispectral (RGB)"), "rgb")
-    dialog.s2_output_type_combo.addItem(_tr("Vegetation Index"), "index")
-    dialog.s2_output_type_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
-    dialog.s2_output_type_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
+    def _subrow(title, widgets):
+        """A light inner card: an inline caption followed by the controls and
+        per-output download buttons, all on one wrapping row."""
+        frame = QFrame()
+        frame.setStyleSheet(
+            "QFrame { background: #fbfcfb; border: 1px solid #e8eee9;"
+            " border-radius: 6px; }"
+            "QLabel { background: transparent; border: none; }"
+        )
+        box = QVBoxLayout(frame)
+        box.setContentsMargins(10, 6, 10, 6)
+        box.setSpacing(0)
+        cap = QLabel(title)
+        cap.setStyleSheet(
+            "color: #1b6b39; font-size: 10px; font-weight: bold; letter-spacing: 1px;"
+        )
+        box.addWidget(_flow([cap, *widgets], spacing=10))
+        return frame
 
-    # RGB controls — just the composite rendering.
-    rgb_page = QWidget()
-    rgb_page.setStyleSheet("background: transparent;")
-    rgb_page_lay = QHBoxLayout(rgb_page)
-    rgb_page_lay.setContentsMargins(0, 0, 0, 0)
-    rgb_page_lay.setSpacing(12)
+    # Shared date selector for both single-date outputs.
+    single_lay.addWidget(_labeled(_tr("Date"), dialog.s2_result_date_combo, 34))
+
+    # --- Multispectral (RGB) ---
     dialog.s2_rgb_render_combo = QComboBox()
     _prepare_field(dialog.s2_rgb_render_combo, 30)
-    dialog.s2_rgb_render_combo.setMinimumWidth(220)
+    dialog.s2_rgb_render_combo.setMinimumWidth(200)
     dialog.s2_rgb_render_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
     for _label, _key in _RGB_RENDER_MODES:
         dialog.s2_rgb_render_combo.addItem(_label, _key)
     dialog.s2_rgb_render_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
-    rgb_page_lay.addWidget(_labeled(_tr("Rendering"), dialog.s2_rgb_render_combo, 70))
-    rgb_page_lay.addStretch(1)
+    dialog.s2_btn_rgb_preview = QPushButton(_tr("Preview"))
+    dialog.s2_btn_rgb_preview.setFixedHeight(30)
+    dialog.s2_btn_rgb_preview.setStyleSheet(STYLE_BTN_PRIMARY)
+    dialog.s2_btn_rgb_download = QPushButton(_tr("Download & Preview").replace("&", "&&"))
+    dialog.s2_btn_rgb_download.setFixedHeight(30)
+    dialog.s2_btn_rgb_download.setStyleSheet(STYLE_BTN_SECONDARY)
+    single_lay.addWidget(_subrow(_tr("RGB"), [
+        _labeled(_tr("Rendering"), dialog.s2_rgb_render_combo, 70),
+        dialog.s2_btn_rgb_preview,
+        dialog.s2_btn_rgb_download,
+    ]))
 
-    # VI controls — index choice + color ramp.
-    vi_page = QWidget()
-    vi_page.setStyleSheet("background: transparent;")
-    vi_page_lay = QHBoxLayout(vi_page)
-    vi_page_lay.setContentsMargins(0, 0, 0, 0)
-    vi_page_lay.setSpacing(12)
+    # --- Vegetation index ---
     dialog.s2_vi_index_combo = QComboBox()
     _prepare_field(dialog.s2_vi_index_combo, 30)
-    dialog.s2_vi_index_combo.setMinimumWidth(120)
+    dialog.s2_vi_index_combo.setMinimumWidth(76)
     dialog.s2_vi_index_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
     for name in INDEX_ORDER:
         dialog.s2_vi_index_combo.addItem(name, name)
@@ -608,38 +615,24 @@ def _build_results_tab(dialog, parent):
     dialog.s2_vi_index_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
     dialog.s2_vi_ramp_combo = QComboBox()
     _prepare_field(dialog.s2_vi_ramp_combo, 30)
-    dialog.s2_vi_ramp_combo.setMinimumWidth(120)
+    dialog.s2_vi_ramp_combo.setMinimumWidth(90)
     dialog.s2_vi_ramp_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
     dialog.s2_vi_ramp_combo.addItems(_COLOR_RAMPS)
+    dialog.s2_vi_ramp_combo.setCurrentText("RdYlGn")
     dialog.s2_vi_ramp_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
-    vi_page_lay.addWidget(_labeled(_tr("Index"), dialog.s2_vi_index_combo, 44))
-    vi_page_lay.addWidget(_labeled(_tr("Color Ramp"), dialog.s2_vi_ramp_combo, 80))
-    vi_page_lay.addStretch(1)
+    dialog.s2_btn_vi_preview = QPushButton(_tr("Preview"))
+    dialog.s2_btn_vi_preview.setFixedHeight(30)
+    dialog.s2_btn_vi_preview.setStyleSheet(STYLE_BTN_PRIMARY)
+    dialog.s2_btn_vi_download = QPushButton(_tr("Download & Preview").replace("&", "&&"))
+    dialog.s2_btn_vi_download.setFixedHeight(30)
+    dialog.s2_btn_vi_download.setStyleSheet(STYLE_BTN_SECONDARY)
+    single_lay.addWidget(_subrow(_tr("INDEX"), [
+        _labeled(_tr("Index"), dialog.s2_vi_index_combo, 44),
+        _labeled(_tr("Color Ramp"), dialog.s2_vi_ramp_combo, 80),
+        dialog.s2_btn_vi_preview,
+        dialog.s2_btn_vi_download,
+    ]))
 
-    # Swap the type-specific controls without leaving gaps in the row.
-    type_stack = QStackedWidget()
-    type_stack.setStyleSheet("QStackedWidget { background: transparent; border: none; }")
-    type_stack.addWidget(rgb_page)
-    type_stack.addWidget(vi_page)
-    type_stack.setFixedHeight(34)
-    dialog.s2_output_stack = type_stack
-    dialog.s2_output_type_combo.currentIndexChanged.connect(type_stack.setCurrentIndex)
-
-    # One shared Preview / Download pair for both output types.
-    dialog.s2_btn_preview = QPushButton(_tr("Preview"))
-    dialog.s2_btn_preview.setFixedHeight(30)
-    dialog.s2_btn_preview.setStyleSheet(STYLE_BTN_PRIMARY)
-    dialog.s2_btn_download_preview = QPushButton(_tr("Download & Preview").replace("&", "&&"))
-    dialog.s2_btn_download_preview.setFixedHeight(30)
-    dialog.s2_btn_download_preview.setStyleSheet(STYLE_BTN_SECONDARY)
-
-    single_lay.addWidget(_flow([
-        _labeled(_tr("Date"), dialog.s2_result_date_combo, 34),
-        _labeled(_tr("Output"), dialog.s2_output_type_combo, 56),
-        type_stack,
-        dialog.s2_btn_preview,
-        dialog.s2_btn_download_preview,
-    ], spacing=12))
     lay.addWidget(single_panel)
 
     # --- Synthetic composite --------------------------------------------
@@ -665,6 +658,7 @@ def _build_results_tab(dialog, parent):
     dialog.s2_composite_ramp_combo.setMinimumWidth(200)
     dialog.s2_composite_ramp_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
     dialog.s2_composite_ramp_combo.addItems(_COLOR_RAMPS)
+    dialog.s2_composite_ramp_combo.setCurrentText("RdYlGn")
     dialog.s2_composite_ramp_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
 
     dialog.s2_btn_composite_preview = QPushButton(_tr("Preview Composite"))
@@ -866,9 +860,9 @@ def setup_optical_page(dialog, page):
       s2_web_view, s2_btn_adjust_filter, s2_btn_filter_dates, s2_btn_open_browser,
       s2_btn_download_csv, s2_btn_batch_download,
       s2_chk_smoothing, s2_smooth_window, s2_smooth_polyorder,
-      s2_result_date_combo, s2_output_type_combo, s2_output_stack,
-      s2_rgb_render_combo, s2_vi_index_combo, s2_vi_ramp_combo,
-      s2_btn_preview, s2_btn_download_preview,
+      s2_result_date_combo,
+      s2_rgb_render_combo, s2_btn_rgb_preview, s2_btn_rgb_download,
+      s2_vi_index_combo, s2_vi_ramp_combo, s2_btn_vi_preview, s2_btn_vi_download,
       s2_composite_metric_combo, s2_composite_ramp_combo,
       s2_btn_composite_preview, s2_btn_composite_download,
       s2_chk_climate_precip, s2_chk_climate_tmin, s2_chk_climate_tmax,
