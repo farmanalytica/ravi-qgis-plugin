@@ -45,11 +45,21 @@ from .radar import (
     _prepare_field,
     _section_panel,
 )
+from .range_slider import RangeSlider
 from .styles import STYLE_BTN_PRIMARY, STYLE_BTN_SECONDARY, STYLE_CHECKBOX
 
 
 def _tr(text):
     return QCoreApplication.translate("RAVI", text)
+
+
+def _value_lbl(text):
+    lbl = QLabel(text)
+    lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    lbl.setStyleSheet(
+        "color: #616161; font-size: 10px; background: transparent; border: none;"
+    )
+    return lbl
 
 
 _MONTHS = [
@@ -164,14 +174,13 @@ def _build_intro_tab(_dialog, parent):
     outer.addWidget(scroll, 1)
 
 
-def _threshold_row(label_text, min_widget, min_lbl, max_widget, max_lbl):
-    """A labeled Min/Max double-slider row used for the NDVI/NBR2 thresholds."""
+def _threshold_row(label_text, range_slider):
+    """A labeled range-slider row for NDVI/NBR2 thresholds."""
     box = QWidget()
     box.setStyleSheet("background: transparent;")
-    grid = QGridLayout(box)
-    grid.setContentsMargins(0, 0, 0, 0)
-    grid.setHorizontalSpacing(8)
-    grid.setVerticalSpacing(2)
+    row = QHBoxLayout(box)
+    row.setContentsMargins(0, 0, 0, 0)
+    row.setSpacing(8)
 
     name = QLabel(label_text)
     name.setMinimumWidth(54)
@@ -179,24 +188,9 @@ def _threshold_row(label_text, min_widget, min_lbl, max_widget, max_lbl):
         "color: #616161; font-size: 12px; font-weight: bold;"
         " background: transparent; border: none;"
     )
-    grid.addWidget(name, 0, 0, 2, 1)
-
-    grid.addWidget(min_lbl, 0, 1, Qt.AlignmentFlag.AlignHCenter)
-    grid.addWidget(max_lbl, 0, 2, Qt.AlignmentFlag.AlignHCenter)
-    grid.addWidget(min_widget, 1, 1)
-    grid.addWidget(max_widget, 1, 2)
-    grid.setColumnStretch(1, 1)
-    grid.setColumnStretch(2, 1)
+    row.addWidget(name)
+    row.addWidget(range_slider, 1)
     return box
-
-
-def _value_lbl(text):
-    lbl = QLabel(text)
-    lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    lbl.setStyleSheet(
-        "color: #616161; font-size: 10px; background: transparent; border: none;"
-    )
-    return lbl
 
 
 def _build_inputs_tab(dialog, parent):
@@ -321,42 +315,11 @@ def _build_inputs_tab(dialog, parent):
     thr_lay.setSpacing(10)
     thr_lay.addWidget(_field_label(_tr("BARE-SOIL THRESHOLDS")))
 
-    # NDVI: inf slider shows a negative value (value/100 negated), sup positive.
-    dialog.sysi_ndvi_inf_slider = QSlider(Qt.Orientation.Horizontal)
-    dialog.sysi_ndvi_inf_slider.setMinimum(0)
-    dialog.sysi_ndvi_inf_slider.setMaximum(100)
-    dialog.sysi_ndvi_inf_slider.setValue(25)
-    dialog.sysi_ndvi_inf_slider.setStyleSheet(_SLIDER_STYLE)
-    dialog.sysi_ndvi_sup_slider = QSlider(Qt.Orientation.Horizontal)
-    dialog.sysi_ndvi_sup_slider.setMinimum(0)
-    dialog.sysi_ndvi_sup_slider.setMaximum(100)
-    dialog.sysi_ndvi_sup_slider.setValue(25)
-    dialog.sysi_ndvi_sup_slider.setStyleSheet(_SLIDER_STYLE)
-    dialog.sysi_ndvi_inf_value = _value_lbl("-0.25")
-    dialog.sysi_ndvi_sup_value = _value_lbl("0.25")
-    thr_lay.addWidget(_threshold_row(
-        _tr("NDVI"),
-        dialog.sysi_ndvi_inf_slider, dialog.sysi_ndvi_inf_value,
-        dialog.sysi_ndvi_sup_slider, dialog.sysi_ndvi_sup_value,
-    ))
+    dialog.sysi_ndvi_range_slider = RangeSlider(-1.0, 1.0, -0.25, 0.25)
+    thr_lay.addWidget(_threshold_row(_tr("NDVI"), dialog.sysi_ndvi_range_slider))
 
-    dialog.sysi_nbr_inf_slider = QSlider(Qt.Orientation.Horizontal)
-    dialog.sysi_nbr_inf_slider.setMinimum(0)
-    dialog.sysi_nbr_inf_slider.setMaximum(100)
-    dialog.sysi_nbr_inf_slider.setValue(30)
-    dialog.sysi_nbr_inf_slider.setStyleSheet(_SLIDER_STYLE)
-    dialog.sysi_nbr_sup_slider = QSlider(Qt.Orientation.Horizontal)
-    dialog.sysi_nbr_sup_slider.setMinimum(0)
-    dialog.sysi_nbr_sup_slider.setMaximum(100)
-    dialog.sysi_nbr_sup_slider.setValue(10)
-    dialog.sysi_nbr_sup_slider.setStyleSheet(_SLIDER_STYLE)
-    dialog.sysi_nbr_inf_value = _value_lbl("-0.30")
-    dialog.sysi_nbr_sup_value = _value_lbl("0.10")
-    thr_lay.addWidget(_threshold_row(
-        _tr("NBR2"),
-        dialog.sysi_nbr_inf_slider, dialog.sysi_nbr_inf_value,
-        dialog.sysi_nbr_sup_slider, dialog.sysi_nbr_sup_value,
-    ))
+    dialog.sysi_nbr_range_slider = RangeSlider(-1.0, 1.0, -0.30, 0.10)
+    thr_lay.addWidget(_threshold_row(_tr("NBR2"), dialog.sysi_nbr_range_slider))
 
     hint = QLabel(_tr("Keep Min &lt; Max. Pixels inside both ranges are kept as bare soil."))
     hint.setTextFormat(Qt.TextFormat.RichText)
@@ -364,23 +327,6 @@ def _build_inputs_tab(dialog, parent):
         "color: #9e9e9e; font-size: 10px; background: transparent; border: none;"
     )
     thr_lay.addWidget(hint)
-
-    def _sync_ndvi_inf(v):
-        dialog.sysi_ndvi_inf_value.setText(f"{-v / 100:.2f}")
-
-    def _sync_ndvi_sup(v):
-        dialog.sysi_ndvi_sup_value.setText(f"{v / 100:.2f}")
-
-    def _sync_nbr_inf(v):
-        dialog.sysi_nbr_inf_value.setText(f"{-v / 100:.2f}")
-
-    def _sync_nbr_sup(v):
-        dialog.sysi_nbr_sup_value.setText(f"{v / 100:.2f}")
-
-    dialog.sysi_ndvi_inf_slider.valueChanged.connect(_sync_ndvi_inf)
-    dialog.sysi_ndvi_sup_slider.valueChanged.connect(_sync_ndvi_sup)
-    dialog.sysi_nbr_inf_slider.valueChanged.connect(_sync_nbr_inf)
-    dialog.sysi_nbr_sup_slider.valueChanged.connect(_sync_nbr_sup)
     lay.addWidget(thr_panel)
 
     # --- Cloud cover -----------------------------------------------------
@@ -492,8 +438,7 @@ def setup_sysi_page(dialog, page):
     Exposes on dialog:
       sysi_layer_combo, sysi_btn_draw_aoi, sysi_btn_hybrid_layer,
       sysi_date_start, sysi_date_end, sysi_month_checks,
-      sysi_ndvi_inf_slider, sysi_ndvi_sup_slider,
-      sysi_nbr_inf_slider, sysi_nbr_sup_slider,
+      sysi_ndvi_range_slider, sysi_nbr_range_slider  (RangeSlider instances),
       sysi_cloud_slider, sysi_buffer_slider,
       sysi_stack, sysi_set_tab, sysi_btn_back, sysi_btn_generate, sysi_step_lbl
     """

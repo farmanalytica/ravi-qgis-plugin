@@ -150,6 +150,7 @@ class RAVI:
         from .controllers.sar_ctrl import SARCtrl
         from .controllers.optical_ctrl import OpticalCtrl
         from .controllers.landsat_ctrl import LandsatCtrl
+        from .controllers.sysi_ctrl import SYSICtrl
 
         self._services_ready = True
         self.gee_service = GEEService()
@@ -162,6 +163,7 @@ class RAVI:
         self.landsat_ctrl = LandsatCtrl(
             self.dialog, self.interface, self.gee_service
         )
+        self.sysi_ctrl = SYSICtrl(self.dialog, self.interface, self.gee_service)
 
         saved_project_id = self.gee_service.get_saved_project_id()
         if saved_project_id:
@@ -307,6 +309,19 @@ class RAVI:
             self.landsat_ctrl.handle_open_browser
         )
 
+        self.dialog.sysi_btn_draw_aoi.clicked.connect(
+            self.sysi_ctrl.handle_draw_aoi
+        )
+        self.dialog.sysi_btn_hybrid_layer.clicked.connect(
+            self.dem_ctrl.handle_hybrid_layer
+        )
+        self.dialog.sysi_btn_generate.clicked.connect(
+            self.sysi_ctrl.handle_generate_sysi
+        )
+        self.dialog.sysi_layer_combo.layerChanged.connect(
+            self.sysi_ctrl.handle_layer_changed
+        )
+
         self.auth_ctrl.refresh_auth_status()
 
     def _on_extlibs_ready(self, success, error_msg):
@@ -327,7 +342,7 @@ class RAVI:
         """Display the plugin dialog and handle user interaction."""
         from . import extlibs_manager
 
-        if self.first_start:
+        if self.first_start or not hasattr(self, "dialog"):
             self.first_start = False
             self.dialog = RAVIDialog(self.interface.mainWindow())
 
