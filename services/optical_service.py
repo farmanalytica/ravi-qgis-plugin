@@ -303,6 +303,68 @@ class OpticalService:
         return output_path
 
     @staticmethod
+    def get_index_image_for_date(
+        aoi: ee.FeatureCollection, date: str, index_name: str, buffer_m: float = 0
+    ):
+        """Single-band vegetation-index image for ``date`` (same scene pick as
+        the time series), clipped to the buffered AOI."""
+        region = OpticalService._download_region(aoi, buffer_m)
+        next_date = (
+            datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+
+        collection = (
+            ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+            .filterBounds(aoi)
+            .filterDate(date, next_date)
+        )
+        collection = OpticalService._keep_one_image_per_date(collection, aoi)
+        image = OpticalService._add_vegetation_index(
+            ee.Image(collection.first()), index_name
+        )
+        return image.select("index").clip(region), region
+
+    @staticmethod
+    def download_index_for_date(
+        aoi: ee.FeatureCollection,
+        date: str,
+        index_name: str,
+        buffer_m: float = 0,
+        output_folder: str = None,
+    ) -> str:
+        """Download the single-band index scene for ``date`` as a GeoTIFF."""
+        image, region = OpticalService.get_index_image_for_date(
+            aoi, date, index_name, buffer_m
+        )
+        url = image.getDownloadURL(
+            {
+                "scale": 10,
+                "region": region.bounds().getInfo(),
+                "format": "GeoTIFF",
+                "crs": "EPSG:4326",
+            }
+        )
+
+        response = requests.get(url, timeout=300)
+        if not response.ok:
+            raise RuntimeError(
+                f"Optical download failed (HTTP {response.status_code}): "
+                f"{response.reason}"
+            )
+
+        base_dir = (
+            output_folder
+            if (output_folder and os.path.isdir(output_folder))
+            else tempfile.gettempdir()
+        )
+        output_path = OpticalService._unique_path(
+            base_dir, f"S2_{index_name}_{date}.tiff"
+        )
+        with open(output_path, "wb") as f:
+            f.write(response.content)
+        return output_path
+
+    @staticmethod
     def _unique_path(folder: str, filename: str) -> str:
         path = os.path.join(folder, filename)
         if not os.path.exists(path):

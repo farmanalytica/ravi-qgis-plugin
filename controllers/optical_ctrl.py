@@ -30,8 +30,10 @@ from ..services.optical_service import OpticalService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL
+from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_chart_html
 from ..workers.batch_download_worker import BatchDownloadWorker
+from ..workers.optical_preview_worker import OpticalPreviewWorker
 from ..workers.optical_worker import OpticalWorker
 
 
@@ -71,6 +73,8 @@ class OpticalCtrl:
         self._date_filter_dialog = None
         self._batch_worker: BatchDownloadWorker | None = None
         self._batch_dialog: QProgressDialog | None = None
+        self._preview_worker: OpticalPreviewWorker | None = None
+        self._preview_btn_texts: tuple | None = None
 
         # The "Adjust filter" dialog shows a live image count (cheap) and only
         # re-renders the plot when the user clicks OK.
@@ -457,9 +461,15 @@ class OpticalCtrl:
             self._batch_dialog.close()
             self._batch_dialog = None
 
-    # Real-colour band positions within the _MULTISPECTRAL_BANDS stack
-    # (1-based): B4=Red, B3=Green, B2=Blue.
-    _RGB_BANDS = (4, 3, 2)
+    # Band positions within the _MULTISPECTRAL_BANDS stack (1-based):
+    # B1=1 B2=2 B3=3 B4=4 B5=5 B6=6 B7=7 B8=8 B8A=9 B9=10 B11=11 B12=12.
+    _RGB_MODE_BANDS = {
+        "RGB: Real Color": (4, 3, 2),       # B4 B3 B2
+        "RGB: Red-NIR-Green": (4, 8, 3),    # B4 B8 B3
+        "RGB: NIR-Red-Green": (8, 4, 3),    # B8 B4 B3
+        "RGB: SWIR2-NIR-Green": (12, 8, 3),  # B12 B8 B3
+        "RGB: SWIR1-NIR-SWIR2": (11, 8, 12),  # B11 B8 B12
+    }
 
     def _load_downloaded_images(self, paths: list):
         for path in paths:
@@ -469,15 +479,15 @@ class OpticalCtrl:
             except Exception:
                 continue
 
-    def _add_rgb_raster(self, path: str, name: str):
-        """Load a multispectral GeoTIFF as a true-colour (B4/B3/B2) layer with a
-        2–98% cumulative-cut stretch per band, mirroring the legacy renderer."""
+    def _add_rgb_raster(self, path: str, name: str, bands=(4, 3, 2)):
+        """Load a multispectral GeoTIFF as an RGB composite (default true colour
+        B4/B3/B2) with a 2–98% cumulative-cut stretch per band."""
         layer = QgsRasterLayer(path, name)
         if not layer.isValid():
             return
 
         provider = layer.dataProvider()
-        red, green, blue = self._RGB_BANDS
+        red, green, blue = bands
         renderer = QgsMultiBandColorRenderer(provider, red, green, blue)
 
         extent = layer.extent()
@@ -498,6 +508,104 @@ class OpticalCtrl:
         layer.setRenderer(renderer)
         QgsProject.instance().addMapLayer(layer)
         layer.triggerRepaint()
+
+    # -- single-date image (preview / download) ---------------------------
+    def handle_rgb_preview(self):
+        self._run_single("rgb", to_folder=False)
+
+    def handle_rgb_download(self):
+        self._run_single("rgb", to_folder=True)
+
+    def handle_vi_preview(self):
+        self._run_single("index", to_folder=False)
+
+    def handle_vi_download(self):
+        self._run_single("index", to_folder=True)
+
+    def _run_single(self, kind: str, to_folder: bool):
+        if not self._has_results():
+            return
+        if self._preview_worker is not None and self._preview_worker.isRunning():
+            return
+
+        date = self.dialog.s2_result_date_combo.currentText()
+        if not date:
+            self.dialog.pop_message(_tr("Select a date first."), "warning")
+            return
+
+        index_name = self.dialog.s2_vi_index_combo.currentData() or "NDVI"
+        if kind == "index" and index_name == CUSTOM_INDEX_LABEL:
+            self.dialog.pop_message(
+                _tr("Custom optical indices are not available in this milestone."),
+                "warning",
+            )
+            return
+
+        folder = (
+            SettingsManager.load_download_folder()
+            if to_folder
+            else tempfile.gettempdir()
+        )
+
+        self._set_single_busy(kind, True)
+        self._preview_worker = OpticalPreviewWorker(
+            kind, self.aoi, date, index_name, self._buffer_meters(), folder
+        )
+        self._preview_worker.finished.connect(
+            lambda path, k: self._on_single_done(path, k, to_folder)
+        )
+        self._preview_worker.failed.connect(self._on_single_failed)
+        self._preview_worker.start()
+
+    def _single_buttons(self, kind: str):
+        if kind == "index":
+            return (self.dialog.s2_btn_vi_preview, self.dialog.s2_btn_vi_download)
+        return (self.dialog.s2_btn_rgb_preview, self.dialog.s2_btn_rgb_download)
+
+    def _set_single_busy(self, kind: str, busy: bool):
+        btns = self._single_buttons(kind)
+        if busy:
+            self._preview_btn_texts = tuple(b.text() for b in btns)
+            for b in btns:
+                b.setText(_tr("Loading..."))
+        elif self._preview_btn_texts:
+            for b, txt in zip(btns, self._preview_btn_texts):
+                b.setText(txt)
+        for b in btns:
+            b.setEnabled(not busy)
+
+    def _on_single_done(self, path: str, kind: str, to_folder: bool):
+        self._set_single_busy(kind, False)
+        worker, self._preview_worker = self._preview_worker, None
+        if worker is not None:
+            worker.deleteLater()
+
+        date = self.dialog.s2_result_date_combo.currentText()
+        if kind == "index":
+            index_name = self.dialog.s2_vi_index_combo.currentData() or "NDVI"
+            ramp = self.dialog.s2_vi_ramp_combo.currentText()
+            RasterRendererUtils.load_pseudocolor_raster(
+                path, f"S2 {index_name} {date}", 1, ramp
+            )
+        else:
+            mode = self.dialog.s2_rgb_render_combo.currentData()
+            bands = self._RGB_MODE_BANDS.get(mode, (4, 3, 2))
+            self._add_rgb_raster(path, f"S2 RGB {date}", bands)
+
+        if self.interface is not None:
+            action = _tr("downloaded and loaded") if to_folder else _tr("loaded")
+            self.interface.messageBar().pushMessage(
+                "RAVI", _tr("Optical image %s into QGIS.") % action
+            )
+
+    def _on_single_failed(self, message: str):
+        worker, self._preview_worker = self._preview_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        # Both pairs may show "Loading..."; restore whichever is disabled.
+        for kind in ("rgb", "index"):
+            self._set_single_busy(kind, False)
+        self.dialog.pop_message(message, "warning")
 
     def _render_timeseries(self):
         """Plot the AOI-average time series into the optical results web view."""
