@@ -831,21 +831,25 @@ def _wire_filter_dialog(dialog):
     """Attach the lazy openers for the client-side filter popup and the per-date
     selection dialog.
 
-    Front-end only: each opener caches the chosen settings/dates on ``dialog``.
-    Re-rendering the plot from them is a later backend task.
+    The filter popup shows a live image count while the sliders move
+    (``optical_filter_count_fn``), but only applies to the plot on OK, via
+    ``on_optical_filter_applied`` (both set by the controller).
     """
     dialog.s2_filter_settings = None
     dialog.s2_active_dates = None
 
     def _open_filter():
-        popup = OpticalFilterDialog(settings=dialog.s2_filter_settings, parent=dialog)
-
-        def _capture(settings):
-            dialog.s2_filter_settings = settings
-
-        popup.filter_changed.connect(_capture)
+        popup = OpticalFilterDialog(
+            settings=dialog.s2_filter_settings,
+            count_fn=getattr(dialog, "optical_filter_count_fn", None),
+            parent=dialog,
+        )
         if popup.exec():
-            dialog.s2_filter_settings = popup.get_settings()
+            settings = popup.get_settings()
+            dialog.s2_filter_settings = settings
+            hook = getattr(dialog, "on_optical_filter_applied", None)
+            if hook is not None:
+                hook(settings)
 
     def _open_dates():
         dates = getattr(dialog, "s2_available_dates", None) or []
