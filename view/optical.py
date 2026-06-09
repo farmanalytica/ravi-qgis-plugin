@@ -53,7 +53,6 @@ from .radar import (
 )
 from .styles import STYLE_BTN_PRIMARY, STYLE_BTN_SECONDARY, STYLE_CHECKBOX
 from .optical_filter_dialog import OpticalFilterDialog
-from .sar_date_filter_dialog import SARDateFilterDialog
 from .optical_index_info import (
     CUSTOM_BAND_REFERENCE,
     CUSTOM_INDEX_LABEL,
@@ -851,18 +850,10 @@ def _wire_filter_dialog(dialog):
             if hook is not None:
                 hook(settings)
 
-    def _open_dates():
-        dates = getattr(dialog, "s2_available_dates", None) or []
-        popup = SARDateFilterDialog(dates, dialog.s2_active_dates, parent=dialog)
-        popup.filter_changed.connect(
-            lambda selected: setattr(dialog, "s2_active_dates", list(selected))
-        )
-        popup.exec()
-
+    # The "Filter dates" button is wired to OpticalCtrl.handle_filter_dates in
+    # ravi.py (it owns the active-date state and re-renders the plot).
     dialog.open_optical_filter_dialog = _open_filter
-    dialog.open_optical_date_filter = _open_dates
     dialog.s2_btn_adjust_filter.clicked.connect(_open_filter)
-    dialog.s2_btn_filter_dates.clicked.connect(_open_dates)
 
 def setup_optical_page(dialog, page):
     """

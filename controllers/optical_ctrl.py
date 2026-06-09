@@ -9,17 +9,29 @@ DataFrame, including filter metadata, to the QGIS/Python console.
 
 import os
 import tempfile
+from datetime import datetime
 
 import pandas as pd
 
 from qgis.PyQt.QtCore import QCoreApplication, QUrl
-from qgis.core import QgsCoordinateTransform, QgsProject
+from qgis.PyQt.QtGui import QDesktopServices
+from qgis.PyQt.QtWidgets import QFileDialog, QProgressDialog
+from qgis.core import (
+    QgsContrastEnhancement,
+    QgsCoordinateTransform,
+    QgsMultiBandColorRenderer,
+    QgsProject,
+    QgsRasterLayer,
+)
 
+from ..managers.settings_manager import SettingsManager
 from ..services.aoi_service import AOIService
+from ..services.optical_service import OpticalService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL
 from ..view.sar_plot import render_chart_html
+from ..workers.batch_download_worker import BatchDownloadWorker
 from ..workers.optical_worker import OpticalWorker
 
 
@@ -55,6 +67,10 @@ class OpticalCtrl:
         self._draw_tool = None
         self._plot_path: str | None = None
         self._filter_settings = dict(DEFAULT_FILTER_SETTINGS)
+        self._active_dates: list | None = None
+        self._date_filter_dialog = None
+        self._batch_worker: BatchDownloadWorker | None = None
+        self._batch_dialog: QProgressDialog | None = None
 
         # The "Adjust filter" dialog shows a live image count (cheap) and only
         # re-renders the plot when the user clicks OK.
@@ -207,21 +223,25 @@ class OpticalCtrl:
         self.dataframe = pd.DataFrame(data_rows)
         self.dataframe = self.dataframe.reindex(columns=columns)
         self._current_index = index_name
-
-        dates = self.dataframe["date"].dropna().astype(str).tolist()
-        self.dialog.s2_available_dates = dates
-        self.dialog.s2_result_date_combo.clear()
-        self.dialog.s2_result_date_combo.addItems(dates)
+        self._active_dates = None
 
         print(self.dataframe.to_string(index=False))  # TODO: remove (debug)
 
+        self._refresh_result_dates()
         self._render_timeseries()
         self.dialog.s2_set_tab(2)
 
     def apply_filter_settings(self, settings: dict):
-        """Re-render the plot with new filter settings (called on dialog OK)."""
+        """Apply new threshold filters (called on Adjust-filter OK).
+
+        Applying thresholds changes which dates qualify, so it overrides any
+        manual date selection (Filter dates) and rebuilds the single-image date
+        dropdown from the newly filtered set.
+        """
         self._filter_settings = dict(settings)
+        self._active_dates = None
         if self.dataframe is not None and not self.dataframe.empty:
+            self._refresh_result_dates()
             self._render_timeseries()
 
     def count_matching(self, settings: dict) -> int:
@@ -238,9 +258,246 @@ class OpticalCtrl:
             & (df["coverage_pct"] >= s["coverage_min"])
         )
 
+    def _threshold_dates(self) -> list:
+        """Dates passing the current thresholds (ignores manual date selection)."""
+        df = self.dataframe[self._filter_mask(self.dataframe, self._filter_settings)]
+        return df["date"].dropna().astype(str).tolist()
+
     def _filtered_dataframe(self) -> pd.DataFrame:
-        """Apply the current threshold filters to the cached time series."""
-        return self.dataframe[self._filter_mask(self.dataframe, self._filter_settings)]
+        """Cached series after thresholds and the manual date selection."""
+        df = self.dataframe[self._filter_mask(self.dataframe, self._filter_settings)]
+        if self._active_dates is not None:
+            df = df[df["date"].astype(str).isin(self._active_dates)]
+        return df
+
+    def _refresh_result_dates(self):
+        """Repopulate the single-image date dropdown from the filtered series."""
+        dates = self._filtered_dataframe()["date"].dropna().astype(str).tolist()
+        self.dialog.s2_available_dates = dates
+        combo = self.dialog.s2_result_date_combo
+        previous = combo.currentText()
+        combo.blockSignals(True)
+        combo.clear()
+        combo.addItems(dates)
+        if previous in dates:
+            combo.setCurrentText(previous)
+        combo.blockSignals(False)
+
+    # -- Filter dates (manual per-date include/exclude) -------------------
+    def handle_filter_dates(self):
+        if self.dataframe is None or self.dataframe.empty:
+            self.dialog.pop_message(_tr("Run the optical analysis first."), "warning")
+            return
+
+        if self._date_filter_dialog is not None:
+            self._date_filter_dialog.raise_()
+            self._date_filter_dialog.activateWindow()
+            return
+
+        from ..view.sar_date_filter_dialog import SARDateFilterDialog
+
+        self._date_filter_dialog = SARDateFilterDialog(
+            self._threshold_dates(), self._active_dates, parent=self.dialog
+        )
+        self._date_filter_dialog.filter_changed.connect(self._on_dates_changed)
+        self._date_filter_dialog.finished.connect(self._on_date_filter_closed)
+        self._date_filter_dialog.show()
+
+    def _on_dates_changed(self, selected_dates):
+        all_dates = self._threshold_dates()
+        self._active_dates = (
+            None if set(selected_dates) == set(all_dates) else list(selected_dates)
+        )
+        self._refresh_result_dates()
+        self._render_timeseries()
+
+    def _on_date_filter_closed(self):
+        self._date_filter_dialog = None
+
+    # -- export actions (time-series toolbar) -----------------------------
+    def _has_results(self) -> bool:
+        if self.dataframe is None or self.dataframe.empty:
+            self.dialog.pop_message(_tr("Run the optical analysis first."), "warning")
+            return False
+        return True
+
+    def _plot_dataframe(self):
+        return (
+            self._filtered_dataframe()
+            .rename(columns={"date": "dates"})
+            .dropna(subset=["dates", "AOI_average"])
+        )
+
+    def handle_open_browser(self):
+        """Open the current (filtered) time series in the system browser."""
+        if not self._has_results():
+            return
+
+        index_name = self._current_index
+        html = render_chart_html(
+            self._plot_dataframe(),
+            hide_toolbar=False,
+            title=_tr("%s Time Series") % index_name,
+            ylabel=_tr("%s AOI average") % index_name,
+        )
+        with tempfile.NamedTemporaryFile(
+            suffix=".html", delete=False, mode="w", encoding="utf-8"
+        ) as f:
+            f.write(html)
+            path = f.name
+        QDesktopServices.openUrl(QUrl.fromLocalFile(path))
+
+    def handle_export_csv(self):
+        """Export the current (filtered) time series as CSV."""
+        if not self._has_results():
+            return
+
+        date_str = datetime.now().strftime("%Y%m%d")
+        default_filename = f"optical_{self._current_index}_timeseries_{date_str}.csv"
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.dialog,
+            _tr("Export Optical Time Series as CSV"),
+            default_filename,
+            _tr("CSV Files (*.csv);;All Files (*)"),
+        )
+        if not file_path:
+            return
+
+        try:
+            self._filtered_dataframe().to_csv(file_path, index=False)
+            self.dialog.pop_message(
+                _tr("CSV exported successfully to %s") % file_path, "info"
+            )
+        except Exception as e:
+            self.dialog.pop_message(_tr("Failed to export CSV: %s") % str(e), "warning")
+
+    def _buffer_meters(self) -> float:
+        slider = getattr(self.dialog, "s2_buffer_slider", None)
+        if slider is None:
+            return 0
+        value = slider.value()
+        return 0 if -3 <= value <= 3 else value  # match the UI dead-zone
+
+    def handle_batch_download(self):
+        """Download the multispectral scene of every filtered date (raw S2
+        bands, clipped to the AOI plus the buffer setting)."""
+        if not self._has_results():
+            return
+        if self._batch_worker is not None and self._batch_worker.isRunning():
+            return
+
+        dates = self._filtered_dataframe()["date"].dropna().astype(str).tolist()
+        if not dates:
+            self.dialog.pop_message(_tr("No dates selected to download."), "warning")
+            return
+
+        aoi = self.aoi
+        buffer_m = self._buffer_meters()
+        folder = SettingsManager.load_download_folder()
+
+        self._batch_dialog = QProgressDialog(
+            _tr("Preparing batch download..."),
+            _tr("Cancel"),
+            0,
+            len(dates),
+            self.dialog,
+        )
+        self._batch_dialog.setWindowTitle(_tr("Batch Download Progress"))
+        self._batch_dialog.setModal(True)
+        self._batch_dialog.show()
+
+        def _download_one(date):
+            return OpticalService.download_multispectral_for_date(
+                aoi, date, buffer_m=buffer_m, output_folder=folder
+            )
+
+        self._batch_worker = BatchDownloadWorker(dates, _download_one)
+        self._batch_worker.progress.connect(self._on_batch_progress)
+        self._batch_worker.finished.connect(self._on_batch_done)
+        self._batch_worker.cancelled.connect(self._on_batch_cancelled)
+        self._batch_worker.failed.connect(self._on_batch_failed)
+        self._batch_dialog.canceled.connect(self._batch_worker.request_cancel)
+        self._batch_worker.start()
+
+    def _on_batch_progress(self, current: int, total: int, date_str: str):
+        if self._batch_dialog is None:
+            return
+        self._batch_dialog.setMaximum(total)
+        self._batch_dialog.setValue(current)
+        self._batch_dialog.setLabelText(
+            _tr("Downloading %d of %d: %s") % (current, total, date_str)
+        )
+
+    def _on_batch_done(self, successful: int, total: int, paths: list):
+        self._close_batch_dialog()
+        self._load_downloaded_images(paths)
+        failed = total - successful
+        msg = _tr("Batch download complete: %d/%d successful") % (successful, total)
+        if failed > 0:
+            msg += _tr(" (%d failed)") % failed
+        self.dialog.pop_message(msg, "warning" if failed > 0 else "info")
+        self._batch_worker = None
+
+    def _on_batch_cancelled(self, successful: int, total: int, paths: list):
+        self._close_batch_dialog()
+        self._load_downloaded_images(paths)
+        self.dialog.pop_message(
+            _tr("Batch download cancelled. %d/%d downloaded.") % (successful, total),
+            "info",
+        )
+        self._batch_worker = None
+
+    def _on_batch_failed(self, message: str):
+        self._close_batch_dialog()
+        self.dialog.pop_message(_tr("Batch download failed: %s") % message, "warning")
+        self._batch_worker = None
+
+    def _close_batch_dialog(self):
+        if self._batch_dialog is not None:
+            self._batch_dialog.close()
+            self._batch_dialog = None
+
+    # Real-colour band positions within the _MULTISPECTRAL_BANDS stack
+    # (1-based): B4=Red, B3=Green, B2=Blue.
+    _RGB_BANDS = (4, 3, 2)
+
+    def _load_downloaded_images(self, paths: list):
+        for path in paths:
+            try:
+                name = os.path.splitext(os.path.basename(path))[0]
+                self._add_rgb_raster(path, name)
+            except Exception:
+                continue
+
+    def _add_rgb_raster(self, path: str, name: str):
+        """Load a multispectral GeoTIFF as a true-colour (B4/B3/B2) layer with a
+        2–98% cumulative-cut stretch per band, mirroring the legacy renderer."""
+        layer = QgsRasterLayer(path, name)
+        if not layer.isValid():
+            return
+
+        provider = layer.dataProvider()
+        red, green, blue = self._RGB_BANDS
+        renderer = QgsMultiBandColorRenderer(provider, red, green, blue)
+
+        extent = layer.extent()
+        for band, set_enhancement in (
+            (red, renderer.setRedContrastEnhancement),
+            (green, renderer.setGreenContrastEnhancement),
+            (blue, renderer.setBlueContrastEnhancement),
+        ):
+            val_min, val_max = provider.cumulativeCut(band, 0.02, 0.98, extent, 250000)
+            ce = QgsContrastEnhancement(provider.dataType(band))
+            ce.setContrastEnhancementAlgorithm(
+                QgsContrastEnhancement.StretchToMinimumMaximum
+            )
+            ce.setMinimumValue(val_min)
+            ce.setMaximumValue(val_max)
+            set_enhancement(ce)
+
+        layer.setRenderer(renderer)
+        QgsProject.instance().addMapLayer(layer)
+        layer.triggerRepaint()
 
     def _render_timeseries(self):
         """Plot the AOI-average time series into the optical results web view."""
