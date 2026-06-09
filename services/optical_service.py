@@ -1,8 +1,25 @@
-import ee
-
+import os
+import tempfile
+from datetime import datetime, timedelta
 from typing import List, Dict, Any
 
+import ee
+import requests
+
+try:
+    from osgeo import gdal
+except ImportError:
+    gdal = None
+
 from ..tools.indexes import INDEX_REGISTRY, calc_custom
+
+
+# Raw Sentinel-2 SR multispectral bands written by the batch download (no
+# computed index bands). B10 is absent from the surface-reflectance product.
+_MULTISPECTRAL_BANDS = [
+    "B1", "B2", "B3", "B4", "B5", "B6",
+    "B7", "B8", "B8A", "B9", "B11", "B12",
+]
 
 
 class OpticalService:
@@ -22,6 +39,7 @@ class OpticalService:
     ) -> List[Dict[str, Any]]:
 
         collection = OpticalService._build_base_collection(aoi, date_start, date_end)
+        collection = OpticalService._keep_one_image_per_date(collection, aoi)
 
         def process_image(image):
             processed_image = OpticalService._add_vegetation_index(image, index_name)
@@ -48,6 +66,48 @@ class OpticalService:
             .filterBounds(aoi)
             .filterDate(date_start, date_end)
         )
+
+    @staticmethod
+    def _keep_one_image_per_date(
+        collection: ee.ImageCollection, aoi: ee.FeatureCollection
+    ) -> ee.ImageCollection:
+        """Keep a single image per acquisition date (always on).
+
+        Criteria: highest AOI footprint coverage first, cloud cover as the
+        tiebreaker. Both come from cheap geometry/metadata (no reduceRegion), so
+        the expensive per-image statistics are computed for the kept images
+        alone -- unlike the legacy approach, which derived stats before
+        deduplicating. Footprint coverage uses image.geometry() (the full MGRS
+        tile for Sentinel-2), so single-tile AOIs tie at full coverage and the
+        cloud tiebreaker decides.
+        """
+        geometry = aoi.geometry()
+        aoi_area = geometry.area()
+
+        def tag(image):
+            coverage = (
+                image.geometry()
+                .intersection(geometry, ee.ErrorMargin(1))
+                .area()
+                .divide(aoi_area)
+            )
+            cloud = ee.Number(image.get("CLOUDY_PIXEL_PERCENTAGE"))
+            # Composite descending score: coverage dominates, low cloud breaks
+            # ties (coverage in [0,1] scaled by 1000 outweighs cloud in [0,100]).
+            score = coverage.multiply(1000).subtract(cloud.divide(100))
+            return image.set(
+                {
+                    "date": ee.Date(image.get("system:time_start")).format(
+                        "YYYY-MM-dd"
+                    ),
+                    "dedup_score": score,
+                }
+            )
+
+        # distinct() returns a generic Collection; re-cast to ImageCollection so
+        # downstream map() yields ee.Image elements (not ee.Feature).
+        deduped = collection.map(tag).sort("dedup_score", False).distinct("date")
+        return ee.ImageCollection(deduped)
 
     @staticmethod
     def _build_valid_scl_mask(
@@ -89,6 +149,11 @@ class OpticalService:
 
         geometry = aoi.geometry()
 
+        # Geometry-based coverage (legacy): cheaper than a pixel count, but uses
+        # image.geometry(), which for Sentinel-2 is the full nominal MGRS tile
+        # square. AOIs inside a single tile therefore read ~100% even when the
+        # swath only partially covers them; it only catches AOIs that extend
+        # past a granule footprint (e.g. spanning multiple tiles).
         intersection_area = (
             image.geometry().intersection(geometry, ee.ErrorMargin(1)).area()
         )
@@ -167,3 +232,99 @@ class OpticalService:
                 rows.append(property)
 
         return rows
+
+    # -- multispectral export (batch download) ----------------------------
+    @staticmethod
+    def _download_region(aoi: ee.FeatureCollection, buffer_m: float):
+        """AOI geometry, optionally buffered (positive grows, negative crops)."""
+        geometry = aoi.geometry()
+        if buffer_m:
+            geometry = geometry.buffer(buffer_m)
+        return geometry
+
+    @staticmethod
+    def get_multispectral_image_for_date(
+        aoi: ee.FeatureCollection, date: str, buffer_m: float = 0
+    ):
+        """Single Sentinel-2 SR multispectral image for ``date`` (one scene per
+        date, same pick as the time series), clipped to the buffered AOI."""
+        region = OpticalService._download_region(aoi, buffer_m)
+        next_date = (
+            datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+
+        collection = (
+            ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+            .filterBounds(aoi)
+            .filterDate(date, next_date)
+        )
+        collection = OpticalService._keep_one_image_per_date(collection, aoi)
+        image = ee.Image(collection.first()).select(_MULTISPECTRAL_BANDS)
+        return image.clip(region), region
+
+    @staticmethod
+    def download_multispectral_for_date(
+        aoi: ee.FeatureCollection,
+        date: str,
+        buffer_m: float = 0,
+        output_folder: str = None,
+    ) -> str:
+        """Download the multispectral scene for ``date`` as a GeoTIFF and return
+        its path. Raises on a failed HTTP download."""
+        image, region = OpticalService.get_multispectral_image_for_date(
+            aoi, date, buffer_m
+        )
+        url = image.getDownloadURL(
+            {
+                "scale": 10,
+                "region": region.bounds().getInfo(),
+                "format": "GeoTIFF",
+                "crs": "EPSG:4326",
+            }
+        )
+
+        response = requests.get(url, timeout=300)
+        if not response.ok:
+            raise RuntimeError(
+                f"Optical download failed (HTTP {response.status_code}): "
+                f"{response.reason}"
+            )
+
+        base_dir = (
+            output_folder
+            if (output_folder and os.path.isdir(output_folder))
+            else tempfile.gettempdir()
+        )
+        output_path = OpticalService._unique_path(base_dir, f"Sentinel2_{date}.tiff")
+        with open(output_path, "wb") as f:
+            f.write(response.content)
+
+        OpticalService._set_band_names(output_path)
+        return output_path
+
+    @staticmethod
+    def _unique_path(folder: str, filename: str) -> str:
+        path = os.path.join(folder, filename)
+        if not os.path.exists(path):
+            return path
+        stem, ext = os.path.splitext(filename)
+        i = 1
+        while os.path.exists(os.path.join(folder, f"{stem}_{i}{ext}")):
+            i += 1
+        return os.path.join(folder, f"{stem}_{i}{ext}")
+
+    @staticmethod
+    def _set_band_names(file_path: str):
+        if gdal is None:
+            return
+        try:
+            dataset = gdal.Open(file_path, gdal.GA_Update)
+            if dataset is None:
+                return
+            for i in range(1, min(dataset.RasterCount + 1, len(_MULTISPECTRAL_BANDS) + 1)):
+                band = dataset.GetRasterBand(i)
+                if band is not None:
+                    band.SetDescription(_MULTISPECTRAL_BANDS[i - 1])
+            dataset = None
+        except Exception:
+            pass

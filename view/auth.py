@@ -16,6 +16,7 @@ from qgis.PyQt.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -26,6 +27,127 @@ from .styles import STYLE_BTN_PRIMARY, STYLE_BTN_SECONDARY
 
 def _tr(text):
     return QCoreApplication.translate("RAVI", text)
+
+
+# External links (mirrors ui/intro.html).
+_URL_CAIO = "https://www.linkedin.com/in/caioarantes/"
+_URL_LUCAS = "https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/"
+_URL_FARM = "https://farmanalytica.com.br"
+_URL_SITE = "https://www.raviqgis.org"
+_LINK_STYLE = "color:#1b6b39; font-weight:bold; text-decoration:none;"
+
+# Feature overview shown on the Auth page. Each entry is (name, one-line what).
+# Keep names aligned with the per-page intros (optical.py, sysi.py, radar.py).
+_FEATURES = [
+    ("Optical time series",
+     "Per-date Sentinel-2 vegetation-index series (NDVI, EVI, NDRE, NDWI, NBR…) "
+     "over your AOI, with SCL cloud/shadow masking and date filtering"),
+    ("Custom indices",
+     "Build your own index from band math and reuse it across the whole series"),
+    ("Synthetic composite",
+     "Reduce a series to one image (mean, median, max, AUC…) for a clean snapshot"),
+    ("Multispectral RGB",
+     "True- and false-colour composites for any acquisition date, styled in QGIS"),
+    ("SYSI — synthetic soil image",
+     "Bare-soil reflectance composite (GEOS3) from cloud-free pixels for soil mapping"),
+    ("Radar (SAR)",
+     "Sentinel-1 VV/VH backscatter time series — cloud-independent monitoring"),
+    ("DEM download",
+     "Fetch terrain elevation models (SRTM, Copernicus…) clipped to your area"),
+    ("Climate overlay",
+     "Overlay daily NASA POWER precipitation and min/max temperature on the plot"),
+    ("Point &amp; feature analysis",
+     "Per-feature or per-point series with adjustable buffer and value extraction"),
+    ("Batch download &amp; CSV",
+     "Export every selected date as rasters and the full data table as CSV"),
+]
+
+
+def _build_intro_section():
+    """Full-width banner: condensed RAVI story + an overview of every feature.
+
+    The narrative is distilled from ui/intro.html; the feature grid mirrors the
+    per-module intro tabs so the Auth page doubles as a landing overview.
+    """
+    frame = QFrame()
+    frame.setMinimumWidth(280)
+    frame.setStyleSheet("""
+        QFrame {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+        }
+        QLabel { background: transparent; border: none; }
+    """)
+    lay = QVBoxLayout(frame)
+    lay.setContentsMargins(18, 14, 18, 14)
+    lay.setSpacing(10)
+
+    title = QLabel(_tr("Welcome to RAVI"))
+    title.setStyleSheet("color: #1a1a1a; font-size: 18px; font-weight: bold;")
+    lay.addWidget(title)
+
+    story = QLabel(
+        _tr(
+            "<b>RAVI</b> (Remote Analysis of Vegetation Indices) began as the "
+            "undergraduate thesis of "
+            "<a href='{caio}' style='{ls}'>Caio Arantes</a>, supervised by "
+            "<a href='{lucas}' style='{ls}'>Prof. Dr. Lucas dos Rios Amaral</a>, "
+            "and is now an open-source project maintained with the support of "
+            "<a href='{farm}' style='{ls}'>FARM Analytica</a>, co-founded by Caio. "
+            "Committed to technology diffusion and the open-source philosophy, it "
+            "brings <b>Google Earth Engine</b> processing into QGIS — turning "
+            "satellite archives into vegetation, soil, radar and climate insight, "
+            "without leaving your map."
+        ).format(caio=_URL_CAIO, lucas=_URL_LUCAS, farm=_URL_FARM, ls=_LINK_STYLE)
+    )
+    story.setWordWrap(True)
+    story.setTextFormat(Qt.TextFormat.RichText)
+    story.setOpenExternalLinks(True)
+    story.setStyleSheet("color: #555555; font-size: 12px; line-height: 1.4;")
+    lay.addWidget(story)
+
+    feat_caption = QLabel(_tr("WHAT YOU CAN DO"))
+    feat_caption.setStyleSheet(
+        "color: #1b6b39; font-size: 11px; letter-spacing: 1px; font-weight: bold;"
+    )
+    lay.addWidget(feat_caption)
+
+    # Split the features into two balanced columns of rich-text bullets.
+    half = (len(_FEATURES) + 1) // 2
+    columns = QHBoxLayout()
+    columns.setContentsMargins(0, 0, 0, 0)
+    columns.setSpacing(20)
+    for chunk in (_FEATURES[:half], _FEATURES[half:]):
+        items = "".join(
+            f"<p style='margin:0 0 8px 0;'>"
+            f"<b style='color:#1b6b39;'>{name}</b><br>"
+            f"<span style='color:#616161;'>{desc}</span></p>"
+            for name, desc in chunk
+        )
+        col = QLabel(items)
+        col.setWordWrap(True)
+        col.setTextFormat(Qt.TextFormat.RichText)
+        col.setAlignment(Qt.AlignmentFlag.AlignTop)
+        col.setStyleSheet("font-size: 12px;")
+        columns.addWidget(col, 1)
+    lay.addLayout(columns)
+
+    footer = QLabel(
+        _tr(
+            "Learn more and read the setup guide at "
+            "<a href='{site}' style='{ls}'>www.raviqgis.org</a> · "
+            "Commercial inquiries: "
+            "<a href='{farm}' style='{ls}'>FARM Analytica</a>"
+        ).format(site=_URL_SITE, farm=_URL_FARM, ls=_LINK_STYLE)
+    )
+    footer.setWordWrap(True)
+    footer.setTextFormat(Qt.TextFormat.RichText)
+    footer.setOpenExternalLinks(True)
+    footer.setStyleSheet("color: #9e9e9e; font-size: 11px; padding-top: 4px;")
+    lay.addWidget(footer)
+
+    return frame
 
 
 def setup_auth_page(dialog, page):
@@ -44,80 +166,49 @@ def setup_auth_page(dialog, page):
     """
     page.setStyleSheet("background-color: #f5f5f5;")
 
-    outer = QVBoxLayout(page)
-    outer.setContentsMargins(0, 0, 0, 0)
-    outer.setSpacing(0)
-    outer.addStretch(2)
+    # Two columns that scroll independently: welcome (left) and auth (right).
+    page_lay = QHBoxLayout(page)
+    page_lay.setContentsMargins(16, 16, 16, 16)
+    page_lay.setSpacing(20)
 
-    row = QHBoxLayout()
-    row.setContentsMargins(28, 0, 28, 0)
-    row.setSpacing(34)
+    def _make_scroll():
+        sc = QScrollArea()
+        sc.setWidgetResizable(True)
+        sc.setFrameShape(QFrame.Shape.NoFrame)
+        sc.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        sc.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        return sc
 
-    left = QWidget()
-    left.setFixedWidth(230)
-    left.setStyleSheet("background: transparent;")
-    left_lay = QVBoxLayout(left)
-    left_lay.setContentsMargins(0, 0, 0, 0)
-    left_lay.setSpacing(8)
+    # LEFT column: welcome story + feature overview.
+    left_scroll = _make_scroll()
+    left_scroll.setWidget(_build_intro_section())
+    page_lay.addWidget(left_scroll, 1)
 
-    left_lay.addStretch(1)
+    # RIGHT column: sign-in card (page focus), status, GEE prerequisites.
+    right_scroll = _make_scroll()
+    page_lay.addWidget(right_scroll, 1)
 
-    title_lbl = QLabel(_tr("GEE Authentication"))
-    title_lbl.setStyleSheet("color: #1a1a1a; font-size: 18px; font-weight: bold;")
-    left_lay.addWidget(title_lbl)
+    right = QWidget()
+    right.setStyleSheet("background: transparent;")
+    right_scroll.setWidget(right)
+    right_lay = QVBoxLayout(right)
+    right_lay.setContentsMargins(0, 0, 0, 0)
+    right_lay.setSpacing(12)
 
-    desc_lbl = QLabel(
-        _tr(
-            "RAVI uses <b>Google Earth Engine</b> for processing. "
-            "To continue, you will need authorized access."
-        )
+    auth_heading = QLabel(_tr("GEE Authentication"))
+    auth_heading.setStyleSheet(
+        "color: #1a1a1a; font-size: 16px; font-weight: bold;"
     )
-    desc_lbl.setWordWrap(True)
-    desc_lbl.setTextFormat(Qt.TextFormat.RichText)
-    desc_lbl.setStyleSheet("color: #616161; font-size: 13px;")
-    left_lay.addWidget(desc_lbl)
-
-    info_frame = QFrame()
-    info_frame.setStyleSheet("""
-        QFrame {
-            background-color: #e8f5e9;
-            border-left: 3px solid #43a047;
-            border-radius: 4px;
-        }
-        QLabel { background: transparent; border: none; }
-    """)
-    info_lay = QHBoxLayout(info_frame)
-    info_lay.setContentsMargins(12, 10, 12, 10)
-    info_lay.setSpacing(8)
-
-    info_icon = QLabel("ⓘ")
-    info_icon.setFixedWidth(18)
-    info_icon.setAlignment(Qt.AlignmentFlag.AlignTop)
-    info_icon.setStyleSheet("color: #2e7d32; font-size: 14px; font-weight: bold;")
-    info_lay.addWidget(info_icon)
-
-    info_text = QLabel(
-        _tr(
-            "Requires an active GEE account and a Google Cloud Console project "
-            "with the API enabled."
-        )
-    )
-    info_text.setWordWrap(True)
-    info_text.setStyleSheet("color: #1b5e20; font-size: 12px;")
-    info_lay.addWidget(info_text, 1)
-
-    left_lay.addWidget(info_frame)
-    left_lay.addStretch(1)
-    row.addStretch(1)
-    row.addWidget(left)
+    right_lay.addWidget(auth_heading)
 
     card = QFrame()
-    card.setFixedWidth(258)
     card.setFixedHeight(250)
+    # Accent border keeps the sign-in card the visual focus of the page, even
+    # below the feature banner.
     card.setStyleSheet("""
         QFrame {
             background-color: #ffffff;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #1b6b39;
             border-radius: 12px;
         }
         QLabel { background: transparent; border: none; }
@@ -198,11 +289,8 @@ def setup_auth_page(dialog, page):
     card_lay.addWidget(dialog.btn_reset_auth, 0, Qt.AlignmentFlag.AlignHCenter)
     card_lay.addStretch(1)
 
-    row.addWidget(card)
-    row.addStretch(1)
-    outer.addLayout(row)
+    right_lay.addWidget(card)
 
-    outer.addSpacing(6)
     dialog.auth_status_lbl = QLabel("")
     dialog.auth_status_lbl.setWordWrap(True)
     dialog.auth_status_lbl.setTextFormat(Qt.TextFormat.RichText)
@@ -210,16 +298,44 @@ def setup_auth_page(dialog, page):
     dialog.auth_status_lbl.setAlignment(Qt.AlignmentFlag.AlignHCenter)
     dialog.auth_status_lbl.setStyleSheet("color: #616161; font-size: 11px;")
     dialog.auth_status_lbl.hide()
-    outer.addWidget(dialog.auth_status_lbl)
+    right_lay.addWidget(dialog.auth_status_lbl)
+
+    info_frame = QFrame()
+    info_frame.setStyleSheet("""
+        QFrame {
+            background-color: #e8f5e9;
+            border-left: 3px solid #43a047;
+            border-radius: 4px;
+        }
+        QLabel { background: transparent; border: none; }
+    """)
+    info_lay = QHBoxLayout(info_frame)
+    info_lay.setContentsMargins(12, 10, 12, 10)
+    info_lay.setSpacing(8)
+
+    info_icon = QLabel("ⓘ")
+    info_icon.setFixedWidth(18)
+    info_icon.setAlignment(Qt.AlignmentFlag.AlignTop)
+    info_icon.setStyleSheet("color: #2e7d32; font-size: 14px; font-weight: bold;")
+    info_lay.addWidget(info_icon)
+
+    info_text = QLabel(
+        _tr(
+            "Requires an active GEE account and a Google Cloud Console project "
+            "with the API enabled."
+        )
+    )
+    info_text.setWordWrap(True)
+    info_text.setStyleSheet("color: #1b5e20; font-size: 12px;")
+    info_lay.addWidget(info_text, 1)
+
+    right_lay.addWidget(info_frame)
 
     dialog.btn_go_to_aoi = QPushButton(page)
     dialog.btn_go_to_aoi.hide()
     dialog.btn_go_to_aoi.clicked.connect(dialog.show_dem_page)
 
-    outer.addStretch(2)
-
     folder_frame = QFrame()
-    folder_frame.setFixedWidth(560)
     folder_frame.setStyleSheet("""
         QFrame {
             background-color: #ffffff;
@@ -228,13 +344,17 @@ def setup_auth_page(dialog, page):
         }
         QLabel { background: transparent; border: none; }
     """)
-    folder_lay = QHBoxLayout(folder_frame)
-    folder_lay.setContentsMargins(14, 8, 10, 8)
+    folder_lay = QVBoxLayout(folder_frame)
+    folder_lay.setContentsMargins(14, 10, 14, 10)
     folder_lay.setSpacing(8)
 
     folder_lbl = QLabel(_tr("Download folder"))
     folder_lbl.setStyleSheet("color: #616161; font-size: 11px; font-weight: bold;")
     folder_lay.addWidget(folder_lbl)
+
+    folder_input_row = QHBoxLayout()
+    folder_input_row.setContentsMargins(0, 0, 0, 0)
+    folder_input_row.setSpacing(8)
 
     dialog.folder_input = QLineEdit()
     dialog.folder_input.setReadOnly(True)
@@ -250,7 +370,7 @@ def setup_auth_page(dialog, page):
             font-size: 12px;
         }
     """)
-    folder_lay.addWidget(dialog.folder_input, 1)
+    folder_input_row.addWidget(dialog.folder_input, 1)
 
     dialog.btn_clear_folder = QPushButton("✕")
     dialog.btn_clear_folder.setFixedSize(28, 28)
@@ -269,12 +389,14 @@ def setup_auth_page(dialog, page):
         }
         QPushButton:disabled { color: #eeeeee; }
     """)
-    folder_lay.addWidget(dialog.btn_clear_folder)
+    folder_input_row.addWidget(dialog.btn_clear_folder)
 
     dialog.btn_browse_folder = QPushButton(_tr("Browse"))
     dialog.btn_browse_folder.setFixedHeight(28)
     dialog.btn_browse_folder.setStyleSheet(STYLE_BTN_SECONDARY)
-    folder_lay.addWidget(dialog.btn_browse_folder)
+    folder_input_row.addWidget(dialog.btn_browse_folder)
+
+    folder_lay.addLayout(folder_input_row)
 
     def _sync_clear_enabled(text):
         dialog.btn_clear_folder.setEnabled(bool(text))
@@ -282,11 +404,5 @@ def setup_auth_page(dialog, page):
     dialog.folder_input.textChanged.connect(_sync_clear_enabled)
     _sync_clear_enabled(dialog.folder_input.text())
 
-    folder_outer_row = QHBoxLayout()
-    folder_outer_row.setContentsMargins(0, 0, 0, 0)
-    folder_outer_row.addStretch(1)
-    folder_outer_row.addWidget(folder_frame)
-    folder_outer_row.addStretch(1)
-    outer.addLayout(folder_outer_row)
-
-    outer.addSpacing(16)
+    right_lay.addWidget(folder_frame)
+    right_lay.addStretch(1)
