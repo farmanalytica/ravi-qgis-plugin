@@ -87,7 +87,10 @@ class OpticalService:
                 }
             )
 
-        return collection.map(tag).sort("dedup_score", False).distinct("date")
+        # distinct() returns a generic Collection; re-cast to ImageCollection so
+        # downstream map() yields ee.Image elements (not ee.Feature).
+        deduped = collection.map(tag).sort("dedup_score", False).distinct("date")
+        return ee.ImageCollection(deduped)
 
     @staticmethod
     def _build_valid_scl_mask(
