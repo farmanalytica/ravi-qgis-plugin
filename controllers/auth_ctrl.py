@@ -95,7 +95,7 @@ class AuthCtrl:
             return
 
         if self.gee_service.is_authenticated:
-            self._navigate_to_radar()
+            self._navigate_to_next()
             return
 
         project_id = self.dialog.project_id_input.text()
@@ -116,9 +116,8 @@ class AuthCtrl:
             return False
         return True
 
-    def _navigate_to_radar(self):
-        self.dialog.show_radar_page()
-        self.dialog.sar_set_tab(1)
+    def _navigate_to_next(self):
+        self.dialog.show_optical_page()
 
     def _on_browser_opened(self, url: str):
         self.dialog.set_auth_status(_tr("Waiting for sign-in in your browser…"), url)
@@ -131,7 +130,7 @@ class AuthCtrl:
 
         if success:
             self.dialog.set_auth_state("authenticated")
-            self._navigate_to_radar()
+            self._navigate_to_next()
             self.dialog.pop_message(_tr("Authentication successful!"), "info")
         elif message != CANCELLED:
             self.dialog.pop_message(message, "warning")
