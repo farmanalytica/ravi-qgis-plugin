@@ -210,6 +210,18 @@ class RAVI:
         self.dialog.s2_layer_combo.layerChanged.connect(
             self.optical_ctrl.handle_layer_changed
         )
+        self.dialog.s2_btn_filter_dates.clicked.connect(
+            self.optical_ctrl.handle_filter_dates
+        )
+        self.dialog.s2_btn_open_browser.clicked.connect(
+            self.optical_ctrl.handle_open_browser
+        )
+        self.dialog.s2_btn_download_csv.clicked.connect(
+            self.optical_ctrl.handle_export_csv
+        )
+        self.dialog.s2_btn_batch_download.clicked.connect(
+            self.optical_ctrl.handle_batch_download
+        )
 
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
