@@ -510,7 +510,6 @@ class LandsatCtrl:
         if worker is not None:
             worker.deleteLater()
         # Non-modal: avoid stacking a dialog on top of the Run date-list flow.
-        print(f"Landsat time-series error: {message}")
         self.dialog.ls_web_view.setHtml(
             self._ts_message_html(_tr("Could not build the time series."))
         )
@@ -526,8 +525,7 @@ class LandsatCtrl:
                 ylabel=_tr("%s AOI average") % index_name,
                 colors=self._MISSION_COLORS,
             )
-        except Exception as e:
-            print(f"Landsat time-series render error: {e!r}")
+        except Exception:
             self.dialog.ls_web_view.setHtml(
                 self._ts_message_html(_tr("Could not render the chart."))
             )
