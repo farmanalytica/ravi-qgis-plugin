@@ -89,20 +89,30 @@ class OpticalService:
 
         geometry = aoi.geometry()
 
-        intersection_area = (
-            image.geometry().intersection(geometry, ee.ErrorMargin(1)).area()
-        )
-        aoi_area = geometry.area()
-        coverage_percentage = (
-            ee.Number(intersection_area).divide(aoi_area).multiply(100)
-        )
-
+        # Total pixels in the AOI (unmask -> every pixel counts, including
+        # NODATA), used as the denominator for both coverage and valid-pixel %.
         total_pixels = (
             scl_band.unmask()
             .reduceRegion(
                 reducer=ee.Reducer.count(), geometry=geometry, scale=10, maxPixels=1e9
             )
             .getNumber("SCL")
+        )
+
+        # Actual data pixels in the AOI. The SCL band is masked where the
+        # granule has no data, so counting it WITHOUT unmask gives the real
+        # footprint. We avoid image.geometry() here: for Sentinel-2 it returns
+        # the full nominal MGRS tile square, so swath-edge granules with NODATA
+        # still report 100% coverage.
+        data_pixels = (
+            scl_band.reduceRegion(
+                reducer=ee.Reducer.count(), geometry=geometry, scale=10, maxPixels=1e9
+            ).getNumber("SCL")
+        )
+        coverage_percentage = ee.Algorithms.If(
+            ee.Number(total_pixels).gt(0),
+            ee.Number(data_pixels).divide(total_pixels).multiply(100),
+            0,
         )
 
         valid_mask = OpticalService._build_valid_scl_mask(
