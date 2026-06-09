@@ -148,12 +148,16 @@ class RAVI:
         from .controllers.dem_ctrl import DEMCtrl
         from .controllers.auth_ctrl import AuthCtrl
         from .controllers.sar_ctrl import SARCtrl
+        from .controllers.optical_ctrl import OpticalCtrl
 
         self._services_ready = True
         self.gee_service = GEEService()
         self.dem_ctrl = DEMCtrl(self.dialog, self.gee_service, self.interface)
         self.auth_ctrl = AuthCtrl(self.dialog, self.gee_service)
         self.sar_ctrl = SARCtrl(self.dialog, self.interface, self.gee_service)
+        self.optical_ctrl = OpticalCtrl(
+            self.dialog, self.interface, self.gee_service
+        )
 
         saved_project_id = self.gee_service.get_saved_project_id()
         if saved_project_id:
@@ -193,6 +197,19 @@ class RAVI:
         )
         self.dialog.btn_hybrid_layer.clicked.connect(self.dem_ctrl.handle_hybrid_layer)
         self.dialog.btn_draw_aoi.clicked.connect(self.dem_ctrl.handle_draw_aoi)
+
+        self.dialog.s2_btn_hybrid_layer.clicked.connect(
+            self.dem_ctrl.handle_hybrid_layer
+        )
+        self.dialog.s2_btn_draw_aoi.clicked.connect(
+            self.optical_ctrl.handle_draw_aoi
+        )
+        self.dialog.s2_btn_run.clicked.connect(
+            self.optical_ctrl.handle_optical_run
+        )
+        self.dialog.s2_layer_combo.layerChanged.connect(
+            self.optical_ctrl.handle_layer_changed
+        )
 
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
