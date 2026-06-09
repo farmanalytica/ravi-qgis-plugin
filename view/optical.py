@@ -922,6 +922,17 @@ def setup_optical_page(dialog, page):
         }
         QSpinBox:focus { border: 1.5px solid #1b6b39; }
         QSpinBox:disabled { color: #bdbdbd; background: #f2f2f2; border-color: #e6e6e6; }
+        QSpinBox::up-button, QSpinBox::down-button {
+            subcontrol-origin: border;
+            width: 16px;
+            background-color: #eef2f0;
+            border-left: 1px solid #d0d0d0;
+        }
+        QSpinBox::up-button { subcontrol-position: top right; border-top-right-radius: 6px; }
+        QSpinBox::down-button { subcontrol-position: bottom right; border-bottom-right-radius: 6px; }
+        QSpinBox::up-button:hover, QSpinBox::down-button:hover { background-color: #d8e4dd; }
+        QSpinBox::up-arrow { width: 9px; height: 9px; }
+        QSpinBox::down-arrow { width: 9px; height: 9px; }
         QLabel { background: transparent; border: none; }
         QCalendarWidget QWidget {
             background-color: #ffffff;
