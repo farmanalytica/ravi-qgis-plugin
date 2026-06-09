@@ -98,8 +98,9 @@ class OpticalFilterDialog(QDialog):
 
         intro = QLabel(
             _tr(
-                "Adjust how the cached image series is filtered. The plot updates "
-                "when you click OK — no new Earth Engine request is made."
+                "Three independent filters narrow the cached image series. Each "
+                "card notes which direction is stricter. The plot updates when "
+                "you click OK — no new Earth Engine request is made."
             )
         )
         intro.setWordWrap(True)
@@ -119,6 +120,7 @@ class OpticalFilterDialog(QDialog):
         body.setSpacing(14)
 
         body.addWidget(self._build_cloud_section())
+        body.addWidget(self._build_valid_section())
         body.addWidget(self._build_coverage_section())
         body.addStretch(1)
 
@@ -190,63 +192,71 @@ class OpticalFilterDialog(QDialog):
         row.addWidget(value_lbl)
         return row
 
-    def _build_cloud_section(self):
-        frame, lay = self._section(_tr("CLOUD COVER (SCENE)"))
-        lay.addWidget(self._explain(_tr(
-            "Drop scenes whose tile-level cloud cover (CLOUDY_PIXEL_PERCENTAGE, "
-            "from the image metadata) exceeds this limit. Lower values keep only "
-            "clearer scenes. The per-pixel and AOI-local filtering is driven by "
-            "the SCL classes below."
-        )))
+    def _strict_hint(self, text):
+        lbl = QLabel(text)
+        lbl.setWordWrap(True)
+        lbl.setStyleSheet("color: #b26a00; font-size: 10px; font-weight: bold;")
+        return lbl
 
-        lay.addWidget(QLabel(_tr("Max scene cloud %")))
-        self.cloud_scene_slider = self._pct_slider(
-            DEFAULT_FILTER_SETTINGS["cloud_scene_max"]
+    def _build_slider_section(self, title, explain, hint, attr, default):
+        """One self-contained filter card: title, explanation, slider, and a
+        strictness hint. The slider/value widgets are exposed as ``<attr>_slider``
+        / ``<attr>_value`` so get_settings / set_settings can reach them."""
+        frame, lay = self._section(title)
+        lay.addWidget(self._explain(explain))
+
+        slider = self._pct_slider(default)
+        value = QLabel(f"{default}%")
+        lay.addLayout(self._slider_row(slider, value))
+        lay.addWidget(self._strict_hint(hint))
+
+        slider.valueChanged.connect(
+            lambda v: (value.setText(f"{v}%"), self._emit())
         )
-        self.cloud_scene_value = QLabel(
-            f"{DEFAULT_FILTER_SETTINGS['cloud_scene_max']}%"
-        )
-        lay.addLayout(self._slider_row(self.cloud_scene_slider, self.cloud_scene_value))
-        self.cloud_scene_slider.valueChanged.connect(
-            lambda v: (self.cloud_scene_value.setText(f"{v}%"), self._emit())
-        )
+        setattr(self, attr + "_slider", slider)
+        setattr(self, attr + "_value", value)
         return frame
+
+    def _build_cloud_section(self):
+        return self._build_slider_section(
+            _tr("SCENE CLOUD COVER · MAX %"),
+            _tr(
+                "Tile-level cloud cover (CLOUDY_PIXEL_PERCENTAGE from image "
+                "metadata). Sentinel-2 scenes are 100×100 km tiles, so this is "
+                "whole-tile cloudiness — not the cloud inside your AOI. For local "
+                "conditions, use the Valid pixels filter."
+            ),
+            _tr("↓  Lower = stricter — keeps only clearer scenes"),
+            "cloud_scene",
+            DEFAULT_FILTER_SETTINGS["cloud_scene_max"],
+        )
+
+    def _build_valid_section(self):
+        return self._build_slider_section(
+            _tr("VALID PIXELS IN AOI · MIN %"),
+            _tr(
+                "Share of the AOI covered by valid (unmasked) pixels, per the SCL "
+                "classes chosen on the Inputs tab. Measured inside your AOI, so it "
+                "reflects local cloud and shadow better than scene cloud cover."
+            ),
+            _tr("↑  Higher = stricter — demands cleaner pixels in the AOI"),
+            "valid_pixel",
+            DEFAULT_FILTER_SETTINGS["valid_pixel_min"],
+        )
 
     def _build_coverage_section(self):
-        frame, lay = self._section(_tr("VALID PIXELS, COVERAGE & DUPLICATES"))
-        lay.addWidget(self._explain(_tr(
-            "Drop a date when valid (unmasked) pixels cover less than this share "
-            "of the AOI. Valid pixels are defined by the SCL mask chosen on the "
-            "Inputs tab; this slider only re-thresholds the cached counts."
-        )))
-        lay.addWidget(QLabel(_tr("Min valid pixels in AOI %")))
-        self.valid_pixel_slider = self._pct_slider(
-            DEFAULT_FILTER_SETTINGS["valid_pixel_min"]
+        return self._build_slider_section(
+            _tr("AOI FOOTPRINT COVERAGE · MIN %"),
+            _tr(
+                "How much of the AOI the scene's footprint overlaps. High "
+                "thresholds (e.g. 90%) ensure scenes that cover the whole AOI; "
+                "large or irregular AOIs spanning several tiles may rarely reach "
+                "high values."
+            ),
+            _tr("↑  Higher = stricter — requires fuller AOI coverage"),
+            "coverage",
+            DEFAULT_FILTER_SETTINGS["coverage_min"],
         )
-        self.valid_pixel_value = QLabel(
-            f"{DEFAULT_FILTER_SETTINGS['valid_pixel_min']}%"
-        )
-        lay.addLayout(self._slider_row(self.valid_pixel_slider, self.valid_pixel_value))
-        self.valid_pixel_slider.valueChanged.connect(
-            lambda v: (self.valid_pixel_value.setText(f"{v}%"), self._emit())
-        )
-
-        lay.addWidget(self._explain(_tr(
-            "Require each scene's footprint to cover at least this share of the "
-            "AOI."
-        )))
-        lay.addWidget(QLabel(_tr("Min AOI coverage %")))
-        self.coverage_slider = self._pct_slider(
-            DEFAULT_FILTER_SETTINGS["coverage_min"]
-        )
-        self.coverage_value = QLabel(
-            f"{DEFAULT_FILTER_SETTINGS['coverage_min']}%"
-        )
-        lay.addLayout(self._slider_row(self.coverage_slider, self.coverage_value))
-        self.coverage_slider.valueChanged.connect(
-            lambda v: (self.coverage_value.setText(f"{v}%"), self._emit())
-        )
-        return frame
 
     # -- behavior ---------------------------------------------------------
     def _emit(self):
