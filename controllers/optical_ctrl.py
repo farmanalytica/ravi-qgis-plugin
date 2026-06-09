@@ -7,14 +7,18 @@ Inputs tab fetches the vegetation-index time series and prints the resulting
 DataFrame, including filter metadata, to the QGIS/Python console.
 """
 
+import os
+import tempfile
+
 import pandas as pd
 
-from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtCore import QCoreApplication, QUrl
 from qgis.core import QgsCoordinateTransform, QgsProject
 
 from ..services.aoi_service import AOIService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL
+from ..view.sar_plot import render_chart_html
 from ..workers.optical_worker import OpticalWorker
 
 
@@ -30,13 +34,6 @@ border:3px solid #e0e0e0;border-top-color:#1b6b39;border-radius:50%;
 animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 </style></head><body><div class="box"><div class="spinner"></div>
 <div>Fetching Sentinel-2 time series...</div></div></body></html>"""
-
-_DONE_HTML = """<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-html,body{height:100%;margin:0;font-family:Arial,sans-serif;background:#fff}
-.box{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-text-align:center;color:#616161}.title{color:#1b6b39;font-weight:bold;margin-bottom:6px}
-</style></head><body><div class="box"><div class="title">Time series fetched</div>
-<div>DataFrame printed to the console.</div></div></body></html>"""
 
 
 class OpticalCtrl:
@@ -55,6 +52,7 @@ class OpticalCtrl:
         self._optical_worker: OpticalWorker | None = None
         self._run_btn_text: str | None = None
         self._draw_tool = None
+        self._plot_path: str | None = None
 
     def _release_worker(self):
         worker, self._optical_worker = self._optical_worker, None
@@ -107,7 +105,7 @@ class OpticalCtrl:
         canvas.refresh()
 
     def handle_optical_run(self):
-        """Fetch the optical time series and print the DataFrame to console."""
+        """Fetch the optical time series and plot it on the results page."""
 
         if self._optical_worker is not None and self._optical_worker.isRunning():
             return
@@ -207,17 +205,34 @@ class OpticalCtrl:
         self.dialog.s2_result_date_combo.clear()
         self.dialog.s2_result_date_combo.addItems(dates)
 
-        print("")
-        print(f"Optical Sentinel-2 {index_name} time-series DataFrame:")
-        print(self.dataframe.to_string(index=False))
-        print("")
+        print(self.dataframe.to_string(index=False))  # TODO: remove (debug)
 
-        self.dialog.s2_web_view.setHtml(_DONE_HTML)
+        self._render_timeseries()
         self.dialog.s2_set_tab(2)
-        self.dialog.pop_message(
-            _tr("Optical time series fetched. DataFrame printed to console."),
-            "info",
+
+    def _render_timeseries(self):
+        """Plot the AOI-average time series into the optical results web view."""
+        index_name = self._current_index
+        plot_df = self.dataframe.rename(columns={"date": "dates"})
+        plot_df = plot_df.dropna(subset=["dates", "AOI_average"])
+
+        html = render_chart_html(
+            plot_df,
+            title=_tr("%s Time Series") % index_name,
+            ylabel=_tr("%s AOI average") % index_name,
         )
+
+        fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_")
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(html)
+        self.dialog.s2_web_view.load(QUrl.fromLocalFile(path))
+
+        if self._plot_path and os.path.exists(self._plot_path):
+            try:
+                os.remove(self._plot_path)
+            except OSError:
+                pass
+        self._plot_path = path
 
     def _on_optical_failed(self, message):
         self._set_run_busy(False)
