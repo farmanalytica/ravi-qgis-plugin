@@ -251,9 +251,8 @@ class LandsatService:
                     tier,
                     reducer,
                 )
-            except Exception as e:
+            except Exception:
                 # One mission failing (range, quota…) must not drop the others.
-                print(f"Landsat time-series ({mission}) skipped: {e}")
                 continue
             if df.empty or index_key not in df.columns:
                 continue

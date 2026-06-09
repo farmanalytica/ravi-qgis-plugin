@@ -229,8 +229,6 @@ class OpticalCtrl:
         self._current_index = index_name
         self._active_dates = None
 
-        print(self.dataframe.to_string(index=False))  # TODO: remove (debug)
-
         self._refresh_result_dates()
         self._render_timeseries()
         self.dialog.s2_set_tab(2)
