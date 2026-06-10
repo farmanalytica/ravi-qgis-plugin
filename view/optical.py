@@ -797,6 +797,7 @@ def _build_results_tab(dialog, parent):
     composite_lay.setSpacing(10)
     composite_lay.addWidget(_caption(_tr("SYNTHETIC IMAGE (COMPOSITE)")))
     composite_hint = QLabel(_tr("Composite the selected index over the selected dates."))
+    composite_hint.setWordWrap(True)
     composite_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
     composite_lay.addWidget(composite_hint)
 
@@ -841,6 +842,7 @@ def _build_results_tab(dialog, parent):
             "time-series plot, over the same date range. Temperature is fetched too "
             "and included in the CSV export.")
     )
+    climate_hint.setWordWrap(True)
     climate_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
     climate_lay.addWidget(climate_hint)
 

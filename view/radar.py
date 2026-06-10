@@ -949,6 +949,7 @@ def _build_results_tab(dialog, parent):
     composite_hint = QLabel(
         _tr("Composite the selected index over the selected dates.")
     )
+    composite_hint.setWordWrap(True)
     composite_hint.setStyleSheet(
         "color: #616161; font-size: 11px; background: transparent; border: none;"
     )

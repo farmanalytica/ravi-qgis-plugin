@@ -1403,5 +1403,53 @@
         <source>🛰️ Optical Imagery Module - Sentinel-2</source>
         <translation>🛰️ ऑप्टिकल इमेजरी मॉड्यूल - Sentinel-2</translation>
     </message>
+    <message>
+        <source>AOI</source>
+        <translation>AOI</translation>
+    </message>
+    <message>
+        <source>Points</source>
+        <translation>बिंदु</translation>
+    </message>
+    <message>
+        <source>Features</source>
+        <translation>फ़ीचर</translation>
+    </message>
+    <message>
+        <source>Click on the map to sample a point time series.</source>
+        <translation>किसी बिंदु की समय शृंखला का नमूना लेने के लिए मानचित्र पर क्लिक करें।</translation>
+    </message>
+    <message>
+        <source>P%d (%.5f, %.5f)</source>
+        <translation>P%d (%.5f, %.5f)</translation>
+    </message>
+    <message>
+        <source>Select a polygon AOI layer for per-feature analysis.</source>
+        <translation>प्रति-फ़ीचर विश्लेषण के लिए एक पॉलिगॉन AOI लेयर चुनें।</translation>
+    </message>
+    <message>
+        <source>The selected layer has no usable features.</source>
+        <translation>चयनित लेयर में कोई उपयोग योग्य फ़ीचर नहीं है।</translation>
+    </message>
+    <message>
+        <source>feature %d</source>
+        <translation>फ़ीचर %d</translation>
+    </message>
+    <message>
+        <source>%s — Points</source>
+        <translation>%s — बिंदु</translation>
+    </message>
+    <message>
+        <source>%s — Features</source>
+        <translation>%s — फ़ीचर</translation>
+    </message>
+    <message>
+        <source>AOI average</source>
+        <translation>AOI औसत</translation>
+    </message>
+    <message>
+        <source>%s value</source>
+        <translation>%s मान</translation>
+    </message>
 </context>
 </TS>

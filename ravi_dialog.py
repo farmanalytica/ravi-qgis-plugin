@@ -143,7 +143,6 @@ class RAVIDialog(QDialog):
         )
         self.setWindowModality(Qt.WindowModality.NonModal)
 
-        self.setMinimumSize(800, 534)
         self.resize(800, 534)
         self.setSizeGripEnabled(True)
         self.setStyleSheet(STYLE_DIALOG)

@@ -1403,5 +1403,53 @@
         <source>🛰️ Optical Imagery Module - Sentinel-2</source>
         <translation>🛰️ 光学影像模块 - Sentinel-2</translation>
     </message>
+    <message>
+        <source>AOI</source>
+        <translation>AOI</translation>
+    </message>
+    <message>
+        <source>Points</source>
+        <translation>点</translation>
+    </message>
+    <message>
+        <source>Features</source>
+        <translation>要素</translation>
+    </message>
+    <message>
+        <source>Click on the map to sample a point time series.</source>
+        <translation>单击地图以采样某个点的时间序列。</translation>
+    </message>
+    <message>
+        <source>P%d (%.5f, %.5f)</source>
+        <translation>P%d (%.5f, %.5f)</translation>
+    </message>
+    <message>
+        <source>Select a polygon AOI layer for per-feature analysis.</source>
+        <translation>请选择一个多边形 AOI 图层进行逐要素分析。</translation>
+    </message>
+    <message>
+        <source>The selected layer has no usable features.</source>
+        <translation>所选图层没有可用要素。</translation>
+    </message>
+    <message>
+        <source>feature %d</source>
+        <translation>要素 %d</translation>
+    </message>
+    <message>
+        <source>%s — Points</source>
+        <translation>%s — 点</translation>
+    </message>
+    <message>
+        <source>%s — Features</source>
+        <translation>%s — 要素</translation>
+    </message>
+    <message>
+        <source>AOI average</source>
+        <translation>AOI 平均值</translation>
+    </message>
+    <message>
+        <source>%s value</source>
+        <translation>%s 值</translation>
+    </message>
 </context>
 </TS>

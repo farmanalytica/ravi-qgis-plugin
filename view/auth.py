@@ -17,6 +17,7 @@ from qgis.PyQt.QtWidgets import (
     QLineEdit,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -197,6 +198,12 @@ def setup_auth_page(dialog, page):
         sc.setWidgetResizable(True)
         sc.setFrameShape(QFrame.Shape.NoFrame)
         sc.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        # Fill the available height and scroll internally. Without this, the
+        # word-wrapped welcome text (whose height grows as the column narrows)
+        # drives the scroll area's minimum height up and pushes the whole dialog
+        # taller when the user reduces it horizontally.
+        sc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sc.setMinimumHeight(0)
         sc.setStyleSheet("QScrollArea { background: transparent; border: none; }")
         return sc
 
