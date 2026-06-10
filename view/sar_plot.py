@@ -47,7 +47,7 @@ def _build_figure(dataframe, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH
     return fig
 
 
-def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean"):
+def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean", smooth_y=None, smooth_label="Smoothed"):
     """Return a self-contained page that renders the figure with the vendored
     plotly.js v1.58 (QtWebKit-compatible), fed the figure JSON via Plotly.newPlot.
 
@@ -58,6 +58,11 @@ def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time
                      Defaults to True for in-plugin use.
         title: Chart title (default: "VV/VH Ratio Mean Time Series").
         ylabel: Y-axis label (default: "VV/VH Ratio Mean").
+        smooth_y: Optional list of smoothed y-values aligned with the
+                 dataframe rows. When given, a second line trace is overlaid
+                 and the raw trace is relabelled so the legend distinguishes
+                 them.
+        smooth_label: Legend name for the smoothed overlay.
 
     The default v6 template is dropped so the JSON stays within what the old
     engine understands. Intended to be written to a temp file and loaded from a
@@ -66,15 +71,34 @@ def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time
     fig = _build_figure(dataframe, title=title, ylabel=ylabel)
     fig.update_layout(template="none")
     fig_dict = fig.to_dict()
-    pairs = sorted(
-        zip(dataframe["dates"].tolist(), dataframe["AOI_average"].tolist()),
-        key=lambda p: p[0],
-    )
-    x = [p[0] for p in pairs]
-    y = [float(p[1]) for p in pairs]
+    dates = dataframe["dates"].tolist()
+    raw = dataframe["AOI_average"].tolist()
+    if smooth_y is not None:
+        triples = sorted(zip(dates, raw, smooth_y), key=lambda p: p[0])
+        x = [p[0] for p in triples]
+        y = [float(p[1]) for p in triples]
+        sy = [float(p[2]) for p in triples]
+    else:
+        pairs = sorted(zip(dates, raw), key=lambda p: p[0])
+        x = [p[0] for p in pairs]
+        y = [float(p[1]) for p in pairs]
+        sy = None
     for trace in fig_dict.get("data", []):
         trace["x"] = x
         trace["y"] = y
+    if sy is not None:
+        if fig_dict.get("data"):
+            fig_dict["data"][0]["name"] = "Observed"
+            fig_dict["data"][0]["showlegend"] = True
+        fig_dict.setdefault("data", []).append({
+            "type": "scatter",
+            "mode": "lines",
+            "name": smooth_label,
+            "x": x,
+            "y": sy,
+            "line": {"color": "#d98f00", "width": 2},
+        })
+        fig_dict.setdefault("layout", {})["showlegend"] = True
     fig_json = json.dumps(fig_dict)
 
     config = {

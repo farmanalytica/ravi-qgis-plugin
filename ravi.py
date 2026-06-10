@@ -219,6 +219,15 @@ class RAVI:
         self.dialog.s2_btn_filter_dates.clicked.connect(
             self.optical_ctrl.handle_filter_dates
         )
+        self.dialog.s2_chk_smoothing.toggled.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
+        self.dialog.s2_smooth_window.valueChanged.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
+        self.dialog.s2_smooth_polyorder.valueChanged.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
         self.dialog.s2_btn_open_browser.clicked.connect(
             self.optical_ctrl.handle_open_browser
         )

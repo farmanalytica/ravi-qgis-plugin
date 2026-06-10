@@ -366,7 +366,11 @@ class OpticalCtrl:
             return
 
         try:
-            self._filtered_dataframe().to_csv(file_path, index=False)
+            export_df = self._filtered_dataframe().sort_values("date")
+            smooth_y = self._smoothed_series(export_df["AOI_average"].tolist())
+            if smooth_y is not None:
+                export_df = export_df.assign(AOI_average_smoothed=smooth_y)
+            export_df.to_csv(file_path, index=False)
             self.dialog.pop_message(
                 _tr("CSV exported successfully to %s") % file_path, "info"
             )
@@ -605,16 +609,64 @@ class OpticalCtrl:
             self._set_single_busy(kind, False)
         self.dialog.pop_message(message, "warning")
 
+    def handle_smoothing_changed(self, *args):
+        """Re-render when smoothing is toggled or its window/poly changes.
+
+        Savitzky-Golay smoothing is a view-only transform of the cached
+        series, so it just re-renders the plot — no Earth Engine call, same
+        path the threshold and date filters use.
+        """
+        if self.dataframe is not None and not self.dataframe.empty:
+            self._render_timeseries()
+
+    def _smoothed_series(self, y):
+        """Savitzky-Golay smoothing of the AOI-average series, or None.
+
+        Recomputed on every render so it tracks whatever the threshold and
+        date filters leave behind. ``y`` is assumed already date-sorted; the
+        returned list aligns with it. Returns None when smoothing is off or
+        the filtered series is too short for a valid window.
+        """
+        chk = getattr(self.dialog, "s2_chk_smoothing", None)
+        if chk is None or not chk.isChecked():
+            return None
+        n = len(y)
+        if n < 3:
+            return None
+        window = int(self.dialog.s2_smooth_window.value())
+        poly = int(self.dialog.s2_smooth_polyorder.value())
+        # savgol needs an odd window no longer than the series, and a
+        # polyorder strictly below the window. Clamp rather than fail so the
+        # overlay still shows when the filtered series is short.
+        window = min(window, n)
+        if window % 2 == 0:
+            window -= 1
+        if window < 3:
+            return None
+        poly = min(poly, window - 1)
+        try:
+            from scipy.signal import savgol_filter
+
+            smoothed = savgol_filter(y, window_length=window, polyorder=poly)
+        except Exception:
+            return None
+        return [float(v) for v in smoothed]
+
     def _render_timeseries(self):
         """Plot the AOI-average time series into the optical results web view."""
         index_name = self._current_index
         plot_df = self._filtered_dataframe().rename(columns={"date": "dates"})
         plot_df = plot_df.dropna(subset=["dates", "AOI_average"])
+        plot_df = plot_df.sort_values("dates")
+
+        smooth_y = self._smoothed_series(plot_df["AOI_average"].tolist())
 
         html = render_chart_html(
             plot_df,
             title=_tr("%s Time Series") % index_name,
             ylabel=_tr("%s AOI average") % index_name,
+            smooth_y=smooth_y,
+            smooth_label=_tr("Smoothed (Savitzky-Golay)"),
         )
 
         fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_")
