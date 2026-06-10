@@ -683,5 +683,725 @@
         <source> (%d failed)</source>
         <translation> （%d 个失败）</translation>
     </message>
+    <message>
+        <source>%d images match</source>
+        <translation>%d 张影像匹配</translation>
+    </message>
+    <message>
+        <source>%s AOI average</source>
+        <translation>%s AOI 平均值</translation>
+    </message>
+    <message>
+        <source>%s Time Series</source>
+        <translation>%s 时间序列</translation>
+    </message>
+    <message>
+        <source>%s Time Series (Landsat 7/8/9)</source>
+        <translation>%s 时间序列 (Landsat 7/8/9)</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Area &amp;amp; Date Selection:&lt;/b&gt; Define the AOI and the period to scan</source>
+        <translation>&lt;b&gt;区域与日期选择：&lt;/b&gt;定义 AOI 和扫描时间段</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Auto-Load:&lt;/b&gt; The generated soil image loads in QGIS automatically</source>
+        <translation>&lt;b&gt;自动加载：&lt;/b&gt;生成的土壤影像自动加载到 QGIS</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Batch Download &amp;amp; CSV Export:&lt;/b&gt; Pull every selected date and export the table</source>
+        <translation>&lt;b&gt;批量下载与 CSV 导出：&lt;/b&gt;拉取每个选定日期并导出表格</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Batch Download:&lt;/b&gt; Pull the super-res image of every available date</source>
+        <translation>&lt;b&gt;批量下载：&lt;/b&gt;拉取每个可用日期的超分辨率影像</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Blue, Green, Red, Red-edge, NIR, SWIR1, SWIR2:&lt;/b&gt; surface reflectance</source>
+        <translation>&lt;b&gt;蓝、绿、红、红边、近红外、SWIR1、SWIR2：&lt;/b&gt;地表反射率</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Climate Overlay:&lt;/b&gt; NASA POWER precipitation and temperature on the plot</source>
+        <translation>&lt;b&gt;气候叠加：&lt;/b&gt;在图中叠加 NASA POWER 降水与温度</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Cloud Filtering:&lt;/b&gt; Drop scenes above a cloud-cover threshold</source>
+        <translation>&lt;b&gt;云量过滤：&lt;/b&gt;剔除云覆盖超过阈值的场景</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Cloud Masking:&lt;/b&gt; USGS QA_PIXEL bitmask removes clouds, shadows and cirrus</source>
+        <translation>&lt;b&gt;云掩膜：&lt;/b&gt;USGS QA_PIXEL 位掩膜去除云、阴影和卷云</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Custom index.&lt;/b&gt; Define a Sentinel-2 band expression below, give it a name and save it. Reflectance bands are scaled to 0–1.</source>
+        <translation>&lt;b&gt;自定义指数。&lt;/b&gt;在下方定义 Sentinel-2 波段表达式，命名并保存。反射率波段已缩放至 0–1。</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Download Buffer:&lt;/b&gt; Expand or crop the clipped output around the AOI</source>
+        <translation>&lt;b&gt;下载缓冲区：&lt;/b&gt;在 AOI 周围扩展或裁剪输出</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;GEOS3 Bare-Soil Detection:&lt;/b&gt; NDVI and NBR2 thresholds isolate bare soil</source>
+        <translation>&lt;b&gt;GEOS3 裸土检测：&lt;/b&gt;NDVI 与 NBR2 阈值分离裸土</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Generate:&lt;/b&gt; Run the composite to build the synthetic soil image</source>
+        <translation>&lt;b&gt;生成：&lt;/b&gt;运行合成以构建合成土壤影像</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;How to build an expression&lt;/b&gt;&lt;br&gt;Combine band names with operators. Bands are scaled to 0–1 reflectance.&lt;br&gt;&amp;bull; Arithmetic: &lt;b&gt;+ &amp;minus; * /&lt;/b&gt; &amp;nbsp; power &lt;b&gt;**&lt;/b&gt; &amp;nbsp; grouping &lt;b&gt;( )&lt;/b&gt;&lt;br&gt;&amp;bull; Math functions: &lt;b&gt;sqrt() abs() exp() log() pow(x, y) min(a, b) max(a, b)&lt;/b&gt;&lt;br&gt;&amp;bull; Compare: &lt;b&gt;&amp;lt; &amp;lt;= &amp;gt; &amp;gt;= == !=&lt;/b&gt; &amp;nbsp; logic &lt;b&gt;&amp;amp;&amp;amp; || !&lt;/b&gt;&lt;br&gt;&amp;bull; Conditional: &lt;b&gt;condition ? value_if_true : value_if_false&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Examples&lt;/b&gt;&lt;br&gt;&amp;bull; NDVI: &lt;code&gt;(B8 - B4) / (B8 + B4)&lt;/code&gt;&lt;br&gt;&amp;bull; SAVI: &lt;code&gt;1.5 * (B8 - B4) / (B8 + B4 + 0.5)&lt;/code&gt;&lt;br&gt;&amp;bull; Mask low NIR: &lt;code&gt;B8 &gt; 0.2 ? (B8 - B4) / (B8 + B4) : 0&lt;/code&gt;</source>
+        <translation>&lt;b&gt;如何构建表达式&lt;/b&gt;&lt;br&gt;用运算符组合波段名称。波段已缩放为 0–1 反射率。&lt;br&gt;&amp;bull; 算术：&lt;b&gt;+ &amp;minus; * /&lt;/b&gt; &amp;nbsp; 幂 &lt;b&gt;**&lt;/b&gt; &amp;nbsp; 分组 &lt;b&gt;( )&lt;/b&gt;&lt;br&gt;&amp;bull; 数学函数：&lt;b&gt;sqrt() abs() exp() log() pow(x, y) min(a, b) max(a, b)&lt;/b&gt;&lt;br&gt;&amp;bull; 比较：&lt;b&gt;&amp;lt; &amp;lt;= &amp;gt; &amp;gt;= == !=&lt;/b&gt; &amp;nbsp; 逻辑 &lt;b&gt;&amp;amp;&amp;amp; || !&lt;/b&gt;&lt;br&gt;&amp;bull; 条件：&lt;b&gt;condition ? value_if_true : value_if_false&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;示例&lt;/b&gt;&lt;br&gt;&amp;bull; NDVI：&lt;code&gt;(B8 - B4) / (B8 + B4)&lt;/code&gt;&lt;br&gt;&amp;bull; SAVI：&lt;code&gt;1.5 * (B8 - B4) / (B8 + B4 + 0.5)&lt;/code&gt;&lt;br&gt;&amp;bull; 掩膜低 NIR：&lt;code&gt;B8 &gt; 0.2 ? (B8 - B4) / (B8 + B4) : 0&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Index Explanations:&lt;/b&gt; Description and formula for every index</source>
+        <translation>&lt;b&gt;指数说明：&lt;/b&gt;每个指数的描述与公式</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and Landsat mission</source>
+        <translation>&lt;b&gt;输入：&lt;/b&gt;选择区域 (AOI)、日期范围和 Landsat 任务</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and bare-soil parameters</source>
+        <translation>&lt;b&gt;输入：&lt;/b&gt;选择区域 (AOI)、日期范围和裸土参数</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and vegetation index</source>
+        <translation>&lt;b&gt;输入：&lt;/b&gt;选择区域 (AOI)、日期范围和植被指数</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Live Filtering:&lt;/b&gt; Cloud %, SCL classes, AOI coverage, date selection and Savitzky-Golay smoothing — re-applied to the cached series with no new GEE call</source>
+        <translation>&lt;b&gt;实时过滤：&lt;/b&gt;云量百分比、SCL 类别、AOI 覆盖、日期选择和 Savitzky-Golay 平滑——无需新的 GEE 调用即可重新应用于缓存序列</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Load:&lt;/b&gt; The SYSI raster is loaded into QGIS automatically</source>
+        <translation>&lt;b&gt;加载：&lt;/b&gt;SYSI 栅格自动加载到 QGIS</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Month Filter:&lt;/b&gt; Restrict the composite to chosen months of the year</source>
+        <translation>&lt;b&gt;月份过滤：&lt;/b&gt;将合成限制为一年中选定的月份</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Multispectral RGB:&lt;/b&gt; True- and false-colour composites from the SR bands</source>
+        <translation>&lt;b&gt;多光谱 RGB：&lt;/b&gt;基于 SR 波段的真彩色与假彩色合成</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;NBR2:&lt;/b&gt; Normalized Burn Ratio 2</source>
+        <translation>&lt;b&gt;NBR2：&lt;/b&gt;归一化燃烧指数 2</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;NDVI:&lt;/b&gt; Normalized Difference Vegetation Index</source>
+        <translation>&lt;b&gt;NDVI：&lt;/b&gt;归一化差值植被指数</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Point &amp;amp; Per-Feature Analysis:&lt;/b&gt; Time series per clicked point or per polygon</source>
+        <translation>&lt;b&gt;点与逐要素分析：&lt;/b&gt;按点击点或按多边形的时间序列</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;RAVI&lt;/b&gt; (Remote Analysis of Vegetation Indices) began as the undergraduate thesis of &lt;a href='{caio}' style='{ls}'&gt;Caio Arantes&lt;/a&gt;, supervised by &lt;a href='{lucas}' style='{ls}'&gt;Prof. Dr. Lucas dos Rios Amaral&lt;/a&gt;, and is now an open-source project maintained with the support of &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;, co-founded by Caio. Committed to technology diffusion and the open-source philosophy, it brings &lt;b&gt;Google Earth Engine&lt;/b&gt; processing into QGIS — turning satellite archives into vegetation, soil, radar and climate insight, without leaving your map.</source>
+        <translation>&lt;b&gt;RAVI&lt;/b&gt;（Remote Analysis of Vegetation Indices）最初是 &lt;a href='{caio}' style='{ls}'&gt;Caio Arantes&lt;/a&gt; 的本科论文，由 &lt;a href='{lucas}' style='{ls}'&gt;Lucas dos Rios Amaral 教授&lt;/a&gt;指导，如今已成为在 &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;（由 Caio 共同创立）支持下维护的开源项目。秉持技术普及与开源理念，它将 &lt;b&gt;Google Earth Engine&lt;/b&gt; 处理带入 QGIS——无需离开地图，即可把卫星档案转化为植被、土壤、雷达与气候洞察。</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Results:&lt;/b&gt; Inspect the plot, adjust the filter, preview and download outputs</source>
+        <translation>&lt;b&gt;结果：&lt;/b&gt;查看图表、调整过滤、预览并下载输出</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Results:&lt;/b&gt; Preview and download super-res RGB, indices and composites</source>
+        <translation>&lt;b&gt;结果：&lt;/b&gt;预览并下载超分辨率 RGB、指数与合成</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Run:&lt;/b&gt; Build the per-date time series over the AOI</source>
+        <translation>&lt;b&gt;运行：&lt;/b&gt;在 AOI 上构建逐日期时间序列</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Run:&lt;/b&gt; List the available acquisition dates over the AOI</source>
+        <translation>&lt;b&gt;运行：&lt;/b&gt;列出 AOI 上可用的获取日期</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Super-Resolution RGB (15 m):&lt;/b&gt; Pan-sharpened real-colour imagery for any date</source>
+        <translation>&lt;b&gt;超分辨率 RGB (15 m)：&lt;/b&gt;任意日期的全色锐化真彩色影像</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Synthetic Composite:&lt;/b&gt; Aggregate the series (mean, median, AUC, …) into one image</source>
+        <translation>&lt;b&gt;合成影像：&lt;/b&gt;将序列（均值、中位数、AUC 等）聚合为一张影像</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;True-Color &amp;amp; False-Color Imagery:&lt;/b&gt; Download styled RGB rasters for any date</source>
+        <translation>&lt;b&gt;真彩色与假彩色影像：&lt;/b&gt;下载任意日期的样式化 RGB 栅格</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Vegetation Index Time Series:&lt;/b&gt; 19 built-in indices plus a custom index builder</source>
+        <translation>&lt;b&gt;植被指数时间序列：&lt;/b&gt;19 个内置指数以及自定义指数构建器</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Vegetation Indices:&lt;/b&gt; NDVI, EVI, SAVI and more on 30 m surface reflectance</source>
+        <translation>&lt;b&gt;植被指数：&lt;/b&gt;基于 30 m 地表反射率的 NDVI、EVI、SAVI 等</translation>
+    </message>
+    <message>
+        <source>ACQUISITION DATE</source>
+        <translation>获取日期</translation>
+    </message>
+    <message>
+        <source>AOI FOOTPRINT COVERAGE · MIN %</source>
+        <translation>AOI 覆盖范围 · 最小 %</translation>
+    </message>
+    <message>
+        <source>Accumulated precipitation (mm)</source>
+        <translation>累积降水量 (mm)</translation>
+    </message>
+    <message>
+        <source>Adjust Filter</source>
+        <translation>调整过滤</translation>
+    </message>
+    <message>
+        <source>Adjust filter</source>
+        <translation>调整过滤</translation>
+    </message>
+    <message>
+        <source>Apply Scene Classification (SCL) mask</source>
+        <translation>应用场景分类 (SCL) 掩膜</translation>
+    </message>
+    <message>
+        <source>Apply cloud mask (QA_PIXEL)</source>
+        <translation>应用云掩膜 (QA_PIXEL)</translation>
+    </message>
+    <message>
+        <source>Authentication is required to download Landsat data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>下载 Landsat 数据需要身份验证。请前往 Auth 页面并验证您的 Google Cloud 项目 ID。</translation>
+    </message>
+    <message>
+        <source>Authentication is required to download optical data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>下载光学数据需要身份验证。请前往 Auth 页面并验证您的 Google Cloud 项目 ID。</translation>
+    </message>
+    <message>
+        <source>Authentication is required to generate SYSI data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>生成 SYSI 数据需要身份验证。请前往 Auth 页面并验证您的 Google Cloud 项目 ID。</translation>
+    </message>
+    <message>
+        <source>BARE-SOIL THRESHOLDS</source>
+        <translation>裸土阈值</translation>
+    </message>
+    <message>
+        <source>Batch download cancelled. %d/%d downloaded.</source>
+        <translation>批量下载已取消。已下载 %d/%d。</translation>
+    </message>
+    <message>
+        <source>CLIMATE (NASA POWER)</source>
+        <translation>气候 (NASA POWER)</translation>
+    </message>
+    <message>
+        <source>CLOUD PIXEL PERCENTAGE (TILE)</source>
+        <translation>云像元百分比（瓦片）</translation>
+    </message>
+    <message>
+        <source>Capture points on map</source>
+        <translation>在地图上捕获点</translation>
+    </message>
+    <message>
+        <source>Checked classes always define the valid-pixel count used by the Results filter. When the mask above is enabled, they are also masked out of every image before indices are computed, affecting the time series and downloaded rasters.</source>
+        <translation>勾选的类别始终定义结果过滤器使用的有效像元计数。启用上方掩膜时，它们还会在计算指数前从每张影像中被掩除，从而影响时间序列和下载的栅格。</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>清除</translation>
+    </message>
+    <message>
+        <source>Clear points</source>
+        <translation>清除点</translation>
+    </message>
+    <message>
+        <source>Climate fetch failed: %s</source>
+        <translation>气候数据获取失败：%s</translation>
+    </message>
+    <message>
+        <source>Climate overlay added to the time-series plot.</source>
+        <translation>已将气候叠加添加到时间序列图。</translation>
+    </message>
+    <message>
+        <source>Composite %s into QGIS.</source>
+        <translation>合成影像已%s到 QGIS。</translation>
+    </message>
+    <message>
+        <source>Could not build the time series.</source>
+        <translation>无法构建时间序列。</translation>
+    </message>
+    <message>
+        <source>Could not render the chart.</source>
+        <translation>无法渲染图表。</translation>
+    </message>
+    <message>
+        <source>Custom optical indices are not available for composites in this milestone.</source>
+        <translation>此版本中合成影像暂不支持自定义光学指数。</translation>
+    </message>
+    <message>
+        <source>Custom optical indices are not available in this milestone.</source>
+        <translation>此版本暂不支持自定义光学指数。</translation>
+    </message>
+    <message>
+        <source>EXPRESSION</source>
+        <translation>表达式</translation>
+    </message>
+    <message>
+        <source>End date must be after start date.</source>
+        <translation>结束日期必须晚于开始日期。</translation>
+    </message>
+    <message>
+        <source>Enter proxy (e.g. http://user:pass@host:port):</source>
+        <translation>输入代理（例如 http://user:pass@host:port）：</translation>
+    </message>
+    <message>
+        <source>Every run searches &lt;b&gt;Landsat 7, 8 and 9&lt;/b&gt; together. Each available date is tagged with its mission in the Results date list.</source>
+        <translation>每次运行都会同时检索 &lt;b&gt;Landsat 7、8 和 9&lt;/b&gt;。每个可用日期在结果日期列表中均标注其所属任务。</translation>
+    </message>
+    <message>
+        <source>Export Climate Data as CSV</source>
+        <translation>将气候数据导出为 CSV</translation>
+    </message>
+    <message>
+        <source>Export Optical Time Series as CSV</source>
+        <translation>将光学时间序列导出为 CSV</translation>
+    </message>
+    <message>
+        <source>Extract a time series per clicked map point, or one series per polygon feature of the AOI layer keyed by an attribute.</source>
+        <translation>按地图上每个点击点提取时间序列，或按 AOI 图层中以属性标识的每个多边形要素提取一条序列。</translation>
+    </message>
+    <message>
+        <source>Failed to load SYSI raster into QGIS.</source>
+        <translation>无法将 SYSI 栅格加载到 QGIS。</translation>
+    </message>
+    <message>
+        <source>Feature ID</source>
+        <translation>要素 ID</translation>
+    </message>
+    <message>
+        <source>Fetch the climate overlay first.</source>
+        <translation>请先获取气候叠加。</translation>
+    </message>
+    <message>
+        <source>Filtering no longer happens when the collection runs. Every image keeps its cloud, SCL and coverage metadata, so the &lt;b&gt;Adjust filter&lt;/b&gt; button on the Results tab re-filters and re-plots the series instantly, without contacting Earth Engine again.</source>
+        <translation>运行集合时不再进行过滤。每张影像都保留其云量、SCL 和覆盖元数据，因此结果选项卡上的&lt;b&gt;调整过滤&lt;/b&gt;按钮可即时重新过滤并重绘序列，无需再次访问 Earth Engine。</translation>
+    </message>
+    <message>
+        <source>Generate SYSI</source>
+        <translation>生成 SYSI</translation>
+    </message>
+    <message>
+        <source>Generating…</source>
+        <translation>正在生成…</translation>
+    </message>
+    <message>
+        <source>How much of the AOI the scene's footprint overlaps. High thresholds (e.g. 90%) ensure scenes that cover the whole AOI; large or irregular AOIs spanning several tiles may rarely reach high values.</source>
+        <translation>场景足迹覆盖 AOI 的比例。高阈值（例如 90%）可确保场景覆盖整个 AOI；跨多个瓦片的大型或不规则 AOI 可能很少达到高值。</translation>
+    </message>
+    <message>
+        <source>How pixels inside the AOI are aggregated to one value per date in the time-series plot (built automatically when you Run).</source>
+        <translation>在时间序列图中，AOI 内的像元如何按每个日期聚合为一个值（运行时自动构建）。</translation>
+    </message>
+    <message>
+        <source>INCLUDED MONTHS</source>
+        <translation>包含的月份</translation>
+    </message>
+    <message>
+        <source>INDEX</source>
+        <translation>指数</translation>
+    </message>
+    <message>
+        <source>INDEX NAME</source>
+        <translation>指数名称</translation>
+    </message>
+    <message>
+        <source>INDEX TIME SERIES</source>
+        <translation>指数时间序列</translation>
+    </message>
+    <message>
+        <source>Index</source>
+        <translation>指数</translation>
+    </message>
+    <message>
+        <source>Keep Min &amp;lt; Max. Pixels inside both ranges are kept as bare soil.</source>
+        <translation>保持最小值 &amp;lt; 最大值。位于两个范围内的像元被保留为裸土。</translation>
+    </message>
+    <message>
+        <source>Landsat (Super-Res)</source>
+        <translation>Landsat（超分辨率）</translation>
+    </message>
+    <message>
+        <source>Landsat Super-Resolution</source>
+        <translation>Landsat 超分辨率</translation>
+    </message>
+    <message>
+        <source>Landsat image %s into QGIS.</source>
+        <translation>Landsat 影像已%s到 QGIS。</translation>
+    </message>
+    <message>
+        <source>Learn more and read the setup guide at &lt;a href='{site}' style='{ls}'&gt;www.raviqgis.org&lt;/a&gt; · Commercial inquiries: &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;</source>
+        <translation>了解更多并阅读设置指南：&lt;a href='{site}' style='{ls}'&gt;www.raviqgis.org&lt;/a&gt; · 商务咨询：&lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Loading dates…</source>
+        <translation>正在加载日期…</translation>
+    </message>
+    <message>
+        <source>MULTISPECTRAL RGB (30 m)</source>
+        <translation>多光谱 RGB (30 m)</translation>
+    </message>
+    <message>
+        <source>Max temperature</source>
+        <translation>最高温度</translation>
+    </message>
+    <message>
+        <source>Min temperature</source>
+        <translation>最低温度</translation>
+    </message>
+    <message>
+        <source>Monthly precipitation</source>
+        <translation>月降水量</translation>
+    </message>
+    <message>
+        <source>My Index</source>
+        <translation>我的指数</translation>
+    </message>
+    <message>
+        <source>NASA POWER returned no climate data for this area/range.</source>
+        <translation>NASA POWER 未返回此区域/范围的气候数据。</translation>
+    </message>
+    <message>
+        <source>NBR2</source>
+        <translation>NBR2</translation>
+    </message>
+    <message>
+        <source>NDVI</source>
+        <translation>NDVI</translation>
+    </message>
+    <message>
+        <source>NIR, Red, Green</source>
+        <translation>近红外、红、绿</translation>
+    </message>
+    <message>
+        <source>No Landsat images found for this AOI and date range.</source>
+        <translation>未找到此 AOI 和日期范围的 Landsat 影像。</translation>
+    </message>
+    <message>
+        <source>No Sentinel-2 images found for this date range.</source>
+        <translation>未找到此日期范围的 Sentinel-2 影像。</translation>
+    </message>
+    <message>
+        <source>No dates in the current selection to composite.</source>
+        <translation>当前选择中没有可用于合成的日期。</translation>
+    </message>
+    <message>
+        <source>No time-series data for this AOI and date range.</source>
+        <translation>此 AOI 和日期范围没有时间序列数据。</translation>
+    </message>
+    <message>
+        <source>Optical (Sentinel-2)</source>
+        <translation>光学 (Sentinel-2)</translation>
+    </message>
+    <message>
+        <source>Optical Imagery (Sentinel-2)</source>
+        <translation>光学影像 (Sentinel-2)</translation>
+    </message>
+    <message>
+        <source>Optical image %s into QGIS.</source>
+        <translation>光学影像已%s到 QGIS。</translation>
+    </message>
+    <message>
+        <source>Overlay accumulated monthly precipitation (NASA POWER) as bars on the time-series plot, over the same date range. Temperature is fetched too and included in the CSV export.</source>
+        <translation>在相同日期范围内，将累积月降水量 (NASA POWER) 以柱状叠加到时间序列图上。温度也会被获取并包含在 CSV 导出中。</translation>
+    </message>
+    <message>
+        <source>Overlay on plot</source>
+        <translation>叠加到图中</translation>
+    </message>
+    <message>
+        <source>POINT &amp; FEATURE ANALYSIS</source>
+        <translation>点与要素分析</translation>
+    </message>
+    <message>
+        <source>PROCESSING</source>
+        <translation>处理中</translation>
+    </message>
+    <message>
+        <source>Pan-sharpened real-colour image. Previews are top-of-atmosphere (TOA).</source>
+        <translation>全色锐化真彩色影像。预览为大气层顶 (TOA)。</translation>
+    </message>
+    <message>
+        <source>Pan-sharpening is only available on &lt;b&gt;Top-of-Atmosphere (TOA)&lt;/b&gt; products, so super-resolution previews are TOA reflectance. Vegetation indices and multispectral composites use the atmospherically-corrected &lt;b&gt;Surface Reflectance (SR)&lt;/b&gt; product at the native 30 m. Landsat 5 is not offered — it has no panchromatic band.</source>
+        <translation>全色锐化仅适用于&lt;b&gt;大气层顶 (TOA)&lt;/b&gt;产品，因此超分辨率预览为 TOA 反射率。植被指数和多光谱合成使用经过大气校正的&lt;b&gt;地表反射率 (SR)&lt;/b&gt;产品，原生分辨率为 30 m。不提供 Landsat 5——它没有全色波段。</translation>
+    </message>
+    <message>
+        <source>Plot a time series first.</source>
+        <translation>请先绘制时间序列。</translation>
+    </message>
+    <message>
+        <source>Plot per-feature series</source>
+        <translation>绘制逐要素序列</translation>
+    </message>
+    <message>
+        <source>Poly order</source>
+        <translation>多项式阶数</translation>
+    </message>
+    <message>
+        <source>Precipitation</source>
+        <translation>降水量</translation>
+    </message>
+    <message>
+        <source>Proxy Settings</source>
+        <translation>代理设置</translation>
+    </message>
+    <message>
+        <source>Proxy setting (only if required by your network provider)</source>
+        <translation>代理设置（仅在网络提供商要求时）</translation>
+    </message>
+    <message>
+        <source>Proxy settings</source>
+        <translation>代理设置</translation>
+    </message>
+    <message>
+        <source>RGB</source>
+        <translation>RGB</translation>
+    </message>
+    <message>
+        <source>Real Color (B4, B3, B2)</source>
+        <translation>真彩色 (B4, B3, B2)</translation>
+    </message>
+    <message>
+        <source>Real Color (Red, Green, Blue)</source>
+        <translation>真彩色（红、绿、蓝）</translation>
+    </message>
+    <message>
+        <source>Red, NIR, Green</source>
+        <translation>红、近红外、绿</translation>
+    </message>
+    <message>
+        <source>Removes clouds, cloud shadows, cirrus and saturated pixels. Disabling delivers more dates but with much more noise.</source>
+        <translation>去除云、云阴影、卷云和饱和像元。禁用后可获得更多日期，但噪声大得多。</translation>
+    </message>
+    <message>
+        <source>Rendering</source>
+        <translation>渲染</translation>
+    </message>
+    <message>
+        <source>Run the Landsat analysis first.</source>
+        <translation>请先运行 Landsat 分析。</translation>
+    </message>
+    <message>
+        <source>Run the optical analysis first.</source>
+        <translation>请先运行光学分析。</translation>
+    </message>
+    <message>
+        <source>Running...</source>
+        <translation>正在运行...</translation>
+    </message>
+    <message>
+        <source>SCENE CLOUD COVER · MAX %</source>
+        <translation>场景云覆盖 · 最大 %</translation>
+    </message>
+    <message>
+        <source>SCL CLOUD MASK</source>
+        <translation>SCL 云掩膜</translation>
+    </message>
+    <message>
+        <source>SUPER-RESOLUTION RGB (15 m)</source>
+        <translation>超分辨率 RGB (15 m)</translation>
+    </message>
+    <message>
+        <source>SWIR1, NIR, Red</source>
+        <translation>SWIR1、近红外、红</translation>
+    </message>
+    <message>
+        <source>SWIR1, NIR, SWIR2</source>
+        <translation>SWIR1、近红外、SWIR2</translation>
+    </message>
+    <message>
+        <source>SWIR2, NIR, Green</source>
+        <translation>SWIR2、近红外、绿</translation>
+    </message>
+    <message>
+        <source>SYSI</source>
+        <translation>SYSI</translation>
+    </message>
+    <message>
+        <source>SYSI '%s' generated and loaded into QGIS.</source>
+        <translation>SYSI '%s' 已生成并加载到 QGIS。</translation>
+    </message>
+    <message>
+        <source>Save custom index</source>
+        <translation>保存自定义指数</translation>
+    </message>
+    <message>
+        <source>Savitzky-Golay smoothing</source>
+        <translation>Savitzky-Golay 平滑</translation>
+    </message>
+    <message>
+        <source>Select a date first.</source>
+        <translation>请先选择日期。</translation>
+    </message>
+    <message>
+        <source>Select at least one month.</source>
+        <translation>请至少选择一个月份。</translation>
+    </message>
+    <message>
+        <source>Share of the AOI covered by valid (unmasked) pixels, per the SCL classes chosen on the Inputs tab. Measured inside your AOI, so it reflects local cloud and shadow better than scene cloud cover.</source>
+        <translation>按输入选项卡上选定的 SCL 类别，AOI 中由有效（未掩膜）像元覆盖的比例。在 AOI 内部测量，因此比场景云覆盖更能反映局地云和阴影。</translation>
+    </message>
+    <message>
+        <source>Single-date image of the index chosen on the Inputs tab, on 30 m surface reflectance.</source>
+        <translation>在 30 m 地表反射率上，输入选项卡所选指数的单日期影像。</translation>
+    </message>
+    <message>
+        <source>Smoothed (Savitzky-Golay)</source>
+        <translation>平滑 (Savitzky-Golay)</translation>
+    </message>
+    <message>
+        <source>Step %d of 2</source>
+        <translation>第 %d 步，共 2 步</translation>
+    </message>
+    <message>
+        <source>Step %d of 3</source>
+        <translation>第 %d 步，共 3 步</translation>
+    </message>
+    <message>
+        <source>Synthetic Soil Image (SYSI)</source>
+        <translation>合成土壤影像 (SYSI)</translation>
+    </message>
+    <message>
+        <source>TIME-SERIES SPATIAL REDUCER</source>
+        <translation>时间序列空间归约器</translation>
+    </message>
+    <message>
+        <source>The Optical module analyses the &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; collection in Google Earth Engine. Pick an area, a date range and a vegetation index to build an interactive time series, then download imagery, composites and indices — no coding required.</source>
+        <translation>光学模块在 Google Earth Engine 中分析 &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; 集合。选择区域、日期范围和植被指数以构建交互式时间序列，然后下载影像、合成和指数——无需编程。</translation>
+    </message>
+    <message>
+        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. By keeping only the pixels that are bare soil across many dates, it reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
+        <translation>SYSI 模块构建&lt;b&gt;合成土壤影像&lt;/b&gt;：由多时相 Sentinel-2 集合派生的裸土反射率合成。通过仅保留在多个日期均为裸土的像元，它揭示出不含植被和作物残茬的底层土壤表面——无需编程。</translation>
+    </message>
+    <message>
+        <source>The chart above plots the index and reducer chosen on the Inputs tab across Landsat 7/8/9 — built automatically when you Run.</source>
+        <translation>上图绘制了在输入选项卡上选定的指数和归约器在 Landsat 7/8/9 上的变化——运行时自动构建。</translation>
+    </message>
+    <message>
+        <source>The synthetic soil image carries the Sentinel-2 surface-reflectance bands together with the soil indices computed during processing:</source>
+        <translation>合成土壤影像携带 Sentinel-2 地表反射率波段以及处理过程中计算的土壤指数：</translation>
+    </message>
+    <message>
+        <source>This module sharpens &lt;b&gt;Landsat 7/8/9&lt;/b&gt; imagery from 30 m to an effective &lt;b&gt;15 m&lt;/b&gt; using HSV pan-sharpening — merging the 15 m panchromatic band into the visible RGB channels. Pick an area, a date range and a mission, then preview and download super-resolution imagery, vegetation indices and multispectral composites.</source>
+        <translation>本模块使用 HSV 全色锐化将 &lt;b&gt;Landsat 7/8/9&lt;/b&gt; 影像从 30 m 锐化到有效 &lt;b&gt;15 m&lt;/b&gt;——把 15 m 全色波段融合进可见光 RGB 通道。选择区域、日期范围和任务，然后预览并下载超分辨率影像、植被指数和多光谱合成。</translation>
+    </message>
+    <message>
+        <source>Three independent filters narrow the cached image series. Each card notes which direction is stricter. The plot updates when you click OK — no new Earth Engine request is made.</source>
+        <translation>三个独立过滤器缩小缓存的影像序列。每张卡片说明哪个方向更严格。点击 OK 时图表更新——不会发出新的 Earth Engine 请求。</translation>
+    </message>
+    <message>
+        <source>Tile-level cloud cover (CLOUDY_PIXEL_PERCENTAGE from image metadata). Sentinel-2 scenes are 100×100 km tiles, so this is whole-tile cloudiness — not the cloud inside your AOI. For local conditions, use the Valid pixels filter.</source>
+        <translation>瓦片级云覆盖（来自影像元数据的 CLOUDY_PIXEL_PERCENTAGE）。Sentinel-2 场景为 100×100 km 瓦片，因此这是整个瓦片的云量——而非 AOI 内的云。对于局地情况，请使用有效像元过滤器。</translation>
+    </message>
+    <message>
+        <source>To use this module you need authentication to Google Earth Engine via a &lt;b&gt;Google Cloud Project ID&lt;/b&gt;. Configure this in the "Auth" tab of the plugin.</source>
+        <translation>使用本模块需要通过 &lt;b&gt;Google Cloud 项目 ID&lt;/b&gt; 完成 Google Earth Engine 身份验证。请在插件的 “Auth” 选项卡中配置。</translation>
+    </message>
+    <message>
+        <source>To use this module you need authentication to Google Earth Engine via a &lt;b&gt;Google Cloud Project ID&lt;/b&gt;. Configure this in the "Auth" tab.</source>
+        <translation>使用本模块需要通过 &lt;b&gt;Google Cloud 项目 ID&lt;/b&gt; 完成 Google Earth Engine 身份验证。请在 “Auth” 选项卡中配置。</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applied on the clipped synthetic soil image.</source>
+        <translation>使用正缓冲区可纳入区域外侧地形，或使用负缓冲区裁剪边缘。应用于裁剪后的合成土壤影像。</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applies to every downloaded and previewed optical output (single date, batch, composite).</source>
+        <translation>使用正缓冲区可纳入区域外侧地形，或使用负缓冲区裁剪边缘。适用于每个下载和预览的光学输出（单日期、批量、合成）。</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applies to every previewed and downloaded image.</source>
+        <translation>使用正缓冲区可纳入区域外侧地形，或使用负缓冲区裁剪边缘。适用于每张预览和下载的影像。</translation>
+    </message>
+    <message>
+        <source>Use these band names in the expression:</source>
+        <translation>在表达式中使用这些波段名称：</translation>
+    </message>
+    <message>
+        <source>Used for the Results time-series plot and the single-date index image. Only indices computable from Landsat bands are listed (no red-edge).</source>
+        <translation>用于结果时间序列图和单日期指数影像。仅列出可由 Landsat 波段计算的指数（无红边）。</translation>
+    </message>
+    <message>
+        <source>VALID PIXELS IN AOI · MIN %</source>
+        <translation>AOI 内有效像元 · 最小 %</translation>
+    </message>
+    <message>
+        <source>VEGETATION INDEX</source>
+        <translation>植被指数</translation>
+    </message>
+    <message>
+        <source>VEGETATION INDEX (30 m)</source>
+        <translation>植被指数 (30 m)</translation>
+    </message>
+    <message>
+        <source>WHAT YOU CAN DO</source>
+        <translation>您可以做什么</translation>
+    </message>
+    <message>
+        <source>Welcome to RAVI</source>
+        <translation>欢迎使用 RAVI</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>窗口</translation>
+    </message>
+    <message>
+        <source>ℹ️ About the bands</source>
+        <translation>ℹ️ 关于波段</translation>
+    </message>
+    <message>
+        <source>↑  Higher = stricter — demands cleaner pixels in the AOI</source>
+        <translation>↑  越高 = 越严格——要求 AOI 内像元更干净</translation>
+    </message>
+    <message>
+        <source>↑  Higher = stricter — requires fuller AOI coverage</source>
+        <translation>↑  越高 = 越严格——要求 AOI 覆盖更完整</translation>
+    </message>
+    <message>
+        <source>↓  Lower = stricter — keeps only clearer scenes</source>
+        <translation>↓  越低 = 越严格——仅保留更晴朗的场景</translation>
+    </message>
+    <message>
+        <source>☁️ Filtering (new)</source>
+        <translation>☁️ 过滤（新）</translation>
+    </message>
+    <message>
+        <source>✨ Main Features</source>
+        <translation>✨ 主要功能</translation>
+    </message>
+    <message>
+        <source>🌱 SYSI Module - Synthetic Soil Image</source>
+        <translation>🌱 SYSI 模块 - 合成土壤影像</translation>
+    </message>
+    <message>
+        <source>📅 Available coverage: &lt;b&gt;1999 to present&lt;/b&gt; — Landsat 7 (1999–2022), Landsat 8 (2013–) and Landsat 9 (2021–). Dates outside a mission's lifespan are skipped automatically.</source>
+        <translation>📅 可用覆盖范围：&lt;b&gt;1999 年至今&lt;/b&gt;——Landsat 7 (1999–2022)、Landsat 8 (2013–) 和 Landsat 9 (2021–)。任务寿命之外的日期会被自动跳过。</translation>
+    </message>
+    <message>
+        <source>📋 Workflow</source>
+        <translation>📋 工作流程</translation>
+    </message>
+    <message>
+        <source>🔧 Initial Setup</source>
+        <translation>🔧 初始设置</translation>
+    </message>
+    <message>
+        <source>🛰️ Bands</source>
+        <translation>🛰️ 波段</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat Super-Resolution</source>
+        <translation>🛰️ Landsat 超分辨率</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution is built on &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ Landsat 超分辨率基于 &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt; 构建，与其作者 &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt; 合作完成。</translation>
+    </message>
+    <message>
+        <source>🛰️ Optical Imagery Module - Sentinel-2</source>
+        <translation>🛰️ 光学影像模块 - Sentinel-2</translation>
+    </message>
 </context>
 </TS>

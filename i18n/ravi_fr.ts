@@ -683,5 +683,725 @@
         <source> (%d failed)</source>
         <translation> (%d en échec)</translation>
     </message>
+    <message>
+        <source>%d images match</source>
+        <translation>%d images correspondent</translation>
+    </message>
+    <message>
+        <source>%s AOI average</source>
+        <translation>Moyenne de l'AOI %s</translation>
+    </message>
+    <message>
+        <source>%s Time Series</source>
+        <translation>Série temporelle %s</translation>
+    </message>
+    <message>
+        <source>%s Time Series (Landsat 7/8/9)</source>
+        <translation>Série temporelle %s (Landsat 7/8/9)</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Area &amp;amp; Date Selection:&lt;/b&gt; Define the AOI and the period to scan</source>
+        <translation>&lt;b&gt;Sélection de la zone et des dates :&lt;/b&gt; définissez l'AOI et la période à analyser</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Auto-Load:&lt;/b&gt; The generated soil image loads in QGIS automatically</source>
+        <translation>&lt;b&gt;Chargement automatique :&lt;/b&gt; l'image de sol générée est chargée automatiquement dans QGIS</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Batch Download &amp;amp; CSV Export:&lt;/b&gt; Pull every selected date and export the table</source>
+        <translation>&lt;b&gt;Téléchargement par lot et export CSV :&lt;/b&gt; récupérez chaque date sélectionnée et exportez le tableau</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Batch Download:&lt;/b&gt; Pull the super-res image of every available date</source>
+        <translation>&lt;b&gt;Téléchargement par lot :&lt;/b&gt; récupérez l'image en super-résolution de chaque date disponible</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Blue, Green, Red, Red-edge, NIR, SWIR1, SWIR2:&lt;/b&gt; surface reflectance</source>
+        <translation>&lt;b&gt;Bleu, Vert, Rouge, Red-edge, PIR, SWIR1, SWIR2 :&lt;/b&gt; réflectance de surface</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Climate Overlay:&lt;/b&gt; NASA POWER precipitation and temperature on the plot</source>
+        <translation>&lt;b&gt;Superposition climatique :&lt;/b&gt; précipitations et température NASA POWER sur le graphique</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Cloud Filtering:&lt;/b&gt; Drop scenes above a cloud-cover threshold</source>
+        <translation>&lt;b&gt;Filtrage des nuages :&lt;/b&gt; écartez les scènes au-dessus d'un seuil de couverture nuageuse</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Cloud Masking:&lt;/b&gt; USGS QA_PIXEL bitmask removes clouds, shadows and cirrus</source>
+        <translation>&lt;b&gt;Masquage des nuages :&lt;/b&gt; le bitmask QA_PIXEL de l'USGS supprime nuages, ombres et cirrus</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Custom index.&lt;/b&gt; Define a Sentinel-2 band expression below, give it a name and save it. Reflectance bands are scaled to 0–1.</source>
+        <translation>&lt;b&gt;Indice personnalisé.&lt;/b&gt; Définissez ci-dessous une expression de bandes Sentinel-2, nommez-la et enregistrez-la. Les bandes de réflectance sont mises à l'échelle 0–1.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Download Buffer:&lt;/b&gt; Expand or crop the clipped output around the AOI</source>
+        <translation>&lt;b&gt;Tampon de téléchargement :&lt;/b&gt; agrandissez ou rognez la sortie autour de l'AOI</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;GEOS3 Bare-Soil Detection:&lt;/b&gt; NDVI and NBR2 thresholds isolate bare soil</source>
+        <translation>&lt;b&gt;Détection de sol nu GEOS3 :&lt;/b&gt; les seuils NDVI et NBR2 isolent le sol nu</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Generate:&lt;/b&gt; Run the composite to build the synthetic soil image</source>
+        <translation>&lt;b&gt;Générer :&lt;/b&gt; lancez le composite pour construire l'image synthétique de sol</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;How to build an expression&lt;/b&gt;&lt;br&gt;Combine band names with operators. Bands are scaled to 0–1 reflectance.&lt;br&gt;&amp;bull; Arithmetic: &lt;b&gt;+ &amp;minus; * /&lt;/b&gt; &amp;nbsp; power &lt;b&gt;**&lt;/b&gt; &amp;nbsp; grouping &lt;b&gt;( )&lt;/b&gt;&lt;br&gt;&amp;bull; Math functions: &lt;b&gt;sqrt() abs() exp() log() pow(x, y) min(a, b) max(a, b)&lt;/b&gt;&lt;br&gt;&amp;bull; Compare: &lt;b&gt;&amp;lt; &amp;lt;= &amp;gt; &amp;gt;= == !=&lt;/b&gt; &amp;nbsp; logic &lt;b&gt;&amp;amp;&amp;amp; || !&lt;/b&gt;&lt;br&gt;&amp;bull; Conditional: &lt;b&gt;condition ? value_if_true : value_if_false&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Examples&lt;/b&gt;&lt;br&gt;&amp;bull; NDVI: &lt;code&gt;(B8 - B4) / (B8 + B4)&lt;/code&gt;&lt;br&gt;&amp;bull; SAVI: &lt;code&gt;1.5 * (B8 - B4) / (B8 + B4 + 0.5)&lt;/code&gt;&lt;br&gt;&amp;bull; Mask low NIR: &lt;code&gt;B8 &gt; 0.2 ? (B8 - B4) / (B8 + B4) : 0&lt;/code&gt;</source>
+        <translation>&lt;b&gt;Comment construire une expression&lt;/b&gt;&lt;br&gt;Combinez les noms de bandes avec des opérateurs. Les bandes sont mises à l'échelle de réflectance 0–1.&lt;br&gt;&amp;bull; Arithmétique : &lt;b&gt;+ &amp;minus; * /&lt;/b&gt; &amp;nbsp; puissance &lt;b&gt;**&lt;/b&gt; &amp;nbsp; groupement &lt;b&gt;( )&lt;/b&gt;&lt;br&gt;&amp;bull; Fonctions mathématiques : &lt;b&gt;sqrt() abs() exp() log() pow(x, y) min(a, b) max(a, b)&lt;/b&gt;&lt;br&gt;&amp;bull; Comparaison : &lt;b&gt;&amp;lt; &amp;lt;= &amp;gt; &amp;gt;= == !=&lt;/b&gt; &amp;nbsp; logique &lt;b&gt;&amp;amp;&amp;amp; || !&lt;/b&gt;&lt;br&gt;&amp;bull; Conditionnel : &lt;b&gt;condition ? valeur_si_vrai : valeur_si_faux&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Exemples&lt;/b&gt;&lt;br&gt;&amp;bull; NDVI : &lt;code&gt;(B8 - B4) / (B8 + B4)&lt;/code&gt;&lt;br&gt;&amp;bull; SAVI : &lt;code&gt;1.5 * (B8 - B4) / (B8 + B4 + 0.5)&lt;/code&gt;&lt;br&gt;&amp;bull; Masquer PIR faible : &lt;code&gt;B8 &gt; 0.2 ? (B8 - B4) / (B8 + B4) : 0&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Index Explanations:&lt;/b&gt; Description and formula for every index</source>
+        <translation>&lt;b&gt;Explications des indices :&lt;/b&gt; description et formule de chaque indice</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and Landsat mission</source>
+        <translation>&lt;b&gt;Entrées :&lt;/b&gt; sélectionnez la zone (AOI), la plage de dates et la mission Landsat</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and bare-soil parameters</source>
+        <translation>&lt;b&gt;Entrées :&lt;/b&gt; sélectionnez la zone (AOI), la plage de dates et les paramètres de sol nu</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Inputs:&lt;/b&gt; Select the area (AOI), date range and vegetation index</source>
+        <translation>&lt;b&gt;Entrées :&lt;/b&gt; sélectionnez la zone (AOI), la plage de dates et l'indice de végétation</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Live Filtering:&lt;/b&gt; Cloud %, SCL classes, AOI coverage, date selection and Savitzky-Golay smoothing — re-applied to the cached series with no new GEE call</source>
+        <translation>&lt;b&gt;Filtrage en direct :&lt;/b&gt; % de nuages, classes SCL, couverture de l'AOI, sélection de dates et lissage Savitzky-Golay — réappliqués à la série en cache sans nouvel appel GEE</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Load:&lt;/b&gt; The SYSI raster is loaded into QGIS automatically</source>
+        <translation>&lt;b&gt;Charger :&lt;/b&gt; le raster SYSI est chargé automatiquement dans QGIS</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Month Filter:&lt;/b&gt; Restrict the composite to chosen months of the year</source>
+        <translation>&lt;b&gt;Filtre de mois :&lt;/b&gt; restreignez le composite aux mois choisis de l'année</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Multispectral RGB:&lt;/b&gt; True- and false-colour composites from the SR bands</source>
+        <translation>&lt;b&gt;RVB multispectral :&lt;/b&gt; compositions en couleurs réelles et fausses couleurs à partir des bandes SR</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;NBR2:&lt;/b&gt; Normalized Burn Ratio 2</source>
+        <translation>&lt;b&gt;NBR2 :&lt;/b&gt; Ratio de brûlure normalisé 2</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;NDVI:&lt;/b&gt; Normalized Difference Vegetation Index</source>
+        <translation>&lt;b&gt;NDVI :&lt;/b&gt; Indice de végétation par différence normalisée</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Point &amp;amp; Per-Feature Analysis:&lt;/b&gt; Time series per clicked point or per polygon</source>
+        <translation>&lt;b&gt;Analyse par point et par entité :&lt;/b&gt; série temporelle par point cliqué ou par polygone</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;RAVI&lt;/b&gt; (Remote Analysis of Vegetation Indices) began as the undergraduate thesis of &lt;a href='{caio}' style='{ls}'&gt;Caio Arantes&lt;/a&gt;, supervised by &lt;a href='{lucas}' style='{ls}'&gt;Prof. Dr. Lucas dos Rios Amaral&lt;/a&gt;, and is now an open-source project maintained with the support of &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;, co-founded by Caio. Committed to technology diffusion and the open-source philosophy, it brings &lt;b&gt;Google Earth Engine&lt;/b&gt; processing into QGIS — turning satellite archives into vegetation, soil, radar and climate insight, without leaving your map.</source>
+        <translation>&lt;b&gt;RAVI&lt;/b&gt; (Remote Analysis of Vegetation Indices) a débuté comme le mémoire de licence de &lt;a href='{caio}' style='{ls}'&gt;Caio Arantes&lt;/a&gt;, encadré par le &lt;a href='{lucas}' style='{ls}'&gt;Prof. Dr. Lucas dos Rios Amaral&lt;/a&gt;, et est aujourd'hui un projet open source maintenu avec le soutien de &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;, cofondée par Caio. Engagé dans la diffusion technologique et la philosophie open source, il intègre le traitement &lt;b&gt;Google Earth Engine&lt;/b&gt; dans QGIS — transformant les archives satellitaires en informations sur la végétation, le sol, le radar et le climat, sans quitter votre carte.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Results:&lt;/b&gt; Inspect the plot, adjust the filter, preview and download outputs</source>
+        <translation>&lt;b&gt;Résultats :&lt;/b&gt; examinez le graphique, ajustez le filtre, prévisualisez et téléchargez les sorties</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Results:&lt;/b&gt; Preview and download super-res RGB, indices and composites</source>
+        <translation>&lt;b&gt;Résultats :&lt;/b&gt; prévisualisez et téléchargez le RVB en super-résolution, les indices et les composites</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Run:&lt;/b&gt; Build the per-date time series over the AOI</source>
+        <translation>&lt;b&gt;Exécuter :&lt;/b&gt; construisez la série temporelle par date sur l'AOI</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Run:&lt;/b&gt; List the available acquisition dates over the AOI</source>
+        <translation>&lt;b&gt;Exécuter :&lt;/b&gt; listez les dates d'acquisition disponibles sur l'AOI</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Super-Resolution RGB (15 m):&lt;/b&gt; Pan-sharpened real-colour imagery for any date</source>
+        <translation>&lt;b&gt;RVB super-résolution (15 m) :&lt;/b&gt; imagerie en couleurs réelles avec pan-sharpening pour toute date</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Synthetic Composite:&lt;/b&gt; Aggregate the series (mean, median, AUC, …) into one image</source>
+        <translation>&lt;b&gt;Composite synthétique :&lt;/b&gt; agrégez la série (moyenne, médiane, AUC, …) en une seule image</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;True-Color &amp;amp; False-Color Imagery:&lt;/b&gt; Download styled RGB rasters for any date</source>
+        <translation>&lt;b&gt;Imagerie en couleurs réelles et fausses couleurs :&lt;/b&gt; téléchargez des rasters RVB stylisés pour toute date</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Vegetation Index Time Series:&lt;/b&gt; 19 built-in indices plus a custom index builder</source>
+        <translation>&lt;b&gt;Série temporelle d'indice de végétation :&lt;/b&gt; 19 indices intégrés plus un constructeur d'indice personnalisé</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Vegetation Indices:&lt;/b&gt; NDVI, EVI, SAVI and more on 30 m surface reflectance</source>
+        <translation>&lt;b&gt;Indices de végétation :&lt;/b&gt; NDVI, EVI, SAVI et plus, sur réflectance de surface à 30 m</translation>
+    </message>
+    <message>
+        <source>ACQUISITION DATE</source>
+        <translation>DATE D'ACQUISITION</translation>
+    </message>
+    <message>
+        <source>AOI FOOTPRINT COVERAGE · MIN %</source>
+        <translation>COUVERTURE DE L'AOI PAR L'EMPREINTE · MIN %</translation>
+    </message>
+    <message>
+        <source>Accumulated precipitation (mm)</source>
+        <translation>Précipitations cumulées (mm)</translation>
+    </message>
+    <message>
+        <source>Adjust Filter</source>
+        <translation>Ajuster le filtre</translation>
+    </message>
+    <message>
+        <source>Adjust filter</source>
+        <translation>Ajuster le filtre</translation>
+    </message>
+    <message>
+        <source>Apply Scene Classification (SCL) mask</source>
+        <translation>Appliquer le masque de classification de scène (SCL)</translation>
+    </message>
+    <message>
+        <source>Apply cloud mask (QA_PIXEL)</source>
+        <translation>Appliquer le masque de nuages (QA_PIXEL)</translation>
+    </message>
+    <message>
+        <source>Authentication is required to download Landsat data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>Une authentification est requise pour télécharger les données Landsat. Allez sur la page Auth et validez l'ID de votre projet Google Cloud.</translation>
+    </message>
+    <message>
+        <source>Authentication is required to download optical data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>Une authentification est requise pour télécharger les données optiques. Allez sur la page Auth et validez l'ID de votre projet Google Cloud.</translation>
+    </message>
+    <message>
+        <source>Authentication is required to generate SYSI data. Please go to the Auth page and validate your Google Cloud project ID.</source>
+        <translation>Une authentification est requise pour générer les données SYSI. Allez sur la page Auth et validez l'ID de votre projet Google Cloud.</translation>
+    </message>
+    <message>
+        <source>BARE-SOIL THRESHOLDS</source>
+        <translation>SEUILS DE SOL NU</translation>
+    </message>
+    <message>
+        <source>Batch download cancelled. %d/%d downloaded.</source>
+        <translation>Téléchargement par lot annulé. %d/%d téléchargés.</translation>
+    </message>
+    <message>
+        <source>CLIMATE (NASA POWER)</source>
+        <translation>CLIMAT (NASA POWER)</translation>
+    </message>
+    <message>
+        <source>CLOUD PIXEL PERCENTAGE (TILE)</source>
+        <translation>POURCENTAGE DE PIXELS NUAGEUX (TUILE)</translation>
+    </message>
+    <message>
+        <source>Capture points on map</source>
+        <translation>Capturer des points sur la carte</translation>
+    </message>
+    <message>
+        <source>Checked classes always define the valid-pixel count used by the Results filter. When the mask above is enabled, they are also masked out of every image before indices are computed, affecting the time series and downloaded rasters.</source>
+        <translation>Les classes cochées définissent toujours le nombre de pixels valides utilisé par le filtre Résultats. Lorsque le masque ci-dessus est activé, elles sont aussi masquées de chaque image avant le calcul des indices, affectant la série temporelle et les rasters téléchargés.</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <source>Clear points</source>
+        <translation>Effacer les points</translation>
+    </message>
+    <message>
+        <source>Climate fetch failed: %s</source>
+        <translation>Échec de récupération des données climatiques : %s</translation>
+    </message>
+    <message>
+        <source>Climate overlay added to the time-series plot.</source>
+        <translation>Superposition climatique ajoutée au graphique de la série temporelle.</translation>
+    </message>
+    <message>
+        <source>Composite %s into QGIS.</source>
+        <translation>Composite %s dans QGIS.</translation>
+    </message>
+    <message>
+        <source>Could not build the time series.</source>
+        <translation>Impossible de construire la série temporelle.</translation>
+    </message>
+    <message>
+        <source>Could not render the chart.</source>
+        <translation>Impossible de rendre le graphique.</translation>
+    </message>
+    <message>
+        <source>Custom optical indices are not available for composites in this milestone.</source>
+        <translation>Les indices optiques personnalisés ne sont pas disponibles pour les composites dans cette version.</translation>
+    </message>
+    <message>
+        <source>Custom optical indices are not available in this milestone.</source>
+        <translation>Les indices optiques personnalisés ne sont pas disponibles dans cette version.</translation>
+    </message>
+    <message>
+        <source>EXPRESSION</source>
+        <translation>EXPRESSION</translation>
+    </message>
+    <message>
+        <source>End date must be after start date.</source>
+        <translation>La date de fin doit être postérieure à la date de début.</translation>
+    </message>
+    <message>
+        <source>Enter proxy (e.g. http://user:pass@host:port):</source>
+        <translation>Saisissez le proxy (ex. http://user:pass@host:port) :</translation>
+    </message>
+    <message>
+        <source>Every run searches &lt;b&gt;Landsat 7, 8 and 9&lt;/b&gt; together. Each available date is tagged with its mission in the Results date list.</source>
+        <translation>Chaque exécution recherche &lt;b&gt;Landsat 7, 8 et 9&lt;/b&gt; ensemble. Chaque date disponible est étiquetée avec sa mission dans la liste des dates des Résultats.</translation>
+    </message>
+    <message>
+        <source>Export Climate Data as CSV</source>
+        <translation>Exporter les données climatiques en CSV</translation>
+    </message>
+    <message>
+        <source>Export Optical Time Series as CSV</source>
+        <translation>Exporter la série temporelle optique en CSV</translation>
+    </message>
+    <message>
+        <source>Extract a time series per clicked map point, or one series per polygon feature of the AOI layer keyed by an attribute.</source>
+        <translation>Extrayez une série temporelle par point cliqué sur la carte, ou une série par entité polygonale de la couche AOI, identifiée par un attribut.</translation>
+    </message>
+    <message>
+        <source>Failed to load SYSI raster into QGIS.</source>
+        <translation>Échec du chargement du raster SYSI dans QGIS.</translation>
+    </message>
+    <message>
+        <source>Feature ID</source>
+        <translation>ID d'entité</translation>
+    </message>
+    <message>
+        <source>Fetch the climate overlay first.</source>
+        <translation>Récupérez d'abord la superposition climatique.</translation>
+    </message>
+    <message>
+        <source>Filtering no longer happens when the collection runs. Every image keeps its cloud, SCL and coverage metadata, so the &lt;b&gt;Adjust filter&lt;/b&gt; button on the Results tab re-filters and re-plots the series instantly, without contacting Earth Engine again.</source>
+        <translation>Le filtrage n'a plus lieu lors de l'exécution de la collection. Chaque image conserve ses métadonnées de nuage, SCL et couverture, de sorte que le bouton &lt;b&gt;Ajuster le filtre&lt;/b&gt; de l'onglet Résultats refiltre et retrace la série instantanément, sans recontacter Earth Engine.</translation>
+    </message>
+    <message>
+        <source>Generate SYSI</source>
+        <translation>Générer SYSI</translation>
+    </message>
+    <message>
+        <source>Generating…</source>
+        <translation>Génération…</translation>
+    </message>
+    <message>
+        <source>How much of the AOI the scene's footprint overlaps. High thresholds (e.g. 90%) ensure scenes that cover the whole AOI; large or irregular AOIs spanning several tiles may rarely reach high values.</source>
+        <translation>Quelle part de l'AOI l'empreinte de la scène recouvre. Des seuils élevés (ex. 90%) garantissent des scènes couvrant tout l'AOI ; les AOI grandes ou irrégulières s'étendant sur plusieurs tuiles atteignent rarement des valeurs élevées.</translation>
+    </message>
+    <message>
+        <source>How pixels inside the AOI are aggregated to one value per date in the time-series plot (built automatically when you Run).</source>
+        <translation>Comment les pixels à l'intérieur de l'AOI sont agrégés en une valeur par date dans le graphique de la série temporelle (construit automatiquement lors de l'exécution).</translation>
+    </message>
+    <message>
+        <source>INCLUDED MONTHS</source>
+        <translation>MOIS INCLUS</translation>
+    </message>
+    <message>
+        <source>INDEX</source>
+        <translation>INDICE</translation>
+    </message>
+    <message>
+        <source>INDEX NAME</source>
+        <translation>NOM DE L'INDICE</translation>
+    </message>
+    <message>
+        <source>INDEX TIME SERIES</source>
+        <translation>SÉRIE TEMPORELLE DE L'INDICE</translation>
+    </message>
+    <message>
+        <source>Index</source>
+        <translation>Indice</translation>
+    </message>
+    <message>
+        <source>Keep Min &amp;lt; Max. Pixels inside both ranges are kept as bare soil.</source>
+        <translation>Gardez Min &amp;lt; Max. Les pixels dans les deux plages sont conservés comme sol nu.</translation>
+    </message>
+    <message>
+        <source>Landsat (Super-Res)</source>
+        <translation>Landsat (super-rés)</translation>
+    </message>
+    <message>
+        <source>Landsat Super-Resolution</source>
+        <translation>Super-résolution Landsat</translation>
+    </message>
+    <message>
+        <source>Landsat image %s into QGIS.</source>
+        <translation>Image Landsat %s dans QGIS.</translation>
+    </message>
+    <message>
+        <source>Learn more and read the setup guide at &lt;a href='{site}' style='{ls}'&gt;www.raviqgis.org&lt;/a&gt; · Commercial inquiries: &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;</source>
+        <translation>En savoir plus et lire le guide d'installation sur &lt;a href='{site}' style='{ls}'&gt;www.raviqgis.org&lt;/a&gt; · Demandes commerciales : &lt;a href='{farm}' style='{ls}'&gt;FARM Analytica&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Loading dates…</source>
+        <translation>Chargement des dates…</translation>
+    </message>
+    <message>
+        <source>MULTISPECTRAL RGB (30 m)</source>
+        <translation>RVB MULTISPECTRAL (30 m)</translation>
+    </message>
+    <message>
+        <source>Max temperature</source>
+        <translation>Température maximale</translation>
+    </message>
+    <message>
+        <source>Min temperature</source>
+        <translation>Température minimale</translation>
+    </message>
+    <message>
+        <source>Monthly precipitation</source>
+        <translation>Précipitations mensuelles</translation>
+    </message>
+    <message>
+        <source>My Index</source>
+        <translation>Mon indice</translation>
+    </message>
+    <message>
+        <source>NASA POWER returned no climate data for this area/range.</source>
+        <translation>NASA POWER n'a retourné aucune donnée climatique pour cette zone/plage.</translation>
+    </message>
+    <message>
+        <source>NBR2</source>
+        <translation>NBR2</translation>
+    </message>
+    <message>
+        <source>NDVI</source>
+        <translation>NDVI</translation>
+    </message>
+    <message>
+        <source>NIR, Red, Green</source>
+        <translation>PIR, Rouge, Vert</translation>
+    </message>
+    <message>
+        <source>No Landsat images found for this AOI and date range.</source>
+        <translation>Aucune image Landsat trouvée pour cet AOI et cette plage de dates.</translation>
+    </message>
+    <message>
+        <source>No Sentinel-2 images found for this date range.</source>
+        <translation>Aucune image Sentinel-2 trouvée pour cette plage de dates.</translation>
+    </message>
+    <message>
+        <source>No dates in the current selection to composite.</source>
+        <translation>Aucune date dans la sélection actuelle à composer.</translation>
+    </message>
+    <message>
+        <source>No time-series data for this AOI and date range.</source>
+        <translation>Aucune donnée de série temporelle pour cet AOI et cette plage de dates.</translation>
+    </message>
+    <message>
+        <source>Optical (Sentinel-2)</source>
+        <translation>Optique (Sentinel-2)</translation>
+    </message>
+    <message>
+        <source>Optical Imagery (Sentinel-2)</source>
+        <translation>Imagerie optique (Sentinel-2)</translation>
+    </message>
+    <message>
+        <source>Optical image %s into QGIS.</source>
+        <translation>Image optique %s dans QGIS.</translation>
+    </message>
+    <message>
+        <source>Overlay accumulated monthly precipitation (NASA POWER) as bars on the time-series plot, over the same date range. Temperature is fetched too and included in the CSV export.</source>
+        <translation>Superposez les précipitations mensuelles cumulées (NASA POWER) sous forme de barres sur le graphique de la série temporelle, sur la même plage de dates. La température est aussi récupérée et incluse dans l'export CSV.</translation>
+    </message>
+    <message>
+        <source>Overlay on plot</source>
+        <translation>Superposer sur le graphique</translation>
+    </message>
+    <message>
+        <source>POINT &amp; FEATURE ANALYSIS</source>
+        <translation>ANALYSE DE POINT ET D'ENTITÉ</translation>
+    </message>
+    <message>
+        <source>PROCESSING</source>
+        <translation>TRAITEMENT</translation>
+    </message>
+    <message>
+        <source>Pan-sharpened real-colour image. Previews are top-of-atmosphere (TOA).</source>
+        <translation>Image en couleurs réelles avec pan-sharpening. Les aperçus sont en sommet d'atmosphère (TOA).</translation>
+    </message>
+    <message>
+        <source>Pan-sharpening is only available on &lt;b&gt;Top-of-Atmosphere (TOA)&lt;/b&gt; products, so super-resolution previews are TOA reflectance. Vegetation indices and multispectral composites use the atmospherically-corrected &lt;b&gt;Surface Reflectance (SR)&lt;/b&gt; product at the native 30 m. Landsat 5 is not offered — it has no panchromatic band.</source>
+        <translation>Le pan-sharpening n'est disponible que sur les produits &lt;b&gt;Sommet de l'atmosphère (TOA)&lt;/b&gt;, donc les aperçus en super-résolution sont en réflectance TOA. Les indices de végétation et les composites multispectraux utilisent le produit &lt;b&gt;Réflectance de surface (SR)&lt;/b&gt; corrigé des effets atmosphériques, à la résolution native de 30 m. Landsat 5 n'est pas proposé — il n'a pas de bande panchromatique.</translation>
+    </message>
+    <message>
+        <source>Plot a time series first.</source>
+        <translation>Tracez d'abord une série temporelle.</translation>
+    </message>
+    <message>
+        <source>Plot per-feature series</source>
+        <translation>Tracer les séries par entité</translation>
+    </message>
+    <message>
+        <source>Poly order</source>
+        <translation>Ordre du polynôme</translation>
+    </message>
+    <message>
+        <source>Precipitation</source>
+        <translation>Précipitations</translation>
+    </message>
+    <message>
+        <source>Proxy Settings</source>
+        <translation>Paramètres du proxy</translation>
+    </message>
+    <message>
+        <source>Proxy setting (only if required by your network provider)</source>
+        <translation>Paramètre de proxy (uniquement si requis par votre fournisseur réseau)</translation>
+    </message>
+    <message>
+        <source>Proxy settings</source>
+        <translation>Paramètres du proxy</translation>
+    </message>
+    <message>
+        <source>RGB</source>
+        <translation>RVB</translation>
+    </message>
+    <message>
+        <source>Real Color (B4, B3, B2)</source>
+        <translation>Couleurs réelles (B4, B3, B2)</translation>
+    </message>
+    <message>
+        <source>Real Color (Red, Green, Blue)</source>
+        <translation>Couleurs réelles (Rouge, Vert, Bleu)</translation>
+    </message>
+    <message>
+        <source>Red, NIR, Green</source>
+        <translation>Rouge, PIR, Vert</translation>
+    </message>
+    <message>
+        <source>Removes clouds, cloud shadows, cirrus and saturated pixels. Disabling delivers more dates but with much more noise.</source>
+        <translation>Supprime les nuages, les ombres de nuages, les cirrus et les pixels saturés. La désactivation fournit plus de dates mais avec beaucoup plus de bruit.</translation>
+    </message>
+    <message>
+        <source>Rendering</source>
+        <translation>Rendu</translation>
+    </message>
+    <message>
+        <source>Run the Landsat analysis first.</source>
+        <translation>Exécutez d'abord l'analyse Landsat.</translation>
+    </message>
+    <message>
+        <source>Run the optical analysis first.</source>
+        <translation>Exécutez d'abord l'analyse optique.</translation>
+    </message>
+    <message>
+        <source>Running...</source>
+        <translation>Exécution...</translation>
+    </message>
+    <message>
+        <source>SCENE CLOUD COVER · MAX %</source>
+        <translation>COUVERTURE NUAGEUSE DE LA SCÈNE · MAX %</translation>
+    </message>
+    <message>
+        <source>SCL CLOUD MASK</source>
+        <translation>MASQUE DE NUAGES SCL</translation>
+    </message>
+    <message>
+        <source>SUPER-RESOLUTION RGB (15 m)</source>
+        <translation>RVB SUPER-RÉSOLUTION (15 m)</translation>
+    </message>
+    <message>
+        <source>SWIR1, NIR, Red</source>
+        <translation>SWIR1, PIR, Rouge</translation>
+    </message>
+    <message>
+        <source>SWIR1, NIR, SWIR2</source>
+        <translation>SWIR1, PIR, SWIR2</translation>
+    </message>
+    <message>
+        <source>SWIR2, NIR, Green</source>
+        <translation>SWIR2, PIR, Vert</translation>
+    </message>
+    <message>
+        <source>SYSI</source>
+        <translation>SYSI</translation>
+    </message>
+    <message>
+        <source>SYSI '%s' generated and loaded into QGIS.</source>
+        <translation>SYSI '%s' généré et chargé dans QGIS.</translation>
+    </message>
+    <message>
+        <source>Save custom index</source>
+        <translation>Enregistrer l'indice personnalisé</translation>
+    </message>
+    <message>
+        <source>Savitzky-Golay smoothing</source>
+        <translation>Lissage Savitzky-Golay</translation>
+    </message>
+    <message>
+        <source>Select a date first.</source>
+        <translation>Sélectionnez d'abord une date.</translation>
+    </message>
+    <message>
+        <source>Select at least one month.</source>
+        <translation>Sélectionnez au moins un mois.</translation>
+    </message>
+    <message>
+        <source>Share of the AOI covered by valid (unmasked) pixels, per the SCL classes chosen on the Inputs tab. Measured inside your AOI, so it reflects local cloud and shadow better than scene cloud cover.</source>
+        <translation>Proportion de l'AOI couverte par des pixels valides (non masqués), selon les classes SCL choisies dans l'onglet Entrées. Mesurée à l'intérieur de votre AOI, elle reflète mieux les nuages et ombres locaux que la couverture nuageuse de la scène.</translation>
+    </message>
+    <message>
+        <source>Single-date image of the index chosen on the Inputs tab, on 30 m surface reflectance.</source>
+        <translation>Image à date unique de l'indice choisi dans l'onglet Entrées, sur réflectance de surface à 30 m.</translation>
+    </message>
+    <message>
+        <source>Smoothed (Savitzky-Golay)</source>
+        <translation>Lissé (Savitzky-Golay)</translation>
+    </message>
+    <message>
+        <source>Step %d of 2</source>
+        <translation>Étape %d sur 2</translation>
+    </message>
+    <message>
+        <source>Step %d of 3</source>
+        <translation>Étape %d sur 3</translation>
+    </message>
+    <message>
+        <source>Synthetic Soil Image (SYSI)</source>
+        <translation>Image synthétique de sol (SYSI)</translation>
+    </message>
+    <message>
+        <source>TIME-SERIES SPATIAL REDUCER</source>
+        <translation>RÉDUCTEUR SPATIAL DE LA SÉRIE TEMPORELLE</translation>
+    </message>
+    <message>
+        <source>The Optical module analyses the &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; collection in Google Earth Engine. Pick an area, a date range and a vegetation index to build an interactive time series, then download imagery, composites and indices — no coding required.</source>
+        <translation>Le module Optique analyse la collection &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; dans Google Earth Engine. Choisissez une zone, une plage de dates et un indice de végétation pour construire une série temporelle interactive, puis téléchargez images, composites et indices — sans coder.</translation>
+    </message>
+    <message>
+        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. By keeping only the pixels that are bare soil across many dates, it reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
+        <translation>Le module SYSI construit une &lt;b&gt;Image synthétique de sol&lt;/b&gt; : un composite de réflectance de sol nu issu d'une collection Sentinel-2 multitemporelle. En ne conservant que les pixels de sol nu sur de nombreuses dates, il révèle la surface du sol exempte de végétation et de résidus de culture — sans coder.</translation>
+    </message>
+    <message>
+        <source>The chart above plots the index and reducer chosen on the Inputs tab across Landsat 7/8/9 — built automatically when you Run.</source>
+        <translation>Le graphique ci-dessus trace l'indice et le réducteur choisis dans l'onglet Entrées sur Landsat 7/8/9 — construit automatiquement lors de l'exécution.</translation>
+    </message>
+    <message>
+        <source>The synthetic soil image carries the Sentinel-2 surface-reflectance bands together with the soil indices computed during processing:</source>
+        <translation>L'image synthétique de sol contient les bandes de réflectance de surface Sentinel-2 ainsi que les indices de sol calculés lors du traitement :</translation>
+    </message>
+    <message>
+        <source>This module sharpens &lt;b&gt;Landsat 7/8/9&lt;/b&gt; imagery from 30 m to an effective &lt;b&gt;15 m&lt;/b&gt; using HSV pan-sharpening — merging the 15 m panchromatic band into the visible RGB channels. Pick an area, a date range and a mission, then preview and download super-resolution imagery, vegetation indices and multispectral composites.</source>
+        <translation>Ce module affine l'imagerie &lt;b&gt;Landsat 7/8/9&lt;/b&gt; de 30 m à &lt;b&gt;15 m&lt;/b&gt; effectifs grâce au pan-sharpening HSV — en fusionnant la bande panchromatique de 15 m dans les canaux RVB visibles. Choisissez une zone, une plage de dates et une mission, puis prévisualisez et téléchargez l'imagerie en super-résolution, les indices de végétation et les composites multispectraux.</translation>
+    </message>
+    <message>
+        <source>Three independent filters narrow the cached image series. Each card notes which direction is stricter. The plot updates when you click OK — no new Earth Engine request is made.</source>
+        <translation>Trois filtres indépendants restreignent la série d'images en cache. Chaque carte indique quelle direction est la plus stricte. Le graphique se met à jour au clic sur OK — aucune nouvelle requête Earth Engine n'est faite.</translation>
+    </message>
+    <message>
+        <source>Tile-level cloud cover (CLOUDY_PIXEL_PERCENTAGE from image metadata). Sentinel-2 scenes are 100×100 km tiles, so this is whole-tile cloudiness — not the cloud inside your AOI. For local conditions, use the Valid pixels filter.</source>
+        <translation>Couverture nuageuse au niveau de la tuile (CLOUDY_PIXEL_PERCENTAGE des métadonnées de l'image). Les scènes Sentinel-2 sont des tuiles de 100×100 km, il s'agit donc de la nébulosité de toute la tuile — pas du nuage dans votre AOI. Pour les conditions locales, utilisez le filtre Pixels valides.</translation>
+    </message>
+    <message>
+        <source>To use this module you need authentication to Google Earth Engine via a &lt;b&gt;Google Cloud Project ID&lt;/b&gt;. Configure this in the "Auth" tab of the plugin.</source>
+        <translation>Pour utiliser ce module, vous devez vous authentifier auprès de Google Earth Engine via un &lt;b&gt;ID de projet Google Cloud&lt;/b&gt;. Configurez-le dans l'onglet « Auth » du plugin.</translation>
+    </message>
+    <message>
+        <source>To use this module you need authentication to Google Earth Engine via a &lt;b&gt;Google Cloud Project ID&lt;/b&gt;. Configure this in the "Auth" tab.</source>
+        <translation>Pour utiliser ce module, vous devez vous authentifier auprès de Google Earth Engine via un &lt;b&gt;ID de projet Google Cloud&lt;/b&gt;. Configurez-le dans l'onglet « Auth ».</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applied on the clipped synthetic soil image.</source>
+        <translation>Utilisez un tampon positif pour inclure le terrain juste à l'extérieur de votre zone, ou un tampon négatif pour rogner les bords. Appliqué sur l'image synthétique de sol découpée.</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applies to every downloaded and previewed optical output (single date, batch, composite).</source>
+        <translation>Utilisez un tampon positif pour inclure le terrain juste à l'extérieur de votre zone, ou un tampon négatif pour rogner les bords. S'applique à chaque sortie optique téléchargée et prévisualisée (date unique, lot, composite).</translation>
+    </message>
+    <message>
+        <source>Use a positive buffer to include terrain just outside your area, or a negative buffer to crop the edges. Applies to every previewed and downloaded image.</source>
+        <translation>Utilisez un tampon positif pour inclure le terrain juste à l'extérieur de votre zone, ou un tampon négatif pour rogner les bords. S'applique à chaque image prévisualisée et téléchargée.</translation>
+    </message>
+    <message>
+        <source>Use these band names in the expression:</source>
+        <translation>Utilisez ces noms de bandes dans l'expression :</translation>
+    </message>
+    <message>
+        <source>Used for the Results time-series plot and the single-date index image. Only indices computable from Landsat bands are listed (no red-edge).</source>
+        <translation>Utilisé pour le graphique de série temporelle des Résultats et l'image d'indice à date unique. Seuls les indices calculables à partir des bandes Landsat sont listés (sans red-edge).</translation>
+    </message>
+    <message>
+        <source>VALID PIXELS IN AOI · MIN %</source>
+        <translation>PIXELS VALIDES DANS L'AOI · MIN %</translation>
+    </message>
+    <message>
+        <source>VEGETATION INDEX</source>
+        <translation>INDICE DE VÉGÉTATION</translation>
+    </message>
+    <message>
+        <source>VEGETATION INDEX (30 m)</source>
+        <translation>INDICE DE VÉGÉTATION (30 m)</translation>
+    </message>
+    <message>
+        <source>WHAT YOU CAN DO</source>
+        <translation>CE QUE VOUS POUVEZ FAIRE</translation>
+    </message>
+    <message>
+        <source>Welcome to RAVI</source>
+        <translation>Bienvenue dans RAVI</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Fenêtre</translation>
+    </message>
+    <message>
+        <source>ℹ️ About the bands</source>
+        <translation>ℹ️ À propos des bandes</translation>
+    </message>
+    <message>
+        <source>↑  Higher = stricter — demands cleaner pixels in the AOI</source>
+        <translation>↑  Plus haut = plus strict — exige des pixels plus propres dans l'AOI</translation>
+    </message>
+    <message>
+        <source>↑  Higher = stricter — requires fuller AOI coverage</source>
+        <translation>↑  Plus haut = plus strict — exige une couverture plus complète de l'AOI</translation>
+    </message>
+    <message>
+        <source>↓  Lower = stricter — keeps only clearer scenes</source>
+        <translation>↓  Plus bas = plus strict — ne garde que les scènes plus claires</translation>
+    </message>
+    <message>
+        <source>☁️ Filtering (new)</source>
+        <translation>☁️ Filtrage (nouveau)</translation>
+    </message>
+    <message>
+        <source>✨ Main Features</source>
+        <translation>✨ Fonctionnalités principales</translation>
+    </message>
+    <message>
+        <source>🌱 SYSI Module - Synthetic Soil Image</source>
+        <translation>🌱 Module SYSI - Image synthétique de sol</translation>
+    </message>
+    <message>
+        <source>📅 Available coverage: &lt;b&gt;1999 to present&lt;/b&gt; — Landsat 7 (1999–2022), Landsat 8 (2013–) and Landsat 9 (2021–). Dates outside a mission's lifespan are skipped automatically.</source>
+        <translation>📅 Couverture disponible : &lt;b&gt;1999 à aujourd'hui&lt;/b&gt; — Landsat 7 (1999–2022), Landsat 8 (2013–) et Landsat 9 (2021–). Les dates hors de la durée de vie d'une mission sont ignorées automatiquement.</translation>
+    </message>
+    <message>
+        <source>📋 Workflow</source>
+        <translation>📋 Flux de travail</translation>
+    </message>
+    <message>
+        <source>🔧 Initial Setup</source>
+        <translation>🔧 Configuration initiale</translation>
+    </message>
+    <message>
+        <source>🛰️ Bands</source>
+        <translation>🛰️ Bandes</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat Super-Resolution</source>
+        <translation>🛰️ Super-résolution Landsat</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution is built on &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ La super-résolution Landsat repose sur &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, en collaboration avec son auteur &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>🛰️ Optical Imagery Module - Sentinel-2</source>
+        <translation>🛰️ Module d'imagerie optique - Sentinel-2</translation>
+    </message>
 </context>
 </TS>
