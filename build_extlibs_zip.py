@@ -15,11 +15,6 @@ Two modes:
 Commit + push the resulting extlibs-<tag>.zip so the runtime downloader
 (extlibs_manager) can fetch the build matching each QGIS Python. The GitHub
 Actions workflow (.github/workflows/build-extlibs.yml) builds the full matrix.
-
-Each zip also carries the native ``aria2c`` daemon under ``extlibs/bin/`` — the
-Landsat batch download spawns it via agrigee_lite's downloader and aria2 is not
-a pip package. On Windows the official static build is downloaded; on
-Linux/macOS the runner's system aria2c (installed by the workflow) is copied.
 """
 import os
 import shutil
@@ -27,18 +22,10 @@ import subprocess
 import sys
 import sysconfig
 import tempfile
-import urllib.request
 import zipfile
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _REQUIREMENTS = os.path.join(_HERE, "requirements.txt")
-
-# Official aria2 static Windows build. Bump the version here to update the
-# bundled daemon; the asset is a zip containing ``.../aria2c.exe``.
-_ARIA2_WIN_URL = (
-    "https://github.com/aria2/aria2/releases/download/"
-    "release-1.37.0/aria2-1.37.0-win-64bit-build1.zip"
-)
 
 # Keep in sync with extlibs_manager._QGIS_PROVIDED.
 _QGIS_PROVIDED = (
@@ -86,47 +73,6 @@ def _strip(target):
                     pass
 
 
-def bundle_aria2c(build):
-    """Place the native aria2c binary at ``<build>/bin/`` so the zip ships it as
-    ``extlibs/bin/aria2c[.exe]``. Best-effort: on a platform where no binary can
-    be obtained the directory is left out, and the plugin's runtime PATH lookup
-    (or a clear error) covers the batch download."""
-    bin_dir = os.path.join(build, "bin")
-    os.makedirs(bin_dir, exist_ok=True)
-
-    if sys.platform.startswith("win"):
-        dest = os.path.join(bin_dir, "aria2c.exe")
-        tmp_zip = os.path.join(build, "_aria2_win.zip")
-        try:
-            print(f"download aria2c <- {_ARIA2_WIN_URL}")
-            urllib.request.urlretrieve(_ARIA2_WIN_URL, tmp_zip)  # noqa: S310
-            with zipfile.ZipFile(tmp_zip) as zf:
-                member = next(n for n in zf.namelist() if n.endswith("aria2c.exe"))
-                with zf.open(member) as src, open(dest, "wb") as out:
-                    shutil.copyfileobj(src, out)
-            print("bundled aria2c.exe")
-            return
-        except Exception as e:
-            print(f"WARNING: could not bundle aria2c.exe: {e}")
-    else:
-        # Linux/macOS: copy the runner's system aria2c (the workflow installs it
-        # via apt/brew). These are dynamically linked, so this is best-effort.
-        src = shutil.which("aria2c")
-        if src:
-            dest = os.path.join(bin_dir, "aria2c")
-            shutil.copy2(src, dest)
-            os.chmod(dest, 0o755)
-            print(f"bundled aria2c from {src}")
-            return
-        print("aria2c not found on PATH; not bundling (runtime PATH fallback)")
-
-    # Nothing bundled — drop the empty dir so it doesn't clutter the zip.
-    try:
-        os.rmdir(bin_dir)
-    except OSError:
-        pass
-
-
 def full_build():
     tag = current_tag()
     # Write to the plugin root (committed + served by the raw GitHub URL that
@@ -141,7 +87,6 @@ def full_build():
             check=True,
         )
         _strip(build)
-        bundle_aria2c(build)
         zip_dir(build, out)
         print(f"Done: extlibs-{tag}.zip")
     finally:
