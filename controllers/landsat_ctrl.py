@@ -29,7 +29,7 @@ from ..services.landsat_service import LandsatService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_multiseries_chart_html
-from ..workers.batch_download_worker import BatchDownloadWorker
+from ..workers.landsat_batch_worker import LandsatBatchWorker
 from ..workers.landsat_preview_worker import LandsatPreviewWorker
 from ..workers.landsat_timeseries_worker import LandsatTimeseriesWorker
 from ..workers.landsat_worker import LandsatWorker
@@ -66,7 +66,7 @@ class LandsatCtrl:
         self._run_btn_text: str | None = None
         self._preview_worker: LandsatPreviewWorker | None = None
         self._preview_btn_texts: dict | None = None
-        self._batch_worker: BatchDownloadWorker | None = None
+        self._batch_worker: LandsatBatchWorker | None = None
         self._batch_dialog: QProgressDialog | None = None
         self._ts_worker: LandsatTimeseriesWorker | None = None
         self._ts_df = None
@@ -374,19 +374,9 @@ class LandsatCtrl:
         self._batch_dialog.setModal(True)
         self._batch_dialog.show()
 
-        def _download_one(pair):
-            date, mission = pair
-            return LandsatService.download_superres_for_date(
-                aoi,
-                date,
-                mission,
-                use_cloud_mask=use_cloud_mask,
-                tier=1,
-                buffer_m=buffer_m,
-                output_folder=folder,
-            )
-
-        self._batch_worker = BatchDownloadWorker(pairs, _download_one)
+        self._batch_worker = LandsatBatchWorker(
+            aoi, pairs, use_cloud_mask, 1, buffer_m, folder
+        )
         self._batch_worker.progress.connect(self._on_batch_progress)
         self._batch_worker.finished.connect(self._on_batch_done)
         self._batch_worker.cancelled.connect(self._on_batch_cancelled)
@@ -394,13 +384,13 @@ class LandsatCtrl:
         self._batch_dialog.canceled.connect(self._batch_worker.request_cancel)
         self._batch_worker.start()
 
-    def _on_batch_progress(self, current: int, total: int, date_str: str):
+    def _on_batch_progress(self, completed: int, total: int):
         if self._batch_dialog is None:
             return
         self._batch_dialog.setMaximum(total)
-        self._batch_dialog.setValue(current)
+        self._batch_dialog.setValue(completed)
         self._batch_dialog.setLabelText(
-            _tr("Downloading %d of %d: %s") % (current, total, date_str)
+            _tr("Downloaded %d of %d") % (completed, total)
         )
 
     def _on_batch_done(self, successful: int, total: int, paths: list):
