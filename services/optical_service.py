@@ -233,6 +233,83 @@ class OpticalService:
 
         return rows
 
+    # -- point / per-feature time series ----------------------------------
+    @staticmethod
+    def get_geometry_time_series(
+        geometry: ee.Geometry,
+        date_start: str,
+        date_end: str,
+        index_name: str,
+        apply_scl: bool,
+        invalid_scl_values: List[int],
+        reducer: str = "mean",
+    ) -> List[Dict[str, Any]]:
+        """Vegetation-index time series for a single geometry over the full date
+        range, returned as ``[{"date": str, "value": float}, ...]``.
+
+        Mirrors the AOI series processing (one image per date, optional SCL
+        masking) so the point/feature curves stay comparable to the AOI curve.
+
+        ``reducer``:
+          * ``"first"`` — exact value of the 10 m pixel containing the geometry
+            (used for clicked points; truer than averaging a buffered disc).
+          * ``"mean"``  — spatial mean over the geometry (used for polygon
+            features).
+        """
+        collection = OpticalService._build_base_collection(geometry, date_start, date_end)
+        # Keep one image per date by lowest cloud cover. The AOI-series
+        # deduplicator divides by the AOI area (zero for a clicked point), so a
+        # cloud-only rule is used here — correct for both points and polygons and
+        # safe for degenerate geometries.
+        def _tag_date(image):
+            return image.set(
+                "date",
+                ee.Date(image.get("system:time_start")).format("YYYY-MM-dd"),
+            )
+
+        deduped = (
+            collection.map(_tag_date)
+            .sort("CLOUDY_PIXEL_PERCENTAGE")
+            .distinct("date")
+        )
+        collection = ee.ImageCollection(deduped)
+
+        ee_reducer = ee.Reducer.first() if reducer == "first" else ee.Reducer.mean()
+
+        def process_image(image):
+            img = OpticalService._add_vegetation_index(image, index_name)
+            if apply_scl:
+                img = OpticalService._apply_scl_mask(img, invalid_scl_values)
+            value = img.select("index").reduceRegion(
+                reducer=ee_reducer,
+                geometry=geometry,
+                scale=10,
+                maxPixels=1e9,
+            ).get("index")
+            return image.set(
+                {
+                    "date": ee.Date(image.get("system:time_start")).format(
+                        "YYYY-MM-dd"
+                    ),
+                    "value": value,
+                }
+            )
+
+        processed = collection.map(process_image).filter(
+            ee.Filter.notNull(["value"])
+        )
+
+        dates = processed.aggregate_array("date").getInfo()
+        values = processed.aggregate_array("value").getInfo()
+
+        rows = [
+            {"date": d, "value": v}
+            for d, v in zip(dates, values)
+            if v is not None
+        ]
+        rows.sort(key=lambda r: r["date"])
+        return rows
+
     # -- multispectral export (batch download) ----------------------------
     @staticmethod
     def _download_region(aoi: ee.FeatureCollection, buffer_m: float):
