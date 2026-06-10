@@ -33,6 +33,7 @@ from ..view.optical_index_info import CUSTOM_INDEX_LABEL
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_chart_html
 from ..workers.batch_download_worker import BatchDownloadWorker
+from ..workers.optical_composite_worker import OpticalCompositeWorker
 from ..workers.optical_preview_worker import OpticalPreviewWorker
 from ..workers.optical_worker import OpticalWorker
 
@@ -75,6 +76,12 @@ class OpticalCtrl:
         self._batch_dialog: QProgressDialog | None = None
         self._preview_worker: OpticalPreviewWorker | None = None
         self._preview_btn_texts: tuple | None = None
+        self._composite_worker: OpticalCompositeWorker | None = None
+        self._composite_btn_texts: tuple | None = None
+        # SCL settings captured at run time, replayed for the composite so it
+        # matches the masking behind the plotted series.
+        self._run_apply_scl = True
+        self._run_invalid_scl: list[int] = []
 
         # The "Adjust filter" dialog shows a live image count (cheap) and only
         # re-renders the plot when the user clicks OK.
@@ -172,12 +179,14 @@ class OpticalCtrl:
             return
 
         self.aoi = aoi
+        self._run_apply_scl = self.dialog.s2_chk_apply_scl.isChecked()
+        self._run_invalid_scl = self._selected_invalid_scl_values()
         params = {
             "date_start": start_qdate.toString("yyyy-MM-dd"),
             "date_end": end_qdate.toString("yyyy-MM-dd"),
             "index_name": index_name,
-            "apply_scl": self.dialog.s2_chk_apply_scl.isChecked(),
-            "invalid_scl_values": self._selected_invalid_scl_values(),
+            "apply_scl": self._run_apply_scl,
+            "invalid_scl_values": self._run_invalid_scl,
         }
 
         self._current_index = index_name
@@ -618,6 +627,106 @@ class OpticalCtrl:
         """
         if self.dataframe is not None and not self.dataframe.empty:
             self._render_timeseries()
+
+    # -- synthetic composite (preview / download) -------------------------
+    def handle_composite_preview(self):
+        self._run_composite(to_folder=False)
+
+    def handle_composite_download(self):
+        self._run_composite(to_folder=True)
+
+    def _run_composite(self, to_folder: bool):
+        if not self._has_results():
+            return
+        if self._composite_worker is not None and self._composite_worker.isRunning():
+            return
+
+        # Composite only the dates still shown on the plot (thresholds + the
+        # manual date filter), exactly what _filtered_dataframe yields.
+        dates = self._filtered_dataframe()["date"].dropna().astype(str).tolist()
+        if not dates:
+            self.dialog.pop_message(
+                _tr("No dates in the current selection to composite."), "warning"
+            )
+            return
+
+        index_name = self._current_index
+        if index_name == CUSTOM_INDEX_LABEL or (
+            index_name and "custom" in index_name.lower()
+        ):
+            self.dialog.pop_message(
+                _tr("Custom optical indices are not available for composites in "
+                    "this milestone."),
+                "warning",
+            )
+            return
+
+        metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
+        folder = (
+            SettingsManager.load_download_folder()
+            if to_folder
+            else tempfile.gettempdir()
+        )
+
+        self._set_composite_busy(True)
+        self._composite_worker = OpticalCompositeWorker(
+            self.aoi,
+            dates,
+            index_name,
+            metric,
+            self._run_apply_scl,
+            self._run_invalid_scl,
+            self._buffer_meters(),
+            folder,
+        )
+        self._composite_worker.finished.connect(
+            lambda path: self._on_composite_done(path, to_folder)
+        )
+        self._composite_worker.failed.connect(self._on_composite_failed)
+        self._composite_worker.start()
+
+    def _composite_buttons(self):
+        return (
+            self.dialog.s2_btn_composite_preview,
+            self.dialog.s2_btn_composite_download,
+        )
+
+    def _set_composite_busy(self, busy: bool):
+        btns = self._composite_buttons()
+        if busy:
+            self._composite_btn_texts = tuple(b.text() for b in btns)
+            for b in btns:
+                b.setText(_tr("Loading..."))
+        elif self._composite_btn_texts:
+            for b, txt in zip(btns, self._composite_btn_texts):
+                b.setText(txt)
+        for b in btns:
+            b.setEnabled(not busy)
+
+    def _on_composite_done(self, path: str, to_folder: bool):
+        self._set_composite_busy(False)
+        worker, self._composite_worker = self._composite_worker, None
+        if worker is not None:
+            worker.deleteLater()
+
+        metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
+        ramp = self.dialog.s2_composite_ramp_combo.currentText()
+        RasterRendererUtils.load_pseudocolor_raster(
+            path, f"S2 {self._current_index} {metric}", 1, ramp
+        )
+
+        if self.interface is not None:
+            action = _tr("downloaded and loaded") if to_folder else _tr("loaded")
+            self.interface.messageBar().pushMessage(
+                "RAVI", _tr("Composite %s into QGIS.") % action
+            )
+
+    def _on_composite_failed(self, message: str):
+        self._set_composite_busy(False)
+        worker, self._composite_worker = self._composite_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        self.dialog.pop_message(message, "warning")
 
     def _smoothed_series(self, y):
         """Savitzky-Golay smoothing of the AOI-average series, or None.

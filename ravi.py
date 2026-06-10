@@ -249,6 +249,12 @@ class RAVI:
         self.dialog.s2_btn_vi_download.clicked.connect(
             self.optical_ctrl.handle_vi_download
         )
+        self.dialog.s2_btn_composite_preview.clicked.connect(
+            self.optical_ctrl.handle_composite_preview
+        )
+        self.dialog.s2_btn_composite_download.clicked.connect(
+            self.optical_ctrl.handle_composite_download
+        )
 
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
