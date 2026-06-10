@@ -322,6 +322,7 @@ def _build_inputs_tab(dialog, parent):
     thr_lay.addWidget(_threshold_row(_tr("NBR2"), dialog.sysi_nbr_range_slider))
 
     hint = QLabel(_tr("Keep Min &lt; Max. Pixels inside both ranges are kept as bare soil."))
+    hint.setWordWrap(True)
     hint.setTextFormat(Qt.TextFormat.RichText)
     hint.setStyleSheet(
         "color: #9e9e9e; font-size: 10px; background: transparent; border: none;"

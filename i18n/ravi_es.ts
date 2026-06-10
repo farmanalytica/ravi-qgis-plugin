@@ -1403,5 +1403,53 @@
         <source>🛰️ Optical Imagery Module - Sentinel-2</source>
         <translation>🛰️ Módulo de imágenes ópticas - Sentinel-2</translation>
     </message>
+    <message>
+        <source>AOI</source>
+        <translation>AOI</translation>
+    </message>
+    <message>
+        <source>Points</source>
+        <translation>Puntos</translation>
+    </message>
+    <message>
+        <source>Features</source>
+        <translation>Entidades</translation>
+    </message>
+    <message>
+        <source>Click on the map to sample a point time series.</source>
+        <translation>Haz clic en el mapa para muestrear la serie temporal de un punto.</translation>
+    </message>
+    <message>
+        <source>P%d (%.5f, %.5f)</source>
+        <translation>P%d (%.5f, %.5f)</translation>
+    </message>
+    <message>
+        <source>Select a polygon AOI layer for per-feature analysis.</source>
+        <translation>Selecciona una capa de polígonos (AOI) para el análisis por entidad.</translation>
+    </message>
+    <message>
+        <source>The selected layer has no usable features.</source>
+        <translation>La capa seleccionada no tiene entidades utilizables.</translation>
+    </message>
+    <message>
+        <source>feature %d</source>
+        <translation>entidad %d</translation>
+    </message>
+    <message>
+        <source>%s — Points</source>
+        <translation>%s — Puntos</translation>
+    </message>
+    <message>
+        <source>%s — Features</source>
+        <translation>%s — Entidades</translation>
+    </message>
+    <message>
+        <source>AOI average</source>
+        <translation>Promedio del AOI</translation>
+    </message>
+    <message>
+        <source>%s value</source>
+        <translation>Valor de %s</translation>
+    </message>
 </context>
 </TS>
