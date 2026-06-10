@@ -30,6 +30,7 @@ from qgis.PyQt.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QSlider,
+    QAbstractSpinBox,
     QSpinBox,
     QSplitter,
     QStackedWidget,
@@ -605,17 +606,72 @@ def _build_results_tab(dialog, parent):
     dialog.s2_chk_smoothing = QCheckBox(_tr("Savitzky-Golay smoothing"))
     dialog.s2_chk_smoothing.setStyleSheet(STYLE_CHECKBOX)
 
+    def _spin_widget(spinbox, height=30):
+        try:
+            spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        except AttributeError:
+            spinbox.setButtonSymbols(QAbstractSpinBox.NoButtons)  # type: ignore[attr-defined]
+        spinbox.setStyleSheet(
+            "QSpinBox {"
+            " background: #ffffff; color: #1a1a1a;"
+            " border-top: 1.5px solid #b8dcc8; border-bottom: 1.5px solid #b8dcc8;"
+            " border-left: none; border-right: none; border-radius: 0px;"
+            " padding: 0px 4px; font-size: 13px; font-weight: 600; min-width: 36px;"
+            "}"
+        )
+        spinbox.setAlignment(Qt.AlignCenter)
+        spinbox.setFixedHeight(height)
+
+        _btn_base = (
+            " background-color: #edf7f1; color: #1b6b39;"
+            " font-size: 16px; font-weight: 600;"
+            " min-width: 26px; max-width: 26px; padding: 0px;"
+        )
+        btn_m = QPushButton("−")
+        btn_p = QPushButton("+")
+        btn_m.setStyleSheet(
+            "QPushButton {" + _btn_base +
+            " border: 1.5px solid #b8dcc8; border-right: 1px solid #d4e8dc;"
+            " border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
+            " border-top-right-radius: 0px; border-bottom-right-radius: 0px; }"
+            " QPushButton:hover { background-color: #c5e8d0; border-color: #1b6b39; }"
+            " QPushButton:pressed { background-color: #1b6b39; color: #ffffff; border-color: #1b6b39; }"
+        )
+        btn_p.setStyleSheet(
+            "QPushButton {" + _btn_base +
+            " border: 1.5px solid #b8dcc8; border-left: 1px solid #d4e8dc;"
+            " border-top-right-radius: 6px; border-bottom-right-radius: 6px;"
+            " border-top-left-radius: 0px; border-bottom-left-radius: 0px; }"
+            " QPushButton:hover { background-color: #c5e8d0; border-color: #1b6b39; }"
+            " QPushButton:pressed { background-color: #1b6b39; color: #ffffff; border-color: #1b6b39; }"
+        )
+        for b in (btn_m, btn_p):
+            b.setFixedHeight(height)
+            b.setFocusPolicy(Qt.NoFocus)
+        btn_m.clicked.connect(spinbox.stepDown)
+        btn_p.clicked.connect(spinbox.stepUp)
+        wrap = QWidget()
+        wrap.setStyleSheet("background: transparent; border: none;")
+        wlay = QHBoxLayout(wrap)
+        wlay.setContentsMargins(0, 0, 0, 0)
+        wlay.setSpacing(0)
+        wlay.addWidget(btn_m)
+        wlay.addWidget(spinbox)
+        wlay.addWidget(btn_p)
+        wrap.setFixedHeight(height)
+        return wrap
+
     dialog.s2_smooth_window = QSpinBox()
     dialog.s2_smooth_window.setRange(3, 99)
     dialog.s2_smooth_window.setSingleStep(2)
     dialog.s2_smooth_window.setValue(7)
-    _prepare_field(dialog.s2_smooth_window, 28)
-    dialog.s2_smooth_window.setMinimumWidth(64)
+    window_widget = _spin_widget(dialog.s2_smooth_window)
+    window_widget.setMinimumWidth(84)
     dialog.s2_smooth_polyorder = QSpinBox()
     dialog.s2_smooth_polyorder.setRange(1, 10)
     dialog.s2_smooth_polyorder.setValue(2)
-    _prepare_field(dialog.s2_smooth_polyorder, 28)
-    dialog.s2_smooth_polyorder.setMinimumWidth(64)
+    polyorder_widget = _spin_widget(dialog.s2_smooth_polyorder)
+    polyorder_widget.setMinimumWidth(84)
 
     # Window must stay odd and the polynomial order below it (valid SG).
     def _force_odd(v):
@@ -634,8 +690,8 @@ def _build_results_tab(dialog, parent):
     smooth_params_lay = QHBoxLayout(smooth_params)
     smooth_params_lay.setContentsMargins(0, 0, 0, 0)
     smooth_params_lay.setSpacing(12)
-    smooth_params_lay.addWidget(_labeled(_tr("Window"), dialog.s2_smooth_window, 56))
-    smooth_params_lay.addWidget(_labeled(_tr("Poly order"), dialog.s2_smooth_polyorder, 70))
+    smooth_params_lay.addWidget(_labeled(_tr("Window"), window_widget, 56))
+    smooth_params_lay.addWidget(_labeled(_tr("Poly order"), polyorder_widget, 70))
 
     def _sync_smoothing():
         smooth_params.setVisible(dialog.s2_chk_smoothing.isChecked())
@@ -1003,22 +1059,11 @@ def setup_optical_page(dialog, page):
             color: #212121;
             border: 1px solid #d0d0d0;
             border-radius: 6px;
-            padding: 2px 6px;
+            padding: 2px 24px 2px 6px;
             font-size: 12px;
         }
         QSpinBox:focus { border: 1.5px solid #1b6b39; }
         QSpinBox:disabled { color: #bdbdbd; background: #f2f2f2; border-color: #e6e6e6; }
-        QSpinBox::up-button, QSpinBox::down-button {
-            subcontrol-origin: border;
-            width: 16px;
-            background-color: #eef2f0;
-            border-left: 1px solid #d0d0d0;
-        }
-        QSpinBox::up-button { subcontrol-position: top right; border-top-right-radius: 6px; }
-        QSpinBox::down-button { subcontrol-position: bottom right; border-bottom-right-radius: 6px; }
-        QSpinBox::up-button:hover, QSpinBox::down-button:hover { background-color: #d8e4dd; }
-        QSpinBox::up-arrow { width: 9px; height: 9px; }
-        QSpinBox::down-arrow { width: 9px; height: 9px; }
         QLabel { background: transparent; border: none; }
         QCalendarWidget QWidget {
             background-color: #ffffff;
