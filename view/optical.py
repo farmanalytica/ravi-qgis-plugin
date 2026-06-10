@@ -1093,7 +1093,7 @@ def setup_optical_page(dialog, page):
     def _set_tab(index):
         stack.setCurrentIndex(index)
         btn_back.setEnabled(index > 0)
-        step_lbl.setText(f"Step {index + 1} of 3")
+        step_lbl.setText(_tr("Step %d of 3") % (index + 1))
         btn_intro_next.setVisible(index == 0)
         btn_run.setVisible(index == 1)
         btn_tab_intro.setStyleSheet(_TAB_ACTIVE if index == 0 else _TAB_INACTIVE)
