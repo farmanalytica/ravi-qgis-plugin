@@ -40,16 +40,6 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
 
-      # aria2 (the native daemon the Landsat batch download spawns) is bundled
-      # into the zip. Windows pulls the official static build inside
-      # build_extlibs_zip.py; Linux/macOS copy the runner's system binary, so
-      # install it here first.
-      - name: Install aria2 (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: |
-          if [ "$RUNNER_OS" = "Linux" ]; then sudo apt-get update && sudo apt-get install -y aria2; fi
-          if [ "$RUNNER_OS" = "macOS" ]; then brew install aria2; fi
-
       - name: Build tagged extlibs zip
         run: python build_extlibs_zip.py
 
