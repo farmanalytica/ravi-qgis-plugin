@@ -360,6 +360,31 @@ def _build_inputs_tab(dialog, parent):
     )
     custom_lay.addWidget(band_ref)
 
+    expr_help = QLabel(_tr(
+        "<b>How to build an expression</b><br>"
+        "Combine band names with operators. Bands are scaled to 0–1 reflectance."
+        "<br>"
+        "&bull; Arithmetic: <b>+ &minus; * /</b> &nbsp; power <b>**</b> &nbsp; "
+        "grouping <b>( )</b><br>"
+        "&bull; Math functions: <b>sqrt() abs() exp() log() pow(x, y) "
+        "min(a, b) max(a, b)</b><br>"
+        "&bull; Compare: <b>&lt; &lt;= &gt; &gt;= == !=</b> &nbsp; "
+        "logic <b>&amp;&amp; || !</b><br>"
+        "&bull; Conditional: <b>condition ? value_if_true : value_if_false</b>"
+        "<br><br>"
+        "<b>Examples</b><br>"
+        "&bull; NDVI: <code>(B8 - B4) / (B8 + B4)</code><br>"
+        "&bull; SAVI: <code>1.5 * (B8 - B4) / (B8 + B4 + 0.5)</code><br>"
+        "&bull; Mask low NIR: <code>B8 > 0.2 ? (B8 - B4) / (B8 + B4) : 0</code>"
+    ))
+    expr_help.setWordWrap(True)
+    expr_help.setTextFormat(Qt.TextFormat.RichText)
+    expr_help.setStyleSheet(
+        "color: #4a5650; font-size: 10px; background: #f7faf7;"
+        " border: 1px solid #dde7dd; border-radius: 6px; padding: 8px;"
+    )
+    custom_lay.addWidget(expr_help)
+
     dialog.s2_btn_custom_save = QPushButton(_tr("Save custom index"))
     dialog.s2_btn_custom_save.setFixedHeight(28)
     dialog.s2_btn_custom_save.setStyleSheet(STYLE_BTN_SECONDARY)
