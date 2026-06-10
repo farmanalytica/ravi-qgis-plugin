@@ -47,7 +47,7 @@ def _build_figure(dataframe, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH
     return fig
 
 
-def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean", smooth_y=None, smooth_label="Smoothed"):
+def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time Series", ylabel="VV/VH Ratio Mean", smooth_y=None, smooth_label="Smoothed", precip_bars=None):
     """Return a self-contained page that renders the figure with the vendored
     plotly.js v1.58 (QtWebKit-compatible), fed the figure JSON via Plotly.newPlot.
 
@@ -63,6 +63,10 @@ def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time
                  and the raw trace is relabelled so the legend distinguishes
                  them.
         smooth_label: Legend name for the smoothed overlay.
+        precip_bars: Optional dict ``{"x": [...], "y": [...], "name": str,
+                 "ylabel": str}`` drawn as a bar series on a secondary
+                 right-hand y-axis (e.g. accumulated monthly precipitation).
+                 Bars sit behind the index line.
 
     The default v6 template is dropped so the JSON stays within what the old
     engine understands. Intended to be written to a temp file and loaded from a
@@ -99,6 +103,31 @@ def render_chart_html(dataframe, hide_toolbar=True, title="VV/VH Ratio Mean Time
             "line": {"color": "#d98f00", "width": 2},
         })
         fig_dict.setdefault("layout", {})["showlegend"] = True
+    if precip_bars and precip_bars.get("x"):
+        # Bar series on a secondary right axis. Inserted at the front so it
+        # draws behind the index line/markers (later traces render on top).
+        bar_trace = {
+            "type": "bar",
+            "name": precip_bars.get("name", "Precipitation"),
+            "x": list(precip_bars["x"]),
+            "y": [float(v) for v in precip_bars["y"]],
+            "yaxis": "y2",
+            "marker": {"color": "rgba(42, 93, 132, 0.45)"},
+        }
+        fig_dict.setdefault("data", []).insert(0, bar_trace)
+        layout = fig_dict.setdefault("layout", {})
+        layout["showlegend"] = True
+        layout["yaxis2"] = {
+            "title": precip_bars.get("ylabel", "Precipitation (mm)"),
+            "overlaying": "y",
+            "side": "right",
+            "showgrid": False,
+            "rangemode": "tozero",
+        }
+        # Keep the index line on the primary axis (explicit after the insert).
+        for trace in fig_dict["data"]:
+            if trace.get("type") != "bar" and "yaxis" not in trace:
+                trace["yaxis"] = "y"
     fig_json = json.dumps(fig_dict)
 
     config = {

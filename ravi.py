@@ -255,6 +255,18 @@ class RAVI:
         self.dialog.s2_btn_composite_download.clicked.connect(
             self.optical_ctrl.handle_composite_download
         )
+        self.dialog.s2_btn_climate_overlay.clicked.connect(
+            self.optical_ctrl.handle_climate_overlay
+        )
+        self.dialog.s2_btn_climate_save.clicked.connect(
+            self.optical_ctrl.handle_climate_export
+        )
+        self.dialog.s2_btn_climate_clear.clicked.connect(
+            self.optical_ctrl.handle_climate_clear
+        )
+        self.dialog.s2_chk_climate_precip.toggled.connect(
+            self.optical_ctrl.handle_climate_toggled
+        )
 
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer

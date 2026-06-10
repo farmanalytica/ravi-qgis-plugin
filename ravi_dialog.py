@@ -27,9 +27,11 @@ from qgis.PyQt.QtGui import QDesktopServices, QPixmap
 from qgis.PyQt.QtWidgets import (
     QApplication,
     QDialog,
+    QDialogButtonBox,
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QProgressBar,
     QPushButton,
@@ -38,6 +40,8 @@ from qgis.PyQt.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from .managers.settings_manager import SettingsManager
 
 from .view.auth import setup_auth_page
 from .view.download_dem import setup_download_dem_page
@@ -283,6 +287,26 @@ class RAVIDialog(QDialog):
 
         header_layout.addStretch()
 
+        # Proxy settings, tucked into the top-right corner as a subtle link
+        # (mirrors the ClimaPlots placement). Only needed on restricted networks.
+        self.proxy_btn = QPushButton(_tr("Proxy settings"))
+        self.proxy_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.proxy_btn.setToolTip(
+            _tr("Proxy setting (only if required by your network provider)")
+        )
+        self.proxy_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                color: #9e9e9e;
+                border: none;
+                font-size: 11px;
+                padding: 0 10px;
+            }
+            QPushButton:hover { color: #1b6b39; }
+        """)
+        self.proxy_btn.clicked.connect(self._open_proxy_dialog)
+        header_layout.addWidget(self.proxy_btn)
+
         self.browser = QPushButton("?")
         self.browser.setFixedSize(28, 28)
         self.browser.setToolTip(_tr("Learn more"))
@@ -295,6 +319,31 @@ class RAVIDialog(QDialog):
         header_layout.addWidget(self.browser)
 
         return header
+
+    def _open_proxy_dialog(self):
+        """Small modal to view/edit the optional outbound HTTP(S) proxy."""
+        dialog = QDialog(self)
+        dialog.setWindowTitle(_tr("Proxy Settings"))
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(
+            QLabel(_tr("Enter proxy (e.g. http://user:pass@host:port):"))
+        )
+        proxy_edit = QLineEdit()
+        proxy_edit.setText(SettingsManager.get_proxy())
+        proxy_edit.setMinimumWidth(320)
+        layout.addWidget(proxy_edit)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        layout.addWidget(buttons)
+
+        def _accept():
+            SettingsManager.set_proxy(proxy_edit.text().strip())
+            dialog.accept()
+
+        buttons.accepted.connect(_accept)
+        buttons.rejected.connect(dialog.reject)
+        dialog.exec()
 
 
     def _build_footer(self):
@@ -417,6 +466,9 @@ class RAVIDialog(QDialog):
     def _sync_page_state(self, index):
         """Keep header and sidebar state aligned with the current stack page."""
         current = self.stack.widget(index)
+
+        # Proxy settings are only relevant on the auth page (network setup).
+        self.proxy_btn.setVisible(current is self.auth_page)
 
         if current is self.loading_page:
             self._header_title.setText(_tr("Setting up…"))
