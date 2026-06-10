@@ -746,13 +746,9 @@ class OpticalCtrl:
     def _precip_bars(self):
         """Accumulated monthly precipitation as a bar-overlay payload, or None.
 
-        Returns None unless climate data is loaded and the Precipitation box is
-        ticked, so the bars appear/disappear with the checkbox on every render.
+        Returns None unless climate data is loaded.
         """
         if self._climate_df is None or self._climate_df.empty:
-            return None
-        chk = getattr(self.dialog, "s2_chk_climate_precip", None)
-        if chk is not None and not chk.isChecked():
             return None
         months, values = NasaPowerService.monthly_precipitation(self._climate_df)
         if not months:
@@ -821,11 +817,6 @@ class OpticalCtrl:
         self.dialog.pop_message(
             _tr("Climate fetch failed: %s") % message, "warning"
         )
-
-    def handle_climate_toggled(self, *args):
-        """Re-render so precip bars appear/disappear with the checkbox."""
-        if self._climate_df is not None and not self._climate_df.empty:
-            self._render_timeseries()
 
     def handle_climate_clear(self):
         """Drop the climate overlay and re-render the plain time series."""
