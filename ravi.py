@@ -264,6 +264,24 @@ class RAVI:
         self.dialog.s2_btn_climate_clear.clicked.connect(
             self.optical_ctrl.handle_climate_clear
         )
+        self.dialog.s2_btn_capture_points.clicked.connect(
+            self.optical_ctrl.handle_toggle_point_capture
+        )
+        self.dialog.s2_btn_clear_points.clicked.connect(
+            self.optical_ctrl.handle_clear_points
+        )
+        self.dialog.s2_btn_plot_features.clicked.connect(
+            self.optical_ctrl.handle_plot_features
+        )
+        self.dialog.s2_plot_view_aoi.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("aoi")
+        )
+        self.dialog.s2_plot_view_points.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("points")
+        )
+        self.dialog.s2_plot_view_features.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("features")
+        )
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
         )

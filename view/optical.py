@@ -83,6 +83,28 @@ _COMPOSITE_METRICS = [
 
 _COLOR_RAMPS = ["Viridis", "Magma", "Plasma", "Inferno", "RdYlGn", "Greys"]
 
+# Segmented toggle over the plot (AOI / Points / Features). The %s slot carries
+# the per-segment corner-radius so the three buttons join into one control.
+# Checked = active view (green); disabled = no data yet for that view.
+_SEGMENT_STYLE = """
+QPushButton {
+    background: #ffffff;
+    color: #1b6b39;
+    border: 1px solid #cfe0d5;
+    padding: 0 16px;
+    font-size: 11px;
+    font-weight: bold;
+    %s
+}
+QPushButton:checked {
+    background: #1b6b39;
+    color: #ffffff;
+    border-color: #1b6b39;
+}
+QPushButton:hover:!checked:enabled { background: #eef5f0; }
+QPushButton:disabled { color: #b8c4bc; background: #f5f7f6; }
+"""
+
 # Sentinel-2 Scene Classification Layer classes (0–11). Masking these changes
 # the pixel values used for indices and imagery, so the selection lives on the
 # Inputs tab (applied at run time), not in the client-side filter popup. The
@@ -473,12 +495,64 @@ def _build_results_tab(dialog, parent):
         QSplitter::handle:hover { border-top-color: #1b6b39; }
     """)
 
+    # Plot area: a segmented toggle (AOI / Points / Features) over the web view.
+    # All three views share this one plot space; the controller swaps the chart
+    # and enables a segment only once that view has data.
+    plot_container = QWidget()
+    plot_container.setStyleSheet("background: transparent;")
+    plot_lay = QVBoxLayout(plot_container)
+    plot_lay.setContentsMargins(0, 0, 0, 0)
+    plot_lay.setSpacing(6)
+
+    seg_bar = QFrame()
+    dialog.s2_plot_view_bar = seg_bar
+    seg_bar.setStyleSheet("background: transparent; border: none;")
+    seg_lay = QHBoxLayout(seg_bar)
+    seg_lay.setContentsMargins(0, 0, 0, 0)
+    seg_lay.setSpacing(0)
+
+    dialog.s2_plot_view_aoi = QPushButton(_tr("AOI"))
+    dialog.s2_plot_view_points = QPushButton(_tr("Points"))
+    dialog.s2_plot_view_features = QPushButton(_tr("Features"))
+    dialog.s2_plot_view_buttons = (
+        dialog.s2_plot_view_aoi,
+        dialog.s2_plot_view_points,
+        dialog.s2_plot_view_features,
+    )
+    for _i, _seg in enumerate(dialog.s2_plot_view_buttons):
+        _seg.setCheckable(True)
+        _seg.setFixedHeight(26)
+        _seg.setCursor(Qt.CursorShape.PointingHandCursor)
+        _seg.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        # Round the outer corners of the first/last segment only, so the three
+        # buttons read as one joined control.
+        if _i == 0:
+            radius = "border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
+        elif _i == len(dialog.s2_plot_view_buttons) - 1:
+            radius = "border-top-right-radius: 6px; border-bottom-right-radius: 6px;"
+        else:
+            radius = ""
+        _seg.setStyleSheet(_SEGMENT_STYLE % radius)
+        seg_lay.addWidget(_seg)
+    seg_lay.addStretch(1)
+
+    dialog.s2_plot_view_aoi.setChecked(True)
+    # Points / Features views unlock once their series exist (the controller
+    # enables them in _update_view_buttons).
+    dialog.s2_plot_view_points.setEnabled(False)
+    dialog.s2_plot_view_features.setEnabled(False)
+    # Toggle bar stays hidden until Points/Features series exist (controller
+    # reveals it in _update_view_buttons).
+    seg_bar.setVisible(False)
+    plot_lay.addWidget(seg_bar)
+
     dialog.s2_web_view = QWebView()
     dialog.s2_web_view.setStyleSheet(
         "border: 1px solid #dce6df; border-radius: 8px; background: #ffffff;"
     )
     dialog.s2_web_view.setMinimumHeight(200)
-    dialog.s2_results_splitter.addWidget(dialog.s2_web_view)
+    plot_lay.addWidget(dialog.s2_web_view, 1)
+    dialog.s2_results_splitter.addWidget(plot_container)
 
     scroll = QScrollArea()
     scroll.setWidgetResizable(True)
