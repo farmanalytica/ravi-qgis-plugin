@@ -364,6 +364,191 @@ class OpticalService:
             f.write(response.content)
         return output_path
 
+    # -- synthetic index composite (selected dates) -----------------------
+    @staticmethod
+    def build_index_composite(
+        aoi: ee.FeatureCollection,
+        dates: List[str],
+        index_name: str,
+        metric: str,
+        apply_scl: bool = False,
+        invalid_scl_values: List[int] = None,
+        buffer_m: float = 0,
+    ):
+        """Aggregate the vegetation index across only the given acquisition
+        dates (those still shown on the plot) into a single composite image.
+
+        Mirrors the time-series processing (same one-scene-per-date pick and SCL
+        masking) so the composite reflects the values the user sees, then reduces
+        the per-date index stack with ``metric``. Returns ``(image, region)``.
+        """
+        if not dates:
+            raise ValueError("No dates selected for the composite.")
+        invalid_scl_values = invalid_scl_values or []
+        sorted_dates = sorted(dates)
+        start = sorted_dates[0]
+        end = (
+            datetime.strptime(sorted_dates[-1], "%Y-%m-%d") + timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+        region = OpticalService._download_region(aoi, buffer_m)
+
+        collection = OpticalService._build_base_collection(aoi, start, end)
+        collection = OpticalService._keep_one_image_per_date(collection, aoi)
+        # Keep only the user-selected dates (those left on the plot).
+        collection = collection.filter(
+            ee.Filter.inList("date", ee.List(sorted_dates))
+        )
+
+        def add_index(image):
+            img = image
+            if apply_scl:
+                img = OpticalService._apply_scl_mask(img, invalid_scl_values)
+            index_band = OpticalService._add_vegetation_index(img, index_name).select(
+                "index"
+            )
+            return index_band.copyProperties(image, ["system:time_start"])
+
+        index_collection = ee.ImageCollection(collection.map(add_index))
+
+        if metric == "Area Under Curve (AUC)":
+            first_image = index_collection.first()
+            result_image = OpticalService._calculate_auc(index_collection, start)
+            result_image = result_image.setDefaultProjection(
+                first_image.projection()
+            ).clip(first_image.geometry())
+        else:
+            result_image = OpticalService._aggregate_index_collection(
+                index_collection, metric
+            )
+
+        # Cast to float so NoData is representable, then clip to the exact AOI
+        # via an explicit mask (the GeoTIFF region stays a rectangle).
+        final_image = result_image.toFloat()
+        mask = ee.Image(1).clip(aoi.geometry()).mask()
+        final_image = final_image.updateMask(mask).clip(region)
+        return final_image.rename("index"), region
+
+    @staticmethod
+    def _aggregate_index_collection(index_collection: ee.ImageCollection, metric: str):
+        """Reduce a per-date index collection to one image by ``metric``.
+
+        The result is re-aligned to the first image's projection
+        (``setDefaultProjection``) and clipped to its geometry so the composite
+        keeps a consistent spatial grid — without this the reducer output has a
+        default 1-degree projection and downloads misaligned/blank.
+        """
+        first_image = index_collection.first()
+        metric_functions = {
+            "Mean": lambda: index_collection.mean(),
+            "Median": lambda: index_collection.median(),
+            "Min": lambda: index_collection.min(),
+            "Max": lambda: index_collection.max(),
+            "Amplitude": lambda: index_collection.max().subtract(
+                index_collection.min()
+            ),
+            "Standard Deviation": lambda: index_collection.reduce(
+                ee.Reducer.stdDev()
+            ).rename("index"),
+            "Sum": lambda: index_collection.sum(),
+        }
+        if metric not in metric_functions:
+            valid = ", ".join(list(metric_functions.keys()) + ["Area Under Curve (AUC)"])
+            raise ValueError(f"Invalid metric: {metric}. Valid metrics are: {valid}")
+
+        result_image = metric_functions[metric]()
+        aligned_image = result_image.setDefaultProjection(
+            first_image.projection()
+        ).clip(first_image.geometry())
+        return aligned_image
+
+    @staticmethod
+    def _calculate_auc(index_collection: ee.ImageCollection, start_date: str):
+        """Area-under-curve of the index over time (trapezoidal rule), with the
+        first image's footprint and projection preserved."""
+        first_image = index_collection.first()
+        index_stack = index_collection.toBands()
+        valid_mask = index_stack.mask().reduce(ee.Reducer.min())
+
+        start = ee.Date(start_date)
+        timestamps = index_collection.aggregate_array("system:time_start").map(
+            lambda d: ee.Date(d).difference(start, "day")
+        )
+        time_diffs = (
+            ee.List(timestamps)
+            .slice(0, -1)
+            .zip(ee.List(timestamps).slice(1))
+            .map(
+                lambda pair: ee.Number(ee.List(pair).get(1)).subtract(
+                    ee.Number(ee.List(pair).get(0))
+                )
+            )
+        )
+        index_array = index_stack.toArray()
+        sums = index_array.arraySlice(0, 1).add(index_array.arraySlice(0, 0, -1))
+        auc = (
+            ee.Image.constant(time_diffs)
+            .toArray()
+            .multiply(sums)
+            .divide(2)
+            .arrayReduce(ee.Reducer.sum(), [0])
+        )
+        auc_image = auc.arrayGet([0]).updateMask(valid_mask)
+        # Re-anchor to the first image's footprint (legacy behaviour).
+        final_image = first_image.select(0).multiply(0).add(auc_image)
+        return final_image
+
+    @staticmethod
+    def download_index_composite(
+        aoi: ee.FeatureCollection,
+        dates: List[str],
+        index_name: str,
+        metric: str,
+        apply_scl: bool = False,
+        invalid_scl_values: List[int] = None,
+        buffer_m: float = 0,
+        output_folder: str = None,
+    ) -> str:
+        """Build the composite and download it as a GeoTIFF; return its path."""
+        image, region = OpticalService.build_index_composite(
+            aoi,
+            dates,
+            index_name,
+            metric,
+            apply_scl=apply_scl,
+            invalid_scl_values=invalid_scl_values,
+            buffer_m=buffer_m,
+        )
+        url = image.getDownloadURL(
+            {
+                "scale": 10,
+                "region": region.bounds().getInfo(),
+                "format": "GeoTIFF",
+                "crs": "EPSG:4326",
+            }
+        )
+
+        response = requests.get(url, timeout=300)
+        if not response.ok:
+            raise RuntimeError(
+                f"Composite download failed (HTTP {response.status_code}): "
+                f"{response.reason}"
+            )
+
+        base_dir = (
+            output_folder
+            if (output_folder and os.path.isdir(output_folder))
+            else tempfile.gettempdir()
+        )
+        safe_metric = (
+            metric.replace(" ", "_").replace("(", "").replace(")", "")
+        )
+        output_path = OpticalService._unique_path(
+            base_dir, f"S2_{index_name}_{safe_metric}.tiff"
+        )
+        with open(output_path, "wb") as f:
+            f.write(response.content)
+        return output_path
+
     @staticmethod
     def _unique_path(folder: str, filename: str) -> str:
         path = os.path.join(folder, filename)
