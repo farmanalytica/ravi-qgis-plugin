@@ -714,17 +714,6 @@ def _build_results_tab(dialog, parent):
     climate_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
     climate_lay.addWidget(climate_hint)
 
-    dialog.s2_chk_climate_precip = QCheckBox(_tr("Precipitation"))
-    dialog.s2_chk_climate_precip.setChecked(True)
-    dialog.s2_chk_climate_tmin = QCheckBox(_tr("Min temperature"))
-    dialog.s2_chk_climate_tmax = QCheckBox(_tr("Max temperature"))
-    for _chk in (
-        dialog.s2_chk_climate_precip,
-        dialog.s2_chk_climate_tmin,
-        dialog.s2_chk_climate_tmax,
-    ):
-        _chk.setStyleSheet(STYLE_CHECKBOX)
-
     dialog.s2_btn_climate_overlay = QPushButton(_tr("Overlay on plot"))
     dialog.s2_btn_climate_overlay.setFixedHeight(30)
     dialog.s2_btn_climate_overlay.setStyleSheet(STYLE_BTN_PRIMARY)
@@ -735,9 +724,6 @@ def _build_results_tab(dialog, parent):
     dialog.s2_btn_climate_clear.setFixedHeight(30)
     dialog.s2_btn_climate_clear.setStyleSheet(STYLE_BTN_SECONDARY)
     climate_lay.addWidget(_flow([
-        dialog.s2_chk_climate_precip,
-        dialog.s2_chk_climate_tmin,
-        dialog.s2_chk_climate_tmax,
         dialog.s2_btn_climate_overlay,
         dialog.s2_btn_climate_save,
         dialog.s2_btn_climate_clear,
@@ -892,7 +878,6 @@ def setup_optical_page(dialog, page):
       s2_vi_index_combo, s2_vi_ramp_combo, s2_btn_vi_preview, s2_btn_vi_download,
       s2_composite_metric_combo, s2_composite_ramp_combo,
       s2_btn_composite_preview, s2_btn_composite_download,
-      s2_chk_climate_precip, s2_chk_climate_tmin, s2_chk_climate_tmax,
       s2_btn_climate_overlay, s2_btn_climate_save, s2_btn_climate_clear,
       s2_btn_capture_points, s2_btn_clear_points, s2_feature_id_combo,
       s2_btn_plot_features, s2_buffer_slider, s2_buffer_value,
