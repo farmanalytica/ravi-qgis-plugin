@@ -32,7 +32,9 @@ from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_chart_html
+from ..services.nasa_power_service import NasaPowerService
 from ..workers.batch_download_worker import BatchDownloadWorker
+from ..workers.climate_worker import ClimateWorker
 from ..workers.optical_composite_worker import OpticalCompositeWorker
 from ..workers.optical_preview_worker import OpticalPreviewWorker
 from ..workers.optical_worker import OpticalWorker
@@ -82,6 +84,13 @@ class OpticalCtrl:
         # matches the masking behind the plotted series.
         self._run_apply_scl = True
         self._run_invalid_scl: list[int] = []
+        # Run date range (the time series window), reused for the climate fetch.
+        self._date_start: str | None = None
+        self._date_end: str | None = None
+        # NASA POWER climate overlay.
+        self._climate_worker: ClimateWorker | None = None
+        self._climate_btn_text: str | None = None
+        self._climate_df = None
 
         # The "Adjust filter" dialog shows a live image count (cheap) and only
         # re-renders the plot when the user clicks OK.
@@ -181,9 +190,13 @@ class OpticalCtrl:
         self.aoi = aoi
         self._run_apply_scl = self.dialog.s2_chk_apply_scl.isChecked()
         self._run_invalid_scl = self._selected_invalid_scl_values()
+        self._date_start = start_qdate.toString("yyyy-MM-dd")
+        self._date_end = end_qdate.toString("yyyy-MM-dd")
+        # A fresh run invalidates any climate overlay from the previous AOI/range.
+        self._climate_df = None
         params = {
-            "date_start": start_qdate.toString("yyyy-MM-dd"),
-            "date_end": end_qdate.toString("yyyy-MM-dd"),
+            "date_start": self._date_start,
+            "date_end": self._date_end,
             "index_name": index_name,
             "apply_scl": self._run_apply_scl,
             "invalid_scl_values": self._run_invalid_scl,
@@ -350,6 +363,7 @@ class OpticalCtrl:
             hide_toolbar=False,
             title=_tr("%s Time Series") % index_name,
             ylabel=_tr("%s AOI average") % index_name,
+            precip_bars=self._precip_bars(),
         )
         with tempfile.NamedTemporaryFile(
             suffix=".html", delete=False, mode="w", encoding="utf-8"
@@ -728,6 +742,125 @@ class OpticalCtrl:
             worker.deleteLater()
         self.dialog.pop_message(message, "warning")
 
+    # -- climate overlay (NASA POWER) -------------------------------------
+    def _precip_bars(self):
+        """Accumulated monthly precipitation as a bar-overlay payload, or None.
+
+        Returns None unless climate data is loaded and the Precipitation box is
+        ticked, so the bars appear/disappear with the checkbox on every render.
+        """
+        if self._climate_df is None or self._climate_df.empty:
+            return None
+        chk = getattr(self.dialog, "s2_chk_climate_precip", None)
+        if chk is not None and not chk.isChecked():
+            return None
+        months, values = NasaPowerService.monthly_precipitation(self._climate_df)
+        if not months:
+            return None
+        # Place each bar at mid-month so it reads against the daily date axis.
+        x = [(m + pd.Timedelta(days=14)).strftime("%Y-%m-%d") for m in months]
+        return {
+            "x": x,
+            "y": values,
+            "name": _tr("Monthly precipitation"),
+            "ylabel": _tr("Accumulated precipitation (mm)"),
+        }
+
+    def handle_climate_overlay(self):
+        """Fetch NASA POWER climate for the series range and overlay precip."""
+        if not self._has_results():
+            return
+        if self._climate_worker is not None and self._climate_worker.isRunning():
+            return
+        if not (self._date_start and self._date_end):
+            self.dialog.pop_message(_tr("Run the optical analysis first."), "warning")
+            return
+
+        self._set_climate_busy(True)
+        proxy = SettingsManager.get_proxy()
+        self._climate_worker = ClimateWorker(
+            self.aoi, self._date_start, self._date_end, proxy=proxy
+        )
+        self._climate_worker.finished.connect(self._on_climate_done)
+        self._climate_worker.failed.connect(self._on_climate_failed)
+        self._climate_worker.start()
+
+    def _set_climate_busy(self, busy: bool):
+        btn = self.dialog.s2_btn_climate_overlay
+        if busy:
+            self._climate_btn_text = btn.text()
+            btn.setText(_tr("Loading..."))
+        elif self._climate_btn_text:
+            btn.setText(self._climate_btn_text)
+        btn.setEnabled(not busy)
+
+    def _on_climate_done(self, df):
+        self._set_climate_busy(False)
+        worker, self._climate_worker = self._climate_worker, None
+        if worker is not None:
+            worker.deleteLater()
+
+        if df is None or df.empty:
+            self.dialog.pop_message(
+                _tr("NASA POWER returned no climate data for this area/range."),
+                "warning",
+            )
+            return
+        self._climate_df = df
+        self._render_timeseries()
+        if self.interface is not None:
+            self.interface.messageBar().pushMessage(
+                "RAVI", _tr("Climate overlay added to the time-series plot.")
+            )
+
+    def _on_climate_failed(self, message: str):
+        self._set_climate_busy(False)
+        worker, self._climate_worker = self._climate_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        self.dialog.pop_message(
+            _tr("Climate fetch failed: %s") % message, "warning"
+        )
+
+    def handle_climate_toggled(self, *args):
+        """Re-render so precip bars appear/disappear with the checkbox."""
+        if self._climate_df is not None and not self._climate_df.empty:
+            self._render_timeseries()
+
+    def handle_climate_clear(self):
+        """Drop the climate overlay and re-render the plain time series."""
+        if self._climate_df is None:
+            return
+        self._climate_df = None
+        if self.dataframe is not None and not self.dataframe.empty:
+            self._render_timeseries()
+
+    def handle_climate_export(self):
+        """Export the fetched daily climate table (precip + temperature) as CSV."""
+        if self._climate_df is None or self._climate_df.empty:
+            self.dialog.pop_message(
+                _tr("Fetch the climate overlay first."), "warning"
+            )
+            return
+
+        date_str = datetime.now().strftime("%Y%m%d")
+        default_filename = f"climate_nasa_power_{date_str}.csv"
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.dialog,
+            _tr("Export Climate Data as CSV"),
+            default_filename,
+            _tr("CSV Files (*.csv);;All Files (*)"),
+        )
+        if not file_path:
+            return
+        try:
+            self._climate_df.to_csv(file_path, index=False)
+            self.dialog.pop_message(
+                _tr("CSV exported successfully to %s") % file_path, "info"
+            )
+        except Exception as e:
+            self.dialog.pop_message(_tr("Failed to export CSV: %s") % str(e), "warning")
+
     def _smoothed_series(self, y):
         """Savitzky-Golay smoothing of the AOI-average series, or None.
 
@@ -776,6 +909,7 @@ class OpticalCtrl:
             ylabel=_tr("%s AOI average") % index_name,
             smooth_y=smooth_y,
             smooth_label=_tr("Smoothed (Savitzky-Golay)"),
+            precip_bars=self._precip_bars(),
         )
 
         fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_")

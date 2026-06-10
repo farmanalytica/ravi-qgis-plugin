@@ -707,7 +707,9 @@ def _build_results_tab(dialog, parent):
     climate_lay.setSpacing(10)
     climate_lay.addWidget(_caption(_tr("CLIMATE (NASA POWER)")))
     climate_hint = QLabel(
-        _tr("Overlay daily NASA POWER climate variables on the time-series plot.")
+        _tr("Overlay accumulated monthly precipitation (NASA POWER) as bars on the "
+            "time-series plot, over the same date range. Temperature is fetched too "
+            "and included in the CSV export.")
     )
     climate_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
     climate_lay.addWidget(climate_hint)
