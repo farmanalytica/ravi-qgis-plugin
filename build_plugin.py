@@ -17,13 +17,13 @@ import zipfile
 from pathlib import Path
 
 PLUGIN_NAME = "RAVI"
+ZIP_NAME = "ravi"  # output filename; matches repository update pipeline
 ROOT = Path(__file__).parent.resolve()
 DIST_DIR = ROOT / "dist"
-ZIP_PATH = DIST_DIR / f"{PLUGIN_NAME}.zip"
+ZIP_PATH = DIST_DIR / f"{ZIP_NAME}.zip"
 
 INCLUDE_FILES = [
     "metadata.txt",
-    "setup.cfg",
     "__init__.py",
     "ravi.py",
     "ravi_dialog.py",
@@ -155,7 +155,7 @@ def build_zip() -> None:
             print(f"  + {dirname}/ ({len(files)} files)")
 
     size_mb = ZIP_PATH.stat().st_size / 1_048_576
-    print(f"\nDone: dist/{PLUGIN_NAME}.zip ({size_mb:.1f} MB)")
+    print(f"\nDone: dist/{ZIP_NAME}.zip ({size_mb:.1f} MB)")
 
 
 def main() -> None:
