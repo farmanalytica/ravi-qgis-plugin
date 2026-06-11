@@ -18,6 +18,7 @@ from pathlib import Path
 
 PLUGIN_NAME = "RAVI"
 ZIP_NAME = "ravi"  # output filename; matches repository update pipeline
+PLUGIN_FOLDER = "ravi"  # zip subfolder; must match install dir name
 ROOT = Path(__file__).parent.resolve()
 DIST_DIR = ROOT / "dist"
 ZIP_PATH = DIST_DIR / f"{ZIP_NAME}.zip"
@@ -130,7 +131,7 @@ def build_zip() -> None:
         for filename in INCLUDE_FILES:
             src = ROOT / filename
             if src.exists():
-                zf.write(src, f"{PLUGIN_NAME}/{filename}")
+                zf.write(src, f"{PLUGIN_FOLDER}/{filename}")
                 print(f"  + {filename}")
             else:
                 print(f"  ! MISSING: {filename}")
@@ -138,7 +139,7 @@ def build_zip() -> None:
         i18n_dir = ROOT / "i18n"
         if i18n_dir.exists():
             for qm in sorted(i18n_dir.glob("*.qm")):
-                zf.write(qm, f"{PLUGIN_NAME}/i18n/{qm.name}")
+                zf.write(qm, f"{PLUGIN_FOLDER}/i18n/{qm.name}")
             print(f"  + i18n/ ({len(list(i18n_dir.glob('*.qm')))} .qm files)")
 
         for dirname in INCLUDE_DIRS:
@@ -151,7 +152,7 @@ def build_zip() -> None:
                 if item.is_file() and not _skip(item, src)
             ]
             for item in sorted(files):
-                zf.write(item, f"{PLUGIN_NAME}/{item.relative_to(ROOT)}")
+                zf.write(item, f"{PLUGIN_FOLDER}/{item.relative_to(ROOT)}")
             print(f"  + {dirname}/ ({len(files)} files)")
 
     size_mb = ZIP_PATH.stat().st_size / 1_048_576
