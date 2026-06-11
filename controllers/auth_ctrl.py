@@ -182,13 +182,16 @@ class AuthCtrl:
 
     def handle_auth_mode_changed(self, mode: str):
         """React to the personal/service segmented toggle."""
+        # Always sync the card to the toggle: the QButtonGroup has already
+        # flipped the checked state, so skipping set_auth_mode here would leave
+        # the service-account row visible (or hidden) out of step with the mode.
+        self.gee_service.save_auth_mode(mode)
+        self.dialog.set_auth_mode(mode)
         if self._is_busy():
             return
-        self.gee_service.save_auth_mode(mode)
         # The active credential context differs per mode, so drop any cached
         # session and re-check from scratch.
         self.gee_service.is_authenticated = False
-        self.dialog.set_auth_mode(mode)
         self.refresh_auth_status()
 
     def handle_browse_key(self):
