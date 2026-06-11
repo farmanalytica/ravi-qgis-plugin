@@ -34,9 +34,9 @@ jobs:
           - { os: macos-latest, py: "3.12" }
           - { os: macos-latest, py: "3.13" }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.py }}
 
@@ -51,7 +51,7 @@ jobs:
         run: python build_extlibs_zip.py
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: extlibs-${{ matrix.os }}-py${{ matrix.py }}
           path: extlibs-*.zip
@@ -67,10 +67,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download all build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: _extlibs_dl
           merge-multiple: true
