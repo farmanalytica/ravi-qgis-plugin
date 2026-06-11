@@ -396,18 +396,36 @@ class OpticalCtrl:
         )
 
     def handle_open_browser(self):
-        """Open the current (filtered) time series in the system browser."""
+        """Open the plot currently toggled on (AOI / Points / Features) in the
+        system browser."""
         if not self._has_results():
             return
 
         index_name = self._current_index
-        html = render_chart_html(
-            self._plot_dataframe(),
-            hide_toolbar=False,
-            title=_tr("%s Time Series") % index_name,
-            ylabel=_tr("%s AOI average") % index_name,
-            precip_bars=self._precip_bars(),
-        )
+        if self._active_plot_view == "points" and self._point_series:
+            html = self._multiseries_html(
+                self._point_series,
+                self._point_colors,
+                _tr("%s — Points") % index_name,
+                hide_toolbar=False,
+            )
+        elif self._active_plot_view == "features" and self._feature_series:
+            html = self._multiseries_html(
+                self._feature_series,
+                self._feature_colors,
+                _tr("%s — Features") % index_name,
+                hide_toolbar=False,
+            )
+        else:
+            html = render_chart_html(
+                self._plot_dataframe(),
+                hide_toolbar=False,
+                title=_tr("%s Time Series") % index_name,
+                ylabel=_tr("%s AOI average") % index_name,
+                precip_bars=self._precip_bars(),
+            )
+        if html is None:
+            return
         with tempfile.NamedTemporaryFile(
             suffix=".html", delete=False, mode="w", encoding="utf-8"
         ) as f:
@@ -436,12 +454,37 @@ class OpticalCtrl:
             smooth_y = self._smoothed_series(export_df["AOI_average"].tolist())
             if smooth_y is not None:
                 export_df = export_df.assign(AOI_average_smoothed=smooth_y)
+            export_df = self._merge_series_columns(export_df)
             export_df.to_csv(file_path, index=False)
             self.dialog.pop_message(
                 _tr("CSV exported successfully to %s") % file_path, "info"
             )
         except Exception as e:
             self.dialog.pop_message(_tr("Failed to export CSV: %s") % str(e), "warning")
+
+    def _merge_series_columns(self, export_df):
+        """Append captured point and per-feature series as extra columns (one
+        per series), aligned on date, so they ride along in the CSV export."""
+        if not self._point_series and not self._feature_series:
+            return export_df
+        merged = export_df.copy()
+        merged["_merge_key"] = merged["date"].astype(str)
+        for prefix, series in (
+            ("point", self._point_series),
+            ("feature", self._feature_series),
+        ):
+            for label, rows in series.items():
+                col = pd.DataFrame(
+                    [
+                        {"_merge_key": str(r["date"]), f"{prefix}_{label}": r.get("value")}
+                        for r in rows
+                    ]
+                )
+                if col.empty:
+                    continue
+                col = col.drop_duplicates(subset="_merge_key")
+                merged = merged.merge(col, on="_merge_key", how="left")
+        return merged.drop(columns="_merge_key")
 
     def _buffer_meters(self) -> float:
         slider = getattr(self.dialog, "s2_buffer_slider", None)
@@ -1287,6 +1330,15 @@ class OpticalCtrl:
     def _render_multiseries(self, series, colors, title):
         """Render a multi-line chart (one line per point/feature) plus the AOI
         average as a grey reference line, into the shared web view."""
+        html = self._multiseries_html(series, colors, title)
+        if html is None:
+            self.dialog.s2_web_view.setHtml("")
+            return
+        self._load_multiseries(html)
+
+    def _multiseries_html(self, series, colors, title, hide_toolbar=True):
+        """Build the multi-line chart HTML (one line per point/feature plus the
+        AOI average reference line), or None if there is nothing to plot."""
         aoi_label = _tr("AOI average")
         records = []
         if self.dataframe is not None and not self.dataframe.empty:
@@ -1311,20 +1363,19 @@ class OpticalCtrl:
                 )
 
         if not records:
-            self.dialog.s2_web_view.setHtml("")
-            return
+            return None
 
         plot_df = pd.DataFrame(records)
         color_map = {aoi_label: "#444444"}
         color_map.update(colors)
-        html = render_multiseries_chart_html(
+        return render_multiseries_chart_html(
             plot_df,
             group_col="series",
             title=title,
             ylabel=_tr("%s value") % self._current_index,
             colors=color_map,
+            hide_toolbar=hide_toolbar,
         )
-        self._load_multiseries(html)
 
     def _load_multiseries(self, html):
         fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_ms_")

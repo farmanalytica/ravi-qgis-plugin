@@ -58,6 +58,7 @@ class LandsatCtrl:
 
         self.aoi = None
         self.shapely_geom = None
+        self._aoi_area_m2 = None          # ellipsoidal AOI area, for the % filter
         self.dated_missions = []          # list of (date, mission)
         self._date_start = None
         self._date_end = None
@@ -139,6 +140,9 @@ class LandsatCtrl:
             self.shapely_geom = AOIService.get_shapely_geometry_from_layer(
                 layer, use_selected_features=False
             )
+            self._aoi_area_m2 = AOIService.get_area_m2_from_layer(
+                layer, use_selected_features=False
+            )
         except Exception as e:
             self.dialog.pop_message(str(e), "warning")
             return
@@ -151,6 +155,8 @@ class LandsatCtrl:
             "date_end": self._date_end,
             "use_cloud_mask": self.dialog.ls_chk_cloud_mask.isChecked(),
             "tier": 1,
+            "min_valid_pct": self._min_valid_pct(),
+            "aoi_area_m2": self._aoi_area_m2,
         }
 
         self._set_run_busy(True)
@@ -240,6 +246,11 @@ class LandsatCtrl:
     def _cloud_mask(self) -> bool:
         return self.dialog.ls_chk_cloud_mask.isChecked()
 
+    def _min_valid_pct(self) -> float:
+        """Min valid-pixel coverage % from the Inputs slider (0 = no filter)."""
+        slider = getattr(self.dialog, "ls_min_valid_slider", None)
+        return slider.value() if slider is not None else 0
+
     # -- single-date preview / download -----------------------------------
     def handle_sr_preview(self):
         self._run_single("superres", to_folder=False)
@@ -290,6 +301,8 @@ class LandsatCtrl:
             1,
             self._buffer_meters(),
             folder,
+            self._min_valid_pct(),
+            self._aoi_area_m2,
         )
         self._preview_worker.finished.connect(
             lambda path, k: self._on_single_done(path, k, to_folder)
@@ -375,7 +388,8 @@ class LandsatCtrl:
         self._batch_dialog.show()
 
         self._batch_worker = LandsatBatchWorker(
-            aoi, pairs, use_cloud_mask, 1, buffer_m, folder
+            aoi, pairs, use_cloud_mask, 1, buffer_m, folder,
+            self._min_valid_pct(), self._aoi_area_m2,
         )
         self._batch_worker.progress.connect(self._on_batch_progress)
         self._batch_worker.finished.connect(self._on_batch_done)
@@ -452,6 +466,8 @@ class LandsatCtrl:
             self._cloud_mask(),
             1,
             reducer,
+            self._min_valid_pct(),
+            self._aoi_area_m2,
         )
         self._ts_worker.finished.connect(self._on_ts_done)
         self._ts_worker.failed.connect(self._on_ts_failed)

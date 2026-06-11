@@ -1451,5 +1451,73 @@
         <source>%s value</source>
         <translation>%s मान</translation>
     </message>
+    <message>
+        <source>An unexpected error occurred: {0}</source>
+        <translation>एक अप्रत्याशित त्रुटि हुई: {0}</translation>
+    </message>
+    <message>
+        <source>Could not read the key file as JSON.</source>
+        <translation>कुंजी फ़ाइल को JSON के रूप में नहीं पढ़ा जा सका।</translation>
+    </message>
+    <message>
+        <source>Downloaded %d of %d</source>
+        <translation>%d में से %d डाउनलोड किया गया</translation>
+    </message>
+    <message>
+        <source>Failed to download dependencies: %s</source>
+        <translation>निर्भरताएँ डाउनलोड करने में विफल: %s</translation>
+    </message>
+    <message>
+        <source>JSON key files (*.json);;All files (*)</source>
+        <translation>JSON कुंजी फ़ाइलें (*.json);;सभी फ़ाइलें (*)</translation>
+    </message>
+    <message>
+        <source>Key file not found.</source>
+        <translation>कुंजी फ़ाइल नहीं मिली।</translation>
+    </message>
+    <message>
+        <source>MIN VALID COVERAGE</source>
+        <translation>न्यूनतम वैध आवरण</translation>
+    </message>
+    <message>
+        <source>Minimum share of the AOI that must hold valid (cloud-free) pixels for a date to be kept — measured against a fully-covered image at native resolution. Applies to the available-date list, the time-series plot and every preview/download. ↑ Higher = stricter (fewer dates). 0% = no filter.</source>
+        <translation>किसी तिथि को बनाए रखने के लिए AOI का न्यूनतम भाग जिसमें वैध (बादल-मुक्त) पिक्सेल होने चाहिए — मूल विभेदन पर पूर्ण रूप से ढके चित्र की तुलना में मापा गया। उपलब्ध-तिथि सूची, समय-श्रृंखला ग्राफ़ और हर पूर्वावलोकन/डाउनलोड पर लागू। ↑ अधिक = अधिक सख्त (कम तिथियाँ)। 0% = कोई फ़िल्टर नहीं।</translation>
+    </message>
+    <message>
+        <source>No key file selected</source>
+        <translation>कोई कुंजी फ़ाइल चयनित नहीं</translation>
+    </message>
+    <message>
+        <source>Not a valid service-account key file.</source>
+        <translation>यह एक मान्य सेवा-खाता कुंजी फ़ाइल नहीं है।</translation>
+    </message>
+    <message>
+        <source>Personal</source>
+        <translation>व्यक्तिगत</translation>
+    </message>
+    <message>
+        <source>SERVICE-ACCOUNT KEY (.json)</source>
+        <translation>सेवा-खाता कुंजी (.json)</translation>
+    </message>
+    <message>
+        <source>Select a service-account key file first.</source>
+        <translation>पहले एक सेवा-खाता कुंजी फ़ाइल चुनें।</translation>
+    </message>
+    <message>
+        <source>Select service-account key file</source>
+        <translation>सेवा-खाता कुंजी फ़ाइल चुनें</translation>
+    </message>
+    <message>
+        <source>Service account</source>
+        <translation>सेवा खाता</translation>
+    </message>
+    <message>
+        <source>Service-account authentication failed: {0}</source>
+        <translation>सेवा-खाता प्रमाणीकरण विफल: {0}</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ Landsat सुपर-रेज़ोल्यूशन और वनस्पति-सूचकांक समय-श्रृंखला &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt; द्वारा संचालित हैं, इसके लेखक &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt; के सहयोग से।</translation>
+    </message>
 </context>
 </TS>
