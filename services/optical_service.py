@@ -262,6 +262,7 @@ class OpticalService:
         apply_scl: bool,
         invalid_scl_values: List[int],
         reducer: str = "mean",
+        custom_expression: str = None,
     ) -> List[Dict[str, Any]]:
         """Vegetation-index time series for a single geometry over the full date
         range, returned as ``[{"date": str, "value": float}, ...]``.
@@ -296,7 +297,9 @@ class OpticalService:
         ee_reducer = ee.Reducer.first() if reducer == "first" else ee.Reducer.mean()
 
         def process_image(image):
-            img = OpticalService._add_vegetation_index(image, index_name)
+            img = OpticalService._add_vegetation_index(
+                image, index_name, custom_expression
+            )
             if apply_scl:
                 img = OpticalService._apply_scl_mask(img, invalid_scl_values)
             value = img.select("index").reduceRegion(
@@ -400,7 +403,11 @@ class OpticalService:
 
     @staticmethod
     def get_index_image_for_date(
-        aoi: ee.FeatureCollection, date: str, index_name: str, buffer_m: float = 0
+        aoi: ee.FeatureCollection,
+        date: str,
+        index_name: str,
+        buffer_m: float = 0,
+        custom_expression: str = None,
     ):
         """Single-band vegetation-index image for ``date`` (same scene pick as
         the time series), clipped to the buffered AOI."""
@@ -416,7 +423,7 @@ class OpticalService:
         )
         collection = OpticalService._keep_one_image_per_date(collection, aoi)
         image = OpticalService._add_vegetation_index(
-            ee.Image(collection.first()), index_name
+            ee.Image(collection.first()), index_name, custom_expression
         )
         return image.select("index").clip(region), region
 
@@ -427,10 +434,11 @@ class OpticalService:
         index_name: str,
         buffer_m: float = 0,
         output_folder: str = None,
+        custom_expression: str = None,
     ) -> str:
         """Download the single-band index scene for ``date`` as a GeoTIFF."""
         image, region = OpticalService.get_index_image_for_date(
-            aoi, date, index_name, buffer_m
+            aoi, date, index_name, buffer_m, custom_expression
         )
         url = image.getDownloadURL(
             {
@@ -470,6 +478,7 @@ class OpticalService:
         apply_scl: bool = False,
         invalid_scl_values: List[int] = None,
         buffer_m: float = 0,
+        custom_expression: str = None,
     ):
         """Aggregate the vegetation index across only the given acquisition
         dates (those still shown on the plot) into a single composite image.
@@ -499,9 +508,9 @@ class OpticalService:
             img = image
             if apply_scl:
                 img = OpticalService._apply_scl_mask(img, invalid_scl_values)
-            index_band = OpticalService._add_vegetation_index(img, index_name).select(
-                "index"
-            )
+            index_band = OpticalService._add_vegetation_index(
+                img, index_name, custom_expression
+            ).select("index")
             return index_band.copyProperties(image, ["system:time_start"])
 
         index_collection = ee.ImageCollection(collection.map(add_index))
@@ -603,6 +612,7 @@ class OpticalService:
         invalid_scl_values: List[int] = None,
         buffer_m: float = 0,
         output_folder: str = None,
+        custom_expression: str = None,
     ) -> str:
         """Build the composite and download it as a GeoTIFF; return its path."""
         image, region = OpticalService.build_index_composite(
@@ -613,6 +623,7 @@ class OpticalService:
             apply_scl=apply_scl,
             invalid_scl_values=invalid_scl_values,
             buffer_m=buffer_m,
+            custom_expression=custom_expression,
         )
         url = image.getDownloadURL(
             {

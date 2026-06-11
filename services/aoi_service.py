@@ -40,14 +40,6 @@ class AOIService:
             raise ValueError("Layer must be polygon or multipolygon.")
 
     @staticmethod
-    def _get_layer_by_id(layer_id):
-
-        layer = QgsProject.instance().mapLayer(layer_id)
-        AOIService._validate_vector_polygon_layer(layer)
-
-        return layer
-
-    @staticmethod
     def _get_dissolved_geometry(layer, use_selected_features=True):
 
         features = (
@@ -160,8 +152,3 @@ class AOIService:
         calc.setEllipsoid(QgsProject.instance().ellipsoid() or "WGS84")
         area = calc.measureArea(geometry)
         return calc.convertAreaMeasurement(area, QgsUnitTypes.AreaSquareMeters)
-
-    @staticmethod
-    def get_ee_feature_colection_from_layer_id(layer_id, use_selected_features=True):
-        layer = AOIService._get_layer_by_id(layer_id)
-        return AOIService._layer_to_ee_feature_collection(layer, use_selected_features)

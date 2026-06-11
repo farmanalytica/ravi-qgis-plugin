@@ -22,7 +22,7 @@ and the ``ee`` SDK.
 
 import os
 
-from qgis.PyQt.QtCore import Qt, QUrl, QCoreApplication
+from qgis.PyQt.QtCore import Qt, QUrl, QCoreApplication, QEvent
 from qgis.PyQt.QtGui import QDesktopServices, QPixmap
 from qgis.PyQt.QtWidgets import (
     QApplication,
@@ -81,6 +81,8 @@ class RAVIDialog(QDialog):
     Signal connections are wired externally by ``ravi.py``.
     """
 
+    _DEFAULT_SIZE = (800, 534)
+
     def __init__(self, parent=None):
         self._qgis_parent = parent
         # Do not pass ``parent`` to QDialog: a Qt-child top-level window has no
@@ -100,6 +102,15 @@ class RAVIDialog(QDialog):
             return
         self._win_configured = True
         self._configure_native_window()
+
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        # Restore from maximized should snap back to the default size, not the
+        # window's pre-maximize geometry that Qt would otherwise reapply.
+        if event.type() == QEvent.Type.WindowStateChange:
+            was_maximized = bool(event.oldState() & Qt.WindowState.WindowMaximized)
+            if was_maximized and not self.isMaximized() and not self.isMinimized():
+                self.resize(*self._DEFAULT_SIZE)
 
     def _configure_native_window(self):
         """Float above QGIS (transient parent) while keeping a taskbar button."""
@@ -143,7 +154,7 @@ class RAVIDialog(QDialog):
         )
         self.setWindowModality(Qt.WindowModality.NonModal)
 
-        self.resize(800, 534)
+        self.resize(*self._DEFAULT_SIZE)
         self.setSizeGripEnabled(True)
         self.setStyleSheet(STYLE_DIALOG)
 
@@ -354,7 +365,11 @@ class RAVIDialog(QDialog):
         link to the FARM Analytica website
         """
         footer = QWidget()
-        footer.setMinimumHeight(36)
+        # Fixed (not minimum) height: a word-wrapped label below has
+        # heightForWidth, and as persistent chrome in the top-level layout it
+        # would otherwise grow the whole dialog taller when the window narrows
+        # (or its DPI changes while being dragged between monitors).
+        footer.setFixedHeight(36)
         footer.setStyleSheet(
             "background-color: transparent;"
             "QLabel { border: none; background: transparent; }"
@@ -391,7 +406,9 @@ class RAVIDialog(QDialog):
         farm_text = QLabel()
         farm_text.setTextFormat(Qt.TextFormat.RichText)
         farm_text.setOpenExternalLinks(True)
-        farm_text.setWordWrap(True)
+        # No word wrap: wrapping reintroduces a width-dependent height that
+        # destabilises the fixed-height footer (see setFixedHeight above).
+        farm_text.setWordWrap(False)
         farm_text.setText(
             _tr("This is a free and open project, supported by ")
             + '<a href="https://farmanalytica.com.br" style="color:#1b6b39;'

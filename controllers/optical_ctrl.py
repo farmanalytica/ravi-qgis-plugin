@@ -95,6 +95,7 @@ class OpticalCtrl:
         self._preview_btn_texts: tuple | None = None
         self._composite_worker: OpticalCompositeWorker | None = None
         self._composite_btn_texts: tuple | None = None
+        self._composite_index: str | None = None
         # SCL settings captured at run time, replayed for the composite so it
         # matches the masking behind the plotted series.
         self._run_apply_scl = True
@@ -350,6 +351,9 @@ class OpticalCtrl:
         combo.addItems(dates)
         if previous in dates:
             combo.setCurrentText(previous)
+        elif dates:
+            # Default to the most recent acquisition (ISO dates sort lexically).
+            combo.setCurrentText(max(dates))
         combo.blockSignals(False)
 
     # -- Filter dates (manual per-date include/exclude) -------------------
@@ -650,12 +654,9 @@ class OpticalCtrl:
             return
 
         index_name = self.dialog.s2_vi_index_combo.currentData() or "NDVI"
-        if kind == "index" and index_name == CUSTOM_INDEX_LABEL:
-            self.dialog.pop_message(
-                _tr("Custom optical indices are not available in this milestone."),
-                "warning",
-            )
-            return
+        custom_expression = (
+            self._resolve_custom_expression(index_name) if kind == "index" else None
+        )
 
         folder = (
             SettingsManager.load_download_folder()
@@ -665,7 +666,13 @@ class OpticalCtrl:
 
         self._set_single_busy(kind, True)
         self._preview_worker = OpticalPreviewWorker(
-            kind, self.aoi, date, index_name, self._buffer_meters(), folder
+            kind,
+            self.aoi,
+            date,
+            index_name,
+            self._buffer_meters(),
+            folder,
+            custom_expression=custom_expression,
         )
         self._preview_worker.finished.connect(
             lambda path, k: self._on_single_done(path, k, to_folder)
@@ -755,18 +762,11 @@ class OpticalCtrl:
             )
             return
 
-        index_name = self._current_index
-        if index_name == CUSTOM_INDEX_LABEL or (
-            index_name and "custom" in index_name.lower()
-        ):
-            self.dialog.pop_message(
-                _tr(
-                    "Custom optical indices are not available for composites in "
-                    "this milestone."
-                ),
-                "warning",
-            )
-            return
+        index_name = self.dialog.s2_composite_index_combo.currentData() or "NDVI"
+        custom_expression = self._resolve_custom_expression(index_name)
+        # Remember the index the composite was launched with, so naming the
+        # loaded layer in the done-callback is independent of later combo edits.
+        self._composite_index = index_name
 
         metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
         folder = (
@@ -785,6 +785,7 @@ class OpticalCtrl:
             self._run_invalid_scl,
             self._buffer_meters(),
             folder,
+            custom_expression=custom_expression,
         )
         self._composite_worker.finished.connect(
             lambda path: self._on_composite_done(path, to_folder)
@@ -818,8 +819,9 @@ class OpticalCtrl:
 
         metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
         ramp = self.dialog.s2_composite_ramp_combo.currentText()
+        index_name = getattr(self, "_composite_index", None) or self._current_index
         RasterRendererUtils.load_pseudocolor_raster(
-            path, f"S2 {self._current_index} {metric}", 1, ramp
+            path, f"S2 {index_name} {metric}", 1, ramp
         )
 
         if self.interface is not None:
@@ -1047,6 +1049,7 @@ class OpticalCtrl:
             "index_name": self._current_index,
             "apply_scl": self._run_apply_scl,
             "invalid_scl_values": self._run_invalid_scl,
+            "custom_expression": self._resolve_custom_expression(self._current_index),
         }
 
     # -- points ------------------------------------------------------------
@@ -1416,12 +1419,32 @@ class OpticalCtrl:
             self.dialog.pop_message(_tr(str(e)), "warning")
 
     def update_index_combobox(self):
-        self.dialog.s2_index_combo.clear()
+        """Rebuild every index dropdown (inputs time-series, single-date VI and
+        composite) so built-in plus saved custom indices stay in sync after a
+        save. Only the inputs combo carries the ``Custom…`` builder entry."""
+        customs = load_custom_indexes()
 
+        self._fill_index_combo(self.dialog.s2_index_combo, customs, with_builder=True)
+        self._fill_index_combo(self.dialog.s2_vi_index_combo, customs)
+        self._fill_index_combo(self.dialog.s2_composite_index_combo, customs)
+
+    @staticmethod
+    def _fill_index_combo(combo, customs, with_builder=False):
+        combo.blockSignals(True)
+        previous = combo.currentData()
+        combo.clear()
         for name in INDEX_ORDER:
-            self.dialog.s2_index_combo.addItem(name, name)
+            combo.addItem(name, name)
+        for name in customs.keys():
+            combo.addItem(name + " - CUSTOM", name)
+        if with_builder:
+            combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)
+        if previous is not None:
+            idx = combo.findData(previous)
+            if idx >= 0:
+                combo.setCurrentIndex(idx)
+        combo.blockSignals(False)
 
-        for name in load_custom_indexes().keys():
-            self.dialog.s2_index_combo.addItem(name + " - CUSTOM", name)
-
-        self.dialog.s2_index_combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)
+    def _resolve_custom_expression(self, index_name):
+        """Saved expression for a custom index name, or None for built-ins."""
+        return load_custom_indexes().get(index_name)

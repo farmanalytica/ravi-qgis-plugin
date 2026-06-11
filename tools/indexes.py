@@ -7,14 +7,6 @@ PLUGIN_DIR = os.path.dirname(__file__)
 JSON_PATH = os.path.join(PLUGIN_DIR, "custom_index.json")
 
 
-def get_scaled(image, bands):
-
-    scaled_dict = {}
-    for b in bands:
-        scaled_dict[b] = image.select(b).divide(10000)
-    return scaled_dict
-
-
 def nvdi(image):
     return image.normalizedDifference(["B8", "B4"]).rename("index")
 

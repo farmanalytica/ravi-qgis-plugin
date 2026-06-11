@@ -1,4 +1,4 @@
-from qgis.PyQt.QtCore import Qt, QCoreApplication, pyqtSignal, QSize
+from qgis.PyQt.QtCore import Qt, QCoreApplication, pyqtSignal
 from qgis.PyQt.QtGui import QFont
 from qgis.PyQt.QtWidgets import (
     QDialog,

@@ -26,6 +26,7 @@ class OpticalCompositeWorker(QThread):
         invalid_scl_values,
         buffer_m,
         output_folder,
+        custom_expression=None,
     ):
         super().__init__()
         self._aoi = aoi
@@ -36,6 +37,7 @@ class OpticalCompositeWorker(QThread):
         self._invalid_scl_values = invalid_scl_values
         self._buffer_m = buffer_m
         self._output_folder = output_folder
+        self._custom_expression = custom_expression
 
     def run(self):
         try:
@@ -48,6 +50,7 @@ class OpticalCompositeWorker(QThread):
                 invalid_scl_values=self._invalid_scl_values,
                 buffer_m=self._buffer_m,
                 output_folder=self._output_folder,
+                custom_expression=self._custom_expression,
             )
             self.finished.emit(path)
         except Exception as e:

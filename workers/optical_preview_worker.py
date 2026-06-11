@@ -16,7 +16,16 @@ class OpticalPreviewWorker(QThread):
     finished = pyqtSignal(str, str)   # output_path, kind
     failed = pyqtSignal(str)
 
-    def __init__(self, kind, aoi, date, index_name, buffer_m, output_folder):
+    def __init__(
+        self,
+        kind,
+        aoi,
+        date,
+        index_name,
+        buffer_m,
+        output_folder,
+        custom_expression=None,
+    ):
         super().__init__()
         self._kind = kind
         self._aoi = aoi
@@ -24,6 +33,7 @@ class OpticalPreviewWorker(QThread):
         self._index_name = index_name
         self._buffer_m = buffer_m
         self._output_folder = output_folder
+        self._custom_expression = custom_expression
 
     def run(self):
         try:
@@ -34,6 +44,7 @@ class OpticalPreviewWorker(QThread):
                     self._index_name,
                     buffer_m=self._buffer_m,
                     output_folder=self._output_folder,
+                    custom_expression=self._custom_expression,
                 )
             else:
                 path = OpticalService.download_multispectral_for_date(
