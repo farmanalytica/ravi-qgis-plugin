@@ -29,6 +29,8 @@ class LandsatPreviewWorker(QThread):
         tier,
         buffer_m,
         output_folder,
+        min_valid_pct=0,
+        aoi_area_m2=None,
     ):
         super().__init__()
         self._kind = kind
@@ -41,6 +43,8 @@ class LandsatPreviewWorker(QThread):
         self._tier = tier
         self._buffer_m = buffer_m
         self._output_folder = output_folder
+        self._min_valid_pct = min_valid_pct
+        self._aoi_area_m2 = aoi_area_m2
 
     def run(self):
         try:
@@ -53,6 +57,8 @@ class LandsatPreviewWorker(QThread):
                     tier=self._tier,
                     buffer_m=self._buffer_m,
                     output_folder=self._output_folder,
+                    min_valid_pct=self._min_valid_pct,
+                    aoi_area_m2=self._aoi_area_m2,
                 )
             elif self._kind == "index":
                 path = LandsatService.download_index_for_date(
@@ -64,6 +70,8 @@ class LandsatPreviewWorker(QThread):
                     tier=self._tier,
                     buffer_m=self._buffer_m,
                     output_folder=self._output_folder,
+                    min_valid_pct=self._min_valid_pct,
+                    aoi_area_m2=self._aoi_area_m2,
                 )
             else:
                 path = LandsatService.download_multispectral_for_date(
@@ -75,6 +83,8 @@ class LandsatPreviewWorker(QThread):
                     tier=self._tier,
                     buffer_m=self._buffer_m,
                     output_folder=self._output_folder,
+                    min_valid_pct=self._min_valid_pct,
+                    aoi_area_m2=self._aoi_area_m2,
                 )
             self.finished.emit(path, self._kind)
         except Exception as e:

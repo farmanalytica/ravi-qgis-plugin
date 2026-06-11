@@ -1451,5 +1451,73 @@
         <source>%s value</source>
         <translation>Valor de %s</translation>
     </message>
+    <message>
+        <source>An unexpected error occurred: {0}</source>
+        <translation>Ocorreu um erro inesperado: {0}</translation>
+    </message>
+    <message>
+        <source>Could not read the key file as JSON.</source>
+        <translation>Não foi possível ler o arquivo de chave como JSON.</translation>
+    </message>
+    <message>
+        <source>Downloaded %d of %d</source>
+        <translation>Baixado %d de %d</translation>
+    </message>
+    <message>
+        <source>Failed to download dependencies: %s</source>
+        <translation>Falha ao baixar as dependências: %s</translation>
+    </message>
+    <message>
+        <source>JSON key files (*.json);;All files (*)</source>
+        <translation>Arquivos de chave JSON (*.json);;Todos os arquivos (*)</translation>
+    </message>
+    <message>
+        <source>Key file not found.</source>
+        <translation>Arquivo de chave não encontrado.</translation>
+    </message>
+    <message>
+        <source>MIN VALID COVERAGE</source>
+        <translation>COBERTURA VÁLIDA MÍN</translation>
+    </message>
+    <message>
+        <source>Minimum share of the AOI that must hold valid (cloud-free) pixels for a date to be kept — measured against a fully-covered image at native resolution. Applies to the available-date list, the time-series plot and every preview/download. ↑ Higher = stricter (fewer dates). 0% = no filter.</source>
+        <translation>Proporção mínima da AOI que deve conter pixels válidos (sem nuvens) para que uma data seja mantida — medida em relação a uma imagem totalmente coberta na resolução nativa. Aplica-se à lista de datas disponíveis, ao gráfico da série temporal e a cada visualização/download. ↑ Maior = mais rigoroso (menos datas). 0% = sem filtro.</translation>
+    </message>
+    <message>
+        <source>No key file selected</source>
+        <translation>Nenhum arquivo de chave selecionado</translation>
+    </message>
+    <message>
+        <source>Not a valid service-account key file.</source>
+        <translation>Não é um arquivo de chave de conta de serviço válido.</translation>
+    </message>
+    <message>
+        <source>Personal</source>
+        <translation>Pessoal</translation>
+    </message>
+    <message>
+        <source>SERVICE-ACCOUNT KEY (.json)</source>
+        <translation>CHAVE DE CONTA DE SERVIÇO (.json)</translation>
+    </message>
+    <message>
+        <source>Select a service-account key file first.</source>
+        <translation>Primeiro selecione um arquivo de chave de conta de serviço.</translation>
+    </message>
+    <message>
+        <source>Select service-account key file</source>
+        <translation>Selecionar arquivo de chave de conta de serviço</translation>
+    </message>
+    <message>
+        <source>Service account</source>
+        <translation>Conta de serviço</translation>
+    </message>
+    <message>
+        <source>Service-account authentication failed: {0}</source>
+        <translation>Falha na autenticação da conta de serviço: {0}</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ A super-resolução Landsat e a série temporal de índices de vegetação são baseadas no &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, em colaboração com seu autor &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</translation>
+    </message>
 </context>
 </TS>

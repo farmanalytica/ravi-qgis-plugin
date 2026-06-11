@@ -1451,5 +1451,73 @@
         <source>%s value</source>
         <translation>Valeur de %s</translation>
     </message>
+    <message>
+        <source>An unexpected error occurred: {0}</source>
+        <translation>Une erreur inattendue s'est produite : {0}</translation>
+    </message>
+    <message>
+        <source>Could not read the key file as JSON.</source>
+        <translation>Impossible de lire le fichier de clé en tant que JSON.</translation>
+    </message>
+    <message>
+        <source>Downloaded %d of %d</source>
+        <translation>Téléchargé %d sur %d</translation>
+    </message>
+    <message>
+        <source>Failed to download dependencies: %s</source>
+        <translation>Échec du téléchargement des dépendances : %s</translation>
+    </message>
+    <message>
+        <source>JSON key files (*.json);;All files (*)</source>
+        <translation>Fichiers de clé JSON (*.json);;Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>Key file not found.</source>
+        <translation>Fichier de clé introuvable.</translation>
+    </message>
+    <message>
+        <source>MIN VALID COVERAGE</source>
+        <translation>COUVERTURE VALIDE MIN</translation>
+    </message>
+    <message>
+        <source>Minimum share of the AOI that must hold valid (cloud-free) pixels for a date to be kept — measured against a fully-covered image at native resolution. Applies to the available-date list, the time-series plot and every preview/download. ↑ Higher = stricter (fewer dates). 0% = no filter.</source>
+        <translation>Part minimale de l'AOI qui doit contenir des pixels valides (sans nuage) pour qu'une date soit conservée — mesurée par rapport à une image entièrement couverte à la résolution native. S'applique à la liste des dates disponibles, au graphique de la série temporelle et à chaque aperçu/téléchargement. ↑ Plus élevé = plus strict (moins de dates). 0 % = aucun filtre.</translation>
+    </message>
+    <message>
+        <source>No key file selected</source>
+        <translation>Aucun fichier de clé sélectionné</translation>
+    </message>
+    <message>
+        <source>Not a valid service-account key file.</source>
+        <translation>Fichier de clé de compte de service non valide.</translation>
+    </message>
+    <message>
+        <source>Personal</source>
+        <translation>Personnel</translation>
+    </message>
+    <message>
+        <source>SERVICE-ACCOUNT KEY (.json)</source>
+        <translation>CLÉ DE COMPTE DE SERVICE (.json)</translation>
+    </message>
+    <message>
+        <source>Select a service-account key file first.</source>
+        <translation>Sélectionnez d'abord un fichier de clé de compte de service.</translation>
+    </message>
+    <message>
+        <source>Select service-account key file</source>
+        <translation>Sélectionner le fichier de clé de compte de service</translation>
+    </message>
+    <message>
+        <source>Service account</source>
+        <translation>Compte de service</translation>
+    </message>
+    <message>
+        <source>Service-account authentication failed: {0}</source>
+        <translation>Échec de l'authentification du compte de service : {0}</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ La super-résolution Landsat et la série temporelle d'indices de végétation reposent sur &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, en collaboration avec son auteur &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</translation>
+    </message>
 </context>
 </TS>

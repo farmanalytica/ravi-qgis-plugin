@@ -16,13 +16,6 @@ Strategy, in order:
 
 The active build is recorded in ``extlibs/.ready`` together with its tag, so a
 QGIS Python upgrade (different tag) re-provisions automatically.
-
-The Landsat batch download drives agrigee_lite's aria2 downloader, which spawns
-the native ``aria2c`` daemon. aria2 is not a pip package, so the tagged extlibs
-zip carries a per-platform ``aria2c`` under ``extlibs/bin/`` (placed there by
-build_extlibs_zip.py / the GitHub Actions workflow) and extraction drops it into
-place automatically. The runtime pip fallback ships no binary; the batch action
-then surfaces a clear error unless ``aria2c`` is already on PATH.
 """
 import importlib
 import os

@@ -15,6 +15,8 @@ from qgis.core import (
     QgsGeometry,
     QgsCoordinateTransform,
     QgsCoordinateReferenceSystem,
+    QgsDistanceArea,
+    QgsUnitTypes,
 )
 
 
@@ -136,6 +138,28 @@ class AOIService:
         AOIService._validate_vector_polygon_layer(layer)
         geojson, _bbox = AOIService._layer_to_geojson_4326(layer, use_selected_features)
         return shape(geojson)
+
+    @staticmethod
+    def get_area_m2_from_layer(layer, use_selected_features=True):
+        """Ellipsoidal area of the dissolved AOI in square metres.
+
+        Computed with QGIS' ``QgsDistanceArea`` (ellipsoidal, so robust for
+        geographic CRSs) on the main thread — no Earth Engine round-trip. Used
+        to translate the Landsat page's "min valid coverage %" into agrigee_lite's
+        absolute ``min_valid_pixel_count``.
+        """
+        AOIService._validate_vector_polygon_layer(layer)
+        geometry = AOIService._get_dissolved_geometry(layer, use_selected_features)
+        if geometry.isEmpty():
+            raise ValueError("Empty geometry.")
+        if not geometry.isGeosValid():
+            geometry = geometry.makeValid()
+
+        calc = QgsDistanceArea()
+        calc.setSourceCrs(layer.crs(), QgsProject.instance().transformContext())
+        calc.setEllipsoid(QgsProject.instance().ellipsoid() or "WGS84")
+        area = calc.measureArea(geometry)
+        return calc.convertAreaMeasurement(area, QgsUnitTypes.AreaSquareMeters)
 
     @staticmethod
     def get_ee_feature_colection_from_layer_id(layer_id, use_selected_features=True):

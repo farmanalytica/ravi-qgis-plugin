@@ -1451,5 +1451,73 @@
         <source>%s value</source>
         <translation>%s 值</translation>
     </message>
+    <message>
+        <source>An unexpected error occurred: {0}</source>
+        <translation>发生意外错误：{0}</translation>
+    </message>
+    <message>
+        <source>Could not read the key file as JSON.</source>
+        <translation>无法将密钥文件作为 JSON 读取。</translation>
+    </message>
+    <message>
+        <source>Downloaded %d of %d</source>
+        <translation>已下载 %d / %d</translation>
+    </message>
+    <message>
+        <source>Failed to download dependencies: %s</source>
+        <translation>下载依赖项失败：%s</translation>
+    </message>
+    <message>
+        <source>JSON key files (*.json);;All files (*)</source>
+        <translation>JSON 密钥文件 (*.json);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <source>Key file not found.</source>
+        <translation>未找到密钥文件。</translation>
+    </message>
+    <message>
+        <source>MIN VALID COVERAGE</source>
+        <translation>最小有效覆盖率</translation>
+    </message>
+    <message>
+        <source>Minimum share of the AOI that must hold valid (cloud-free) pixels for a date to be kept — measured against a fully-covered image at native resolution. Applies to the available-date list, the time-series plot and every preview/download. ↑ Higher = stricter (fewer dates). 0% = no filter.</source>
+        <translation>为保留某一日期，AOI 中必须包含有效（无云）像元的最小比例 —— 以原始分辨率下完全覆盖的影像为基准衡量。适用于可用日期列表、时间序列图以及每次预览/下载。↑ 越高 = 越严格（日期更少）。0% = 不过滤。</translation>
+    </message>
+    <message>
+        <source>No key file selected</source>
+        <translation>未选择密钥文件</translation>
+    </message>
+    <message>
+        <source>Not a valid service-account key file.</source>
+        <translation>不是有效的服务账号密钥文件。</translation>
+    </message>
+    <message>
+        <source>Personal</source>
+        <translation>个人</translation>
+    </message>
+    <message>
+        <source>SERVICE-ACCOUNT KEY (.json)</source>
+        <translation>服务账号密钥 (.json)</translation>
+    </message>
+    <message>
+        <source>Select a service-account key file first.</source>
+        <translation>请先选择一个服务账号密钥文件。</translation>
+    </message>
+    <message>
+        <source>Select service-account key file</source>
+        <translation>选择服务账号密钥文件</translation>
+    </message>
+    <message>
+        <source>Service account</source>
+        <translation>服务账号</translation>
+    </message>
+    <message>
+        <source>Service-account authentication failed: {0}</source>
+        <translation>服务账号身份验证失败：{0}</translation>
+    </message>
+    <message>
+        <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
+        <translation>🛰️ Landsat 超分辨率和植被指数时间序列基于 &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt; 构建，与其作者 &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt; 合作完成。</translation>
+    </message>
 </context>
 </TS>
