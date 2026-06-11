@@ -107,14 +107,12 @@ def full_build():
             # (no sdist builds against the host) for the requested platform.
             pip_plat = _HOST_PLATFORM.replace("-", "_").replace(".", "_")
             plats = [pip_plat]
-            # universal2 fallback: some deps no longer publish a universal2 macOS
-            # wheel, only arch-specific ones (pandas 3.x, geopolars 0.1.0a4).
-            # Accept the two arch sub-platforms so pip can resolve them.
-            # universal2 stays first => pip prefers it for every package that
-            # ships one; only universal2-less packages fall back. pandas is
-            # stripped (resolve-only), but geopolars IS shipped, so arm64 is
-            # listed before x86_64: the bundle ships arm64 geopolars (Apple
-            # Silicon QGIS works; Intel-mac QGIS does not).
+            # universal2 fallback: pandas 3.x publishes no universal2 macOS
+            # wheel, only arch-specific ones. pandas is QGIS-provided and
+            # stripped from the bundle, but pip must still RESOLVE it, so accept
+            # the two arch sub-platforms. universal2 stays first => pip prefers
+            # it for every package that ships one; only universal2-less packages
+            # (pandas, stripped) fall back to an arch wheel.
             if "universal2" in pip_plat:
                 plats += ["macosx_11_0_arm64", "macosx_10_13_x86_64"]
             for p in plats:
