@@ -21,11 +21,12 @@ single multiband GeoTIFF, so no zip extraction or band merging is required (see
 ``download_superres_batch``).
 """
 
+from __future__ import annotations
+
 import os
 import tempfile
 from datetime import datetime, timedelta
 
-import ee
 import requests
 
 try:
@@ -145,6 +146,8 @@ class LandsatService:
     def _feature(aoi: ee.FeatureCollection, date_start: str, date_end: str) -> ee.Feature:
         """agrigee_lite expects a feature carrying ``s``/``e`` date strings and a
         dummy index ``0`` (used by its download/compute code paths)."""
+        import ee
+
         return ee.Feature(aoi.geometry(), {"s": date_start, "e": date_end, "0": 1})
 
     @staticmethod
@@ -333,6 +336,8 @@ class LandsatService:
             mission, use_cloud_mask, tier,
             min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         red = LandsatService._numeral_band(sat, "red")
@@ -352,6 +357,8 @@ class LandsatService:
             mission, use_cloud_mask, tier,
             min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         friendly = MULTISPECTRAL_MODES.get(mode, MULTISPECTRAL_MODES["RGB: Real Color"])
@@ -371,6 +378,8 @@ class LandsatService:
             mission, use_cloud_mask, tier, indices={index_key},
             min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         numeral = LandsatService._numeral_index(sat, index_key)
