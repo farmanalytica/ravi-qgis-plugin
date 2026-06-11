@@ -40,7 +40,14 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
 
+      # macOS: the runner is arm64, but QGIS ships a universal2 Python that
+      # reports macosx-10.13-universal2. _PYTHON_HOST_PLATFORM makes
+      # sysconfig.get_platform() (and thus the bundle tag) match QGIS, and
+      # build_extlibs_zip.py forwards it to pip as --platform so universal2
+      # wheels are downloaded instead of the runner's arm64 wheels.
       - name: Build tagged extlibs zip
+        env:
+          _PYTHON_HOST_PLATFORM: ${{ runner.os == 'macOS' && 'macosx-10.13-universal2' || '' }}
         run: python build_extlibs_zip.py
 
       - name: Upload artifact
