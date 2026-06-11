@@ -34,17 +34,24 @@ jobs:
           - { os: macos-latest, py: "3.12" }
           - { os: macos-latest, py: "3.13" }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.py }}
 
+      # macOS: the runner is arm64, but QGIS ships a universal2 Python that
+      # reports macosx-10.13-universal2. _PYTHON_HOST_PLATFORM makes
+      # sysconfig.get_platform() (and thus the bundle tag) match QGIS, and
+      # build_extlibs_zip.py forwards it to pip as --platform so universal2
+      # wheels are downloaded instead of the runner's arm64 wheels.
       - name: Build tagged extlibs zip
+        env:
+          _PYTHON_HOST_PLATFORM: ${{ runner.os == 'macOS' && 'macosx-10.13-universal2' || '' }}
         run: python build_extlibs_zip.py
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: extlibs-${{ matrix.os }}-py${{ matrix.py }}
           path: extlibs-*.zip
@@ -60,10 +67,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download all build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: _extlibs_dl
           merge-multiple: true

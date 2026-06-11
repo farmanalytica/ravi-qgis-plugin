@@ -15,6 +15,14 @@ Two modes:
 Commit + push the resulting extlibs-<tag>.zip so the runtime downloader
 (extlibs_manager) can fetch the build matching each QGIS Python. The GitHub
 Actions workflow (.github/workflows/build-extlibs.yml) builds the full matrix.
+
+Cross-target builds: set ``_PYTHON_HOST_PLATFORM`` (e.g.
+``macosx-10.13-universal2``) to tag the bundle for a platform other than the
+host. ``sysconfig.get_platform()`` honours that env var, so the output tag
+follows automatically; we additionally pass it to pip as ``--platform`` (with
+``--only-binary=:all:``) so wheels for the target platform are downloaded. The
+macOS CI job uses this so the bundle matches QGIS's universal2 Python rather
+than the arm64 runner.
 """
 import os
 import shutil
@@ -26,6 +34,17 @@ import zipfile
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _REQUIREMENTS = os.path.join(_HERE, "requirements.txt")
+
+# Set by CI to cross-target a platform other than the host (e.g. the macOS job
+# sets it to ``macosx-10.13-universal2`` so the bundle matches QGIS, not the
+# arm64 runner). sysconfig.get_platform() already returns this verbatim.
+#
+# On POSIX, sysconfig keys off mere PRESENCE of the var, so an empty value
+# (the CI ternary sets "" on non-macOS jobs) would yield a broken "cp312-" tag.
+# Scrub an empty value so the host platform is detected normally.
+if not os.environ.get("_PYTHON_HOST_PLATFORM"):
+    os.environ.pop("_PYTHON_HOST_PLATFORM", None)
+_HOST_PLATFORM = os.environ.get("_PYTHON_HOST_PLATFORM")
 
 # Keep in sync with extlibs_manager._QGIS_PROVIDED.
 _QGIS_PROVIDED = (
@@ -81,11 +100,26 @@ def full_build():
     build = tempfile.mkdtemp(prefix="ravi_extlibs_")
     try:
         print(f"pip install -> {build}")
-        subprocess.run(
-            [sys.executable, "-m", "pip", "install", "--target", build,
-             "-r", _REQUIREMENTS, "--no-warn-script-location"],
-            check=True,
-        )
+        cmd = [sys.executable, "-m", "pip", "install", "--target", build,
+               "-r", _REQUIREMENTS, "--no-warn-script-location"]
+        if _HOST_PLATFORM:
+            # Cross-target: only-binary so pip downloads target-platform wheels
+            # (no sdist builds against the host) for the requested platform.
+            pip_plat = _HOST_PLATFORM.replace("-", "_").replace(".", "_")
+            plats = [pip_plat]
+            # universal2 fallback: pandas 3.x publishes no universal2 macOS
+            # wheel, only arch-specific ones. pandas is QGIS-provided and
+            # stripped from the bundle, but pip must still RESOLVE it, so accept
+            # the two arch sub-platforms. universal2 stays first => pip prefers
+            # it for every package that ships one; only universal2-less packages
+            # (pandas, stripped) fall back to an arch wheel.
+            if "universal2" in pip_plat:
+                plats += ["macosx_11_0_arm64", "macosx_10_13_x86_64"]
+            for p in plats:
+                cmd += ["--platform", p]
+            cmd += ["--only-binary=:all:"]
+            print(f"cross-target platform {pip_plat} (resolve via {plats})")
+        subprocess.run(cmd, check=True)
         _strip(build)
         zip_dir(build, out)
         print(f"Done: extlibs-{tag}.zip")

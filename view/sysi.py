@@ -322,6 +322,7 @@ def _build_inputs_tab(dialog, parent):
     thr_lay.addWidget(_threshold_row(_tr("NBR2"), dialog.sysi_nbr_range_slider))
 
     hint = QLabel(_tr("Keep Min &lt; Max. Pixels inside both ranges are kept as bare soil."))
+    hint.setWordWrap(True)
     hint.setTextFormat(Qt.TextFormat.RichText)
     hint.setStyleSheet(
         "color: #9e9e9e; font-size: 10px; background: transparent; border: none;"
@@ -599,7 +600,7 @@ def setup_sysi_page(dialog, page):
     def _set_tab(index):
         stack.setCurrentIndex(index)
         btn_back.setEnabled(index > 0)
-        step_lbl.setText(f"Step {index + 1} of 2")
+        step_lbl.setText(_tr("Step %d of 2") % (index + 1))
         btn_intro_next.setVisible(index == 0)
         btn_generate.setVisible(index == 1)
         btn_tab_intro.setStyleSheet(_TAB_ACTIVE if index == 0 else _TAB_INACTIVE)

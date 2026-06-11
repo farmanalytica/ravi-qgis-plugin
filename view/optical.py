@@ -30,6 +30,7 @@ from qgis.PyQt.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QSlider,
+    QAbstractSpinBox,
     QSpinBox,
     QSplitter,
     QStackedWidget,
@@ -89,6 +90,28 @@ _COMPOSITE_METRICS = [
 ]
 
 _COLOR_RAMPS = ["Viridis", "Magma", "Plasma", "Inferno", "RdYlGn", "Greys"]
+
+# Segmented toggle over the plot (AOI / Points / Features). The %s slot carries
+# the per-segment corner-radius so the three buttons join into one control.
+# Checked = active view (green); disabled = no data yet for that view.
+_SEGMENT_STYLE = """
+QPushButton {
+    background: #ffffff;
+    color: #1b6b39;
+    border: 1px solid #cfe0d5;
+    padding: 0 16px;
+    font-size: 11px;
+    font-weight: bold;
+    %s
+}
+QPushButton:checked {
+    background: #1b6b39;
+    color: #ffffff;
+    border-color: #1b6b39;
+}
+QPushButton:hover:!checked:enabled { background: #eef5f0; }
+QPushButton:disabled { color: #b8c4bc; background: #f5f7f6; }
+"""
 
 # Sentinel-2 Scene Classification Layer classes (0–11). Masking these changes
 # the pixel values used for indices and imagery, so the selection lives on the
@@ -541,12 +564,64 @@ def _build_results_tab(dialog, parent):
         QSplitter::handle:hover { border-top-color: #1b6b39; }
     """)
 
+    # Plot area: a segmented toggle (AOI / Points / Features) over the web view.
+    # All three views share this one plot space; the controller swaps the chart
+    # and enables a segment only once that view has data.
+    plot_container = QWidget()
+    plot_container.setStyleSheet("background: transparent;")
+    plot_lay = QVBoxLayout(plot_container)
+    plot_lay.setContentsMargins(0, 0, 0, 0)
+    plot_lay.setSpacing(6)
+
+    seg_bar = QFrame()
+    dialog.s2_plot_view_bar = seg_bar
+    seg_bar.setStyleSheet("background: transparent; border: none;")
+    seg_lay = QHBoxLayout(seg_bar)
+    seg_lay.setContentsMargins(0, 0, 0, 0)
+    seg_lay.setSpacing(0)
+
+    dialog.s2_plot_view_aoi = QPushButton(_tr("AOI"))
+    dialog.s2_plot_view_points = QPushButton(_tr("Points"))
+    dialog.s2_plot_view_features = QPushButton(_tr("Features"))
+    dialog.s2_plot_view_buttons = (
+        dialog.s2_plot_view_aoi,
+        dialog.s2_plot_view_points,
+        dialog.s2_plot_view_features,
+    )
+    for _i, _seg in enumerate(dialog.s2_plot_view_buttons):
+        _seg.setCheckable(True)
+        _seg.setFixedHeight(26)
+        _seg.setCursor(Qt.CursorShape.PointingHandCursor)
+        _seg.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        # Round the outer corners of the first/last segment only, so the three
+        # buttons read as one joined control.
+        if _i == 0:
+            radius = "border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
+        elif _i == len(dialog.s2_plot_view_buttons) - 1:
+            radius = "border-top-right-radius: 6px; border-bottom-right-radius: 6px;"
+        else:
+            radius = ""
+        _seg.setStyleSheet(_SEGMENT_STYLE % radius)
+        seg_lay.addWidget(_seg)
+    seg_lay.addStretch(1)
+
+    dialog.s2_plot_view_aoi.setChecked(True)
+    # Points / Features views unlock once their series exist (the controller
+    # enables them in _update_view_buttons).
+    dialog.s2_plot_view_points.setEnabled(False)
+    dialog.s2_plot_view_features.setEnabled(False)
+    # Toggle bar stays hidden until Points/Features series exist (controller
+    # reveals it in _update_view_buttons).
+    seg_bar.setVisible(False)
+    plot_lay.addWidget(seg_bar)
+
     dialog.s2_web_view = QWebView()
     dialog.s2_web_view.setStyleSheet(
         "border: 1px solid #dce6df; border-radius: 8px; background: #ffffff;"
     )
     dialog.s2_web_view.setMinimumHeight(200)
-    dialog.s2_results_splitter.addWidget(dialog.s2_web_view)
+    plot_lay.addWidget(dialog.s2_web_view, 1)
+    dialog.s2_results_splitter.addWidget(plot_container)
 
     scroll = QScrollArea()
     scroll.setWidgetResizable(True)
@@ -603,17 +678,74 @@ def _build_results_tab(dialog, parent):
     dialog.s2_chk_smoothing = QCheckBox(_tr("Savitzky-Golay smoothing"))
     dialog.s2_chk_smoothing.setStyleSheet(STYLE_CHECKBOX)
 
+    def _spin_widget(spinbox, height=30):
+        try:
+            spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        except AttributeError:
+            spinbox.setButtonSymbols(QAbstractSpinBox.NoButtons)  # type: ignore[attr-defined]
+        spinbox.setStyleSheet(
+            "QSpinBox {"
+            " background: #ffffff; color: #1a1a1a;"
+            " border-top: 1.5px solid #b8dcc8; border-bottom: 1.5px solid #b8dcc8;"
+            " border-left: none; border-right: none; border-radius: 0px;"
+            " padding: 0px 4px; font-size: 13px; font-weight: 600; min-width: 36px;"
+            "}"
+        )
+        spinbox.setAlignment(Qt.AlignCenter)
+        spinbox.setFixedHeight(height)
+
+        _btn_base = (
+            " background-color: #edf7f1; color: #1b6b39;"
+            " font-size: 16px; font-weight: 600;"
+            " min-width: 26px; max-width: 26px; padding: 0px;"
+        )
+        btn_m = QPushButton("−")
+        btn_p = QPushButton("+")
+        btn_m.setStyleSheet(
+            "QPushButton {"
+            + _btn_base
+            + " border: 1.5px solid #b8dcc8; border-right: 1px solid #d4e8dc;"
+            " border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
+            " border-top-right-radius: 0px; border-bottom-right-radius: 0px; }"
+            " QPushButton:hover { background-color: #c5e8d0; border-color: #1b6b39; }"
+            " QPushButton:pressed { background-color: #1b6b39; color: #ffffff; border-color: #1b6b39; }"
+        )
+        btn_p.setStyleSheet(
+            "QPushButton {"
+            + _btn_base
+            + " border: 1.5px solid #b8dcc8; border-left: 1px solid #d4e8dc;"
+            " border-top-right-radius: 6px; border-bottom-right-radius: 6px;"
+            " border-top-left-radius: 0px; border-bottom-left-radius: 0px; }"
+            " QPushButton:hover { background-color: #c5e8d0; border-color: #1b6b39; }"
+            " QPushButton:pressed { background-color: #1b6b39; color: #ffffff; border-color: #1b6b39; }"
+        )
+        for b in (btn_m, btn_p):
+            b.setFixedHeight(height)
+            b.setFocusPolicy(Qt.NoFocus)
+        btn_m.clicked.connect(spinbox.stepDown)
+        btn_p.clicked.connect(spinbox.stepUp)
+        wrap = QWidget()
+        wrap.setStyleSheet("background: transparent; border: none;")
+        wlay = QHBoxLayout(wrap)
+        wlay.setContentsMargins(0, 0, 0, 0)
+        wlay.setSpacing(0)
+        wlay.addWidget(btn_m)
+        wlay.addWidget(spinbox)
+        wlay.addWidget(btn_p)
+        wrap.setFixedHeight(height)
+        return wrap
+
     dialog.s2_smooth_window = QSpinBox()
     dialog.s2_smooth_window.setRange(3, 99)
     dialog.s2_smooth_window.setSingleStep(2)
     dialog.s2_smooth_window.setValue(7)
-    _prepare_field(dialog.s2_smooth_window, 28)
-    dialog.s2_smooth_window.setMinimumWidth(64)
+    window_widget = _spin_widget(dialog.s2_smooth_window)
+    window_widget.setMinimumWidth(84)
     dialog.s2_smooth_polyorder = QSpinBox()
     dialog.s2_smooth_polyorder.setRange(1, 10)
     dialog.s2_smooth_polyorder.setValue(2)
-    _prepare_field(dialog.s2_smooth_polyorder, 28)
-    dialog.s2_smooth_polyorder.setMinimumWidth(64)
+    polyorder_widget = _spin_widget(dialog.s2_smooth_polyorder)
+    polyorder_widget.setMinimumWidth(84)
 
     # Window must stay odd and the polynomial order below it (valid SG).
     def _force_odd(v):
@@ -634,10 +766,8 @@ def _build_results_tab(dialog, parent):
     smooth_params_lay = QHBoxLayout(smooth_params)
     smooth_params_lay.setContentsMargins(0, 0, 0, 0)
     smooth_params_lay.setSpacing(12)
-    smooth_params_lay.addWidget(_labeled(_tr("Window"), dialog.s2_smooth_window, 56))
-    smooth_params_lay.addWidget(
-        _labeled(_tr("Poly order"), dialog.s2_smooth_polyorder, 70)
-    )
+    smooth_params_lay.addWidget(_labeled(_tr("Window"), window_widget, 56))
+    smooth_params_lay.addWidget(_labeled(_tr("Poly order"), polyorder_widget, 70))
 
     def _sync_smoothing():
         smooth_params.setVisible(dialog.s2_chk_smoothing.isChecked())
@@ -772,6 +902,7 @@ def _build_results_tab(dialog, parent):
     composite_hint = QLabel(
         _tr("Composite the selected index over the selected dates.")
     )
+    composite_hint.setWordWrap(True)
     composite_hint.setStyleSheet(
         "color: #616161; font-size: 11px; background: transparent; border: none;"
     )
@@ -825,23 +956,17 @@ def _build_results_tab(dialog, parent):
     climate_lay.setSpacing(10)
     climate_lay.addWidget(_caption(_tr("CLIMATE (NASA POWER)")))
     climate_hint = QLabel(
-        _tr("Overlay daily NASA POWER climate variables on the time-series plot.")
+        _tr(
+            "Overlay accumulated monthly precipitation (NASA POWER) as bars on the "
+            "time-series plot, over the same date range. Temperature is fetched too "
+            "and included in the CSV export."
+        )
     )
+    climate_hint.setWordWrap(True)
     climate_hint.setStyleSheet(
         "color: #616161; font-size: 11px; background: transparent; border: none;"
     )
     climate_lay.addWidget(climate_hint)
-
-    dialog.s2_chk_climate_precip = QCheckBox(_tr("Precipitation"))
-    dialog.s2_chk_climate_precip.setChecked(True)
-    dialog.s2_chk_climate_tmin = QCheckBox(_tr("Min temperature"))
-    dialog.s2_chk_climate_tmax = QCheckBox(_tr("Max temperature"))
-    for _chk in (
-        dialog.s2_chk_climate_precip,
-        dialog.s2_chk_climate_tmin,
-        dialog.s2_chk_climate_tmax,
-    ):
-        _chk.setStyleSheet(STYLE_CHECKBOX)
 
     dialog.s2_btn_climate_overlay = QPushButton(_tr("Overlay on plot"))
     dialog.s2_btn_climate_overlay.setFixedHeight(30)
@@ -855,9 +980,6 @@ def _build_results_tab(dialog, parent):
     climate_lay.addWidget(
         _flow(
             [
-                dialog.s2_chk_climate_precip,
-                dialog.s2_chk_climate_tmin,
-                dialog.s2_chk_climate_tmax,
                 dialog.s2_btn_climate_overlay,
                 dialog.s2_btn_climate_save,
                 dialog.s2_btn_climate_clear,
@@ -1038,7 +1160,6 @@ def setup_optical_page(dialog, page):
       s2_vi_index_combo, s2_vi_ramp_combo, s2_btn_vi_preview, s2_btn_vi_download,
       s2_composite_metric_combo, s2_composite_ramp_combo,
       s2_btn_composite_preview, s2_btn_composite_download,
-      s2_chk_climate_precip, s2_chk_climate_tmin, s2_chk_climate_tmax,
       s2_btn_climate_overlay, s2_btn_climate_save, s2_btn_climate_clear,
       s2_btn_capture_points, s2_btn_clear_points, s2_feature_id_combo,
       s2_btn_plot_features, s2_buffer_slider, s2_buffer_value,
@@ -1090,22 +1211,11 @@ def setup_optical_page(dialog, page):
             color: #212121;
             border: 1px solid #d0d0d0;
             border-radius: 6px;
-            padding: 2px 6px;
+            padding: 2px 24px 2px 6px;
             font-size: 12px;
         }
         QSpinBox:focus { border: 1.5px solid #1b6b39; }
         QSpinBox:disabled { color: #bdbdbd; background: #f2f2f2; border-color: #e6e6e6; }
-        QSpinBox::up-button, QSpinBox::down-button {
-            subcontrol-origin: border;
-            width: 16px;
-            background-color: #eef2f0;
-            border-left: 1px solid #d0d0d0;
-        }
-        QSpinBox::up-button { subcontrol-position: top right; border-top-right-radius: 6px; }
-        QSpinBox::down-button { subcontrol-position: bottom right; border-bottom-right-radius: 6px; }
-        QSpinBox::up-button:hover, QSpinBox::down-button:hover { background-color: #d8e4dd; }
-        QSpinBox::up-arrow { width: 9px; height: 9px; }
-        QSpinBox::down-arrow { width: 9px; height: 9px; }
         QLabel { background: transparent; border: none; }
         QCalendarWidget QWidget {
             background-color: #ffffff;
@@ -1239,7 +1349,7 @@ def setup_optical_page(dialog, page):
     def _set_tab(index):
         stack.setCurrentIndex(index)
         btn_back.setEnabled(index > 0)
-        step_lbl.setText(f"Step {index + 1} of 3")
+        step_lbl.setText(_tr("Step %d of 3") % (index + 1))
         btn_intro_next.setVisible(index == 0)
         btn_run.setVisible(index == 1)
         btn_tab_intro.setStyleSheet(_TAB_ACTIVE if index == 0 else _TAB_INACTIVE)

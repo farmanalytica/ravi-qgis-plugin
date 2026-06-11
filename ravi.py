@@ -165,6 +165,13 @@ class RAVI:
         if saved_project_id:
             self.dialog.project_id_input.setText(saved_project_id)
 
+        saved_sa_key = self.gee_service.get_saved_sa_key_path()
+        if saved_sa_key:
+            self.dialog.sa_key_input.setText(saved_sa_key)
+        # Restore the sign-in mode so the card opens in the user's last context;
+        # refresh_auth_status() below then auto-authenticates silently.
+        self.dialog.set_auth_mode(self.gee_service.get_saved_auth_mode())
+
         saved_folder = SettingsManager.load_download_folder()
         if saved_folder:
             self.dialog.folder_input.setText(saved_folder)
@@ -175,6 +182,13 @@ class RAVI:
         self.dialog.project_id_input.textChanged.connect(
             self.auth_ctrl.on_project_id_changed
         )
+        self.dialog.btn_mode_personal.clicked.connect(
+            lambda: self.auth_ctrl.handle_auth_mode_changed("personal")
+        )
+        self.dialog.btn_mode_service.clicked.connect(
+            lambda: self.auth_ctrl.handle_auth_mode_changed("service")
+        )
+        self.dialog.btn_browse_key.clicked.connect(self.auth_ctrl.handle_browse_key)
         self.dialog.btn_authenticate.clicked.connect(
             self.auth_ctrl.handle_authentication
         )
@@ -211,6 +225,15 @@ class RAVI:
         self.dialog.s2_btn_filter_dates.clicked.connect(
             self.optical_ctrl.handle_filter_dates
         )
+        self.dialog.s2_chk_smoothing.toggled.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
+        self.dialog.s2_smooth_window.valueChanged.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
+        self.dialog.s2_smooth_polyorder.valueChanged.connect(
+            self.optical_ctrl.handle_smoothing_changed
+        )
         self.dialog.s2_btn_open_browser.clicked.connect(
             self.optical_ctrl.handle_open_browser
         )
@@ -236,6 +259,39 @@ class RAVI:
             self.optical_ctrl.handle_custom_index_save
         )
 
+        self.dialog.s2_btn_composite_preview.clicked.connect(
+            self.optical_ctrl.handle_composite_preview
+        )
+        self.dialog.s2_btn_composite_download.clicked.connect(
+            self.optical_ctrl.handle_composite_download
+        )
+        self.dialog.s2_btn_climate_overlay.clicked.connect(
+            self.optical_ctrl.handle_climate_overlay
+        )
+        self.dialog.s2_btn_climate_save.clicked.connect(
+            self.optical_ctrl.handle_climate_export
+        )
+        self.dialog.s2_btn_climate_clear.clicked.connect(
+            self.optical_ctrl.handle_climate_clear
+        )
+        self.dialog.s2_btn_capture_points.clicked.connect(
+            self.optical_ctrl.handle_toggle_point_capture
+        )
+        self.dialog.s2_btn_clear_points.clicked.connect(
+            self.optical_ctrl.handle_clear_points
+        )
+        self.dialog.s2_btn_plot_features.clicked.connect(
+            self.optical_ctrl.handle_plot_features
+        )
+        self.dialog.s2_plot_view_aoi.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("aoi")
+        )
+        self.dialog.s2_plot_view_points.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("points")
+        )
+        self.dialog.s2_plot_view_features.clicked.connect(
+            lambda _checked=False: self.optical_ctrl.handle_plot_view("features")
+        )
         self.dialog.sar_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
         )

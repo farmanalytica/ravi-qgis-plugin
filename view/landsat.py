@@ -62,6 +62,11 @@ def _tr(text):
 
 _COLOR_RAMPS = ["Viridis", "Magma", "Plasma", "Inferno", "RdYlGn", "Greys"]
 
+# AgriGEE.lite credit links — kept in sync with the welcome page (view/auth.py).
+_URL_AGRIGEE = "https://github.com/mateuspinto/AgriGEE.lite"
+_URL_MATEUS = "https://www.linkedin.com/in/mateuspinto/"
+_LINK_STYLE = "color:#1b6b39; font-weight:bold; text-decoration:none;"
+
 # Multispectral RGB modes (label, stable English key). Keys match
 # LandsatService.MULTISPECTRAL_MODES so the renderer survives a translated UI.
 _MS_MODE_LABELS = {
@@ -168,6 +173,24 @@ def _build_intro_tab(_dialog, parent):
         '<b>Google Cloud Project ID</b>. Configure this in the "Auth" tab.'
     )))
 
+    credit = QLabel(
+        _tr(
+            "🛰️ Landsat super-resolution and the vegetation-index time series are "
+            "powered by <a href='{agrigee}' style='{ls}'>AgriGEE.lite</a>, in "
+            "collaboration with its author "
+            "<a href='{mateus}' style='{ls}'>Mateus Pinto</a>."
+        ).format(agrigee=_URL_AGRIGEE, mateus=_URL_MATEUS, ls=_LINK_STYLE)
+    )
+    credit.setWordWrap(True)
+    credit.setTextFormat(Qt.TextFormat.RichText)
+    credit.setOpenExternalLinks(True)
+    credit.setStyleSheet(
+        "color: #1b5e20; font-size: 11px; background: #e8f5e9;"
+        " border-radius: 4px; padding: 8px 10px;"
+    )
+    lay.addSpacing(8)
+    lay.addWidget(credit)
+
     lay.addStretch(1)
     scroll.setWidget(w)
     outer.addWidget(scroll, 1)
@@ -241,7 +264,7 @@ def _build_inputs_tab(dialog, parent):
     dialog.ls_date_start = QDateEdit()
     dialog.ls_date_start.setDisplayFormat("yyyy-MM-dd")
     dialog.ls_date_start.setCalendarPopup(True)
-    dialog.ls_date_start.setDate(QDate.currentDate().addYears(-1))
+    dialog.ls_date_start.setDate(QDate.currentDate().addYears(-5))
     _prepare_field(dialog.ls_date_start)
     dialog.ls_date_end = QDateEdit()
     dialog.ls_date_end.setDisplayFormat("yyyy-MM-dd")
@@ -349,6 +372,46 @@ def _build_inputs_tab(dialog, parent):
     cloud_hint.setWordWrap(True)
     cloud_hint.setStyleSheet("color: #757575; font-size: 11px; background: transparent; border: none;")
     proc_lay.addWidget(cloud_hint)
+
+    proc_lay.addWidget(_make_divider())
+    proc_lay.addWidget(_field_label(_tr("MIN VALID COVERAGE")))
+
+    coverage_row = QHBoxLayout()
+    coverage_row.setContentsMargins(0, 0, 0, 0)
+    coverage_row.setSpacing(8)
+    dialog.ls_min_valid_slider = QSlider(Qt.Orientation.Horizontal)
+    dialog.ls_min_valid_slider.setMinimum(0)
+    dialog.ls_min_valid_slider.setMaximum(100)
+    dialog.ls_min_valid_slider.setSingleStep(1)
+    dialog.ls_min_valid_slider.setPageStep(10)
+    dialog.ls_min_valid_slider.setValue(80)
+    dialog.ls_min_valid_slider.setStyleSheet(_SLIDER_STYLE)
+    coverage_row.addWidget(dialog.ls_min_valid_slider, 1)
+    dialog.ls_min_valid_value = QLabel("80%")
+    dialog.ls_min_valid_value.setMinimumWidth(42)
+    dialog.ls_min_valid_value.setAlignment(
+        Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+    )
+    dialog.ls_min_valid_value.setStyleSheet(
+        "color: #1b6b39; font-size: 11px; font-weight: bold;"
+        " background: transparent; border: none;"
+    )
+    coverage_row.addWidget(dialog.ls_min_valid_value)
+    proc_lay.addLayout(coverage_row)
+
+    dialog.ls_min_valid_slider.valueChanged.connect(
+        lambda v: dialog.ls_min_valid_value.setText(f"{v}%")
+    )
+
+    coverage_filter_hint = QLabel(_tr(
+        "Minimum share of the AOI that must hold valid (cloud-free) pixels for a "
+        "date to be kept — measured against a fully-covered image at native "
+        "resolution. Applies to the available-date list, the time-series plot and "
+        "every preview/download. ↑ Higher = stricter (fewer dates). 0% = no filter."
+    ))
+    coverage_filter_hint.setWordWrap(True)
+    coverage_filter_hint.setStyleSheet("color: #757575; font-size: 11px; background: transparent; border: none;")
+    proc_lay.addWidget(coverage_filter_hint)
 
     lay.addWidget(proc_panel)
     lay.addStretch(1)
@@ -593,7 +656,8 @@ def setup_landsat_page(dialog, page):
     Exposes on dialog (selected):
       ls_layer_combo, ls_btn_draw_aoi, ls_btn_hybrid_layer,
       ls_date_start, ls_date_end, ls_index_combo, ls_ts_reducer_combo,
-      ls_chk_cloud_mask, ls_date_combo, ls_web_view, ls_btn_ts_browser,
+      ls_chk_cloud_mask, ls_min_valid_slider, ls_min_valid_value,
+      ls_date_combo, ls_web_view, ls_btn_ts_browser,
       ls_btn_sr_preview, ls_btn_sr_download, ls_btn_sr_batch,
       ls_index_ramp_combo, ls_btn_index_preview, ls_btn_index_download,
       ls_ms_mode_combo, ls_btn_ms_preview, ls_btn_ms_download,
@@ -763,7 +827,7 @@ def setup_landsat_page(dialog, page):
     def _set_tab(index):
         stack.setCurrentIndex(index)
         btn_back.setEnabled(index > 0)
-        step_lbl.setText(f"Step {index + 1} of 3")
+        step_lbl.setText(_tr("Step %d of 3") % (index + 1))
         btn_intro_next.setVisible(index == 0)
         btn_run.setVisible(index == 1)
         btn_tab_intro.setStyleSheet(_TAB_ACTIVE if index == 0 else _TAB_INACTIVE)

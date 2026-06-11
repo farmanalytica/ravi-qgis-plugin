@@ -51,7 +51,7 @@ def _tr(text):
 
 _WGS84 = "EPSG:4326"
 _FILL = QColor(27, 107, 57, 60)
-_STROKE = QColor(27, 107, 57, 220)
+_STROKE = QColor(255, 0, 0, 220)
 
 
 def _target_folder():
@@ -82,7 +82,7 @@ def _style_aoi(layer):
     symbol = QgsFillSymbol.createSimple(
         {
             "color": "27,107,57,40",
-            "outline_color": "27,107,57,255",
+            "outline_color": "255,0,0,255",
             "outline_width": "0.6",
         }
     )

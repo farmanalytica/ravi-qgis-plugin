@@ -7,6 +7,7 @@ Inputs tab fetches the vegetation-index time series and prints the resulting
 DataFrame, including filter metadata, to the QGIS/Python console.
 """
 
+import json
 import os
 import tempfile
 from datetime import datetime
@@ -24,16 +25,32 @@ from qgis.core import (
     QgsRasterLayer,
 )
 
+from qgis.core import (
+    QgsCoordinateReferenceSystem,
+    QgsGeometry,
+    QgsMapLayer,
+    QgsWkbTypes,
+)
+
 from ..managers.settings_manager import SettingsManager
-from ..services.aoi_service import AOIService
+from ..services.aoi_service import AOIService, _remove_z_dimension
 from ..services.optical_service import OpticalService
 from ..tools.aoi_draw_tool import start_draw_aoi
+from ..tools.point_capture_tool import PointCaptureTool
 from ..tools.indexes import validate_custom, save_custom_indexes, load_custom_indexes
 from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
 from ..view.optical_index_info import CUSTOM_INDEX_LABEL, INDEX_ORDER
 from ..renderers.raster_renderer_utils import RasterRendererUtils
-from ..view.sar_plot import render_chart_html
+from ..view.sar_plot import (
+    _MULTISERIES_PALETTE,
+    render_chart_html,
+    render_multiseries_chart_html,
+)
+from ..services.nasa_power_service import NasaPowerService
 from ..workers.batch_download_worker import BatchDownloadWorker
+from ..workers.climate_worker import ClimateWorker
+from ..workers.optical_analysis_worker import OpticalAnalysisWorker
+from ..workers.optical_composite_worker import OpticalCompositeWorker
 from ..workers.optical_preview_worker import OpticalPreviewWorker
 from ..workers.optical_worker import OpticalWorker
 
@@ -76,6 +93,35 @@ class OpticalCtrl:
         self._batch_dialog: QProgressDialog | None = None
         self._preview_worker: OpticalPreviewWorker | None = None
         self._preview_btn_texts: tuple | None = None
+        self._composite_worker: OpticalCompositeWorker | None = None
+        self._composite_btn_texts: tuple | None = None
+        # SCL settings captured at run time, replayed for the composite so it
+        # matches the masking behind the plotted series.
+        self._run_apply_scl = True
+        self._run_invalid_scl: list[int] = []
+        # Run date range (the time series window), reused for the climate fetch.
+        self._date_start: str | None = None
+        self._date_end: str | None = None
+        # NASA POWER climate overlay.
+        self._climate_worker: ClimateWorker | None = None
+        self._climate_btn_text: str | None = None
+        self._climate_df = None
+
+        # Point / per-feature analysis. The three views (AOI / Points /
+        # Features) share the one results web view; _active_plot_view tracks
+        # which is shown. Point and feature series are extracted over the full
+        # run date range (independent of the AOI threshold/date filters).
+        self._active_plot_view = "aoi"
+        self._point_tool: PointCaptureTool | None = None
+        self._point_series: dict = {}  # label -> rows [{date, value}]
+        self._point_colors: dict = {}  # label -> css hex
+        self._feature_series: dict = {}
+        self._feature_colors: dict = {}
+        self._analysis_worker: OpticalAnalysisWorker | None = None
+        self._analysis_target: str | None = None
+        self._job_queue: list = []
+        self._feature_btn_text: str | None = None
+        self._plot_view_paths: list = []
 
         # The "Adjust filter" dialog shows a live image count (cheap) and only
         # re-renders the plot when the user clicks OK.
@@ -119,6 +165,10 @@ class OpticalCtrl:
 
         if layer is None:
             layer = self.dialog.s2_layer_combo.currentLayer()
+
+        # Keep the Feature-ID dropdown in sync with the selected layer's
+        # attributes, even when there is no canvas / interface to zoom.
+        self._populate_feature_id_combo(layer)
 
         if not layer or not layer.isValid() or self.interface is None:
             return
@@ -173,12 +223,18 @@ class OpticalCtrl:
             return
 
         self.aoi = aoi
+        self._run_apply_scl = self.dialog.s2_chk_apply_scl.isChecked()
+        self._run_invalid_scl = self._selected_invalid_scl_values()
+        self._date_start = start_qdate.toString("yyyy-MM-dd")
+        self._date_end = end_qdate.toString("yyyy-MM-dd")
+        # A fresh run invalidates any climate overlay from the previous AOI/range.
+        self._climate_df = None
         params = {
-            "date_start": start_qdate.toString("yyyy-MM-dd"),
-            "date_end": end_qdate.toString("yyyy-MM-dd"),
+            "date_start": self._date_start,
+            "date_end": self._date_end,
             "index_name": index_name,
-            "apply_scl": self.dialog.s2_chk_apply_scl.isChecked(),
-            "invalid_scl_values": self._selected_invalid_scl_values(),
+            "apply_scl": self._run_apply_scl,
+            "invalid_scl_values": self._run_invalid_scl,
             "custom_expression": custom_expression,
         }
 
@@ -231,8 +287,17 @@ class OpticalCtrl:
         self._current_index = index_name
         self._active_dates = None
 
+        # A fresh run replaces the AOI/range, so any captured points or feature
+        # series no longer apply; clear them and return to the AOI view.
+        self._clear_point_state()
+        self._feature_series = {}
+        self._feature_colors = {}
+        self._active_plot_view = "aoi"
+        self._populate_feature_id_combo()
+
         self._refresh_result_dates()
         self._render_timeseries()
+        self._update_view_buttons()
         self.dialog.s2_set_tab(2)
 
     def apply_filter_settings(self, settings: dict):
@@ -333,17 +398,36 @@ class OpticalCtrl:
         )
 
     def handle_open_browser(self):
-        """Open the current (filtered) time series in the system browser."""
+        """Open the plot currently toggled on (AOI / Points / Features) in the
+        system browser."""
         if not self._has_results():
             return
 
         index_name = self._current_index
-        html = render_chart_html(
-            self._plot_dataframe(),
-            hide_toolbar=False,
-            title=_tr("%s Time Series") % index_name,
-            ylabel=_tr("%s AOI average") % index_name,
-        )
+        if self._active_plot_view == "points" and self._point_series:
+            html = self._multiseries_html(
+                self._point_series,
+                self._point_colors,
+                _tr("%s — Points") % index_name,
+                hide_toolbar=False,
+            )
+        elif self._active_plot_view == "features" and self._feature_series:
+            html = self._multiseries_html(
+                self._feature_series,
+                self._feature_colors,
+                _tr("%s — Features") % index_name,
+                hide_toolbar=False,
+            )
+        else:
+            html = render_chart_html(
+                self._plot_dataframe(),
+                hide_toolbar=False,
+                title=_tr("%s Time Series") % index_name,
+                ylabel=_tr("%s AOI average") % index_name,
+                precip_bars=self._precip_bars(),
+            )
+        if html is None:
+            return
         with tempfile.NamedTemporaryFile(
             suffix=".html", delete=False, mode="w", encoding="utf-8"
         ) as f:
@@ -368,12 +452,44 @@ class OpticalCtrl:
             return
 
         try:
-            self._filtered_dataframe().to_csv(file_path, index=False)
+            export_df = self._filtered_dataframe().sort_values("date")
+            smooth_y = self._smoothed_series(export_df["AOI_average"].tolist())
+            if smooth_y is not None:
+                export_df = export_df.assign(AOI_average_smoothed=smooth_y)
+            export_df = self._merge_series_columns(export_df)
+            export_df.to_csv(file_path, index=False)
             self.dialog.pop_message(
                 _tr("CSV exported successfully to %s") % file_path, "info"
             )
         except Exception as e:
             self.dialog.pop_message(_tr("Failed to export CSV: %s") % str(e), "warning")
+
+    def _merge_series_columns(self, export_df):
+        """Append captured point and per-feature series as extra columns (one
+        per series), aligned on date, so they ride along in the CSV export."""
+        if not self._point_series and not self._feature_series:
+            return export_df
+        merged = export_df.copy()
+        merged["_merge_key"] = merged["date"].astype(str)
+        for prefix, series in (
+            ("point", self._point_series),
+            ("feature", self._feature_series),
+        ):
+            for label, rows in series.items():
+                col = pd.DataFrame(
+                    [
+                        {
+                            "_merge_key": str(r["date"]),
+                            f"{prefix}_{label}": r.get("value"),
+                        }
+                        for r in rows
+                    ]
+                )
+                if col.empty:
+                    continue
+                col = col.drop_duplicates(subset="_merge_key")
+                merged = merged.merge(col, on="_merge_key", how="left")
+        return merged.drop(columns="_merge_key")
 
     def _buffer_meters(self) -> float:
         slider = getattr(self.dialog, "s2_buffer_slider", None)
@@ -607,16 +723,282 @@ class OpticalCtrl:
             self._set_single_busy(kind, False)
         self.dialog.pop_message(message, "warning")
 
+    def handle_smoothing_changed(self, *args):
+        """Re-render when smoothing is toggled or its window/poly changes.
+
+        Savitzky-Golay smoothing is a view-only transform of the cached
+        series, so it just re-renders the plot — no Earth Engine call, same
+        path the threshold and date filters use.
+        """
+        if self.dataframe is not None and not self.dataframe.empty:
+            self._render_timeseries()
+
+    # -- synthetic composite (preview / download) -------------------------
+    def handle_composite_preview(self):
+        self._run_composite(to_folder=False)
+
+    def handle_composite_download(self):
+        self._run_composite(to_folder=True)
+
+    def _run_composite(self, to_folder: bool):
+        if not self._has_results():
+            return
+        if self._composite_worker is not None and self._composite_worker.isRunning():
+            return
+
+        # Composite only the dates still shown on the plot (thresholds + the
+        # manual date filter), exactly what _filtered_dataframe yields.
+        dates = self._filtered_dataframe()["date"].dropna().astype(str).tolist()
+        if not dates:
+            self.dialog.pop_message(
+                _tr("No dates in the current selection to composite."), "warning"
+            )
+            return
+
+        index_name = self._current_index
+        if index_name == CUSTOM_INDEX_LABEL or (
+            index_name and "custom" in index_name.lower()
+        ):
+            self.dialog.pop_message(
+                _tr(
+                    "Custom optical indices are not available for composites in "
+                    "this milestone."
+                ),
+                "warning",
+            )
+            return
+
+        metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
+        folder = (
+            SettingsManager.load_download_folder()
+            if to_folder
+            else tempfile.gettempdir()
+        )
+
+        self._set_composite_busy(True)
+        self._composite_worker = OpticalCompositeWorker(
+            self.aoi,
+            dates,
+            index_name,
+            metric,
+            self._run_apply_scl,
+            self._run_invalid_scl,
+            self._buffer_meters(),
+            folder,
+        )
+        self._composite_worker.finished.connect(
+            lambda path: self._on_composite_done(path, to_folder)
+        )
+        self._composite_worker.failed.connect(self._on_composite_failed)
+        self._composite_worker.start()
+
+    def _composite_buttons(self):
+        return (
+            self.dialog.s2_btn_composite_preview,
+            self.dialog.s2_btn_composite_download,
+        )
+
+    def _set_composite_busy(self, busy: bool):
+        btns = self._composite_buttons()
+        if busy:
+            self._composite_btn_texts = tuple(b.text() for b in btns)
+            for b in btns:
+                b.setText(_tr("Loading..."))
+        elif self._composite_btn_texts:
+            for b, txt in zip(btns, self._composite_btn_texts):
+                b.setText(txt)
+        for b in btns:
+            b.setEnabled(not busy)
+
+    def _on_composite_done(self, path: str, to_folder: bool):
+        self._set_composite_busy(False)
+        worker, self._composite_worker = self._composite_worker, None
+        if worker is not None:
+            worker.deleteLater()
+
+        metric = self.dialog.s2_composite_metric_combo.currentData() or "Mean"
+        ramp = self.dialog.s2_composite_ramp_combo.currentText()
+        RasterRendererUtils.load_pseudocolor_raster(
+            path, f"S2 {self._current_index} {metric}", 1, ramp
+        )
+
+        if self.interface is not None:
+            action = _tr("downloaded and loaded") if to_folder else _tr("loaded")
+            self.interface.messageBar().pushMessage(
+                "RAVI", _tr("Composite %s into QGIS.") % action
+            )
+
+    def _on_composite_failed(self, message: str):
+        self._set_composite_busy(False)
+        worker, self._composite_worker = self._composite_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        self.dialog.pop_message(message, "warning")
+
+    # -- climate overlay (NASA POWER) -------------------------------------
+    def _precip_bars(self):
+        """Accumulated monthly precipitation as a bar-overlay payload, or None.
+
+        Returns None unless climate data is loaded.
+        """
+        if self._climate_df is None or self._climate_df.empty:
+            return None
+        months, values = NasaPowerService.monthly_precipitation(self._climate_df)
+        if not months:
+            return None
+        # Place each bar at mid-month so it reads against the daily date axis.
+        x = [(m + pd.Timedelta(days=14)).strftime("%Y-%m-%d") for m in months]
+        return {
+            "x": x,
+            "y": values,
+            "name": _tr("Monthly precipitation"),
+            "ylabel": _tr("Accumulated precipitation (mm)"),
+        }
+
+    def handle_climate_overlay(self):
+        """Fetch NASA POWER climate for the series range and overlay precip."""
+        if not self._has_results():
+            return
+        if self._climate_worker is not None and self._climate_worker.isRunning():
+            return
+        if not (self._date_start and self._date_end):
+            self.dialog.pop_message(_tr("Run the optical analysis first."), "warning")
+            return
+
+        self._set_climate_busy(True)
+        proxy = SettingsManager.get_proxy()
+        self._climate_worker = ClimateWorker(
+            self.aoi, self._date_start, self._date_end, proxy=proxy
+        )
+        self._climate_worker.finished.connect(self._on_climate_done)
+        self._climate_worker.failed.connect(self._on_climate_failed)
+        self._climate_worker.start()
+
+    def _set_climate_busy(self, busy: bool):
+        btn = self.dialog.s2_btn_climate_overlay
+        if busy:
+            self._climate_btn_text = btn.text()
+            btn.setText(_tr("Loading..."))
+        elif self._climate_btn_text:
+            btn.setText(self._climate_btn_text)
+        btn.setEnabled(not busy)
+
+    def _on_climate_done(self, df):
+        self._set_climate_busy(False)
+        worker, self._climate_worker = self._climate_worker, None
+        if worker is not None:
+            worker.deleteLater()
+
+        if df is None or df.empty:
+            self.dialog.pop_message(
+                _tr("NASA POWER returned no climate data for this area/range."),
+                "warning",
+            )
+            return
+        self._climate_df = df
+        self._render_timeseries()
+        if self.interface is not None:
+            self.interface.messageBar().pushMessage(
+                "RAVI", _tr("Climate overlay added to the time-series plot.")
+            )
+
+    def _on_climate_failed(self, message: str):
+        self._set_climate_busy(False)
+        worker, self._climate_worker = self._climate_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        self.dialog.pop_message(_tr("Climate fetch failed: %s") % message, "warning")
+
+    def handle_climate_clear(self):
+        """Drop the climate overlay and re-render the plain time series."""
+        if self._climate_df is None:
+            return
+        self._climate_df = None
+        if self.dataframe is not None and not self.dataframe.empty:
+            self._render_timeseries()
+
+    def handle_climate_export(self):
+        """Export the fetched daily climate table (precip + temperature) as CSV."""
+        if self._climate_df is None or self._climate_df.empty:
+            self.dialog.pop_message(_tr("Fetch the climate overlay first."), "warning")
+            return
+
+        date_str = datetime.now().strftime("%Y%m%d")
+        default_filename = f"climate_nasa_power_{date_str}.csv"
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.dialog,
+            _tr("Export Climate Data as CSV"),
+            default_filename,
+            _tr("CSV Files (*.csv);;All Files (*)"),
+        )
+        if not file_path:
+            return
+        try:
+            self._climate_df.to_csv(file_path, index=False)
+            self.dialog.pop_message(
+                _tr("CSV exported successfully to %s") % file_path, "info"
+            )
+        except Exception as e:
+            self.dialog.pop_message(_tr("Failed to export CSV: %s") % str(e), "warning")
+
+    def _smoothed_series(self, y):
+        """Savitzky-Golay smoothing of the AOI-average series, or None.
+
+        Recomputed on every render so it tracks whatever the threshold and
+        date filters leave behind. ``y`` is assumed already date-sorted; the
+        returned list aligns with it. Returns None when smoothing is off or
+        the filtered series is too short for a valid window.
+        """
+        chk = getattr(self.dialog, "s2_chk_smoothing", None)
+        if chk is None or not chk.isChecked():
+            return None
+        n = len(y)
+        if n < 3:
+            return None
+        window = int(self.dialog.s2_smooth_window.value())
+        poly = int(self.dialog.s2_smooth_polyorder.value())
+        # savgol needs an odd window no longer than the series, and a
+        # polyorder strictly below the window. Clamp rather than fail so the
+        # overlay still shows when the filtered series is short.
+        window = min(window, n)
+        if window % 2 == 0:
+            window -= 1
+        if window < 3:
+            return None
+        poly = min(poly, window - 1)
+        try:
+            from scipy.signal import savgol_filter
+
+            smoothed = savgol_filter(y, window_length=window, polyorder=poly)
+        except Exception:
+            return None
+        return [float(v) for v in smoothed]
+
     def _render_timeseries(self):
-        """Plot the AOI-average time series into the optical results web view."""
+        """Plot the AOI-average time series into the optical results web view.
+
+        Only paints when the AOI segment is the active view; while the user is
+        on the Points or Features view, AOI-only changes (filter, smoothing,
+        climate) update silently and show on the next switch back to AOI.
+        """
+        if self._active_plot_view != "aoi":
+            return
+        if self.dataframe is None or self.dataframe.empty:
+            return
         index_name = self._current_index
         plot_df = self._filtered_dataframe().rename(columns={"date": "dates"})
         plot_df = plot_df.dropna(subset=["dates", "AOI_average"])
+        plot_df = plot_df.sort_values("dates")
+
+        smooth_y = self._smoothed_series(plot_df["AOI_average"].tolist())
 
         html = render_chart_html(
             plot_df,
             title=_tr("%s Time Series") % index_name,
             ylabel=_tr("%s AOI average") % index_name,
+            smooth_y=smooth_y,
+            smooth_label=_tr("Smoothed (Savitzky-Golay)"),
+            precip_bars=self._precip_bars(),
         )
 
         fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_")
@@ -630,6 +1012,388 @@ class OpticalCtrl:
             except OSError:
                 pass
         self._plot_path = path
+
+    # -- point & per-feature analysis -------------------------------------
+    def _populate_feature_id_combo(self, layer=None):
+        """Fill the Feature-ID dropdown with the selected layer's attribute
+        field names (the key used to label per-feature series)."""
+        combo = getattr(self.dialog, "s2_feature_id_combo", None)
+        if combo is None:
+            return
+        if layer is None:
+            layer = self.dialog.s2_layer_combo.currentLayer()
+
+        combo.blockSignals(True)
+        previous = combo.currentText()
+        combo.clear()
+        if (
+            layer
+            and layer.type() == QgsMapLayer.VectorLayer
+            and layer.geometryType() == QgsWkbTypes.PolygonGeometry
+        ):
+            names = [field.name() for field in layer.fields()]
+            combo.addItems(names)
+            if previous in names:
+                combo.setCurrentText(previous)
+        combo.blockSignals(False)
+
+    def _analysis_params(self):
+        """Shared params for the point/feature worker, or None if no run yet."""
+        if not (self._date_start and self._date_end and self._current_index):
+            return None
+        return {
+            "date_start": self._date_start,
+            "date_end": self._date_end,
+            "index_name": self._current_index,
+            "apply_scl": self._run_apply_scl,
+            "invalid_scl_values": self._run_invalid_scl,
+        }
+
+    # -- points ------------------------------------------------------------
+    def handle_toggle_point_capture(self):
+        """Toggle the click-to-sample point tool on the canvas."""
+        btn = self.dialog.s2_btn_capture_points
+        if self.interface is None:
+            btn.setChecked(False)
+            return
+
+        canvas = self.interface.mapCanvas()
+        # Turning the tool off (it is the active map tool).
+        if self._point_tool is not None and canvas.mapTool() is self._point_tool:
+            canvas.unsetMapTool(self._point_tool)
+            return
+
+        if not self._has_results():
+            btn.setChecked(False)
+            return
+
+        # Reuse the existing tool so its dots and colour order survive a
+        # toggle off/on; only build a fresh one the first time.
+        if self._point_tool is None:
+            self._point_tool = PointCaptureTool(
+                canvas, self._on_point_captured, _MULTISERIES_PALETTE
+            )
+            self._point_tool.on_deactivated = self._on_point_tool_deactivated
+        canvas.setMapTool(self._point_tool)
+        btn.setChecked(True)
+        if self.interface is not None:
+            self.interface.messageBar().pushMessage(
+                "RAVI",
+                _tr("Click on the map to sample a point time series."),
+            )
+
+    def _on_point_tool_deactivated(self):
+        self.dialog.s2_btn_capture_points.setChecked(False)
+
+    def _on_point_captured(self, lon, lat, index, color_hex):
+        label = _tr("P%d (%.5f, %.5f)") % (index + 1, lat, lon)
+        self._point_colors[label] = color_hex
+        job = {
+            "label": label,
+            "geojson": {"type": "Point", "coordinates": [lon, lat]},
+            "reducer": "first",
+            "color": color_hex,
+        }
+        self._start_analysis([job], "points")
+
+    def handle_clear_points(self):
+        """Remove captured point dots and their series from the plot."""
+        self._clear_point_state()
+        if self._active_plot_view == "points":
+            self._set_plot_view("aoi")
+        self._update_view_buttons()
+
+    def _clear_point_state(self):
+        if self._point_tool is not None:
+            self._point_tool.clear()
+        self._point_series = {}
+        self._point_colors = {}
+
+    # -- features ----------------------------------------------------------
+    def handle_plot_features(self):
+        """Extract one index series per polygon feature of the selected layer."""
+        if not self._has_results():
+            return
+        if self._analysis_worker is not None and self._analysis_worker.isRunning():
+            return
+
+        layer = self.dialog.s2_layer_combo.currentLayer()
+        if (
+            not layer
+            or layer.type() != QgsMapLayer.VectorLayer
+            or layer.geometryType() != QgsWkbTypes.PolygonGeometry
+        ):
+            self.dialog.pop_message(
+                _tr("Select a polygon AOI layer for per-feature analysis."),
+                "warning",
+            )
+            return
+
+        id_field = self.dialog.s2_feature_id_combo.currentText().strip()
+        jobs = self._feature_jobs(layer, id_field)
+        if not jobs:
+            self.dialog.pop_message(
+                _tr("The selected layer has no usable features."), "warning"
+            )
+            return
+
+        # Replace any previous feature run.
+        self._feature_series = {}
+        self._feature_colors = {}
+        self._set_feature_busy(True)
+        self._start_analysis(jobs, "features")
+
+    def _feature_jobs(self, layer, id_field):
+        """Build one extraction job per feature, labelled by ``id_field``."""
+        jobs = []
+        taken = set()
+        for i, feature in enumerate(layer.getFeatures()):
+            geojson = self._layer_feature_geojson(layer, feature)
+            if geojson is None:
+                continue
+            if id_field:
+                raw = feature[id_field]
+                base = (
+                    str(raw)
+                    if raw not in (None, "")
+                    else _tr("feature %d") % feature.id()
+                )
+            else:
+                base = _tr("feature %d") % feature.id()
+            label = base
+            n = 2
+            while label in taken:
+                label = f"{base} ({n})"
+                n += 1
+            taken.add(label)
+            color = _MULTISERIES_PALETTE[i % len(_MULTISERIES_PALETTE)]
+            self._feature_colors[label] = color
+            jobs.append(
+                {
+                    "label": label,
+                    "geojson": geojson,
+                    "reducer": "mean",
+                    "color": color,
+                }
+            )
+        return jobs
+
+    def _layer_feature_geojson(self, layer, feature):
+        """A feature's geometry as a 2D, EPSG:4326 GeoJSON dict (or None)."""
+        geom = QgsGeometry(feature.geometry())
+        if geom.isEmpty():
+            return None
+        if not geom.isGeosValid():
+            geom = geom.makeValid()
+        if layer.crs().authid() != "EPSG:4326":
+            transform = QgsCoordinateTransform(
+                layer.crs(),
+                QgsCoordinateReferenceSystem("EPSG:4326"),
+                QgsProject.instance(),
+            )
+            geom.transform(transform)
+        geojson_str = geom.asJson()
+        if not geojson_str:
+            return None
+        geojson = json.loads(geojson_str)
+        geojson["coordinates"] = _remove_z_dimension(geojson["coordinates"])
+        return geojson
+
+    def _set_feature_busy(self, busy: bool):
+        btn = self.dialog.s2_btn_plot_features
+        if busy:
+            self._feature_btn_text = self._feature_btn_text or btn.text()
+            btn.setText(_tr("Loading..."))
+        elif self._feature_btn_text:
+            btn.setText(self._feature_btn_text)
+        btn.setEnabled(not busy)
+
+    # -- analysis worker plumbing -----------------------------------------
+    def _start_analysis(self, jobs, target):
+        params = self._analysis_params()
+        if params is None:
+            self.dialog.pop_message(_tr("Run the optical analysis first."), "warning")
+            return
+        if self._analysis_worker is not None and self._analysis_worker.isRunning():
+            # Queue further work of the same kind (rapid point clicks).
+            if target == self._analysis_target:
+                self._job_queue.extend(jobs)
+            return
+        self._analysis_target = target
+        self._run_analysis_worker(jobs, params)
+
+    def _run_analysis_worker(self, jobs, params):
+        self._analysis_worker = OpticalAnalysisWorker(jobs, params)
+        self._analysis_worker.series_ready.connect(self._on_series_ready)
+        self._analysis_worker.finished.connect(self._on_analysis_finished)
+        self._analysis_worker.failed.connect(self._on_analysis_failed)
+        self._analysis_worker.start()
+
+    def _on_series_ready(self, label, rows, color):
+        if self._analysis_target == "points":
+            self._point_series[label] = rows
+            if color:
+                self._point_colors[label] = color
+        else:
+            self._feature_series[label] = rows
+            if color:
+                self._feature_colors[label] = color
+        # Points are interactive: reveal each click's line as it lands. Features
+        # arrive as one batch, so they render once on finish (avoids redrawing
+        # the growing chart per feature).
+        if self._analysis_target == "points":
+            self._set_plot_view("points")
+            self._update_view_buttons()
+
+    def _on_analysis_finished(self):
+        if self._job_queue:
+            jobs, self._job_queue = self._job_queue, []
+            params = self._analysis_params()
+            worker, self._analysis_worker = self._analysis_worker, None
+            if worker is not None:
+                worker.deleteLater()
+            if params is not None:
+                self._run_analysis_worker(jobs, params)
+                return
+        worker, self._analysis_worker = self._analysis_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        if self._analysis_target == "features":
+            self._set_feature_busy(False)
+            if self._feature_series:
+                self._set_plot_view("features")
+        self._update_view_buttons()
+
+    def _on_analysis_failed(self, message):
+        worker, self._analysis_worker = self._analysis_worker, None
+        if worker is not None:
+            worker.deleteLater()
+        self._job_queue = []
+        self._set_feature_busy(False)
+        self.dialog.pop_message(message, "warning")
+
+    # -- plot view switching ----------------------------------------------
+    def handle_plot_view(self, view):
+        """Segment-toggle handler (AOI / Points / Features)."""
+        if view == "points" and not self._point_series:
+            return
+        if view == "features" and not self._feature_series:
+            return
+        self._set_plot_view(view)
+
+    def _set_plot_view(self, view, render=True):
+        self._active_plot_view = view
+        buttons = (
+            ("aoi", self.dialog.s2_plot_view_aoi),
+            ("points", self.dialog.s2_plot_view_points),
+            ("features", self.dialog.s2_plot_view_features),
+        )
+        for name, btn in buttons:
+            btn.blockSignals(True)
+            btn.setChecked(name == view)
+            btn.blockSignals(False)
+        if not render:
+            return
+        if view == "points":
+            self._render_points()
+        elif view == "features":
+            self._render_features()
+        else:
+            self._render_timeseries()
+
+    def _update_view_buttons(self):
+        has_aoi = self.dataframe is not None and not self.dataframe.empty
+        self.dialog.s2_plot_view_aoi.setEnabled(has_aoi)
+        self.dialog.s2_plot_view_points.setEnabled(bool(self._point_series))
+        self.dialog.s2_plot_view_features.setEnabled(bool(self._feature_series))
+        # The AOI/Points/Features toggle only makes sense once there is point or
+        # feature data to switch to; hide the whole bar otherwise.
+        self.dialog.s2_plot_view_bar.setVisible(
+            bool(self._point_series) or bool(self._feature_series)
+        )
+        for name, btn in (
+            ("aoi", self.dialog.s2_plot_view_aoi),
+            ("points", self.dialog.s2_plot_view_points),
+            ("features", self.dialog.s2_plot_view_features),
+        ):
+            btn.blockSignals(True)
+            btn.setChecked(name == self._active_plot_view)
+            btn.blockSignals(False)
+
+    def _render_points(self):
+        self._render_multiseries(
+            self._point_series,
+            self._point_colors,
+            _tr("%s — Points") % self._current_index,
+        )
+
+    def _render_features(self):
+        self._render_multiseries(
+            self._feature_series,
+            self._feature_colors,
+            _tr("%s — Features") % self._current_index,
+        )
+
+    def _render_multiseries(self, series, colors, title):
+        """Render a multi-line chart (one line per point/feature) plus the AOI
+        average as a grey reference line, into the shared web view."""
+        html = self._multiseries_html(series, colors, title)
+        if html is None:
+            self.dialog.s2_web_view.setHtml("")
+            return
+        self._load_multiseries(html)
+
+    def _multiseries_html(self, series, colors, title, hide_toolbar=True):
+        """Build the multi-line chart HTML (one line per point/feature plus the
+        AOI average reference line), or None if there is nothing to plot."""
+        aoi_label = _tr("AOI average")
+        records = []
+        if self.dataframe is not None and not self.dataframe.empty:
+            aoi_df = self.dataframe.dropna(subset=["date", "AOI_average"])
+            aoi_df = aoi_df.sort_values("date")
+            for date, value in zip(aoi_df["date"].astype(str), aoi_df["AOI_average"]):
+                records.append(
+                    {"dates": date, "AOI_average": float(value), "series": aoi_label}
+                )
+        for label, rows in series.items():
+            for row in rows:
+                if row.get("value") is None:
+                    continue
+                records.append(
+                    {
+                        "dates": str(row["date"]),
+                        "AOI_average": float(row["value"]),
+                        "series": label,
+                    }
+                )
+
+        if not records:
+            return None
+
+        plot_df = pd.DataFrame(records)
+        color_map = {aoi_label: "#444444"}
+        color_map.update(colors)
+        return render_multiseries_chart_html(
+            plot_df,
+            group_col="series",
+            title=title,
+            ylabel=_tr("%s value") % self._current_index,
+            colors=color_map,
+            hide_toolbar=hide_toolbar,
+        )
+
+    def _load_multiseries(self, html):
+        fd, path = tempfile.mkstemp(suffix=".html", prefix="ravi_optical_ms_")
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(html)
+        self.dialog.s2_web_view.load(QUrl.fromLocalFile(path))
+        for old in self._plot_view_paths:
+            if os.path.exists(old):
+                try:
+                    os.remove(old)
+                except OSError:
+                    pass
+        self._plot_view_paths = [path]
 
     def _on_optical_failed(self, message):
         self._set_run_busy(False)
