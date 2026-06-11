@@ -59,6 +59,7 @@ from .optical_index_info import (
     INDEX_ORDER,
     VEGETATION_INDICES,
 )
+from ..tools.indexes import load_custom_indexes
 
 
 def _tr(text):
@@ -77,8 +78,14 @@ _RGB_RENDER_MODES = [
 ]
 
 _COMPOSITE_METRICS = [
-    "Mean", "Median", "Min", "Max", "Amplitude",
-    "Standard Deviation", "Sum", "Area Under Curve (AUC)",
+    "Mean",
+    "Median",
+    "Min",
+    "Max",
+    "Amplitude",
+    "Standard Deviation",
+    "Sum",
+    "Area Under Curve (AUC)",
 ]
 
 _COLOR_RAMPS = ["Viridis", "Magma", "Plasma", "Inferno", "RdYlGn", "Greys"]
@@ -131,11 +138,16 @@ def _build_intro_tab(_dialog, parent):
     lay.setSpacing(4)
 
     def _h1(text):
-        return _h_lbl(text, "font-size:15px;font-weight:bold;color:#1b6b39;margin-bottom:4px;")
+        return _h_lbl(
+            text, "font-size:15px;font-weight:bold;color:#1b6b39;margin-bottom:4px;"
+        )
 
     def _h2(text):
-        return _h_lbl(text, "font-size:12px;font-weight:bold;color:#2a5d84;"
-                            "padding-bottom:3px;margin-top:12px;margin-bottom:2px;")
+        return _h_lbl(
+            text,
+            "font-size:12px;font-weight:bold;color:#2a5d84;"
+            "padding-bottom:3px;margin-top:12px;margin-bottom:2px;",
+        )
 
     def _para(html):
         return _h_lbl(html, "font-size:12px;color:#333;")
@@ -148,12 +160,16 @@ def _build_intro_tab(_dialog, parent):
 
     lay.addWidget(_h1(_tr("🛰️ Optical Imagery Module - Sentinel-2")))
     lay.addSpacing(2)
-    lay.addWidget(_para(_tr(
-        "The Optical module analyses the <b>Sentinel-2 Harmonized Surface "
-        "Reflectance</b> collection in Google Earth Engine. Pick an area, a date "
-        "range and a vegetation index to build an interactive time series, then "
-        "download imagery, composites and indices — no coding required."
-    )))
+    lay.addWidget(
+        _para(
+            _tr(
+                "The Optical module analyses the <b>Sentinel-2 Harmonized Surface "
+                "Reflectance</b> collection in Google Earth Engine. Pick an area, a date "
+                "range and a vegetation index to build an interactive time series, then "
+                "download imagery, composites and indices — no coding required."
+            )
+        )
+    )
 
     lay.addWidget(_h2(_tr("📋 Workflow")))
     lay.addWidget(_divider())
@@ -162,48 +178,78 @@ def _build_intro_tab(_dialog, parent):
     wf_lay = QVBoxLayout(wf_frame)
     wf_lay.setContentsMargins(12, 6, 12, 6)
     wf_lay.setSpacing(4)
-    for i, text in enumerate([
-        _tr("<b>Inputs:</b> Select the area (AOI), date range and vegetation index"),
-        _tr("<b>Run:</b> Build the per-date time series over the AOI"),
-        _tr("<b>Results:</b> Inspect the plot, adjust the filter, preview and download outputs"),
-    ], 1):
+    for i, text in enumerate(
+        [
+            _tr(
+                "<b>Inputs:</b> Select the area (AOI), date range and vegetation index"
+            ),
+            _tr("<b>Run:</b> Build the per-date time series over the AOI"),
+            _tr(
+                "<b>Results:</b> Inspect the plot, adjust the filter, preview and download outputs"
+            ),
+        ],
+        1,
+    ):
         wf_lay.addWidget(_para(f"{i}. {text}"))
     lay.addWidget(wf_frame)
 
     lay.addWidget(_h2(_tr("✨ Main Features")))
     lay.addWidget(_divider())
     for text in [
-        _tr("<b>Vegetation Index Time Series:</b> 19 built-in indices plus a custom index builder"),
+        _tr(
+            "<b>Vegetation Index Time Series:</b> 19 built-in indices plus a custom index builder"
+        ),
         _tr("<b>Index Explanations:</b> Description and formula for every index"),
-        _tr("<b>True-Color &amp; False-Color Imagery:</b> Download styled RGB rasters for any date"),
-        _tr("<b>Synthetic Composite:</b> Aggregate the series (mean, median, AUC, …) into one image"),
-        _tr("<b>Batch Download &amp; CSV Export:</b> Pull every selected date and export the table"),
-        _tr("<b>Live Filtering:</b> Cloud %, SCL classes, AOI coverage, date selection and "
-            "Savitzky-Golay smoothing — re-applied to the cached series with no new GEE call"),
-        _tr("<b>Climate Overlay:</b> NASA POWER precipitation and temperature on the plot"),
-        _tr("<b>Point &amp; Per-Feature Analysis:</b> Time series per clicked point or per polygon"),
+        _tr(
+            "<b>True-Color &amp; False-Color Imagery:</b> Download styled RGB rasters for any date"
+        ),
+        _tr(
+            "<b>Synthetic Composite:</b> Aggregate the series (mean, median, AUC, …) into one image"
+        ),
+        _tr(
+            "<b>Batch Download &amp; CSV Export:</b> Pull every selected date and export the table"
+        ),
+        _tr(
+            "<b>Live Filtering:</b> Cloud %, SCL classes, AOI coverage, date selection and "
+            "Savitzky-Golay smoothing — re-applied to the cached series with no new GEE call"
+        ),
+        _tr(
+            "<b>Climate Overlay:</b> NASA POWER precipitation and temperature on the plot"
+        ),
+        _tr(
+            "<b>Point &amp; Per-Feature Analysis:</b> Time series per clicked point or per polygon"
+        ),
     ]:
         lay.addWidget(_para(f"✓  {text}"))
 
     lay.addWidget(_h2(_tr("☁️ Filtering (new)")))
     lay.addWidget(_divider())
-    lay.addWidget(_para(_tr(
-        "Filtering no longer happens when the collection runs. Every image keeps "
-        "its cloud, SCL and coverage metadata, so the <b>Adjust filter</b> button "
-        "on the Results tab re-filters and re-plots the series instantly, without "
-        "contacting Earth Engine again."
-    )))
+    lay.addWidget(
+        _para(
+            _tr(
+                "Filtering no longer happens when the collection runs. Every image keeps "
+                "its cloud, SCL and coverage metadata, so the <b>Adjust filter</b> button "
+                "on the Results tab re-filters and re-plots the series instantly, without "
+                "contacting Earth Engine again."
+            )
+        )
+    )
 
     lay.addWidget(_h2(_tr("🔧 Initial Setup")))
     lay.addWidget(_divider())
-    lay.addWidget(_para(_tr(
-        "To use this module you need authentication to Google Earth Engine via a "
-        '<b>Google Cloud Project ID</b>. Configure this in the "Auth" tab.'
-    )))
+    lay.addWidget(
+        _para(
+            _tr(
+                "To use this module you need authentication to Google Earth Engine via a "
+                '<b>Google Cloud Project ID</b>. Configure this in the "Auth" tab.'
+            )
+        )
+    )
 
     lay.addStretch(1)
     scroll.setWidget(w)
     outer.addWidget(scroll, 1)
+
 
 def _build_inputs_tab(dialog, parent):
     outer = QVBoxLayout(parent)
@@ -248,14 +294,18 @@ def _build_inputs_tab(dialog, parent):
         _tr("Drag on the map to draw a box (Shift = square, Esc = cancel)")
     )
     dialog.s2_btn_draw_aoi.setFixedHeight(28)
-    dialog.s2_btn_draw_aoi.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+    dialog.s2_btn_draw_aoi.setSizePolicy(
+        QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+    )
     dialog.s2_btn_draw_aoi.adjustSize()
     dialog.s2_btn_draw_aoi.setStyleSheet(STYLE_BTN_SECONDARY)
     aoi_row_lay.addWidget(dialog.s2_btn_draw_aoi)
 
     dialog.s2_btn_hybrid_layer = QPushButton(_tr("Add Google Hybrid Layer"))
     dialog.s2_btn_hybrid_layer.setFixedHeight(28)
-    dialog.s2_btn_hybrid_layer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+    dialog.s2_btn_hybrid_layer.setSizePolicy(
+        QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+    )
     dialog.s2_btn_hybrid_layer.adjustSize()
     dialog.s2_btn_hybrid_layer.setStyleSheet(STYLE_BTN_SECONDARY)
     aoi_row_lay.addWidget(dialog.s2_btn_hybrid_layer)
@@ -360,23 +410,25 @@ def _build_inputs_tab(dialog, parent):
     )
     custom_lay.addWidget(band_ref)
 
-    expr_help = QLabel(_tr(
-        "<b>How to build an expression</b><br>"
-        "Combine band names with operators. Bands are scaled to 0–1 reflectance."
-        "<br>"
-        "&bull; Arithmetic: <b>+ &minus; * /</b> &nbsp; power <b>**</b> &nbsp; "
-        "grouping <b>( )</b><br>"
-        "&bull; Math functions: <b>sqrt() abs() exp() log() pow(x, y) "
-        "min(a, b) max(a, b)</b><br>"
-        "&bull; Compare: <b>&lt; &lt;= &gt; &gt;= == !=</b> &nbsp; "
-        "logic <b>&amp;&amp; || !</b><br>"
-        "&bull; Conditional: <b>condition ? value_if_true : value_if_false</b>"
-        "<br><br>"
-        "<b>Examples</b><br>"
-        "&bull; NDVI: <code>(B8 - B4) / (B8 + B4)</code><br>"
-        "&bull; SAVI: <code>1.5 * (B8 - B4) / (B8 + B4 + 0.5)</code><br>"
-        "&bull; Mask low NIR: <code>B8 > 0.2 ? (B8 - B4) / (B8 + B4) : 0</code>"
-    ))
+    expr_help = QLabel(
+        _tr(
+            "<b>How to build an expression</b><br>"
+            "Combine band names with operators. Bands are scaled to 0–1 reflectance."
+            "<br>"
+            "&bull; Arithmetic: <b>+ &minus; * /</b> &nbsp; power <b>**</b> &nbsp; "
+            "grouping <b>( )</b><br>"
+            "&bull; Math functions: <b>sqrt() abs() exp() log() pow(x, y) "
+            "min(a, b) max(a, b)</b><br>"
+            "&bull; Compare: <b>&lt; &lt;= &gt; &gt;= == !=</b> &nbsp; "
+            "logic <b>&amp;&amp; || !</b><br>"
+            "&bull; Conditional: <b>condition ? value_if_true : value_if_false</b>"
+            "<br><br>"
+            "<b>Examples</b><br>"
+            "&bull; NDVI: <code>(B8 - B4) / (B8 + B4)</code><br>"
+            "&bull; SAVI: <code>1.5 * (B8 - B4) / (B8 + B4 + 0.5)</code><br>"
+            "&bull; Mask low NIR: <code>B8 > 0.2 ? (B8 - B4) / (B8 + B4) : 0</code>"
+        )
+    )
     expr_help.setWordWrap(True)
     expr_help.setTextFormat(Qt.TextFormat.RichText)
     expr_help.setStyleSheet(
@@ -388,7 +440,9 @@ def _build_inputs_tab(dialog, parent):
     dialog.s2_btn_custom_save = QPushButton(_tr("Save custom index"))
     dialog.s2_btn_custom_save.setFixedHeight(28)
     dialog.s2_btn_custom_save.setStyleSheet(STYLE_BTN_SECONDARY)
-    dialog.s2_btn_custom_save.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+    dialog.s2_btn_custom_save.setSizePolicy(
+        QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+    )
     custom_lay.addWidget(dialog.s2_btn_custom_save, 0, Qt.AlignmentFlag.AlignLeft)
 
     index_lay.addWidget(dialog.s2_custom_container)
@@ -396,14 +450,23 @@ def _build_inputs_tab(dialog, parent):
 
     def _update_index_info(_idx=None):
         key = dialog.s2_index_combo.currentData()
-        is_custom = key == CUSTOM_INDEX_LABEL
-        dialog.s2_custom_container.setVisible(is_custom)
-        if is_custom:
-            dialog.s2_index_info.setText(_tr(
-                "<b>Custom index.</b> Define a Sentinel-2 band expression below, "
-                "give it a name and save it. Reflectance bands are scaled to 0–1."
-            ))
+
+        custom_saved = load_custom_indexes()
+
+        if key == CUSTOM_INDEX_LABEL:
+            dialog.s2_custom_container.setVisible(True)
+            dialog.s2_index_info.setText(
+                _tr(
+                    "<b>Custom index.</b> Define a Sentinel-2 band expression below, "
+                    "give it a name and save it. Reflectance bands are scaled to 0–1."
+                )
+            )
+        elif key in custom_saved:
+            dialog.s2_custom_container.setVisible(False)
+            dialog.s2_index_info.setText(custom_saved[key])
+
         else:
+            dialog.s2_custom_container.setVisible(False)
             dialog.s2_index_info.setText(VEGETATION_INDICES.get(key, ""))
 
     dialog.s2_index_combo.currentIndexChanged.connect(_update_index_info)
@@ -424,14 +487,18 @@ def _build_inputs_tab(dialog, parent):
     dialog.s2_chk_apply_scl.setStyleSheet(STYLE_CHECKBOX)
     scl_lay.addWidget(dialog.s2_chk_apply_scl)
 
-    scl_hint = QLabel(_tr(
-        "Checked classes always define the valid-pixel count used by the Results "
-        "filter. When the mask above is enabled, they are also masked out of "
-        "every image before indices are computed, affecting the time series and "
-        "downloaded rasters."
-    ))
+    scl_hint = QLabel(
+        _tr(
+            "Checked classes always define the valid-pixel count used by the Results "
+            "filter. When the mask above is enabled, they are also masked out of "
+            "every image before indices are computed, affecting the time series and "
+            "downloaded rasters."
+        )
+    )
     scl_hint.setWordWrap(True)
-    scl_hint.setStyleSheet("color: #757575; font-size: 11px; background: transparent; border: none;")
+    scl_hint.setStyleSheet(
+        "color: #757575; font-size: 11px; background: transparent; border: none;"
+    )
     scl_lay.addWidget(scl_hint)
 
     scl_grid = QGridLayout()
@@ -455,6 +522,7 @@ def _build_inputs_tab(dialog, parent):
     lay.addStretch(1)
     scroll.setWidget(scroll_w)
     outer.addWidget(scroll)
+
 
 def _build_results_tab(dialog, parent):
     outer = QVBoxLayout(parent)
@@ -515,13 +583,17 @@ def _build_results_tab(dialog, parent):
     dialog.s2_btn_batch_download = QPushButton(_tr("Batch Download (All Dates)"))
     dialog.s2_btn_batch_download.setFixedHeight(30)
     dialog.s2_btn_batch_download.setStyleSheet(STYLE_BTN_SECONDARY)
-    ts_lay.addWidget(_flow([
-        dialog.s2_btn_adjust_filter,
-        dialog.s2_btn_filter_dates,
-        dialog.s2_btn_open_browser,
-        dialog.s2_btn_download_csv,
-        dialog.s2_btn_batch_download,
-    ]))
+    ts_lay.addWidget(
+        _flow(
+            [
+                dialog.s2_btn_adjust_filter,
+                dialog.s2_btn_filter_dates,
+                dialog.s2_btn_open_browser,
+                dialog.s2_btn_download_csv,
+                dialog.s2_btn_batch_download,
+            ]
+        )
+    )
 
     ts_lay.addWidget(_make_divider())
 
@@ -549,7 +621,9 @@ def _build_results_tab(dialog, parent):
             dialog.s2_smooth_window.blockSignals(True)
             dialog.s2_smooth_window.setValue(v + 1 if v + 1 <= 99 else v - 1)
             dialog.s2_smooth_window.blockSignals(False)
-        dialog.s2_smooth_polyorder.setMaximum(min(10, dialog.s2_smooth_window.value() - 1))
+        dialog.s2_smooth_polyorder.setMaximum(
+            min(10, dialog.s2_smooth_window.value() - 1)
+        )
 
     dialog.s2_smooth_window.valueChanged.connect(_force_odd)
     _force_odd(dialog.s2_smooth_window.value())
@@ -561,16 +635,23 @@ def _build_results_tab(dialog, parent):
     smooth_params_lay.setContentsMargins(0, 0, 0, 0)
     smooth_params_lay.setSpacing(12)
     smooth_params_lay.addWidget(_labeled(_tr("Window"), dialog.s2_smooth_window, 56))
-    smooth_params_lay.addWidget(_labeled(_tr("Poly order"), dialog.s2_smooth_polyorder, 70))
+    smooth_params_lay.addWidget(
+        _labeled(_tr("Poly order"), dialog.s2_smooth_polyorder, 70)
+    )
 
     def _sync_smoothing():
         smooth_params.setVisible(dialog.s2_chk_smoothing.isChecked())
 
     dialog.s2_chk_smoothing.toggled.connect(lambda _v: _sync_smoothing())
-    ts_lay.addWidget(_flow([
-        dialog.s2_chk_smoothing,
-        smooth_params,
-    ], spacing=12))
+    ts_lay.addWidget(
+        _flow(
+            [
+                dialog.s2_chk_smoothing,
+                smooth_params,
+            ],
+            spacing=12,
+        )
+    )
     _sync_smoothing()
     lay.addWidget(ts_panel)
 
@@ -584,7 +665,9 @@ def _build_results_tab(dialog, parent):
     dialog.s2_result_date_combo = QComboBox()
     _prepare_field(dialog.s2_result_date_combo, 30)
     dialog.s2_result_date_combo.setMinimumWidth(136)
-    dialog.s2_result_date_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_result_date_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     dialog.s2_result_date_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
 
     def _subrow(title, widgets):
@@ -613,27 +696,38 @@ def _build_results_tab(dialog, parent):
     dialog.s2_rgb_render_combo = QComboBox()
     _prepare_field(dialog.s2_rgb_render_combo, 30)
     dialog.s2_rgb_render_combo.setMinimumWidth(200)
-    dialog.s2_rgb_render_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_rgb_render_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     for _label, _key in _RGB_RENDER_MODES:
         dialog.s2_rgb_render_combo.addItem(_label, _key)
     dialog.s2_rgb_render_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
     dialog.s2_btn_rgb_preview = QPushButton(_tr("Preview"))
     dialog.s2_btn_rgb_preview.setFixedHeight(30)
     dialog.s2_btn_rgb_preview.setStyleSheet(STYLE_BTN_PRIMARY)
-    dialog.s2_btn_rgb_download = QPushButton(_tr("Download & Preview").replace("&", "&&"))
+    dialog.s2_btn_rgb_download = QPushButton(
+        _tr("Download & Preview").replace("&", "&&")
+    )
     dialog.s2_btn_rgb_download.setFixedHeight(30)
     dialog.s2_btn_rgb_download.setStyleSheet(STYLE_BTN_SECONDARY)
-    single_lay.addWidget(_subrow(_tr("RGB"), [
-        _labeled(_tr("Rendering"), dialog.s2_rgb_render_combo, 70),
-        dialog.s2_btn_rgb_preview,
-        dialog.s2_btn_rgb_download,
-    ]))
+    single_lay.addWidget(
+        _subrow(
+            _tr("RGB"),
+            [
+                _labeled(_tr("Rendering"), dialog.s2_rgb_render_combo, 70),
+                dialog.s2_btn_rgb_preview,
+                dialog.s2_btn_rgb_download,
+            ],
+        )
+    )
 
     # --- Vegetation index ---
     dialog.s2_vi_index_combo = QComboBox()
     _prepare_field(dialog.s2_vi_index_combo, 30)
     dialog.s2_vi_index_combo.setMinimumWidth(76)
-    dialog.s2_vi_index_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_vi_index_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     for name in INDEX_ORDER:
         dialog.s2_vi_index_combo.addItem(name, name)
     dialog.s2_vi_index_combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)
@@ -641,22 +735,31 @@ def _build_results_tab(dialog, parent):
     dialog.s2_vi_ramp_combo = QComboBox()
     _prepare_field(dialog.s2_vi_ramp_combo, 30)
     dialog.s2_vi_ramp_combo.setMinimumWidth(90)
-    dialog.s2_vi_ramp_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_vi_ramp_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     dialog.s2_vi_ramp_combo.addItems(_COLOR_RAMPS)
     dialog.s2_vi_ramp_combo.setCurrentText("RdYlGn")
     dialog.s2_vi_ramp_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
     dialog.s2_btn_vi_preview = QPushButton(_tr("Preview"))
     dialog.s2_btn_vi_preview.setFixedHeight(30)
     dialog.s2_btn_vi_preview.setStyleSheet(STYLE_BTN_PRIMARY)
-    dialog.s2_btn_vi_download = QPushButton(_tr("Download & Preview").replace("&", "&&"))
+    dialog.s2_btn_vi_download = QPushButton(
+        _tr("Download & Preview").replace("&", "&&")
+    )
     dialog.s2_btn_vi_download.setFixedHeight(30)
     dialog.s2_btn_vi_download.setStyleSheet(STYLE_BTN_SECONDARY)
-    single_lay.addWidget(_subrow(_tr("INDEX"), [
-        _labeled(_tr("Index"), dialog.s2_vi_index_combo, 44),
-        _labeled(_tr("Color Ramp"), dialog.s2_vi_ramp_combo, 80),
-        dialog.s2_btn_vi_preview,
-        dialog.s2_btn_vi_download,
-    ]))
+    single_lay.addWidget(
+        _subrow(
+            _tr("INDEX"),
+            [
+                _labeled(_tr("Index"), dialog.s2_vi_index_combo, 44),
+                _labeled(_tr("Color Ramp"), dialog.s2_vi_ramp_combo, 80),
+                dialog.s2_btn_vi_preview,
+                dialog.s2_btn_vi_download,
+            ],
+        )
+    )
 
     lay.addWidget(single_panel)
 
@@ -666,14 +769,20 @@ def _build_results_tab(dialog, parent):
     composite_lay.setContentsMargins(16, 14, 16, 14)
     composite_lay.setSpacing(10)
     composite_lay.addWidget(_caption(_tr("SYNTHETIC IMAGE (COMPOSITE)")))
-    composite_hint = QLabel(_tr("Composite the selected index over the selected dates."))
-    composite_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
+    composite_hint = QLabel(
+        _tr("Composite the selected index over the selected dates.")
+    )
+    composite_hint.setStyleSheet(
+        "color: #616161; font-size: 11px; background: transparent; border: none;"
+    )
     composite_lay.addWidget(composite_hint)
 
     dialog.s2_composite_metric_combo = QComboBox()
     _prepare_field(dialog.s2_composite_metric_combo, 30)
     dialog.s2_composite_metric_combo.setMinimumWidth(200)
-    dialog.s2_composite_metric_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_composite_metric_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     for _metric_key in _COMPOSITE_METRICS:
         dialog.s2_composite_metric_combo.addItem(_tr(_metric_key), _metric_key)
     dialog.s2_composite_metric_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
@@ -681,7 +790,9 @@ def _build_results_tab(dialog, parent):
     dialog.s2_composite_ramp_combo = QComboBox()
     _prepare_field(dialog.s2_composite_ramp_combo, 30)
     dialog.s2_composite_ramp_combo.setMinimumWidth(200)
-    dialog.s2_composite_ramp_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_composite_ramp_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     dialog.s2_composite_ramp_combo.addItems(_COLOR_RAMPS)
     dialog.s2_composite_ramp_combo.setCurrentText("RdYlGn")
     dialog.s2_composite_ramp_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
@@ -689,15 +800,22 @@ def _build_results_tab(dialog, parent):
     dialog.s2_btn_composite_preview = QPushButton(_tr("Preview Composite"))
     dialog.s2_btn_composite_preview.setFixedHeight(30)
     dialog.s2_btn_composite_preview.setStyleSheet(STYLE_BTN_PRIMARY)
-    dialog.s2_btn_composite_download = QPushButton(_tr("Download & Preview").replace("&", "&&"))
+    dialog.s2_btn_composite_download = QPushButton(
+        _tr("Download & Preview").replace("&", "&&")
+    )
     dialog.s2_btn_composite_download.setFixedHeight(30)
     dialog.s2_btn_composite_download.setStyleSheet(STYLE_BTN_SECONDARY)
-    composite_lay.addWidget(_flow([
-        _labeled(_tr("Metric"), dialog.s2_composite_metric_combo, 80),
-        _labeled(_tr("Color Ramp"), dialog.s2_composite_ramp_combo, 80),
-        dialog.s2_btn_composite_preview,
-        dialog.s2_btn_composite_download,
-    ], spacing=12))
+    composite_lay.addWidget(
+        _flow(
+            [
+                _labeled(_tr("Metric"), dialog.s2_composite_metric_combo, 80),
+                _labeled(_tr("Color Ramp"), dialog.s2_composite_ramp_combo, 80),
+                dialog.s2_btn_composite_preview,
+                dialog.s2_btn_composite_download,
+            ],
+            spacing=12,
+        )
+    )
     lay.addWidget(composite_panel)
 
     # --- Climate (NASA POWER) -------------------------------------------
@@ -709,7 +827,9 @@ def _build_results_tab(dialog, parent):
     climate_hint = QLabel(
         _tr("Overlay daily NASA POWER climate variables on the time-series plot.")
     )
-    climate_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
+    climate_hint.setStyleSheet(
+        "color: #616161; font-size: 11px; background: transparent; border: none;"
+    )
     climate_lay.addWidget(climate_hint)
 
     dialog.s2_chk_climate_precip = QCheckBox(_tr("Precipitation"))
@@ -732,14 +852,19 @@ def _build_results_tab(dialog, parent):
     dialog.s2_btn_climate_clear = QPushButton(_tr("Clear"))
     dialog.s2_btn_climate_clear.setFixedHeight(30)
     dialog.s2_btn_climate_clear.setStyleSheet(STYLE_BTN_SECONDARY)
-    climate_lay.addWidget(_flow([
-        dialog.s2_chk_climate_precip,
-        dialog.s2_chk_climate_tmin,
-        dialog.s2_chk_climate_tmax,
-        dialog.s2_btn_climate_overlay,
-        dialog.s2_btn_climate_save,
-        dialog.s2_btn_climate_clear,
-    ], spacing=12))
+    climate_lay.addWidget(
+        _flow(
+            [
+                dialog.s2_chk_climate_precip,
+                dialog.s2_chk_climate_tmin,
+                dialog.s2_chk_climate_tmax,
+                dialog.s2_btn_climate_overlay,
+                dialog.s2_btn_climate_save,
+                dialog.s2_btn_climate_clear,
+            ],
+            spacing=12,
+        )
+    )
     lay.addWidget(climate_panel)
 
     # --- Point & per-feature analysis -----------------------------------
@@ -749,11 +874,15 @@ def _build_results_tab(dialog, parent):
     feature_lay.setSpacing(10)
     feature_lay.addWidget(_caption(_tr("POINT & FEATURE ANALYSIS")))
     feature_hint = QLabel(
-        _tr("Extract a time series per clicked map point, or one series per polygon "
-            "feature of the AOI layer keyed by an attribute.")
+        _tr(
+            "Extract a time series per clicked map point, or one series per polygon "
+            "feature of the AOI layer keyed by an attribute."
+        )
     )
     feature_hint.setWordWrap(True)
-    feature_hint.setStyleSheet("color: #616161; font-size: 11px; background: transparent; border: none;")
+    feature_hint.setStyleSheet(
+        "color: #616161; font-size: 11px; background: transparent; border: none;"
+    )
     feature_lay.addWidget(feature_hint)
 
     dialog.s2_btn_capture_points = QPushButton(_tr("Capture points on map"))
@@ -767,18 +896,25 @@ def _build_results_tab(dialog, parent):
     dialog.s2_feature_id_combo = QComboBox()
     _prepare_field(dialog.s2_feature_id_combo, 30)
     dialog.s2_feature_id_combo.setMinimumWidth(140)
-    dialog.s2_feature_id_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+    dialog.s2_feature_id_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
     dialog.s2_feature_id_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
     dialog.s2_btn_plot_features = QPushButton(_tr("Plot per-feature series"))
     dialog.s2_btn_plot_features.setFixedHeight(30)
     dialog.s2_btn_plot_features.setStyleSheet(STYLE_BTN_PRIMARY)
 
-    feature_lay.addWidget(_flow([
-        dialog.s2_btn_capture_points,
-        dialog.s2_btn_clear_points,
-        _labeled(_tr("Feature ID"), dialog.s2_feature_id_combo, 70),
-        dialog.s2_btn_plot_features,
-    ], spacing=12))
+    feature_lay.addWidget(
+        _flow(
+            [
+                dialog.s2_btn_capture_points,
+                dialog.s2_btn_clear_points,
+                _labeled(_tr("Feature ID"), dialog.s2_feature_id_combo, 70),
+                dialog.s2_btn_plot_features,
+            ],
+            spacing=12,
+        )
+    )
     lay.addWidget(feature_panel)
 
     # --- Download buffer -------------------------------------------------
@@ -788,19 +924,25 @@ def _build_results_tab(dialog, parent):
     buffer_lay.setSpacing(10)
     buffer_lay.addWidget(_caption(_tr("DOWNLOAD BUFFER")))
     buffer_hint = QLabel(
-        _tr("Use a positive buffer to include terrain just outside your area, or a "
+        _tr(
+            "Use a positive buffer to include terrain just outside your area, or a "
             "negative buffer to crop the edges. Applies to every downloaded and "
-            "previewed optical output (single date, batch, composite).")
+            "previewed optical output (single date, batch, composite)."
+        )
     )
     buffer_hint.setWordWrap(True)
-    buffer_hint.setStyleSheet("color: #757575; font-size: 11px; background: transparent; border: none;")
+    buffer_hint.setStyleSheet(
+        "color: #757575; font-size: 11px; background: transparent; border: none;"
+    )
     buffer_lay.addWidget(buffer_hint)
 
     buffer_row = QHBoxLayout()
     buffer_row.setContentsMargins(0, 0, 0, 0)
     buffer_row.setSpacing(8)
     minus_lbl = QLabel("−300 m")
-    minus_lbl.setStyleSheet("color: #9e9e9e; font-size: 9px; background: transparent; border: none;")
+    minus_lbl.setStyleSheet(
+        "color: #9e9e9e; font-size: 9px; background: transparent; border: none;"
+    )
     buffer_row.addWidget(minus_lbl)
     dialog.s2_buffer_slider = QSlider(Qt.Orientation.Horizontal)
     dialog.s2_buffer_slider.setMinimum(-300)
@@ -811,13 +953,17 @@ def _build_results_tab(dialog, parent):
     dialog.s2_buffer_slider.setStyleSheet(_SLIDER_STYLE)
     buffer_row.addWidget(dialog.s2_buffer_slider, 1)
     plus_lbl = QLabel("+300 m")
-    plus_lbl.setStyleSheet("color: #9e9e9e; font-size: 9px; background: transparent; border: none;")
+    plus_lbl.setStyleSheet(
+        "color: #9e9e9e; font-size: 9px; background: transparent; border: none;"
+    )
     buffer_row.addWidget(plus_lbl)
     buffer_lay.addLayout(buffer_row)
 
     dialog.s2_buffer_value = QLabel(_tr("Buffer: 0 m"))
     dialog.s2_buffer_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    dialog.s2_buffer_value.setStyleSheet("color: #616161; font-size: 10px; background: transparent; border: none;")
+    dialog.s2_buffer_value.setStyleSheet(
+        "color: #616161; font-size: 10px; background: transparent; border: none;"
+    )
     buffer_lay.addWidget(dialog.s2_buffer_value)
 
     def _set_s2_buffer_value(value):
@@ -844,6 +990,7 @@ def _build_results_tab(dialog, parent):
     dialog.s2_results_splitter.setStretchFactor(0, 1)
     dialog.s2_results_splitter.setStretchFactor(1, 0)
     outer.addWidget(dialog.s2_results_splitter)
+
 
 def _wire_filter_dialog(dialog):
     """Attach the lazy openers for the client-side filter popup and the per-date
@@ -873,6 +1020,7 @@ def _wire_filter_dialog(dialog):
     # ravi.py (it owns the active-date state and re-renders the plot).
     dialog.open_optical_filter_dialog = _open_filter
     dialog.s2_btn_adjust_filter.clicked.connect(_open_filter)
+
 
 def setup_optical_page(dialog, page):
     """

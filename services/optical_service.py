@@ -11,14 +11,24 @@ try:
 except ImportError:
     gdal = None
 
-from ..tools.indexes import INDEX_REGISTRY, calc_custom
+from ..tools.indexes import INDEX_REGISTRY, apply_custom
 
 
 # Raw Sentinel-2 SR multispectral bands written by the batch download (no
 # computed index bands). B10 is absent from the surface-reflectance product.
 _MULTISPECTRAL_BANDS = [
-    "B1", "B2", "B3", "B4", "B5", "B6",
-    "B7", "B8", "B8A", "B9", "B11", "B12",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "B8",
+    "B8A",
+    "B9",
+    "B11",
+    "B12",
 ]
 
 
@@ -36,13 +46,16 @@ class OpticalService:
         index_name: str,
         apply_scl: bool,
         invalid_scl_values: List[int],
+        custom_expression: str = None,
     ) -> List[Dict[str, Any]]:
 
         collection = OpticalService._build_base_collection(aoi, date_start, date_end)
         collection = OpticalService._keep_one_image_per_date(collection, aoi)
 
         def process_image(image):
-            processed_image = OpticalService._add_vegetation_index(image, index_name)
+            processed_image = OpticalService._add_vegetation_index(
+                image, index_name, custom_expression
+            )
             if apply_scl:
                 processed_image = OpticalService._apply_scl_mask(
                     processed_image, invalid_scl_values
@@ -130,12 +143,18 @@ class OpticalService:
     def _add_vegetation_index(
         image: ee.Image, index_name: str, custom_expression: str = None
     ) -> ee.Image:
-        key = "CUSTOM" if "custom" in index_name.lower() else index_name.upper()
+        index_name_upper = index_name.upper()
 
-        if key == "CUSTOM":
-            index_band = calc_custom(image, custom_expression)
-        elif key in INDEX_REGISTRY:
-            index_band = INDEX_REGISTRY[key](image)
+        if custom_expression is not None:
+            index_band = apply_custom(image, index_name, custom_expression).rename(
+                "index"
+            )
+
+        elif index_name_upper in INDEX_REGISTRY:
+            index_band = INDEX_REGISTRY[index_name_upper](image)
+
+        else:
+            raise ValueError(f"Index {index_name} is not recognized or implemented")
 
         return image.addBands(index_band)
 
@@ -249,9 +268,9 @@ class OpticalService:
         """Single Sentinel-2 SR multispectral image for ``date`` (one scene per
         date, same pick as the time series), clipped to the buffered AOI."""
         region = OpticalService._download_region(aoi, buffer_m)
-        next_date = (
-            datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)
-        ).strftime("%Y-%m-%d")
+        next_date = (datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)).strftime(
+            "%Y-%m-%d"
+        )
 
         collection = (
             ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -309,9 +328,9 @@ class OpticalService:
         """Single-band vegetation-index image for ``date`` (same scene pick as
         the time series), clipped to the buffered AOI."""
         region = OpticalService._download_region(aoi, buffer_m)
-        next_date = (
-            datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)
-        ).strftime("%Y-%m-%d")
+        next_date = (datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)).strftime(
+            "%Y-%m-%d"
+        )
 
         collection = (
             ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -383,7 +402,9 @@ class OpticalService:
             dataset = gdal.Open(file_path, gdal.GA_Update)
             if dataset is None:
                 return
-            for i in range(1, min(dataset.RasterCount + 1, len(_MULTISPECTRAL_BANDS) + 1)):
+            for i in range(
+                1, min(dataset.RasterCount + 1, len(_MULTISPECTRAL_BANDS) + 1)
+            ):
                 band = dataset.GetRasterBand(i)
                 if band is not None:
                     band.SetDescription(_MULTISPECTRAL_BANDS[i - 1])

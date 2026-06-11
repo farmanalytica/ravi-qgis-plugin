@@ -11,3 +11,4 @@ ISSUES.md
 .vscode/
 dev/*.tif
 dev/*.tiff
+custom_index.json
