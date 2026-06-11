@@ -268,7 +268,6 @@ def validate_expression(expression):
     if not expression:
         raise ValueError("A expressão não pode estar vazia.")
 
-    # 1. Limpa as bandas para checar se existem caracteres proibidos (como 'abc')
     clean_expr = re.sub(
         r"\b(B1|B2|B3|B4|B5|B6|B7|B8|B8A|B9|B11|B12)\b",
         "",
@@ -276,7 +275,6 @@ def validate_expression(expression):
         flags=re.IGNORECASE,
     )
 
-    # CORREÇÃO 1: Olhar para clean_expr (onde as bandas já foram extraídas)
     invalid_chars = re.sub(r"[+/*(). 0-9-]", "", clean_expr).strip()
 
     if invalid_chars:
