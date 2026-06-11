@@ -523,12 +523,15 @@ class RAVIDialog(QDialog):
         self.btn_reset_auth.setEnabled(not busy)
         self.btn_browse_folder.setEnabled(not busy)
         self.auth_status_badge.setEnabled(not busy)
+        self.btn_mode_personal.setEnabled(not busy)
+        self.btn_mode_service.setEnabled(not busy)
+        self.btn_browse_key.setEnabled(not busy)
 
         if busy:
             self.btn_authenticate.setText(_tr("Cancel"))
             self.set_auth_status(_tr("Starting authentication…"))
         else:
-            if getattr(self, "_auth_state", None) == "authenticated":
+            if getattr(self, "_auth_state", "").startswith("authenticated"):
                 self.btn_authenticate.setText(_tr("Continue"))
             else:
                 self.btn_authenticate.setText(_tr("🔑   Validate ID"))
@@ -545,14 +548,34 @@ class RAVIDialog(QDialog):
             "#f0d9a8",
         ),
         "authenticated": ("Signed in & ready", "#1b5e20", "#e8f5e9", "#a5d6a7"),
+        "authenticated_sa": (
+            "Signed in via service account",
+            "#1b5e20",
+            "#e8f5e9",
+            "#a5d6a7",
+        ),
     }
+
+    def set_auth_mode(self, mode):
+        """Switch the sign-in card between personal OAuth and service-account.
+
+        Shows/hides the key-file picker and keeps the segmented toggle in sync.
+        The Project ID field is shared by both modes.
+        """
+        is_service = mode == "service"
+        self._auth_mode = "service" if is_service else "personal"
+        self.sa_key_row.setVisible(is_service)
+        target = self.btn_mode_service if is_service else self.btn_mode_personal
+        if not target.isChecked():
+            target.setChecked(True)
 
     def set_auth_state(self, state):
         """
         Update the auth-page status pill.
 
-        ``state`` is one of ``"checking"``, ``"none"``, ``"stored"``, or
-        ``"authenticated"``; unknown values fall back to ``"stored"``.
+        ``state`` is one of ``"checking"``, ``"none"``, ``"stored"``,
+        ``"authenticated"``, or ``"authenticated_sa"``; unknown values fall
+        back to ``"stored"``.
         """
         text, fg, bg, border = self._AUTH_STATE_STYLES.get(
             state, self._AUTH_STATE_STYLES["stored"]
@@ -560,7 +583,7 @@ class RAVIDialog(QDialog):
         self._auth_state = state
 
         if not getattr(self, "_auth_busy", False):
-            if state == "authenticated":
+            if state.startswith("authenticated"):
                 self.btn_authenticate.setText(_tr("Continue"))
             elif state != "checking":
                 self.btn_authenticate.setText(_tr("🔑   Validate ID"))

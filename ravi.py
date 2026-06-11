@@ -169,6 +169,13 @@ class RAVI:
         if saved_project_id:
             self.dialog.project_id_input.setText(saved_project_id)
 
+        saved_sa_key = self.gee_service.get_saved_sa_key_path()
+        if saved_sa_key:
+            self.dialog.sa_key_input.setText(saved_sa_key)
+        # Restore the sign-in mode so the card opens in the user's last context;
+        # refresh_auth_status() below then auto-authenticates silently.
+        self.dialog.set_auth_mode(self.gee_service.get_saved_auth_mode())
+
         saved_folder = SettingsManager.load_download_folder()
         if saved_folder:
             self.dialog.folder_input.setText(saved_folder)
@@ -178,6 +185,15 @@ class RAVI:
         )
         self.dialog.project_id_input.textChanged.connect(
             self.auth_ctrl.on_project_id_changed
+        )
+        self.dialog.btn_mode_personal.clicked.connect(
+            lambda: self.auth_ctrl.handle_auth_mode_changed("personal")
+        )
+        self.dialog.btn_mode_service.clicked.connect(
+            lambda: self.auth_ctrl.handle_auth_mode_changed("service")
+        )
+        self.dialog.btn_browse_key.clicked.connect(
+            self.auth_ctrl.handle_browse_key
         )
         self.dialog.btn_authenticate.clicked.connect(
             self.auth_ctrl.handle_authentication
