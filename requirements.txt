@@ -1,6 +1,10 @@
 #earthengine-api>=0.1.335
 #ee-s1-ard>=1.0.5
-# Pinned: 3.0.1 pulls geopolars==0.1.0a4 (pre-release, no universal2/manylinux
-# wheels) which breaks the --only-binary extlibs build. 3.0.0 is the version
-# shipped in the committed bundles and resolves cleanly on all targets.
-agrigee-lite==3.0.0
+# 3.0.1 pulls geopolars==0.1.0a4 and pandas>=3.0.0. Both ship arch-specific
+# macOS wheels only (arm64/x86_64), no universal2. pandas is QGIS-provided and
+# stripped, so it just needs to resolve; geopolars IS shipped. The macOS
+# universal2 build in build_extlibs_zip.py adds arm64/x86_64 --platform
+# fallbacks (universal2 preferred, arm64 first), so the macOS bundle ships the
+# arm64 geopolars wheel: works on Apple Silicon QGIS, not Intel-mac QGIS.
+# Linux (manylinux_2_24_x86_64) and Windows (win_amd64) resolve cleanly.
+agrigee-lite==3.0.1
