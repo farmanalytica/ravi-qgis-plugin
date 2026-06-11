@@ -28,8 +28,9 @@ from ..managers.settings_manager import SettingsManager
 from ..services.aoi_service import AOIService
 from ..services.optical_service import OpticalService
 from ..tools.aoi_draw_tool import start_draw_aoi
+from ..tools.indexes import validate_custom, save_custom_indexes, load_custom_indexes
 from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
-from ..view.optical_index_info import CUSTOM_INDEX_LABEL
+from ..view.optical_index_info import CUSTOM_INDEX_LABEL, INDEX_ORDER
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_chart_html
 from ..workers.batch_download_worker import BatchDownloadWorker
@@ -81,6 +82,7 @@ class OpticalCtrl:
         self.dialog.optical_filter_count_fn = self.count_matching
         self.dialog.on_optical_filter_applied = self.apply_filter_settings
         self.dialog.s2_filter_settings = dict(DEFAULT_FILTER_SETTINGS)
+        self.update_index_combobox()
 
     def _release_worker(self):
         worker, self._optical_worker = self._optical_worker, None
@@ -156,12 +158,11 @@ class OpticalCtrl:
             return
 
         index_name = self.dialog.s2_index_combo.currentData() or "NDVI"
-        if index_name == CUSTOM_INDEX_LABEL:
-            self.dialog.pop_message(
-                _tr("Custom optical indices are not available in this milestone."),
-                "warning",
-            )
-            return
+        custom_expression = None
+        all_customs = load_custom_indexes()
+
+        if index_name in all_customs:
+            custom_expression = all_customs[index_name]
 
         try:
             aoi, _bbox = AOIService.get_ee_feature_colection_from_layer(
@@ -178,6 +179,7 @@ class OpticalCtrl:
             "index_name": index_name,
             "apply_scl": self.dialog.s2_chk_apply_scl.isChecked(),
             "invalid_scl_values": self._selected_invalid_scl_values(),
+            "custom_expression": custom_expression,
         }
 
         self._current_index = index_name
@@ -462,9 +464,9 @@ class OpticalCtrl:
     # Band positions within the _MULTISPECTRAL_BANDS stack (1-based):
     # B1=1 B2=2 B3=3 B4=4 B5=5 B6=6 B7=7 B8=8 B8A=9 B9=10 B11=11 B12=12.
     _RGB_MODE_BANDS = {
-        "RGB: Real Color": (4, 3, 2),       # B4 B3 B2
-        "RGB: Red-NIR-Green": (4, 8, 3),    # B4 B8 B3
-        "RGB: NIR-Red-Green": (8, 4, 3),    # B8 B4 B3
+        "RGB: Real Color": (4, 3, 2),  # B4 B3 B2
+        "RGB: Red-NIR-Green": (4, 8, 3),  # B4 B8 B3
+        "RGB: NIR-Red-Green": (8, 4, 3),  # B8 B4 B3
         "RGB: SWIR2-NIR-Green": (12, 8, 3),  # B12 B8 B3
         "RGB: SWIR1-NIR-SWIR2": (11, 8, 12),  # B11 B8 B12
     }
@@ -635,3 +637,27 @@ class OpticalCtrl:
         self.dialog.s2_web_view.setHtml("")
         self.dialog.s2_set_tab(1)
         self.dialog.pop_message(message, "warning")
+
+    def handle_custom_index_save(self):
+
+        name = self.dialog.s2_custom_name.text()
+        expression = self.dialog.s2_custom_expression.text()
+
+        try:
+            validate_custom(name, expression)
+            save_custom_indexes(name, expression)
+            self.update_index_combobox()
+            self.dialog.pop_message(_tr("Index sucessfully saved."), "info")
+        except Exception as e:
+            self.dialog.pop_message(_tr(str(e)), "warning")
+
+    def update_index_combobox(self):
+        self.dialog.s2_index_combo.clear()
+
+        for name in INDEX_ORDER:
+            self.dialog.s2_index_combo.addItem(name, name)
+
+        for name in load_custom_indexes().keys():
+            self.dialog.s2_index_combo.addItem(name + " - CUSTOM", name)
+
+        self.dialog.s2_index_combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)
