@@ -136,6 +136,7 @@ def setup_download_dem_page(dialog, page):
 
     subtitle_lbl = QLabel(_tr("Select the polygon layer and elevation dataset."))
     subtitle_lbl.setObjectName("aoiSubtitle")
+    subtitle_lbl.setWordWrap(True)
     scroll_lay.addWidget(subtitle_lbl)
 
     scroll_lay.addSpacing(4)

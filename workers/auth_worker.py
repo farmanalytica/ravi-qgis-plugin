@@ -24,11 +24,12 @@ class AuthWorker(QThread):
     browser_opened = pyqtSignal(str)
     finished_auth = pyqtSignal(bool, str)
 
-    def __init__(self, gee_service, project_id, timeout=180):
+    def __init__(self, gee_service, project_id, timeout=180, sa_key_path=None):
         super().__init__()
         self._gee = gee_service
         self._project_id = project_id
         self._timeout = timeout
+        self._sa_key_path = sa_key_path
         self._is_cancelled = False
 
     def cancel(self):
@@ -36,12 +37,18 @@ class AuthWorker(QThread):
 
     def run(self):
         try:
-            self._gee.authenticate(
-                self._project_id,
-                timeout=self._timeout,
-                should_cancel=lambda: self._is_cancelled,
-                on_browser_open=self.browser_opened.emit,
-            )
+            if self._sa_key_path:
+                # Service-account flow: no browser, runs synchronously.
+                self._gee.authenticate_service_account(
+                    self._sa_key_path, self._project_id
+                )
+            else:
+                self._gee.authenticate(
+                    self._project_id,
+                    timeout=self._timeout,
+                    should_cancel=lambda: self._is_cancelled,
+                    on_browser_open=self.browser_opened.emit,
+                )
             self.finished_auth.emit(True, "")
         except AuthCancelled:
             self.finished_auth.emit(False, CANCELLED)
@@ -56,13 +63,24 @@ class AuthStatusWorker(QThread):
 
     status_ready = pyqtSignal(str)
 
-    def __init__(self, gee_service, project_id):
+    def __init__(self, gee_service, project_id, sa_key_path=None):
         super().__init__()
         self._gee = gee_service
         self._project_id = (project_id or "").strip()
+        self._sa_key_path = (sa_key_path or "").strip()
 
     def run(self):
         try:
+            if self._sa_key_path:
+                # Service-account mode: a saved key path is the stored state.
+                if not self._project_id:
+                    self.status_ready.emit("stored")
+                elif self._gee.check_silent_sa_auth(self._sa_key_path, self._project_id):
+                    self.status_ready.emit("authenticated")
+                else:
+                    self.status_ready.emit("stored")
+                return
+
             if not self._gee.has_stored_credentials():
                 self.status_ready.emit("none")
             elif not self._project_id:

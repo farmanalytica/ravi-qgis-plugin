@@ -1,1303 +1,305 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_SRI_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAVI Documentation</title>
-  <meta name="description"
-    content="RAVI - Remote Analysis of Vegetation Indices via QGIS and Google Earth Engine.">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>
-    /* CSS Reset */
-    
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAVI | Sentinel-2 Vegetation Analysis in QGIS</title>
+<meta name="description" content="QGIS plugin for Sentinel-2 vegetation index analysis via Google Earth Engine.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RAVI | QGIS Plugin for Sentinel-2 Vegetation Analysis">
+<meta property="og:url" content="https://raviqgis.org/">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F3D2E;
+  --primary-h:#1a5c45;
+  --accent:#2E7D5F;
+  --bg:#F7F9F8;
+  --white:#FFFFFF;
+  --text:#111827;
+  --text-soft:#4B5563;
+  --text-muted:#9CA3AF;
+  --border:#E5E7EB;
+  --sh-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 20px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --sh-lg:0 16px 48px rgba(0,0,0,.12),0 4px 16px rgba(0,0,0,.06);
+  --r:14px;--r-sm:8px;--r-full:999px;
+}
+html{scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",sans-serif;color:var(--text);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+.container{width:min(1080px,90vw);margin:0 auto}
+a{color:inherit;text-decoration:none}
 
-    /* Variables */
-    :root {
-      --primary-color: #2c7a5a;
-      --bg-color: #f0f0f0;
-      --text-color: #333;
-      --sidebar-bg: #fff;
-      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+/* NAV */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1.5rem}
+.brand{display:inline-flex;align-items:center;gap:.5rem;font-family:"Fraunces",serif;font-size:1.18rem;font-weight:700;color:var(--primary)}
+.brand-logo{width:30px;height:30px;border-radius:7px;object-fit:contain}
+.nav-right{display:flex;align-items:center;gap:1.1rem}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-size:.9rem;font-weight:500;color:var(--text-soft);transition:color .15s}
+.nav-links a:hover{color:var(--primary)}
+.lang-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-full);padding:.18rem;gap:.12rem}
+.lang-toggle button{border:none;background:transparent;color:var(--text-soft);font-weight:600;font-size:.72rem;padding:.26rem .58rem;border-radius:var(--r-full);cursor:pointer;transition:all .15s;font-family:"Inter",sans-serif}
+.lang-toggle button.active{background:var(--primary);color:var(--white)}
+.lang-toggle button:not(.active):hover{background:var(--border)}
+.menu-toggle{display:none;background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:.36rem .52rem;cursor:pointer;color:var(--text);font-size:1.1rem;line-height:1}
 
-    /* Base Styles */
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
+/* HERO */
+.hero-section{background:var(--primary);padding:5.5rem 0 5rem}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:3.5rem;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.88);padding:.33rem .85rem;border-radius:var(--r-full);font-size:.79rem;font-weight:600;letter-spacing:.05em;margin-bottom:1.3rem}
+h1{font-family:"Fraunces",serif;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.1;font-weight:700;color:var(--white);margin-bottom:1.2rem;max-width:16ch}
+.hero-desc{color:rgba(255,255,255,.72);font-size:1.04rem;max-width:46ch;margin-bottom:2.2rem;line-height:1.75}
+.cta-row{display:flex;flex-wrap:wrap;gap:.75rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:"Inter",sans-serif;font-weight:600;border-radius:var(--r-full);border:none;cursor:pointer;text-decoration:none;transition:all .18s;font-size:.94rem;padding:.76rem 1.65rem;line-height:1}
+.btn:hover{transform:translateY(-1px)}
+.btn-white{background:var(--white);color:var(--primary);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.btn-white:hover{background:#f0f7f4;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.btn-ghost{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+.hero-card{background:var(--white);border-radius:20px;padding:1.4rem;box-shadow:var(--sh-lg)}
+.hero-card-head{background:linear-gradient(135deg,#c8e8db,#aad4c4);border-radius:12px;padding:1.4rem 1.6rem;text-align:center;margin-bottom:1.2rem}
+.hero-card-head strong{display:block;font-family:"Fraunces",serif;font-size:1.12rem;color:var(--primary);margin-bottom:.25rem}
+.hero-card-head p{color:var(--accent);font-size:.87rem;margin:0}
+.hero-card-body strong{display:block;font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.7rem}
+.hero-item{display:flex;align-items:center;gap:.65rem;font-size:.9rem;color:var(--text-soft);padding:.3rem 0}
+.hero-item::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
-    a {
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 500;
-    }
+/* SECTIONS */
+section{padding:5.5rem 0}
+section.alt{background:var(--white)}
+.sec-label{font-size:.76rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-bottom:.65rem}
+h2{font-family:"Fraunces",serif;font-size:clamp(1.65rem,2.8vw,2.2rem);font-weight:700;color:var(--text);margin-bottom:.7rem;line-height:1.22}
+.sec-lead{color:var(--text-soft);font-size:1rem;max-width:54ch;margin-bottom:2.8rem;line-height:1.75}
 
-    a:hover {
-      text-decoration: underline;
-    }
+/* VIDEO */
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r);box-shadow:var(--sh-md);max-width:800px}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 20px auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+/* CARDS GRID */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;box-shadow:var(--sh-sm);transition:box-shadow .22s,transform .22s}
+.card:hover{box-shadow:var(--sh-md);transform:translateY(-3px)}
+.card-icon{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#c8e8db,#aad4c4);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1rem}
+.card h3{font-size:.97rem;font-weight:600;color:var(--text);margin-bottom:.4rem}
+.card p{color:var(--text-soft);font-size:.9rem;line-height:1.62}
+.card-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:.9rem;font-size:.83rem;font-weight:600;color:var(--accent)}
+.card-link:hover{text-decoration:underline}
 
-    /* Video Container (Responsive) */
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      /* 16:9 aspect ratio */
-      height: 0;
-      overflow: hidden;
-      margin: 20px 0;
-    }
+/* STEPS */
+.steps-col{display:flex;flex-direction:column;gap:1rem;max-width:800px}
+.step{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem 1.6rem;display:flex;gap:1.2rem;align-items:flex-start;box-shadow:var(--sh-sm);transition:box-shadow .22s}
+.step:hover{box-shadow:var(--sh-md)}
+.step-num{min-width:38px;height:38px;border-radius:9px;background:var(--primary);color:var(--white);font-family:"Fraunces",serif;font-size:.97rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body h3{font-size:.97rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.step-body p{color:var(--text-soft);font-size:.9rem;line-height:1.62;margin-bottom:.55rem}
+.step-body p:last-child{margin-bottom:0}
+.step-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--accent);border:1px solid #b9e0d0;border-radius:var(--r-full);padding:.24rem .78rem;transition:all .15s}
+.step-link:hover{background:#d1ede3;border-color:var(--accent)}
 
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
+/* ABOUT */
+.about-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:2rem;box-shadow:var(--sh-sm)}
+.about-box>p:first-of-type{color:var(--text-soft);line-height:1.7;margin-bottom:1.5rem}
+.partner-row{display:flex;align-items:flex-start;gap:1.1rem;padding:1.2rem;background:var(--bg);border:1px solid var(--border);border-radius:12px;margin-bottom:1.2rem}
+.partner-logo{width:68px;height:68px;border-radius:12px;object-fit:contain;background:var(--white);padding:.4rem;box-shadow:var(--sh-sm);flex-shrink:0}
+.partner-info{display:grid;gap:.28rem}
+.partner-tag{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.partner-name{font-family:"Fraunces",serif;font-size:1.05rem;font-weight:700;color:var(--text)}
+.partner-info p{color:var(--text-soft);font-size:.88rem;line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.45rem}
+.chip{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .72rem;border-radius:var(--r-full);font-size:.82rem;font-weight:600;border:1px solid var(--border);color:var(--text);transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip-green{background:#d1ede3;border-color:#b9e0d0;color:#0a2e1f}
+.chip-green:hover{background:#b9e0d0}
+.partner-cta{font-size:.88rem;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;margin-top:.1rem;display:inline-block}
+.about-ref{font-size:.93rem;color:var(--text-soft);line-height:1.65}
+.about-ref a{color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 
-    /* Layout */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      min-height: 100vh;
-    }
+/* FOOTER */
+footer{background:var(--primary);padding:2.2rem 0}
+.footer-in{display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap;color:rgba(255,255,255,.6);font-size:.87rem}
+.f-logo{width:27px;height:27px;border-radius:7px;object-fit:contain;opacity:.85}
 
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background-color: var(--sidebar-bg);
-      border-right: 1px solid #ccc;
-      padding: 20px;
-      overflow-y: auto;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      flex-shrink: 0;
-    }
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.show{opacity:1;transform:none}
 
-    .sidebar h2 {
-      font-size: 1.2rem;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0; /* Reset default ul padding */
-    }
-
-    .sidebar li {
-      margin: 8px 0;
-    }
-
-    /* Language Buttons */
-    .lang-buttons {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .lang-btn {
-      padding: 10px 20px;
-      border: 2px solid var(--primary-color);
-      border-radius: 20px;
-      background-color: #fff;
-      color: var(--primary-color);
-      cursor: pointer;
-      margin: 0 5px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .code-block button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2em; /* Adjust the size as needed */
-      margin-left: 10px;
-      color: #555; /* Adjust color as needed */
-    }
-
-    .code-block button:hover {
-      color: #007bff; /* Change color on hover */
-    }
-
-    
-    .lang-btn:hover,
-    .lang-btn.active {
-      background-color: var(--primary-color);
-      color: #fff;
-    }
-
-    /* Main Content */
-    main {
-      flex: 1;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      color: var(--primary-color);
-      border-bottom: 3px solid var(--primary-color);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      color: var(--primary-color);
-      margin-top: 30px;
-      margin-bottom: 10px;
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      color: var(--primary-color);
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      margin-bottom: 15px;
-      line-height: 1.6;
-    }
-
-    /* Lists */
-    ul {
-      padding-left: 20px; /* Add padding for bullet points */
-      margin-bottom: 15px;
-    }
-
-    ol {
-      padding-left: 20px; /* Add padding for numbered lists */
-      margin-bottom: 15px;
-    }
-
-    li {
-      margin-bottom: 8px;
-    }
-
-    /* Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-      overflow-x: auto;
-      display: block;
-      background-color: #fff;
-    }
-
-    th,
-    td {
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f8f9fa;
-      font-weight: bold;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        position: static;
-        height: auto;
-        border-bottom: 1px solid #ccc;
-        overflow-x: auto;
-      }
-
-      main {
-        padding: 10px;
-      }
-
-      .lang-buttons {
-        justify-content: space-around;
-      }
-
-      .lang-btn {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-      }
-    }
-
-    /* Language Content Sections */
-    .lang-content {
-      display: none;
-    }
-
-    .lang-content.active {
-      display: block;
-    }
-  </style>
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-card{display:none}
+  .grid3{grid-template-columns:1fr}
+  .menu-toggle{display:flex}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(255,255,255,.97);border-bottom:1px solid var(--border);flex-direction:column;padding:1rem 1.4rem;gap:.5rem;z-index:40}
+  .nav-links.open{display:flex}
+  .nav-right{gap:.7rem}
+}
+@media(min-width:600px) and (max-width:900px){.grid3{grid-template-columns:1fr 1fr}}
+</style>
 </head>
+<body id="top">
 
-<body>
-  <div class="container">
-    <aside class="sidebar" aria-label="Navigation Sidebar">
-      <nav class="lang-buttons" aria-label="Language Selection">
-        <button class="lang-btn active" data-lang="pt" aria-pressed="true"
-          aria-label="Mudar para Português">Português</button>
-        <button class="lang-btn" data-lang="en" aria-pressed="false"
-          aria-label="Switch to English">English</button>
+<header>
+  <div class="container nav">
+    <a class="brand" href="#top"><img class="brand-logo" src="icon.png" alt="RAVI logo"><span>RAVI</span></a>
+    <div class="nav-right">
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false">&#9776;</button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#features" data-i18n="nav_features">Features</a>
+        <a href="#how-it-works" data-i18n="nav_how">How it works</a>
+        <a href="#setup" data-i18n="nav_setup">GEE Setup</a>
       </nav>
-
-      <div id="sidebar-en" style="display: none;">
-        <h2>Sections</h2>
-        <ul>
-          <li><a href="#en-intro">Introduction</a></li>
-          <li><a href="#en-key-features">Key Features</a></li>
-          <li><a href="#en-installation">Installation</a></li>
-          <li>
-            <a href="#en-usage">Step by step guide</a>
-            <ul>
-              <li><a href="#en-step1">Step 1: Authentication</a></li>
-              <li><a href="#en-step2">Step 2: Select output folder</a></li>
-              <li><a href="#en-step3">Step 3: Load AOI</a></li>
-              <li><a href="#en-step4">Step 4: Define time range</a></li>
-              <li><a href="#en-step5">Step 5: Select vegetation index</a></li>
-              <li><a href="#en-step6">Step 6: Imagery Overlap filter</a></li>
-              <li><a href="#en-step7">Step 7: AOI Buffer</a></li>
-              <li><a href="#en-step8">Step 8: Cloud pixel filter</a></li>
-              <li><a href="#en-step9">Step 9: Valid pixel filter</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#en-results">Panel</a>
-            <ul>
-              <li><a href="#en-time-series-plot">Time Series Plot</a></li>
-              <li><a href="#en-load-rgb-layer">Load RGB Layer</a></li>
-              <li><a href="#en-load-index-layer">Load Index Layer (Day)</a></li>
-              <li><a href="#en-load-index-composite">Load Index Layer (Composite)</a></li>
-              <li><a href="#en-date-selection-tool">Date Selection Tool</a></li>
-              <li><a href="#en-savitzky-golay">Savitzky-Golay Filter</a></li>
-              <li><a href="#en-save-options">Save Options</a></li>
-              <li><a href="#en-nasa-power">NASA POWER Precipitation</a></li>
-              <li><a href="#en-quickly-run-new">Quickly Run New TS</a></li>
-              <li><a href="#en-clear-layers">Clear All Layers</a></li>
-              <li><a href="#en-points">Points Analysis</a></li>
-              <li><a href="#en-polyglon">MultiPolyglon Analysis</a></li>
-              <li><a href="#en-troubleshooting">Troubleshooting</a></li>
-              <li><a href="#en-reporting-issues">Reporting Issues</a></li>
-              <li><a href="#en-contribute">Repositório</a></li>
-              <li><a href="#en-license">License</a></li>
-              <li><a href="#en-about">About the Author</a></li>
-            </ul>
-          </li>
-
-        </ul>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-lang-btn="pt">PT</button>
+        <button type="button" data-lang-btn="en">EN</button>
+        <button type="button" data-lang-btn="fr">FR</button>
+        <button type="button" data-lang-btn="it">IT</button>
+        <button type="button" data-lang-btn="es">ES</button>
+        <button type="button" data-lang-btn="hi">&#2361;&#2367;</button>
+        <button type="button" data-lang-btn="zh">&#20013;&#25991;</button>
       </div>
+    </div>
+  </div>
+</header>
 
-      <div id="sidebar-pt" style="display: block;">
-        <h2>Seções</h2>
-        <ul>
-          <li><a href="#pt-intro">Introdução</a></li>
-          <li><a href="#pt-funcionalidades">Funcionalidades</a></li>
-          <li><a href="#pt-instalacao">Instalação</a></li>
-          <li>
-            <a href="#pt-uso">Guia passo a passo</a>
-            <ul>
-              <li><a href="#pt-passo1">Passo 1: Autenticação</a></li>
-              <li><a href="#pt-passo2">Passo 2: Selecionar a pasta de saída</a></li>
-              <li><a href="#pt-passo3">Passo 3: Carregar AOI</a></li>
-              <li><a href="#pt-passo4">Passo 4: Definir intervalo de tempo</a></li>
-              <li><a href="#pt-passo5">Passo 5: Selecionar índice de vegetação</a></li>
-              <li><a href="#pt-passo6">Passo 6: Filtro de sobreposição</a></li>
-              <li><a href="#pt-passo7">Passo 7: Buffer de AOI</a></li>
-              <li><a href="#pt-passo8">Passo 8: Filtro de pixels nublados</a></li>
-              <li><a href="#pt-passo9">Passo 9: Filtro de pixels válidos</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#pt-resultados">Painel</a>
-            <ul>
-              <li><a href="#pt-grafico-series-temporais">Gráfico de Séries Temporais</a></li>
-              <li><a href="#pt-load-rgb-layer">Carregar Camada RGB</a></li>
-              <li><a href="#pt-load-index-layer">Carregar Camada de Índice (Dia)</a></li>
-              <li><a href="#pt-load-index-composite">Carregar Camada de Índice (Sintética)</a></li>
-              <li><a href="#pt-date-selection-tool">Ferramenta de Remoção de Data</a></li>
-              <li><a href="#pt-savitzky-golay">Filtro Savitzky-Golay</a></li>
-              <li><a href="#pt-save-options">Opções de Salvamento</a></li>
-              <li><a href="#pt-nasa-power">Precipitação NASA POWER</a></li>
-              <li><a href="#pt-quickly-run-new">Executar Nova Série</a></li>
-              <li><a href="#pt-clear-layers">Limpar Camadas</a></li>
-              <li><a href="#pt-points">Análise de Pontos</a></li>
-              <li><a href="#pt-polyglon">Análise de MultiPolígono</a></li>    
-              <li><a href="#pt-troubleshooting">Solução de Problemas</a></li>
-              <li><a href="#pt-reporting-issues">Relatar Problemas</a></li>
-              <li><a href="#pt-contribute">Repositório</a></li>
-              <li><a href="#pt-license">Licença</a></li>
-              <li><a href="#pt-sobre">Sobre o Autor</a></li>                       
-            </ul>
-          </li>
+<main>
 
-        </ul>
+<section class="hero-section">
+  <div class="container hero">
+    <div class="reveal show">
+      <div class="hero-tag" data-i18n="hero_tag">Sentinel-2 vegetation analysis. No code.</div>
+      <h1 data-i18n="hero_title">Analyze vegetation indices directly in QGIS</h1>
+      <p class="hero-desc" data-i18n="hero_description">Authenticate with Google Earth Engine, select your AOI, compute vegetation indices, explore interactive time series, and export results &#8212; all without leaving QGIS.</p>
+      <div class="cta-row">
+        <a class="btn btn-white" href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener noreferrer" data-i18n="github_btn">View on GitHub</a>
+        <a class="btn btn-ghost" href="#how-it-works" data-i18n="learn_btn">How it works</a>
+      </div>
+    </div>
+    <aside class="hero-card reveal" aria-hidden="true">
+      <div class="hero-card-head">
+        <strong data-i18n="preview_title">Sentinel-2</strong>
+        <p data-i18n="preview_subtitle">Time Series &amp; Vegetation Indices</p>
+      </div>
+      <div class="hero-card-body">
+        <strong data-i18n="key_features">Key features</strong>
+        <div class="hero-item" data-i18n="feature_indices">NDVI, EVI, SAVI, GNDVI indices</div>
+        <div class="hero-item" data-i18n="feature_render">RGB &amp; composite layers</div>
+        <div class="hero-item" data-i18n="feature_timeseries">Interactive time series charts</div>
+        <div class="hero-item" data-i18n="feature_download">Multispectral download &amp; CSV export</div>
       </div>
     </aside>
-
-    <main>
-      <article id="en-content" class="lang-content" lang="en" aria-hidden="true">
-        <section>
-          <h1 id="en-intro">RAVI - Remote Analysis of Vegetation Indices</h1>
-          <p>
-            <strong>RAVI</strong> originated as the undergraduate final project (TCC) of
-            <strong><a href="https://www.linkedin.com/in/caioarantes" target="_blank" rel="noopener">Caio Arantes</a></strong>, developed under the supervision of
-            <strong><a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/" target="_blank" rel="noopener">Prof. Dr. Lucas dos Rios Amaral</a></strong>. Currently, RAVI is an
-            <strong>open-source project</strong> maintained with the support of
-            <strong>FARM Analytica</strong>, a company co-founded by Caio Arantes. The project
-            remains committed to <strong>technology diffusion</strong> and the
-            <strong>open-source software philosophy</strong>, with continuous maintenance
-            and the periodic implementation of new features.
-          </p>
-          <p>
-            RAVI is a QGIS plugin designed to integrate with Google Earth Engine (GEE), enabling simplified processing and visualization of geospatial data from the <a
-              href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED"
-              target="_blank" rel="noopener">harmonized surface reflectance catalog</a> of the Copernicus Sentinel-2 mission satellites.
-            The plugin supports vegetation index calculations, visualization, and download of multispectral images.
-            These features make it a valuable tool for students, researchers, farmers, and professionals working in agriculture, land monitoring, or environmental management.
-          </p>
-        </section>
-        </section>
-        <section></section>
-          <h2 id="en-key-features">Key Features</h2>
-          <ul>
-            <li><strong>Integration with Earth Engine</strong>: Easy authentication, direct processing, and immediate visualization of Sentinel-2 data in QGIS.</li>
-            <li><strong>Vegetation Index Calculations</strong>: Support for indices such as NDVI, EVI, SAVI, and GNDVI, on specific dates or in composite images.</li>
-            <li><strong>Time Series Analysis</strong>: Generation of time series, integration of NASA POWER precipitation data, and smoothing with Savitzky-Golay filters.</li>
-            <li><strong>Interactive Visualization</strong>: Creation of interactive charts, raster styling, and export options.</li>
-          </ul>
-          </ul>
-        </section>
-
-        <section>
-          <h2 id="en-installation">Installation</h2>
-          <p>To install RAVI:</p>
-          <ol>
-            <li>Open QGIS and navigate to the <strong>Plugins</strong> menu.</li>
-            <li>Select <strong>Manage and Install Plugins</strong>.</li>
-            <li>In the "All" tab, search for "RAVI", select it, and click <strong>Install</strong>.</li>
-            <li>Ensure that RAVI is checked in the installed plugins list.</li>
-          </ol>
-        </section>
-
-        <section>
-          <h2 id="en-usage">Step by step guide</h2>
-          <section>
-            <h3 id="en-step1">Step 1: Authentication</h3>
-            <img src="medias/media/step1.png" alt="Authentication dialog in RAVI plugin"
-              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing the login options.">
-            <img src="medias/media/step1-1.png" alt="Authentication dialog showing login options"
-              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing the login options.">
-            <img src="medias/media/step1-2.png" alt="Successful authentication message"
-              aria-label="Screenshot of the authentication dialog in the RAVI plugin, showing a successful authentication message.">
-            <ul>
-              <li>If you don't have a Google Earth Engine account, you can create one and register a project <a href="https://earthengine.google.com/signup/" target="_blank" rel="noopener">here</a>.</li>
-              <li>Open the <a href="https://code.earthengine.google.com/" target="_blank" rel="noopener">Google Earth Engine Code Editor</a> to find your project ID.</li>
-              <li>You can also find the project ID in the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a> under the "Project Info" section.</li>
-              <li>After entering your project ID, click <strong>Setup Authentication</strong>.</li>
-              <li>Authorize the plugin to access your Earth Engine account.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3 id="en-step2">Step 2: Select output folder</h3>
-            <img src="medias/media/step2.png" alt="File selection dialog for output folder"
-              aria-label="Screenshot of the file selection dialog for choosing the output folder.">
-            <p>Choose the folder where you want to save the output files.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step3">Step 3: Load and select the area of interest (AOI)</h3>
-            <img src="medias/media/step3.png" alt="AOI selection from a shapefile"
-              aria-label="Screenshot of the AOI selection process from a shapefile.">
-            <ul>
-              <li>Select an AOI by loading a shapefile or GeoJSON file.</li>
-              <li>Ensure the geometry is valid (Polygon or MultiPolygon only).</li>
-              <li>Add a Google Maps layer to the QGIS canvas for better visualization and context.</li>
-              <li>Use the <strong>Build AOI from Canvas Extent</strong> button to generate a new AOI based on the
-                current canvas extent.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3 id="en-step4">Step 4: Define time range for imagery search</h3>
-            <img src="medias/media/step4.png" alt="Date selection interface for time range"
-              aria-label="Screenshot of the date selection interface for defining the time range.">
-            <p>Set a custom time range or select a suggested one.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step5">Step 5: Select vegetation index for time series analysis</h3>
-            <img src="medias/media/step5.png" alt="Dropdown menu for vegetation index selection"
-              aria-label="Screenshot of the dropdown menu for selecting the vegetation index.">
-            <p>Choose the vegetation index you want to analyze from the dropdown menu.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step6">Step 6: Imagery Overlap filter</h3>
-            <img src="medias/media/step6.png" alt="Interface for setting imagery overlap filter"
-              aria-label="Screenshot of the interface for setting the imagery overlap filter.">
-            <p>Set the specified filter according to your analysis requirements.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step7">Step 7: AOI Buffer</h3>
-            <img src="medias/media/step7.png" alt="Interface for setting AOI buffer distance"
-              aria-label="Screenshot of the interface for setting the AOI buffer distance.">
-            <p>Set the Buffer according to your analysis requirements.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step8">Step 8: Cloud pixel percentage filter</h3>
-            <img src="medias/media/step8.png" alt="Interface for setting cloud pixel percentage filter"
-              aria-label="Screenshot of the interface for setting the cloud pixel percentage filter.">
-            <p>Set the specified filter according to your analysis requirements.</p>
-          </section>
-
-          <section>
-            <h3 id="en-step9">Step 9: Valid pixel percentage filter</h3>
-            <img src="medias/media/step9.png" alt="Interface for setting valid pixel percentage filter"
-              aria-label="Screenshot of the interface for setting the valid pixel percentage filter.">
-            <p>Set the specified filter according to your analysis requirements.</p>
-          </section>
-        </section>
-
-        <section>
-          <h2 id="en-results">Panel</h2>
-          <section id="en-time-series-plot">
-            <h3>1. Time Series Plot</h3>
-            <img src="medias/media/results1.png" alt="Interactive time series plot"
-              aria-label="Screenshot of the interactive time series plot.">
-            <ul>
-              <li>Visualize the time series of the selected vegetation index over the defined AOI.</li>
-              <li>Hover over the plot to see specific values and dates for detailed analysis.</li>
-            </ul>
-          </section>
-
-          <section id="en-load-rgb-layer">
-            <h3>2. Load RGB Layer (Focus on a Day)</h3>
-            <img src="medias/media/results2.png" alt="RGB layer visualization in QGIS"
-              aria-label="Screenshot of the RGB layer visualization in QGIS.">
-            <p>
-              Load and display an RGB layer for a specific date to analyze the visual appearance of the area.
-              All spectral bands are downloaded, and the band numbers correspond to the Sentinel-2 bands as listed
-              below:
-            </p>
-            <table>
-              <caption>Sentinel-2 Band Information</caption>
-              <thead>
-                <tr>
-                  <th>Sentinel-2 Band Name</th>
-                  <th>QGIS Band Number</th>
-                  <th>Wavelength (nm)</th>
-                  <th>Spatial Resolution (m)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Band 1 (Coastal aerosol)</td>
-                  <td>1</td>
-                  <td>443</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <td>Band 2 (Blue)</td>
-                  <td>2</td>
-                  <td>490</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Band 3 (Green)</td>
-                  <td>3</td>
-                  <td>560</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Band 4 (Red)</td>
-                  <td>4</td>
-                  <td>665</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Band 5 (Vegetation Red Edge)</td>
-                  <td>5</td>
-                  <td>705</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Band 6 (Vegetation Red Edge)</td>
-                  <td>6</td>
-                  <td>740</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Band 7 (Vegetation Red Edge)</td>
-                  <td>7</td>
-                  <td>783</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Band 8 (NIR)</td>
-                  <td>8</td>
-                  <td>842</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Band 8A (Vegetation Red Edge)</td>
-                  <td>9</td>
-                  <td>865</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Band 9 (Water Vapour)</td>
-                  <td>10</td>
-                  <td>945</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <td>Band 11 (SWIR)</td>
-                  <td>11</td>
-                  <td>1610</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Band 12 (SWIR)</td>
-                  <td>12</td>
-                  <td>2190</td>
-                  <td>20</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section id="en-note-b10">
-            <h3>Note on Band 10</h3>
-            <p>
-              Please note that Band 10 (SWIR - Cirrus) is not available in the Harmonized Surface Reflectance (S2_SR_HARMONIZED) catalog of Sentinel-2. 
-              This band is primarily used for cirrus cloud detection and is excluded from the SR dataset due to its limited applicability in surface analysis.
-            </p>
-          </section>
-
-          <section id="en-load-index-layer">
-            <h3>3. Load Index Layer (Focus on a Day)</h3>
-            <img src="medias/media/results3.png" alt="Vegetation index layer visualization in QGIS"
-              aria-label="Screenshot of the vegetation index layer visualization in QGIS.">
-            <p>Load and display a vegetation index layer for a specific date.</p>
-          </section>
-
-          <section id="en-load-index-composite">
-            <h3>4. Load Index Layer (Composite)</h3>
-            <img src="medias/media/results4.png" alt="Composite vegetation index layer visualization"
-              aria-label="Screenshot of the composite vegetation index layer visualization.">
-            <p>
-              Generate and display a composite image based on the selected vegetation index and the user-defined
-              metric.
-              The composite image will include all images within the current date selection.
-              Use the date selection tool to filter out specific dates.
-            </p>
-          </section>
-
-          <section id="en-date-selection-tool">
-            <h3>5. Date Selection Tool</h3>
-            <img src="medias/media/results5.png" alt="Date selection tool interface"
-              aria-label="Screenshot of the date selection tool interface.">
-            <ul>
-              <li>Use the date selection tool to filter and select specific dates for analysis.</li>
-              <li>The tool updates the time series plot.</li>
-              <li>Composite images are based on all selected dates.</li>
-            </ul>
-          </section>
-
-          <section id="en-savitzky-golay">
-            <h3>6. Savitzky-Golay Filter</h3>
-            <img src="medias/media/results6.png" alt="Savitzky-Golay filter settings interface"
-              aria-label="Screenshot of the Savitzky-Golay filter settings interface.">
-            <p>
-              Apply the Savitzky-Golay filter to smooth the time series data for enhanced trend analysis.
-              Adjust the polynomial order and window length as needed.
-            </p>
-          </section>
-
-          <section id="en-save-options">
-            <h3>7. Save Options</h3>
-            <img src="medias/media/results7.png" alt="Save options interface"
-              aria-label="Screenshot of the save options interface.">
-            <img src="medias/media/results71.png" alt="Save options for image download"
-              aria-label="Screenshot of the save options for image download.">
-            <img src="medias/media/save_csv.png" alt="Save options for spreadsheet download"
-              aria-label="Screenshot of the save options for spreadsheet download.">
-            <p>
-              Save the time series data in CSV format.
-              To save the series as an image, open it in your browser to enable the download option.
-            </p>
-          </section>
-
-          <section id="en-nasa-power">
-            <h3>8. NASA POWER Precipitation</h3>
-            <img src="medias/media/results8.png" alt="NASA POWER precipitation data visualization"
-              aria-label="Screenshot of the NASA POWER precipitation data visualization.">
-            <p>
-              Add monthly precipitation data from NASA POWER for cross-variable comparisons.
-              Save the precipitation data in CSV format.
-            </p>
-          </section>
-
-          <section id="en-quickly-run-new">
-            <h3>9. Quickly Run New Time Series</h3>
-            <img src="medias/media/results9.png" alt="Quick run new time series interface"
-              aria-label="Screenshot of the quick run new time series interface.">
-            <p>
-              Quickly run a new time series analysis by changing the Area of Interest (AOI), vegetation index, or time
-              range.
-            </p>
-          </section>
-
-          <section id="en-clear-layers">
-            <h3>10. Clear All Layers</h3>
-            <img src="medias/media/results10.png" alt="Clear all layers button"
-              aria-label="Screenshot of the clear all layers button.">
-            <p>
-              Clear all loaded layers from the QGIS layer panel to start a new analysis or to declutter your
-              workspace.
-            </p>
-          </section>
-        </section>
-
-
-        </section>
-
-        <section id="en-points">
-          <h3>11. Points Analysis</h3>
-          <img src="medias/media/results11.png" alt="Points Analysis"
-            aria-label="Screenshot.">
-          <p>
-            Perform Points (single pixel) Time Series Analysis.
-            Note the newest point added show up as last in the plot label.
-          </p>
-        </section>
-
-        <section id="en-polyglon">
-          <h3>12. MultiPolygon Analysis</h3>
-          <img src="medias/media/results12.png" alt="MultiPolygon Analysis"
-            aria-label="Screenshot.">
-          <p>
-            Perform MultiPolygon Time Series Analysis.
-          </p>
-        </section>
-      </section>
-
-        <section>
-          <h2 id="en-troubleshooting">Troubleshooting</h2>
-          <ul>
-            <li>
-              <strong>Problem: Module 'ee' not found (Google Earth Engine Python API not installed)</strong>
-
-              <p><strong>Solution:</strong> Open the <strong>OSGeo4W Shell</strong> and run the following command:</p>
-
-              <div class="code-block">
-                <code id="copy-command">pip install earthengine-api</code>
-                <button onclick="copyToClipboard('pip install earthengine-api')" title="Copy to clipboard">
-                  <i class="fas fa-copy"></i>
-                </button>
-              </div>
-
-              <p>After installation, <strong>restart QGIS</strong>.</p>
-            </li>
-            <li><strong>Earth Engine Authentication Failed</strong>: Ensure you meet all requirements as explained in the
-              authentication section.</li>
-            <li><strong>AOI Errors</strong>: Verify the AOI file is valid and uses a proper CRS (EPSG:4326 is
-              preferred).</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 id="en-reporting-issues">Reporting Issues</h2>
-          <p>
-            If you encounter any issues or have suggestions for improvements, please open an issue in the
-            <a href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener">GitHub
-              Issues</a> section.
-          </p>
-        </section>
-
-        <section>
-          <h2 id="en-contribute">Repository</h2>
-          <p>
-            Visit the  <a
-              href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">GitHub
-              repository.</a>
-          </p>
-        </section>
-
-        <section>
-          <h2 id="en-license">License</h2>
-          <p>
-            RAVI is licensed under the GNU General Public License v2.0 or later.
-            Refer to the <a href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank"
-              rel="noopener">LICENSE</a> file for details.
-          </p>
-        </section>
-
-        
-
-        <section class="supervisor-section">
-          <h3>Supervisors</h3>
-          <p>This project was supervised by:</p>
-          <ul>
-            <li><strong>Prof. Dr. Lucas Rios do Amaral</strong> - <a
-                href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/">More about the supervisor</a></li>
-            <li><strong>M.Sc. Isabella Alves da Cunha</strong> - <a
-                href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/">More about the
-                co-supervisor</a></li>
-          </ul>
-        </section>
-        <section id="en-contact">
-          <h2>Contact — FARM Analytica</h2>
-          <p>For commercial inquiries and project services, contact <strong>FARM Analytica</strong>. Visit <a href="https://farmanalytica.com.br" target="_blank">https://farmanalytica.com.br</a> or email <a href="mailto:contact@farmanalytica.com">contact@farmanalytica.com</a>.</p>
-        </section>
-      </article>
-
-      <article id="pt-content" class="lang-content active" lang="pt" aria-hidden="false">
-        <section>
-          <h1 id="pt-intro">RAVI - Análise Remota de Índices de Vegetação</h1>
-          <div class="section">
-            <p>
-              O <strong>RAVI</strong> teve início como trabalho de conclusão de curso (TCC) de
-              <strong><a href="https://www.linkedin.com/in/caioarantes" target="_blank" rel="noopener">Caio Arantes</a></strong>, desenvolvido sob orientação do
-              <strong><a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/" target="_blank" rel="noopener">Prof. Dr. Lucas dos Rios Amaral</a></strong>. Atualmente, o RAVI é um
-              <strong>projeto de código aberto</strong>, mantido com o apoio da
-              <strong>FARM Analytica</strong>, empresa cofundada por Caio Arantes. O projeto
-              mantém seu compromisso com a <strong>difusão tecnológica</strong> e com o
-              <strong>espírito do software livre</strong>, contando com manutenção contínua
-              e a implementação periódica de novas funcionalidades.
-            </p>
-          </div>
-          <div class="video-container" aria-hidden="false" aria-label="Vídeo introdutório do RAVI">
-            <iframe src="https://www.youtube.com/embed/ju4jlqBOt4k?start=2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <p>
-            RAVI é um plugin para QGIS projetado para se integrar ao Google Earth Engine (GEE), permitindo o
-            processamento e a visualização simplificada de dados geoespaciais proveninetes do <a
-              href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED"
-              target="_blank" rel="noopener">catálogo de reflectância de superfície harmonizada</a> dos satélites da missão Copernicus Sentinel-2. 
-            O plugin suporta cálculos de índices de vegetação, visualização e download de imagens multiespectrais.
-            Esses recursos o tornam uma ferramenta para estudantes, pesquisadores, agricultores e profissionais que trabalham com agricultura, monitoramento de terras ou gestão ambiental.
-          </p>
-        </section>
-
-        <section>
-          <h2 id="pt-funcionalidades">Principais Funcionalidades</h2>
-          <ul>
-            <li><strong>Integração com o Earth Engine</strong>: Autenticação, processamento direto e visualização de dados do Sentinel-2 no QGIS.</li>
-            <li><strong>Cálculos de Índices de Vegetação</strong>: Suporte a índices como NDVI, EVI, SAVI e GNDVI, em datas datas específicas ou agregados em composições sintéticas.</li>
-            <li><strong>Análise de Séries Temporais</strong>: Geração de séries temporais, integração de dados de precipitação da NASA POWER e suavização com filtros de Savitzky-Golay.</li>
-           <li><strong>Visualização Interativa</strong>: Criação de gráficos interativos, estilização de raster e opções de exportação.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 id="pt-instalacao">Instalação</h2>
-          <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/0IwiL5-qPCY" title="YouTube video player" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-          </div>
-          <p>Para instalar o RAVI:</p>
-          <ol>
-            <li>Abra o QGIS e navegue até o menu <strong>Plugins</strong>.</li>
-            <li>Selecione <strong>Gerenciar e Instalar Plugins</strong>.</li>
-            <li>Na aba "Todos", pesquise por "RAVI", selecione-o e clique em <strong>Instalar</strong>.</li>
-            <li>Certifique-se de que o RAVI está marcado na lista de plugins instalados.</li>
-          </ol>
-        </section>
-
-        <h2 id="pt-uso">Guia passo a passo</h2>
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/5CG1lTuzzP0" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-        </div>
-
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/FCQF_JRjn50" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-        </div>
-
-        <section>
-          <h3 id="pt-passo1">Passo 1: Autenticação</h3>
-          <img src="medias/media_pt/step0.png" alt="Janela de autenticação do plugin RAVI"
-          <img src="medias/media_pt/step1.png" alt="Diálogo de seleção de pasta para saída"
-            aria-label="Screenshot da janela de autenticação do plugin RAVI.">
-          <ul>
-            <li>Se você não tem uma conta no Google Earth Engine, pode criar uma e registrar um projeto <a href="https://earthengine.google.com/signup/" target="_blank" rel="noopener">aqui</a>.</li>
-            <li>Abra o <a href="https://code.earthengine.google.com/" target="_blank" rel="noopener">Editor de Código do Google Earth Engine</a> para encontrar seu ID do projeto.</li>
-            <li>Você também pode encontrar o ID do projeto no <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Console do Google Cloud</a> na seção "Informações do Projeto".</li>
-            <li>Após inserir seu ID do projeto, clique em <strong>Configurar Autenticação</strong>.</li>
-            <li>Autorize o plugin a acessar sua conta do Earth Engine.</li>
-          </ul>
-        </section>
-
-        <section>
-
-          <section>
-            <h3 id="pt-passo2">Passo 2: Selecionar a pasta de saída</h3>
-            <img src="medias/media_pt/step2.png" alt="Diálogo de seleção de pasta para saída"
-              aria-label="Screenshot do diálogo de seleção de pasta para a pasta de saída.">
-            <p>Escolha a pasta onde deseja salvar os arquivos de saída.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo3">Passo 3: Carregar e selecionar a área de interesse (AOI)</h3>
-            <img src="medias/media_pt/step3.png" alt="Seleção de AOI a partir de um shapefile"
-              aria-label="Screenshot da seleção de AOI a partir de um shapefile.">
-            <ul>
-              <li>Selecione uma AOI carregando um arquivo shapefile ou GeoJSON.</li>
-              <li>Certifique-se de que a geometria é válida (apenas Polygon ou MultiPolygon).</li>
-              <li>Adicione uma camada do Google Maps ao canvas do QGIS para melhor visualização e contexto.</li>
-              <li>Use o botão <strong>Construir área de interesse a partir da extensão do mapa</strong> para gerar
-                automaticamente uma nova AOI com base na extensão atual da tela.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3 id="pt-passo4">Passo 4: Definir o intervalo de tempo para busca de imagens</h3>
-            <img src="medias/media_pt/step4.png" alt="Interface de seleção de data para intervalo de tempo"
-              aria-label="Screenshot da interface de seleção de data para o intervalo de tempo.">
-            <p>Defina um intervalo de tempo personalizado ou selecione um sugerido.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo5">Passo 5: Selecionar o índice de vegetação para análise de séries temporais</h3>
-            <img src="medias/media_pt/step5.png" alt="Menu suspenso para seleção de índice de vegetação"
-              aria-label="Screenshot do menu suspenso para a seleção do índice de vegetação.">
-            <p>Escolha o índice de vegetação que deseja analisar a partir do menu.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo6">Passo 6: Filtro de sobreposição de imagens</h3>
-            <img src="medias/media_pt/step6.png" alt="Interface para definir filtro de sobreposição de imagens"
-              aria-label="Screenshot da interface para definir o filtro de sobreposição de imagens.">
-            <p>Utilize o filtro de sobreposição para ajustar a seleção de imagens conforme os requisitos da sua
-              análise.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo7">Passo 7: Buffer de AOI</h3>
-            <img src="medias/media_pt/step7.png" alt="Interface para definir buffer da AOI"
-              aria-label="Screenshot da interface para definir o buffer da AOI.">
-            <p>Configure o Buffer conforme os requisitos da análise.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo8">Passo 8: Filtro de porcentagem de pixels nublados</h3>
-            <img src="medias/media_pt/step8.png" alt="Interface para configurar filtro de porcentagem de pixels nublados"
-              aria-label="Screenshot da interface para configurar o filtro de porcentagem de pixels nublados.">
-            <p>Configure o filtro de conforme os requisitos da análise.</p>
-          </section>
-
-          <section>
-            <h3 id="pt-passo9">Passo 9: Filtro de porcentagem de pixels válidos</h3>
-            <img src="medias/media_pt/step9.png" alt="Interface para configurar filtro de porcentagem de pixels válidos"
-              aria-label="Screenshot da interface para configurar o filtro de porcentagem de pixels válidos.">
-            <p>Configure o filtro conforme os requisitos da análise.</p>
-          </section>
-        </section>
-
-        <section>
-          <h2 id="pt-resultados">Painel</h2>
-          <section id="pt-grafico-series-temporais">
-            <h3>1. Gráfico de Séries Temporais</h3>
-            <img src="medias/media_pt/results1.png" alt="Gráfico interativo de séries temporais"
-              aria-label="Screenshot do gráfico interativo de séries temporais.">
-            <ul>
-              <li>Visualize a série temporal do índice de vegetação sobre a AOI definida.</li>
-              <li>Coloque o cursor sobre o gráfico para ver valores e datas específicos para uma análise detalhada.</li>
-            </ul>
-          </section>
-
-          <section id="pt-load-rgb-layer">
-            <h3>2. Carregar Camada RGB (Foco em um Dia)</h3>
-            <img src="medias/media_pt/results2.png" alt="Visualização de camada RGB no QGIS"
-              aria-label="Screenshot da visualização da camada RGB no QGIS.">
-            <p>
-              Carregue e exiba uma camada RGB para uma data específica para analisar a aparência visual da área.
-              Todas as bandas espectrais são baixadas, e os números das bandas correspondem às bandas do Sentinel-2
-              conforme listado abaixo:
-            </p>
-            <table>
-              <caption>Informações das Bandas do Sentinel-2</caption>
-              <thead>
-                <tr>
-                  <th>Nome da Banda Sentinel-2</th>
-                  <th>Número da Banda no QGIS</th>
-                  <th>Comprimento de Onda (nm)</th>
-                  <th>Resolução Espacial (m)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Banda 1 (Aerossol Costeiro)</td>
-                  <td>1</td>
-                  <td>443</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <td>Banda 2 (Azul)</td>
-                  <td>2</td>
-                  <td>490</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Banda 3 (Verde)</td>
-                  <td>3</td>
-                  <td>560</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Banda 4 (Vermelho)</td>
-                  <td>4</td>
-                  <td>665</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Banda 5 (Borda Vermelha da Vegetação)</td>
-                  <td>5</td>
-                  <td>705</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Banda 6 (Borda Vermelha da Vegetação)</td>
-                  <td>6</td>
-                  <td>740</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Banda 7 (Borda Vermelha da Vegetação)</td>
-                  <td>7</td>
-                  <td>783</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Banda 8 (NIR)</td>
-                  <td>8</td>
-                  <td>842</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Banda 8A (Borda Vermelha da Vegetação)</td>
-                  <td>9</td>
-                  <td>865</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Banda 9 (Vapor d'água)</td>
-                  <td>10</td>
-                  <td>945</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <td>Banda 11 (SWIR)</td>
-                  <td>11</td>
-                  <td>1610</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>Banda 12 (SWIR)</td>
-                  <td>12</td>
-                  <td>2190</td>
-                  <td>20</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section id="pt-note-b10">
-            <h3>Nota sobre a Banda 10</h3>
-            <p>
-              Observe que a Banda 10 (SWIR - Cirrus) não está disponível no catálogo de Reflectância de Superfície (SR) harmonizada do Sentinel-2.
-              Esta banda é usada principalmente para detecção de nuvens cirrus e é excluída do conjunto de dados SR devido à sua aplicabilidade limitada na análise de superfície.
-            </p>
-          </section>
-
-          <section id="pt-load-index-layer">
-            <h3>3. Carregar Camada de Índice (Foco em um Dia)</h3>
-            <img src="medias/media_pt/results3.png" alt="Visualização de camada de índice de vegetação no QGIS"
-              aria-label="Screenshot da visualização da camada de índice de vegetação no QGIS.">
-            <p>Carregue e exiba uma camada de índice de vegetação para uma data específica.</p>
-          </section>
-
-          <section id="pt-load-index-composite">
-            <h3>4. Carregar Camada de Índice (Sintética)</h3>
-            <img src="medias/media_pt/results4.png" alt="Visualização de camada de índice de vegetação composta"
-              aria-label="Screenshot da visualização da camada de índice de vegetação composta.">
-            <p>
-              Gere e exiba uma imagem sintética baseada no índice de vegetação selecionado e na métrica definida pelo
-              usuário.
-              A imagem sintética é gerada com base em todas as imagems que compoem a série temporal. 
-              As imagens são sobrepostas e cada pixel resultante representa a métrica definida para o índice de vegetação selecionado.
-              Utilize a ferramenta de remoção de data para remover uma data indesejada ou filtrar períodos específicos antes de gerar a imagem sintética.
-            </p>
-          </section>
-
-          <section id="pt-date-selection-tool">
-            <h3>5. Ferramenta de Remoção de Data</h3>
-            <img src="medias/media_pt/results5.png" alt="Interface da ferramenta de seleção de data"
-              aria-label="Screenshot da interface da ferramenta de seleção de data.">
-            <ul>
-              <li>Use a ferramenta de remoção de data para filtrar e selecionar datas e periodos específicos para análise.</li>
-              <li>A ferramenta atualiza o gráfico de séries temporais.</li>
-              <li>IMPORTANTE: Imagens sintéticas são baseadas em todas as datas atualmente selecionadas.</li>
-            </ul>
-          </section>
-
-          <section id="pt-savitzky-golay">
-            <h3>6. Filtro Savitzky-Golay</h3>
-            <img src="medias/media_pt/results6.png" alt="Interface de configurações do filtro Savitzky-Golay"
-              aria-label="Screenshot da interface de configurações do filtro Savitzky-Golay.">
-            <p>
-              Aplique o filtro de Savitzky-Golay para suavizar os dados de séries temporais e aprimorar a análise de
-              tendências.
-              Ajuste a ordem do polinômio e o tamanho da janela conforme necessário.
-            </p>
-          </section>
-
-          <section id="pt-save-options">
-            <h3>7. Opções de Salvamento</h3>
-            <img src="medias/media_pt/results7.png" alt="Interface de opções de salvamento"
-              aria-label="Screenshot da interface de opções de salvamento.">
-            <img src="medias/media_pt/results71.png" alt="Opções de salvamento para download de imagem"
-              aria-label="Screenshot das opções de salvamento para download de imagem.">
-            <img src="medias/media_pt/save_csv.png" alt="Opções de salvamento para download de planilha"
-              aria-label="Screenshot das opções de salvamento para download de planilha.">            
-            <p>
-              Salve os dados da série temporal em formato CSV.
-              Para salvar a série como imagem, abra-a no navegador para habilitar a opção de download.
-            </p>
-          </section>
-
-          <section id="pt-nasa-power">
-            <h3>8. Precipitação NASA POWER</h3>
-            <img src="medias/media_pt/results8.png" alt="Visualização de dados de precipitação NASA POWER"
-              aria-label="Screenshot da visualização de dados de precipitação NASA POWER.">
-            <p>
-              Adicione dados mensais de precipitação do NASA POWER para comparações entre variáveis.
-              Salve os dados em formato CSV.
-            </p>
-          </section>
-
-          <section id="pt-quickly-run-new">
-            <h3>9. Executar Nova Série</h3>
-            <img src="medias/media_pt/results9.png" alt="Interface para executar nova série rapidamente"
-              aria-label="Screenshot da interface para executar nova série rapidamente.">
-            <p>
-              Execute rapidamente uma nova análise de série temporal alterando a Área de Interesse (AOI), o índice de
-              vegetação ou o intervalo de tempo.
-            </p>
-          </section>
-
-          <section id="pt-clear-layers">
-            <h3>10. Limpar Camadas</h3>
-            <img src="medias/media_pt/results10.png" alt="Botão para limpar todas as camadas"
-              aria-label="Screenshot do botão para limpar todas as camadas.">
-            <p>
-              Limpe todas as camadas carregadas do painel para iniciar uma nova análise ou para organizar o espaço de
-              trabalho.
-            </p>
-          </section>
-        </section>
-
-
-        </section>
-
-        <section id="pt-points">
-          <h3>11. Points Analysis</h3>
-          <img src="medias/media_pt/results11.png" alt="Points Analysis"
-            aria-label="Screenshot.">
-            <p>
-            Realize a análise de séries temporais de pontos (pixel único).
-            Observe que o ponto mais recente adicionado aparece por último no rótulo do gráfico.
-            </p>
-        </section>
-
-        <section id="pt-polyglon">
-          <h3>12. MultiPolygon Analysis</h3>
-          <img src="medias/media_pt/results12.png" alt="MultiPolygon Analysis"
-            aria-label="Screenshot.">
-          <p>
-              Realize a análise de séries temporais de MultiPolígono.
-          </p>
-        </section>        
-      </section>
-
-      <section>
-        <h2 id="pt-troubleshooting">Solução de Problemas</h2>
-
-      
-        <ul>
-          <li>
-            <strong>Problema: Erro módulo 'ee' não encontrado (Google Earth Engine Python API não instalado)</strong>
-      
-            <p><strong>Solução:</strong> Abra o <strong>OSGeo4W Shell</strong> (encontrado no menu Iniciar do Windows) e execute o seguinte comando:</p>
-      
-            <div class="code-block">
-              <code id="copy-command">pip install earthengine-api</code>
-              <button onclick="copyToClipboard('pip install earthengine-api')" title="Copiar para a área de transferência">
-                <i class="fas fa-copy"></i>
-              </button>
-            </div>
-      
-            <p>Após a instalação, <strong>reinicie o QGIS</strong>.</p>
-          </li>
-      
-          <li>
-            <strong>Problema: Falha na Autenticação do Earth Engine</strong>
-      
-            <p><strong>Solução:</strong> Verifique se você seguiu todos os passos e atende aos requisitos explicados na aba "Autenticação".</p>
-          </li>
-      
-          <li>
-            <strong>Problema: Erros relacionados à Área de Interesse (AOI)</strong>
-      
-            <p><strong>Solução:</strong> Certifique-se de que:</p>
-            <ul>
-              <li>O arquivo da AOI é um arquivo vetorial válido (Shapefile, GeoJSON, etc.).</li>
-              <li>O arquivo da AOI não está corrompido.</li>
-              <li>O arquivo da AOI possui um Sistema de Referência de Coordenadas (CRS) adequado.  Recomendamos usar <strong>EPSG:4326</strong>.</li>
-            </ul>
-          </li>
-        </ul>
-      
-        <script>
-          function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).catch(err => {
-              console.error('Falha ao copiar: ', err);
-            });
-          }
-        </script>
-      </section>
-      
-
-        <section>
-          <h2 id="pt-reporting-issues">Relatar Problemas</h2>
-          <p>
-            Se encontrar problemas ou tiver sugestões, abra uma issue na seção de <a
-              href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener">GitHub
-              Issues</a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 id="pt-contribute">Repositório</h2>
-          <p>
-            Visite o <a
-              href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener">repositório no 
-              GitHub</a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 id="pt-license">Licença</h2>
-          <p>
-            RAVI é licenciado sob a GNU General Public License v2.0 ou superior.
-            Consulte o arquivo <a
-              href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank"
-              rel="noopener">LICENSE</a> para mais detalhes.
-          </p>
-        </section>
-
-        
-
-        <section class="supervisor-section">
-          <h3>Orientadores</h3>
-          <p>Este projeto foi orientado por:</p>
-          <ul>
-            <li><strong>Prof. Dr. Lucas Rios do Amaral</strong> - <a
-                href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/">Mais sobre o orientador</a></li>
-            <li><strong>M.Sc. Isabella Alves da Cunha</strong> - <a
-                href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/">Mais sobre a
-                coorientadora</a></li>
-          </ul>
-        </section>
-        <section id="pt-contact">
-          <h2>Contato — FARM Analytica</h2>
-          <p>Para demandas comerciais e serviços, entre em contato com a <strong>FARM Analytica</strong>. Visite <a href="https://farmanalytica.com.br" target="_blank">https://farmanalytica.com.br</a> ou envie um e-mail para <a href="mailto:contato@farmanalytica.com.br">contato@farmanalytica.com.br</a>.</p>
-        </section>
-      </article>
-    </main>
   </div>
+</section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const langButtons = document.querySelectorAll('.lang-btn');
-      const langContents = document.querySelectorAll('.lang-content');
-      const sidebarEn = document.getElementById('sidebar-en');
-      const sidebarPt = document.getElementById('sidebar-pt');
+<section class="reveal">
+  <div class="container">
+    <p class="sec-label" data-i18n="intro_label">Overview</p>
+    <h2 data-i18n="intro_title">Remote Analysis of Vegetation Indices</h2>
+    <p class="sec-lead" data-i18n="intro_lead">RAVI is a QGIS plugin that integrates with Google Earth Engine to process and visualize Sentinel-2 surface reflectance data &#8212; vegetation index calculation, visualization, and multispectral image download.</p>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/ju4jlqBOt4k?start=2" title="RAVI introduction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
 
-      langButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const selectedLang = button.dataset.lang;
+<section id="features" class="alt reveal">
+  <div class="container">
+    <p class="sec-label">Features</p>
+    <h2 data-i18n="features_title">Core Features</h2>
+    <p class="sec-lead" data-i18n="features_lead">A complete workflow for vegetation analysis in QGIS with Google Earth Engine integration.</p>
+    <div class="grid3">
+      <article class="card"><div class="card-icon">&#127807;</div><h3 data-i18n="feature_1_title">Vegetation Indices</h3><p data-i18n="feature_1_desc">Compute NDVI, EVI, SAVI, and GNDVI for single dates or composite images.</p></article>
+      <article class="card"><div class="card-icon">&#9729;</div><h3 data-i18n="feature_2_title">Earth Engine Integration</h3><p data-i18n="feature_2_desc">Authenticate, process, and visualize Sentinel-2 surface reflectance data directly in QGIS.</p></article>
+      <article class="card"><div class="card-icon">&#128202;</div><h3 data-i18n="feature_3_title">Interactive Time Series</h3><p data-i18n="feature_3_desc">Plotly charts with hover and zoom &#8212; filter dates, smooth with Savitzky-Golay, and export as CSV.</p></article>
+      <article class="card"><div class="card-icon">&#127783;</div><h3 data-i18n="feature_4_title">NASA POWER Precipitation</h3><p data-i18n="feature_4_desc">Overlay monthly precipitation data for cross-variable comparison alongside your index series.</p></article>
+      <article class="card"><div class="card-icon">&#127757;</div><h3 data-i18n="feature_5_title">RGB &amp; Composite Layers</h3><p data-i18n="feature_5_desc">Load full multispectral RGB imagery for a date or generate composite index rasters across a period.</p></article>
+      <article class="card"><div class="card-icon">&#128205;</div><h3 data-i18n="feature_6_title">Points &amp; Polygon Analysis</h3><p data-i18n="feature_6_desc">Run single-pixel point time series or multi-polygon analysis over your areas of interest.</p></article>
+    </div>
+  </div>
+</section>
 
-          langContents.forEach((content) => {
-            const isActive = content.id === `${selectedLang}-content`;
-            content.classList.toggle('active', isActive);
-            content.setAttribute('aria-hidden', !isActive);
-          });
+<section id="how-it-works" class="reveal">
+  <div class="container">
+    <p class="sec-label">Workflow</p>
+    <h2 data-i18n="how_title">How It Works</h2>
+    <p class="sec-lead" data-i18n="how_lead">A three-step workflow from authentication to vegetation insights in QGIS.</p>
+    <div class="steps-col">
+      <div class="step"><div class="step-num">01</div><div class="step-body"><h3 data-i18n="step_1_title">Authenticate</h3><p data-i18n="step_1_desc">Set up your Google Cloud project ID and authenticate with Google Earth Engine through the plugin.</p></div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-body"><h3 data-i18n="step_2_title">Configure &amp; Run</h3><p data-i18n="step_2_desc">Load your AOI, set the time range, choose a vegetation index and filters, then run to build the time series.</p></div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-body"><h3 data-i18n="step_3_title">Visualize &amp; Export</h3><p data-i18n="step_3_desc">Explore interactive charts, load RGB or index layers, smooth the series, and export as CSV or GeoTIFF.</p></div></div>
+    </div>
+  </div>
+</section>
 
-          langButtons.forEach((btn) => {
-            const isActive = btn.dataset.lang === selectedLang;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-pressed', isActive);
-          });
+<section id="setup" class="alt reveal">
+  <div class="container">
+    <p class="sec-label">GEE Setup</p>
+    <h2 data-i18n="setup_title">Getting Started</h2>
+    <p class="sec-lead" data-i18n="setup_lead">Set up Google Earth Engine and configure RAVI to start analyzing Sentinel-2 data.</p>
+    <div class="steps-col">
+      <div class="step"><div class="step-num">01</div><div class="step-body"><h3 data-i18n="gee_step_1_title">Create a GEE account</h3><p data-i18n="gee_step_1_desc">Sign up for free at earthengine.google.com.</p><a class="step-link" href="https://earthengine.google.com/signup/" target="_blank" rel="noopener noreferrer" data-i18n="gee_step_1_link">&#8594; Go to Earth Engine</a></div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-body"><h3 data-i18n="gee_step_2_title">Create a Google Cloud project</h3><p data-i18n="gee_step_2_desc">Create a new project and link it to your GEE account.</p><a class="step-link" href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" data-i18n="gee_step_2_link">&#8594; Google Cloud Console</a></div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-body"><h3 data-i18n="gee_step_3_title">Enable Earth Engine API</h3><p data-i18n="gee_step_3_desc">In Cloud Console, search for Earth Engine API and enable it.</p><a class="step-link" href="https://console.cloud.google.com/apis/library/earthengine.googleapis.com" target="_blank" rel="noopener noreferrer" data-i18n="gee_step_3_link">&#8594; Enable API</a></div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-body"><h3 data-i18n="gee_step_4_title">Find your project ID</h3><p data-i18n="gee_step_4_desc">Open the Earth Engine Code Editor to find your project ID.</p><a class="step-link" href="https://code.earthengine.google.com/" target="_blank" rel="noopener noreferrer" data-i18n="gee_step_4_link">&#8594; Code Editor</a></div></div>
+      <div class="step"><div class="step-num">05</div><div class="step-body"><h3 data-i18n="gee_step_5_title">Authenticate in RAVI</h3><p data-i18n="gee_step_5_desc">Open RAVI in QGIS, click Setup Authentication, enter your Cloud project ID, and authorize access.</p></div></div>
+    </div>
+  </div>
+</section>
 
-          if (selectedLang === 'en') {
-            sidebarEn.style.display = 'block';
-            sidebarPt.style.display = 'none';
-            document.title = 'RAVI Documentation';
-          } else {
-            sidebarEn.style.display = 'none';
-            sidebarPt.style.display = 'block';
-            document.title = 'Documentação do RAVI';
-          }
+<section id="resources" class="reveal">
+  <div class="container">
+    <p class="sec-label">Resources</p>
+    <h2 data-i18n="resources_title">Source, Support &amp; License</h2>
+    <p class="sec-lead" data-i18n="resources_lead">Everything you need to use, troubleshoot, and contribute to RAVI.</p>
+    <div class="grid3">
+      <article class="card"><div class="card-icon">&#128187;</div><h3 data-i18n="res_repo_title">Repository</h3><p data-i18n="res_repo_desc">Browse the source code, releases, and documentation on GitHub.</p><a class="card-link" href="https://github.com/caioarantes/ravi-qgis-plugin" target="_blank" rel="noopener noreferrer" data-i18n="res_repo_link">&#8594; Open repository</a></article>
+      <article class="card"><div class="card-icon">&#128172;</div><h3 data-i18n="res_issues_title">Report Issues</h3><p data-i18n="res_issues_desc">Found a bug or have a suggestion? Open an issue and help improve RAVI.</p><a class="card-link" href="https://github.com/caioarantes/ravi-qgis-plugin/issues" target="_blank" rel="noopener noreferrer" data-i18n="res_issues_link">&#8594; GitHub Issues</a></article>
+      <article class="card"><div class="card-icon">&#128220;</div><h3 data-i18n="res_license_title">License</h3><p data-i18n="res_license_desc">RAVI is released under the GNU General Public License v2.0 or later.</p><a class="card-link" href="https://github.com/caioarantes/ravi-qgis-plugin/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-i18n="res_license_link">&#8594; Read the license</a></article>
+    </div>
+  </div>
+</section>
 
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        });
-      });
-    });
-  </script>
+<section class="alt reveal">
+  <div class="container">
+    <p class="sec-label">Project</p>
+    <h2 data-i18n="about_title">About the Project</h2>
+    <div class="about-box">
+      <p data-i18n="about_text">RAVI began as the undergraduate final project (TCC) of Caio Arantes, developed under the supervision of Prof. Dr. Lucas dos Rios Amaral. Today it is a free and open-source project maintained with the support of FARM Analytica, committed to technology diffusion and the open-source philosophy.</p>
+      <div class="partner-row">
+        <img class="partner-logo" src="assets/farm_icon.png" alt="FARM Analytica logo">
+        <div class="partner-info">
+          <span class="partner-tag" data-i18n="sponsor_label">Supported by</span>
+          <strong class="partner-name">FARM Analytica</strong>
+          <p data-i18n="sponsor_desc">Technology and field intelligence working together to support practical operations.</p>
+          <div class="chips">
+            <a class="chip chip-green" href="https://api.whatsapp.com/send/?phone=5519992741032&amp;text=Ol%C3%A1!+Preciso+de+mais+informa%C3%A7%C3%B5es&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener noreferrer" data-i18n="sponsor_whatsapp">Talk on WhatsApp</a>
+            <a class="chip" href="mailto:adm@farmanalytica.com.br">adm@farmanalytica.com.br</a>
+          </div>
+          <a class="partner-cta" href="https://farmanalytica.com.br" target="_blank" rel="noopener noreferrer" data-i18n="sponsor_cta">Speak with FARM about exclusive custom solutions</a>
+        </div>
+      </div>
+      <p class="about-ref"><span data-i18n="about_supervisors_prefix">Academic supervision by</span> <a href="https://www.linkedin.com/in/lucas-rios-do-amaral-bb302449/" target="_blank" rel="noopener noreferrer">Prof. Dr. Lucas Rios do Amaral</a> <span data-i18n="about_supervisors_and">and</span> <a href="https://www.linkedin.com/in/isabella-alves-da-cunha-a110011b9/" target="_blank" rel="noopener noreferrer">M.Sc. Isabella Alves da Cunha</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container footer-in">
+    <img class="f-logo" src="icon.png" alt="RAVI">
+    <img class="f-logo" src="assets/farm_icon.png" alt="FARM Analytica">
+    <span data-i18n="footer_text">RAVI, an open and free project supported by FARM Analytica.</span>
+  </div>
+</footer>
+
+<script>
+	const translations={pt:{nav_features:"Recursos",nav_how:"Como funciona",nav_setup:"Configurar GEE",github_btn:"Ver no GitHub",learn_btn:"Como funciona",hero_tag:"Análise de vegetação Sentinel-2. Sem código.",hero_title:"Analise índices de vegetação diretamente no QGIS",hero_description:"Autentique-se no Google Earth Engine, selecione seu AOI, calcule índices de vegetação, explore séries temporais interativas e exporte resultados — tudo sem sair do QGIS.",preview_title:"Sentinel-2",preview_subtitle:"Série Temporal & Índices de Vegetação",key_features:"Principais recursos",feature_indices:"✓ Índices NDVI, EVI, SAVI, GNDVI",feature_render:"✓ Camadas RGB e sintéticas",feature_timeseries:"✓ Gráficos de série temporal interativa",feature_download:"✓ Download multiespectral & exportação CSV",intro_label:"Visão geral",intro_title:"Análise Remota de Índices de Vegetação",intro_lead:"O RAVI é um plugin para QGIS que se integra ao Google Earth Engine para processar e visualizar dados de reflectância de superfície do Sentinel-2 — cálculo de índices de vegetação, visualização e download de imagens multiespectrais.",features_title:"Recursos Principais",features_lead:"Um fluxo de trabalho completo para análise de vegetação no QGIS com integração ao Google Earth Engine.",feature_1_title:"Índices de Vegetação",feature_1_desc:"Calcule NDVI, EVI, SAVI e GNDVI para datas específicas ou imagens sintéticas.",feature_2_title:"Integração com Earth Engine",feature_2_desc:"Autentique, processe e visualize dados de reflectância de superfície do Sentinel-2 diretamente no QGIS.",feature_3_title:"Série Temporal Interativa",feature_3_desc:"Gráficos Plotly com hover e zoom — filtre datas, suavize com Savitzky-Golay e exporte como CSV.",feature_4_title:"Precipitação NASA POWER",feature_4_desc:"Sobreponha dados mensais de precipitação para comparação entre variáveis junto à sua série de índices.",feature_5_title:"Camadas RGB e Sintéticas",feature_5_desc:"Carregue imagens RGB multiespectrais completas de uma data ou gere rasters de índice sintético de um período.",feature_6_title:"Análise de Pontos e Polígonos",feature_6_desc:"Execute séries temporais de pontos (pixel único) ou análise de múltiplos polígonos sobre suas áreas de interesse.",how_title:"Como Funciona",how_lead:"Um fluxo de trabalho em três etapas, da autenticação aos insights de vegetação no QGIS.",step_1_title:"Autenticar",step_1_desc:"Configure seu ID de projeto Google Cloud e autentique-se no Google Earth Engine através do plugin.",step_2_title:"Configurar & Executar",step_2_desc:"Carregue seu AOI, defina o intervalo de tempo, escolha um índice de vegetação e filtros, e execute para gerar a série temporal.",step_3_title:"Visualizar & Exportar",step_3_desc:"Explore gráficos interativos, carregue camadas RGB ou de índice, suavize a série e exporte como CSV ou GeoTIFF.",setup_title:"Primeiros Passos",setup_lead:"Configure o Google Earth Engine e o RAVI para começar a analisar dados Sentinel-2.",gee_step_1_title:"Criar conta Google Earth Engine",gee_step_1_desc:"Cadastre-se gratuitamente em earthengine.google.com.",gee_step_1_link:"→ Ir para Earth Engine",gee_step_2_title:"Criar projeto Google Cloud",gee_step_2_desc:"Crie um novo projeto e vincule-o à sua conta GEE.",gee_step_2_link:"→ Console Google Cloud",gee_step_3_title:"Habilitar Earth Engine API",gee_step_3_desc:"No Console Cloud, procure por Earth Engine API e habilite-a.",gee_step_3_link:"→ Habilitar API",gee_step_4_title:"Encontrar seu ID de projeto",gee_step_4_desc:"Abra o Editor de Código do Earth Engine para encontrar seu ID de projeto.",gee_step_4_link:"→ Editor de Código",gee_step_5_title:"Autenticar no RAVI",gee_step_5_desc:"Abra o RAVI no QGIS, clique em Configurar Autenticação, insira seu ID de projeto Cloud e autorize o acesso.",resources_title:"Código, Suporte & Licença",resources_lead:"Tudo que você precisa para usar, solucionar problemas e contribuir com o RAVI.",res_repo_title:"Repositório",res_repo_desc:"Navegue pelo código-fonte, versões e documentação no GitHub.",res_repo_link:"→ Abrir repositório",res_issues_title:"Relatar Problemas",res_issues_desc:"Encontrou um bug ou tem uma sugestão? Abra uma issue e ajude a melhorar o RAVI.",res_issues_link:"→ GitHub Issues",res_license_title:"Licença",res_license_desc:"O RAVI é distribuído sob a GNU General Public License v2.0 ou superior.",res_license_link:"→ Ler a licença",about_title:"Sobre o Projeto",about_text:"O RAVI teve início como trabalho de conclusão de curso (TCC) de Caio Arantes, desenvolvido sob orientação do Prof. Dr. Lucas dos Rios Amaral. Atualmente é um projeto gratuito e de código aberto, mantido com o apoio da FARM Analytica, comprometido com a difusão tecnológica e o espírito do software livre.",sponsor_label:"Apoiado por",sponsor_desc:"Tecnologia e inteligência de campo trabalhando juntas para apoiar operações práticas.",sponsor_whatsapp:"Fale no WhatsApp",sponsor_cta:"Fale com a FARM sobre soluções personalizadas exclusivas",about_supervisors_prefix:"Orientação acadêmica de",about_supervisors_and:"e",footer_text:"RAVI, um projeto aberto e gratuito apoiado pela FARM Analytica."},en:{nav_features:"Features",nav_how:"How it works",nav_setup:"GEE Setup",github_btn:"View on GitHub",learn_btn:"How it works",hero_tag:"Sentinel-2 vegetation analysis. No code.",hero_title:"Analyze vegetation indices directly in QGIS",hero_description:"Authenticate with Google Earth Engine, select your AOI, compute vegetation indices, explore interactive time series, and export results — all without leaving QGIS.",preview_title:"Sentinel-2",preview_subtitle:"Time Series & Vegetation Indices",key_features:"Key features",feature_indices:"✓ NDVI, EVI, SAVI, GNDVI indices",feature_render:"✓ RGB & composite layers",feature_timeseries:"✓ Interactive time series charts",feature_download:"✓ Multispectral download & CSV export",intro_label:"Overview",intro_title:"Remote Analysis of Vegetation Indices",intro_lead:"RAVI is a QGIS plugin that integrates with Google Earth Engine to process and visualize Sentinel-2 surface reflectance data — vegetation index calculation, visualization, and multispectral image download.",features_title:"Core Features",features_lead:"A complete workflow for vegetation analysis in QGIS with Google Earth Engine integration.",feature_1_title:"Vegetation Indices",feature_1_desc:"Compute NDVI, EVI, SAVI, and GNDVI for single dates or composite images.",feature_2_title:"Earth Engine Integration",feature_2_desc:"Authenticate, process, and visualize Sentinel-2 surface reflectance data directly in QGIS.",feature_3_title:"Interactive Time Series",feature_3_desc:"Plotly charts with hover and zoom — filter dates, smooth with Savitzky-Golay, and export as CSV.",feature_4_title:"NASA POWER Precipitation",feature_4_desc:"Overlay monthly precipitation data for cross-variable comparison alongside your index series.",feature_5_title:"RGB & Composite Layers",feature_5_desc:"Load full multispectral RGB imagery for a date or generate composite index rasters across a period.",feature_6_title:"Points & Polygon Analysis",feature_6_desc:"Run single-pixel point time series or multi-polygon analysis over your areas of interest.",how_title:"How It Works",how_lead:"A three-step workflow from authentication to vegetation insights in QGIS.",step_1_title:"Authenticate",step_1_desc:"Set up your Google Cloud project ID and authenticate with Google Earth Engine through the plugin.",step_2_title:"Configure & Run",step_2_desc:"Load your AOI, set the time range, choose a vegetation index and filters, then run to build the time series.",step_3_title:"Visualize & Export",step_3_desc:"Explore interactive charts, load RGB or index layers, smooth the series, and export as CSV or GeoTIFF.",setup_title:"Getting Started",setup_lead:"Set up Google Earth Engine and configure RAVI to start analyzing Sentinel-2 data.",gee_step_1_title:"Create a Google Earth Engine account",gee_step_1_desc:"Sign up for free at earthengine.google.com.",gee_step_1_link:"→ Go to Earth Engine",gee_step_2_title:"Create a Google Cloud project",gee_step_2_desc:"Create a new project and link it to your GEE account.",gee_step_2_link:"→ Google Cloud Console",gee_step_3_title:"Enable Earth Engine API",gee_step_3_desc:"In Cloud Console, search for Earth Engine API and enable it.",gee_step_3_link:"→ Enable API",gee_step_4_title:"Find your project ID",gee_step_4_desc:"Open the Earth Engine Code Editor to find your project ID.",gee_step_4_link:"→ Code Editor",gee_step_5_title:"Authenticate in RAVI",gee_step_5_desc:"Open RAVI in QGIS, click Setup Authentication, enter your Cloud project ID, and authorize access.",resources_title:"Source, Support & License",resources_lead:"Everything you need to use, troubleshoot, and contribute to RAVI.",res_repo_title:"Repository",res_repo_desc:"Browse the source code, releases, and documentation on GitHub.",res_repo_link:"→ Open repository",res_issues_title:"Report Issues",res_issues_desc:"Found a bug or have a suggestion? Open an issue and help improve RAVI.",res_issues_link:"→ GitHub Issues",res_license_title:"License",res_license_desc:"RAVI is released under the GNU General Public License v2.0 or later.",res_license_link:"→ Read the license",about_title:"About the Project",about_text:"RAVI began as the undergraduate final project (TCC) of Caio Arantes, developed under the supervision of Prof. Dr. Lucas dos Rios Amaral. Today it is a free and open-source project maintained with the support of FARM Analytica, committed to technology diffusion and the open-source philosophy.",sponsor_label:"Supported by",sponsor_desc:"Technology and field intelligence working together to support practical operations.",sponsor_whatsapp:"Talk on WhatsApp",sponsor_cta:"Speak with FARM about exclusive custom solutions",about_supervisors_prefix:"Academic supervision by",about_supervisors_and:"and",footer_text:"RAVI, an open and free project supported by FARM Analytica."},fr:{nav_features:"Fonctionnalités",nav_how:"Comment ça marche",nav_setup:"Configuration GEE",github_btn:"Voir sur GitHub",learn_btn:"Comment ça marche",hero_tag:"Analyse de végétation Sentinel-2. Sans code.",hero_title:"Analysez les indices de végétation directement dans QGIS",hero_description:"Authentifiez-vous auprès de Google Earth Engine, sélectionnez votre AOI, calculez des indices de végétation, explorez des séries chronologiques interactives et exportez les résultats — le tout sans quitter QGIS.",preview_title:"Sentinel-2",preview_subtitle:"Séries Temporelles & Indices de Végétation",key_features:"Principales fonctionnalités",feature_indices:"✓ Indices NDVI, EVI, SAVI, GNDVI",feature_render:"✓ Couches RGB et composites",feature_timeseries:"✓ Graphiques de séries chronologiques interactives",feature_download:"✓ Téléchargement multispectral & export CSV",intro_label:"Aperçu",intro_title:"Analyse à Distance des Indices de Végétation",intro_lead:"RAVI est un plugin QGIS qui s'intègre à Google Earth Engine pour traiter et visualiser les données de réflectance de surface Sentinel-2 — calcul d'indices de végétation, visualisation et téléchargement d'images multispectrales.",features_title:"Fonctionnalités Principales",features_lead:"Un flux de travail complet pour l'analyse de la végétation dans QGIS avec intégration de Google Earth Engine.",feature_1_title:"Indices de Végétation",feature_1_desc:"Calculez NDVI, EVI, SAVI et GNDVI pour des dates précises ou des images composites.",feature_2_title:"Intégration Earth Engine",feature_2_desc:"Authentifiez, traitez et visualisez les données de réflectance de surface Sentinel-2 directement dans QGIS.",feature_3_title:"Séries Temporelles Interactives",feature_3_desc:"Graphiques Plotly avec survol et zoom — filtrez les dates, lissez avec Savitzky-Golay et exportez en CSV.",feature_4_title:"Précipitations NASA POWER",feature_4_desc:"Superposez les données mensuelles de précipitations pour une comparaison croisée avec votre série d'indices.",feature_5_title:"Couches RGB et Composites",feature_5_desc:"Chargez des images RGB multispectrales complètes pour une date ou générez des rasters d'indice composite sur une période.",feature_6_title:"Analyse de Points et Polygones",feature_6_desc:"Exécutez des séries temporelles de points (pixel unique) ou une analyse multi-polygones sur vos zones d'intérêt.",how_title:"Comment Ça Marche",how_lead:"Un flux de travail en trois étapes, de l'authentification aux analyses de végétation dans QGIS.",step_1_title:"Authentifier",step_1_desc:"Configurez votre ID de projet Google Cloud et authentifiez-vous auprès de Google Earth Engine via le plugin.",step_2_title:"Configurer & Exécuter",step_2_desc:"Chargez votre AOI, définissez la plage de dates, choisissez un indice de végétation et des filtres, puis exécutez pour générer la série chronologique.",step_3_title:"Visualiser & Exporter",step_3_desc:"Explorez les graphiques interactifs, chargez des couches RGB ou d'indice, lissez la série et exportez en CSV ou GeoTIFF.",setup_title:"Démarrage",setup_lead:"Configurez Google Earth Engine et RAVI pour commencer à analyser les données Sentinel-2.",gee_step_1_title:"Créer un compte Google Earth Engine",gee_step_1_desc:"Inscrivez-vous gratuitement sur earthengine.google.com.",gee_step_1_link:"→ Aller à Earth Engine",gee_step_2_title:"Créer un projet Google Cloud",gee_step_2_desc:"Créez un nouveau projet et liez-le à votre compte GEE.",gee_step_2_link:"→ Console Google Cloud",gee_step_3_title:"Activer l'API Earth Engine",gee_step_3_desc:"Dans Cloud Console, recherchez Earth Engine API et activez-la.",gee_step_3_link:"→ Activer l'API",gee_step_4_title:"Trouver votre ID de projet",gee_step_4_desc:"Ouvrez l'éditeur de code Earth Engine pour trouver votre ID de projet.",gee_step_4_link:"→ Éditeur de code",gee_step_5_title:"Authentifier dans RAVI",gee_step_5_desc:"Ouvrez RAVI dans QGIS, cliquez sur Configurer l'authentification, entrez votre ID de projet Cloud et autorisez l'accès.",resources_title:"Source, Support & Licence",resources_lead:"Tout ce dont vous avez besoin pour utiliser, dépanner et contribuer à RAVI.",res_repo_title:"Dépôt",res_repo_desc:"Parcourez le code source, les versions et la documentation sur GitHub.",res_repo_link:"→ Ouvrir le dépôt",res_issues_title:"Signaler des Problèmes",res_issues_desc:"Vous avez trouvé un bug ou une suggestion ? Ouvrez une issue et aidez à améliorer RAVI.",res_issues_link:"→ GitHub Issues",res_license_title:"Licence",res_license_desc:"RAVI est publié sous la licence GNU General Public License v2.0 ou ultérieure.",res_license_link:"→ Lire la licence",about_title:"À Propos du Projet",about_text:"RAVI a débuté comme projet de fin d'études (TCC) de Caio Arantes, développé sous la supervision du Prof. Dr. Lucas dos Rios Amaral. C'est aujourd'hui un projet gratuit et open-source maintenu avec le soutien de FARM Analytica, engagé dans la diffusion technologique et la philosophie open-source.",sponsor_label:"Soutenu par",sponsor_desc:"La technologie et l'intelligence de terrain travaillent ensemble pour soutenir les opérations pratiques.",sponsor_whatsapp:"Parlez sur WhatsApp",sponsor_cta:"Parlez à FARM des solutions personnalisées exclusives",about_supervisors_prefix:"Supervision académique par",about_supervisors_and:"et",footer_text:"RAVI, un projet ouvert et gratuit soutenu par FARM Analytica."},it:{nav_features:"Funzionalità",nav_how:"Come funziona",nav_setup:"Configurazione GEE",github_btn:"Visualizza su GitHub",learn_btn:"Come funziona",hero_tag:"Analisi della vegetazione Sentinel-2. Senza codice.",hero_title:"Analizza gli indici di vegetazione direttamente in QGIS",hero_description:"Autenticati con Google Earth Engine, seleziona il tuo AOI, calcola gli indici di vegetazione, esplora serie temporali interattive ed esporta i risultati — tutto senza uscire da QGIS.",preview_title:"Sentinel-2",preview_subtitle:"Serie Temporali & Indici di Vegetazione",key_features:"Caratteristiche principali",feature_indices:"✓ Indici NDVI, EVI, SAVI, GNDVI",feature_render:"✓ Livelli RGB e compositi",feature_timeseries:"✓ Grafici di serie temporali interattivi",feature_download:"✓ Download multispettrale & esportazione CSV",intro_label:"Panoramica",intro_title:"Analisi Remota degli Indici di Vegetazione",intro_lead:"RAVI è un plugin QGIS che si integra con Google Earth Engine per elaborare e visualizzare i dati di riflettanza di superficie Sentinel-2 — calcolo di indici di vegetazione, visualizzazione e download di immagini multispettrali.",features_title:"Funzionalità Principali",features_lead:"Un flusso di lavoro completo per l'analisi della vegetazione in QGIS con integrazione di Google Earth Engine.",feature_1_title:"Indici di Vegetazione",feature_1_desc:"Calcola NDVI, EVI, SAVI e GNDVI per date specifiche o immagini composite.",feature_2_title:"Integrazione Earth Engine",feature_2_desc:"Autentica, elabora e visualizza i dati di riflettanza di superficie Sentinel-2 direttamente in QGIS.",feature_3_title:"Serie Temporali Interattive",feature_3_desc:"Grafici Plotly con hover e zoom — filtra le date, leviga con Savitzky-Golay ed esporta come CSV.",feature_4_title:"Precipitazioni NASA POWER",feature_4_desc:"Sovrapponi i dati mensili di precipitazione per un confronto incrociato con la tua serie di indici.",feature_5_title:"Livelli RGB e Compositi",feature_5_desc:"Carica immagini RGB multispettrali complete per una data o genera raster di indice composito su un periodo.",feature_6_title:"Analisi di Punti e Poligoni",feature_6_desc:"Esegui serie temporali di punti (singolo pixel) o analisi multi-poligono sulle tue aree di interesse.",how_title:"Come Funziona",how_lead:"Un flusso di lavoro in tre fasi, dall'autenticazione alle analisi della vegetazione in QGIS.",step_1_title:"Autenticazione",step_1_desc:"Configura il tuo ID progetto Google Cloud e autenticati con Google Earth Engine tramite il plugin.",step_2_title:"Configura & Esegui",step_2_desc:"Carica il tuo AOI, imposta l'intervallo di date, scegli un indice di vegetazione e filtri, quindi esegui per generare la serie temporale.",step_3_title:"Visualizza & Esporta",step_3_desc:"Esplora grafici interattivi, carica livelli RGB o di indice, leviga la serie ed esporta come CSV o GeoTIFF.",setup_title:"Iniziare",setup_lead:"Configura Google Earth Engine e RAVI per iniziare ad analizzare i dati Sentinel-2.",gee_step_1_title:"Crea un account Google Earth Engine",gee_step_1_desc:"Registrati gratuitamente su earthengine.google.com.",gee_step_1_link:"→ Vai a Earth Engine",gee_step_2_title:"Crea un progetto Google Cloud",gee_step_2_desc:"Crea un nuovo progetto e collegalo al tuo account GEE.",gee_step_2_link:"→ Console Google Cloud",gee_step_3_title:"Abilita l'API Earth Engine",gee_step_3_desc:"In Cloud Console, cerca Earth Engine API e abilitala.",gee_step_3_link:"→ Abilita l'API",gee_step_4_title:"Trova il tuo ID progetto",gee_step_4_desc:"Apri l'editor di codice Earth Engine per trovare il tuo ID progetto.",gee_step_4_link:"→ Editor di codice",gee_step_5_title:"Autenticazione in RAVI",gee_step_5_desc:"Apri RAVI in QGIS, fai clic su Configura autenticazione, inserisci il tuo ID progetto Cloud e autorizza l'accesso.",resources_title:"Codice, Supporto & Licenza",resources_lead:"Tutto ciò di cui hai bisogno per usare, risolvere problemi e contribuire a RAVI.",res_repo_title:"Repository",res_repo_desc:"Sfoglia il codice sorgente, le versioni e la documentazione su GitHub.",res_repo_link:"→ Apri repository",res_issues_title:"Segnala Problemi",res_issues_desc:"Hai trovato un bug o hai un suggerimento? Apri una issue e aiuta a migliorare RAVI.",res_issues_link:"→ GitHub Issues",res_license_title:"Licenza",res_license_desc:"RAVI è distribuito sotto licenza GNU General Public License v2.0 o successiva.",res_license_link:"→ Leggi la licenza",about_title:"Sul Progetto",about_text:"RAVI è nato come progetto di tesi di laurea (TCC) di Caio Arantes, sviluppato sotto la supervisione del Prof. Dr. Lucas dos Rios Amaral. Oggi è un progetto gratuito e open-source mantenuto con il supporto di FARM Analytica, impegnato nella diffusione tecnologica e nella filosofia open-source.",sponsor_label:"Supportato da",sponsor_desc:"La tecnologia e l'intelligenza sul campo lavorano insieme per supportare le operazioni pratiche.",sponsor_whatsapp:"Parla su WhatsApp",sponsor_cta:"Parla con FARM delle soluzioni personalizzate esclusive",about_supervisors_prefix:"Supervisione accademica di",about_supervisors_and:"e",footer_text:"RAVI, un progetto aperto e gratuito supportato da FARM Analytica."},es:{nav_features:"Características",nav_how:"Cómo funciona",nav_setup:"Configurar GEE",github_btn:"Ver en GitHub",learn_btn:"Cómo funciona",hero_tag:"Análisis de vegetación Sentinel-2. Sin código.",hero_title:"Analiza índices de vegetación directamente en QGIS",hero_description:"Autentícate con Google Earth Engine, selecciona tu AOI, calcula índices de vegetación, explora series temporales interactivas y exporta resultados — todo sin salir de QGIS.",preview_title:"Sentinel-2",preview_subtitle:"Series Temporales & Índices de Vegetación",key_features:"Características principales",feature_indices:"✓ Índices NDVI, EVI, SAVI, GNDVI",feature_render:"✓ Capas RGB y compuestas",feature_timeseries:"✓ Gráficos de series temporales interactivos",feature_download:"✓ Descarga multiespectral & exportación CSV",intro_label:"Visión general",intro_title:"Análisis Remoto de Índices de Vegetación",intro_lead:"RAVI es un complemento de QGIS que se integra con Google Earth Engine para procesar y visualizar datos de reflectancia de superficie Sentinel-2 — cálculo de índices de vegetación, visualización y descarga de imágenes multiespectrales.",features_title:"Características Principales",features_lead:"Un flujo de trabajo completo para el análisis de vegetación en QGIS con integración de Google Earth Engine.",feature_1_title:"Índices de Vegetación",feature_1_desc:"Calcula NDVI, EVI, SAVI y GNDVI para fechas específicas o imágenes compuestas.",feature_2_title:"Integración con Earth Engine",feature_2_desc:"Autentica, procesa y visualiza datos de reflectancia de superficie Sentinel-2 directamente en QGIS.",feature_3_title:"Series Temporales Interactivas",feature_3_desc:"Gráficos Plotly con desplazamiento y zoom — filtra fechas, suaviza con Savitzky-Golay y exporta como CSV.",feature_4_title:"Precipitación NASA POWER",feature_4_desc:"Superpón datos mensuales de precipitación para comparación entre variables junto a tu serie de índices.",feature_5_title:"Capas RGB y Compuestas",feature_5_desc:"Carga imágenes RGB multiespectrales completas de una fecha o genera rásteres de índice compuesto de un período.",feature_6_title:"Análisis de Puntos y Polígonos",feature_6_desc:"Ejecuta series temporales de puntos (píxel único) o análisis de múltiples polígonos sobre tus áreas de interés.",how_title:"Cómo Funciona",how_lead:"Un flujo de trabajo de tres pasos, desde la autenticación hasta los análisis de vegetación en QGIS.",step_1_title:"Autenticación",step_1_desc:"Configura tu ID de proyecto de Google Cloud y autentica con Google Earth Engine a través del complemento.",step_2_title:"Configurar & Ejecutar",step_2_desc:"Carga tu AOI, establece el rango de fechas, elige un índice de vegetación y filtros, y ejecuta para generar la serie temporal.",step_3_title:"Visualizar & Exportar",step_3_desc:"Explora gráficos interactivos, carga capas RGB o de índice, suaviza la serie y exporta como CSV o GeoTIFF.",setup_title:"Comenzar",setup_lead:"Configura Google Earth Engine y RAVI para comenzar a analizar datos Sentinel-2.",gee_step_1_title:"Crear cuenta de Google Earth Engine",gee_step_1_desc:"Regístrate gratis en earthengine.google.com.",gee_step_1_link:"→ Ir a Earth Engine",gee_step_2_title:"Crear proyecto de Google Cloud",gee_step_2_desc:"Crea un nuevo proyecto y vincúlalo a tu cuenta GEE.",gee_step_2_link:"→ Consola de Google Cloud",gee_step_3_title:"Habilitar API de Earth Engine",gee_step_3_desc:"En Cloud Console, busca Earth Engine API y habilítala.",gee_step_3_link:"→ Habilitar API",gee_step_4_title:"Encuentra tu ID de proyecto",gee_step_4_desc:"Abre el Editor de Código de Earth Engine para encontrar tu ID de proyecto.",gee_step_4_link:"→ Editor de Código",gee_step_5_title:"Autenticación en RAVI",gee_step_5_desc:"Abre RAVI en QGIS, haz clic en Configurar Autenticación, ingresa tu ID de proyecto Cloud y autoriza el acceso.",resources_title:"Código, Soporte & Licencia",resources_lead:"Todo lo que necesitas para usar, solucionar problemas y contribuir a RAVI.",res_repo_title:"Repositorio",res_repo_desc:"Explora el código fuente, las versiones y la documentación en GitHub.",res_repo_link:"→ Abrir repositorio",res_issues_title:"Reportar Problemas",res_issues_desc:"¿Encontraste un error o tienes una sugerencia? Abre una issue y ayuda a mejorar RAVI.",res_issues_link:"→ GitHub Issues",res_license_title:"Licencia",res_license_desc:"RAVI se distribuye bajo la licencia GNU General Public License v2.0 o posterior.",res_license_link:"→ Leer la licencia",about_title:"Sobre el Proyecto",about_text:"RAVI comenzó como el proyecto final de grado (TCC) de Caio Arantes, desarrollado bajo la supervisión del Prof. Dr. Lucas dos Rios Amaral. Hoy es un proyecto gratuito y de código abierto mantenido con el apoyo de FARM Analytica, comprometido con la difusión tecnológica y la filosofía de código abierto.",sponsor_label:"Apoyado por",sponsor_desc:"La tecnología y la inteligencia de campo trabajan juntas para apoyar operaciones prácticas.",sponsor_whatsapp:"Habla en WhatsApp",sponsor_cta:"Habla con FARM sobre soluciones personalizadas exclusivas",about_supervisors_prefix:"Supervisión académica por",about_supervisors_and:"y",footer_text:"RAVI, un proyecto abierto y gratuito apoyado por FARM Analytica."},hi:{nav_features:"सुविधाएं",nav_how:"यह कैसे काम करता है",nav_setup:"GEE सेटअप",github_btn:"GitHub पर देखें",learn_btn:"यह कैसे काम करता है",hero_tag:"Sentinel-2 वनस्पति विश्लेषण। कोई कोड नहीं।",hero_title:"QGIS में सीधे वनस्पति सूचकांकों का विश्लेषण करें",hero_description:"Google Earth Engine से प्रमाणित करें, अपना AOI चुनें, वनस्पति सूचकांकों की गणना करें, इंटरैक्टिव समय श्रृंखला देखें और परिणाम निर्यात करें — सभी QGIS से बाहर जाए बिना।",preview_title:"Sentinel-2",preview_subtitle:"समय श्रृंखला & वनस्पति सूचकांक",key_features:"मुख्य सुविधाएं",feature_indices:"✓ NDVI, EVI, SAVI, GNDVI सूचकांक",feature_render:"✓ RGB और मिश्रित परतें",feature_timeseries:"✓ इंटरैक्टिव समय श्रृंखला चार्ट",feature_download:"✓ बहुस्पेक्ट्रल डाउनलोड & CSV निर्यात",intro_label:"अवलोकन",intro_title:"वनस्पति सूचकांकों का दूरस्थ विश्लेषण",intro_lead:"RAVI एक QGIS प्लगइन है जो Google Earth Engine के साथ एकीकृत होकर Sentinel-2 सतह परावर्तन डेटा को प्रोसेस और कल्पना करता है — वनस्पति सूचकांक गणना, कल्पना और बहुस्पेक्ट्रल छवि डाउनलोड।",features_title:"मुख्य सुविधाएं",features_lead:"Google Earth Engine एकीकरण के साथ QGIS में वनस्पति विश्लेषण के लिए एक संपूर्ण कार्यप्रवाह।",feature_1_title:"वनस्पति सूचकांक",feature_1_desc:"विशिष्ट तिथियों या मिश्रित छवियों के लिए NDVI, EVI, SAVI और GNDVI की गणना करें।",feature_2_title:"Earth Engine एकीकरण",feature_2_desc:"QGIS में सीधे Sentinel-2 सतह परावर्तन डेटा को प्रमाणित, प्रोसेस और कल्पना करें।",feature_3_title:"इंटरैक्टिव समय श्रृंखला",feature_3_desc:"होवर और जूम के साथ Plotly चार्ट — तिथियों को फ़िल्टर करें, Savitzky-Golay से चिकना करें और CSV के रूप में निर्यात करें।",feature_4_title:"NASA POWER वर्षा",feature_4_desc:"अपनी सूचकांक श्रृंखला के साथ चर-तुलना के लिए मासिक वर्षा डेटा को ओवरले करें।",feature_5_title:"RGB और मिश्रित परतें",feature_5_desc:"किसी तिथि के लिए पूर्ण बहुस्पेक्ट्रल RGB छवि लोड करें या किसी अवधि में मिश्रित सूचकांक रास्टर उत्पन्न करें।",feature_6_title:"बिंदु और बहुभुज विश्लेषण",feature_6_desc:"अपने रुचि क्षेत्रों पर एकल-पिक्सेल बिंदु समय श्रृंखला या बहु-बहुभुज विश्लेषण चलाएं।",how_title:"यह कैसे काम करता है",how_lead:"QGIS में प्रमाणीकरण से वनस्पति अंतर्दृष्टि तक एक तीन-चरणीय कार्यप्रवाह।",step_1_title:"प्रमाणीकरण",step_1_desc:"अपना Google Cloud प्रोजेक्ट ID सेट करें और प्लगइन के माध्यम से Google Earth Engine के साथ प्रमाणित करें।",step_2_title:"कॉन्फ़िगर & चलाएं",step_2_desc:"अपना AOI लोड करें, समय सीमा सेट करें, वनस्पति सूचकांक और फ़िल्टर चुनें, फिर समय श्रृंखला बनाने के लिए चलाएं।",step_3_title:"कल्पना & निर्यात",step_3_desc:"इंटरैक्टिव चार्ट देखें, RGB या सूचकांक परतें लोड करें, श्रृंखला को चिकना करें और CSV या GeoTIFF के रूप में निर्यात करें।",setup_title:"शुरुआत",setup_lead:"Sentinel-2 डेटा का विश्लेषण शुरू करने के लिए Google Earth Engine सेटअप करें और RAVI कॉन्फ़िगर करें।",gee_step_1_title:"Google Earth Engine खाता बनाएं",gee_step_1_desc:"earthengine.google.com पर निःशुल्क साइन अप करें।",gee_step_1_link:"→ Earth Engine पर जाएं",gee_step_2_title:"Google Cloud प्रोजेक्ट बनाएं",gee_step_2_desc:"एक नई प्रोजेक्ट बनाएं और इसे अपने GEE खाते से जोड़ें।",gee_step_2_link:"→ Google Cloud कंसोल",gee_step_3_title:"Earth Engine API सक्षम करें",gee_step_3_desc:"Cloud Console में, Earth Engine API खोजें और इसे सक्षम करें।",gee_step_3_link:"→ API सक्षम करें",gee_step_4_title:"अपना प्रोजेक्ट ID खोजें",gee_step_4_desc:"अपना प्रोजेक्ट ID खोजने के लिए Earth Engine कोड एडिटर खोलें।",gee_step_4_link:"→ कोड एडिटर",gee_step_5_title:"RAVI में प्रमाणीकरण",gee_step_5_desc:"QGIS में RAVI खोलें, प्रमाणीकरण सेटअप पर क्लिक करें, अपना Cloud प्रोजेक्ट ID दर्ज करें और पहुंच को अधिकृत करें।",resources_title:"स्रोत, समर्थन & लाइसेंस",resources_lead:"RAVI का उपयोग करने, समस्या निवारण और योगदान करने के लिए आपको जो कुछ भी चाहिए।",res_repo_title:"रिपॉजिटरी",res_repo_desc:"GitHub पर स्रोत कोड, रिलीज़ और दस्तावेज़ देखें।",res_repo_link:"→ रिपॉजिटरी खोलें",res_issues_title:"समस्याएं रिपोर्ट करें",res_issues_desc:"बग मिला या कोई सुझाव है? एक issue खोलें और RAVI को बेहतर बनाने में मदद करें।",res_issues_link:"→ GitHub Issues",res_license_title:"लाइसेंस",res_license_desc:"RAVI को GNU General Public License v2.0 या बाद के संस्करण के तहत जारी किया गया है।",res_license_link:"→ लाइसेंस पढ़ें",about_title:"परियोजना के बारे में",about_text:"RAVI की शुरुआत Caio Arantes के स्नातक अंतिम प्रोजेक्ट (TCC) के रूप में हुई, जिसे Prof. Dr. Lucas dos Rios Amaral की देखरेख में विकसित किया गया। आज यह एक मुफ्त और ओपन-सोर्स प्रोजेक्ट है जो FARM Analytica के समर्थन से बनाए रखा जाता है, प्रौद्योगिकी प्रसार और ओपन-सोर्स दर्शन के प्रति प्रतिबद्ध है।",sponsor_label:"द्वारा समर्थित",sponsor_desc:"प्रौद्योगिकी और क्षेत्र खुफिया व्यावहारिक संचालन का समर्थन करने के लिए एक साथ काम करते हैं।",sponsor_whatsapp:"WhatsApp पर बात करें",sponsor_cta:"FARM से विशेष कस्टम समाधानों के बारे में बात करें",about_supervisors_prefix:"शैक्षणिक पर्यवेक्षण",about_supervisors_and:"और",footer_text:"RAVI, FARM Analytica द्वारा समर्थित एक खुली और निःशुल्क परियोजना।"},zh:{nav_features:"功能",nav_how:"使用方法",nav_setup:"GEE设置",github_btn:"在GitHub上查看",learn_btn:"使用方法",hero_tag:"Sentinel-2植被分析。无需代码。",hero_title:"在QGIS中直接分析植被指数",hero_description:"使用Google Earth Engine进行身份验证，选择您的AOI，计算植被指数，探索交互式时间序列，导出结果 — 所有操作无需离开QGIS。",preview_title:"Sentinel-2",preview_subtitle:"时间序列 & 植被指数",key_features:"主要功能",feature_indices:"✓ NDVI、EVI、SAVI、GNDVI指数",feature_render:"✓ RGB与合成图层",feature_timeseries:"✓ 交互式时间序列图表",feature_download:"✓ 多光谱下载 & CSV导出",intro_label:"概述",intro_title:"植被指数遥感分析",intro_lead:"RAVI是一个QGIS插件，集成Google Earth Engine以处理和可视化Sentinel-2地表反射率数据 — 植被指数计算、可视化和多光谱图像下载。",features_title:"核心功能",features_lead:"QGIS中植被分析的完整工作流，集成Google Earth Engine。",feature_1_title:"植被指数",feature_1_desc:"为特定日期或合成图像计算NDVI、EVI、SAVI和GNDVI。",feature_2_title:"Earth Engine集成",feature_2_desc:"在QGIS中直接进行身份验证、处理和可视化Sentinel-2地表反射率数据。",feature_3_title:"交互式时间序列",feature_3_desc:"支持悬停和缩放的Plotly图表 — 按日期筛选，使用Savitzky-Golay平滑，并导出为CSV。",feature_4_title:"NASA POWER降水",feature_4_desc:"叠加每月降水数据，与您的指数序列进行跨变量比较。",feature_5_title:"RGB与合成图层",feature_5_desc:"加载某日期的完整多光谱RGB图像，或生成某时段的合成指数栅格。",feature_6_title:"点与多边形分析",feature_6_desc:"在您的兴趣区域上运行单像素点时间序列或多边形分析。",how_title:"使用方法",how_lead:"从身份验证到在QGIS中获得植被洞察的三步工作流。",step_1_title:"身份验证",step_1_desc:"设置您的Google Cloud项目ID并通过插件向Google Earth Engine进行身份验证。",step_2_title:"配置 & 运行",step_2_desc:"加载您的AOI，设置时间范围，选择植被指数和筛选器，然后运行以生成时间序列。",step_3_title:"可视化 & 导出",step_3_desc:"探索交互式图表，加载RGB或指数图层，平滑序列，并导出为CSV或GeoTIFF。",setup_title:"快速入门",setup_lead:"设置Google Earth Engine并配置RAVI开始分析Sentinel-2数据。",gee_step_1_title:"创建Google Earth Engine账户",gee_step_1_desc:"在earthengine.google.com免费注册。",gee_step_1_link:"→ 前往Earth Engine",gee_step_2_title:"创建Google Cloud项目",gee_step_2_desc:"创建新项目并将其链接到您的GEE账户。",gee_step_2_link:"→ Google Cloud控制台",gee_step_3_title:"启用Earth Engine API",gee_step_3_desc:"在Cloud Console中，搜索Earth Engine API并启用它。",gee_step_3_link:"→ 启用API",gee_step_4_title:"查找您的项目ID",gee_step_4_desc:"打开Earth Engine代码编辑器以查找您的项目ID。",gee_step_4_link:"→ 代码编辑器",gee_step_5_title:"在RAVI中进行身份验证",gee_step_5_desc:"在QGIS中打开RAVI，单击设置身份验证，输入您的Cloud项目ID并授权访问。",resources_title:"源代码、支持 & 许可证",resources_lead:"使用、排查问题和为RAVI做贡献所需的一切。",res_repo_title:"代码仓库",res_repo_desc:"在GitHub上浏览源代码、发布版本和文档。",res_repo_link:"→ 打开仓库",res_issues_title:"报告问题",res_issues_desc:"发现错误或有建议？提交issue，帮助改进RAVI。",res_issues_link:"→ GitHub Issues",res_license_title:"许可证",res_license_desc:"RAVI在GNU General Public License v2.0或更高版本下发布。",res_license_link:"→ 阅读许可证",about_title:"关于项目",about_text:"RAVI始于Caio Arantes的本科毕业项目（TCC），在Prof. Dr. Lucas dos Rios Amaral的指导下开发。如今它是一个免费开源项目，在FARM Analytica的支持下维护，致力于技术传播和开源理念。",sponsor_label:"支持方",sponsor_desc:"技术和田间情报共同努力支持实际操作。",sponsor_whatsapp:"在WhatsApp上交谈",sponsor_cta:"与FARM沟通关于专属定制解决方案",about_supervisors_prefix:"学术指导",about_supervisors_and:"和",footer_text:"RAVI，由FARM Analytica支持的开放免费项目。"}};function applyLanguage(lang){const i18n=translations[lang]||translations.en;const langMap={pt:"pt-BR",en:"en",fr:"fr",it:"it",es:"es",hi:"hi",zh:"zh-Hans"};document.documentElement.lang=langMap[lang]||"en";document.querySelectorAll("[data-i18n]").forEach((el)=>{const key=el.getAttribute("data-i18n");if(i18n[key]){el.textContent=i18n[key]}});document.querySelectorAll("[data-lang-btn]").forEach((btn)=>{btn.classList.toggle("active",btn.getAttribute("data-lang-btn")===lang)});localStorage.setItem("raviWebsiteLang",lang)}const savedLang=localStorage.getItem("raviWebsiteLang");const browserLang=navigator.language&&navigator.language.toLowerCase().startsWith("pt")?"pt":"en";const initialLang=["pt","en","fr","it","es","hi","zh"].includes(savedLang)?savedLang:browserLang;document.querySelectorAll("[data-lang-btn]").forEach((btn)=>{btn.addEventListener("click",()=>{applyLanguage(btn.getAttribute("data-lang-btn"))})});applyLanguage(initialLang);const observer=new IntersectionObserver((entries)=>{entries.forEach((entry)=>{if(entry.isIntersecting){entry.target.classList.add("show")}})},{threshold:.15});document.querySelectorAll(".reveal").forEach((el)=>observer.observe(el));const menuToggle=document.getElementById("menuToggle");const navLinks=document.getElementById("navLinks");if(menuToggle&&navLinks){menuToggle.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuToggle.setAttribute("aria-expanded",open?"true":"false");menuToggle.textContent=open?"✕":"☰"});navLinks.querySelectorAll("a").forEach((a)=>{a.addEventListener("click",()=>{navLinks.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");menuToggle.textContent="☰"})})}
+	</script>
 </body>
-
 </html>

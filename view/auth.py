@@ -11,12 +11,14 @@ import os
 
 from qgis.PyQt.QtCore import Qt, QCoreApplication
 from qgis.PyQt.QtWidgets import (
+    QButtonGroup,
     QFrame,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -197,6 +199,12 @@ def setup_auth_page(dialog, page):
         sc.setWidgetResizable(True)
         sc.setFrameShape(QFrame.Shape.NoFrame)
         sc.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        # Fill the available height and scroll internally. Without this, the
+        # word-wrapped welcome text (whose height grows as the column narrows)
+        # drives the scroll area's minimum height up and pushes the whole dialog
+        # taller when the user reduces it horizontally.
+        sc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sc.setMinimumHeight(0)
         sc.setStyleSheet("QScrollArea { background: transparent; border: none; }")
         return sc
 
@@ -223,7 +231,9 @@ def setup_auth_page(dialog, page):
     right_lay.addWidget(auth_heading)
 
     card = QFrame()
-    card.setFixedHeight(250)
+    # Height tracks content: the service-account key row appears/disappears as
+    # the user switches sign-in mode, so a fixed height would clip or pad it.
+    card.setMinimumHeight(250)
     # Accent border keeps the sign-in card the visual focus of the page, even
     # below the feature banner.
     card.setStyleSheet("""
@@ -237,6 +247,44 @@ def setup_auth_page(dialog, page):
     card_lay = QVBoxLayout(card)
     card_lay.setContentsMargins(20, 18, 20, 14)
     card_lay.setSpacing(7)
+
+    # Sign-in mode toggle: personal OAuth vs. a service-account key file.
+    mode_row = QFrame()
+    mode_row.setStyleSheet(
+        """
+        QFrame { background: #f0f0f0; border: none; border-radius: 6px; }
+        QPushButton {
+            background: transparent;
+            color: #616161;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 0;
+        }
+        QPushButton:checked {
+            background: #1b6b39;
+            color: #ffffff;
+        }
+        """
+    )
+    mode_lay = QHBoxLayout(mode_row)
+    mode_lay.setContentsMargins(3, 3, 3, 3)
+    mode_lay.setSpacing(3)
+
+    dialog.btn_mode_personal = QPushButton(_tr("Personal"))
+    dialog.btn_mode_service = QPushButton(_tr("Service account"))
+    dialog.auth_mode_group = QButtonGroup(dialog)
+    dialog.auth_mode_group.setExclusive(True)
+    for btn in (dialog.btn_mode_personal, dialog.btn_mode_service):
+        btn.setCheckable(True)
+        btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn.setFixedHeight(26)
+        dialog.auth_mode_group.addButton(btn)
+        mode_lay.addWidget(btn, 1)
+    dialog.btn_mode_personal.setChecked(True)
+    card_lay.addWidget(mode_row)
+    card_lay.addSpacing(2)
 
     dialog.auth_status_badge = QPushButton(_tr("Checking sign-in status…"))
     dialog.auth_status_badge.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -259,6 +307,50 @@ def setup_auth_page(dialog, page):
     )
     card_lay.addWidget(dialog.auth_status_badge)
     card_lay.addSpacing(4)
+
+    # Service-account key picker. Hidden in personal mode; shown via
+    # dialog.set_auth_mode("service").
+    dialog.sa_key_row = QWidget()
+    dialog.sa_key_row.setStyleSheet("background: transparent;")
+    sa_lay = QVBoxLayout(dialog.sa_key_row)
+    sa_lay.setContentsMargins(0, 0, 0, 0)
+    sa_lay.setSpacing(4)
+
+    sa_lbl = QLabel(_tr("SERVICE-ACCOUNT KEY (.json)"))
+    sa_lbl.setStyleSheet(
+        "color: #9e9e9e; font-size: 11px; letter-spacing: 1px; font-weight: bold;"
+    )
+    sa_lay.addWidget(sa_lbl)
+
+    sa_input_row = QHBoxLayout()
+    sa_input_row.setContentsMargins(0, 0, 0, 0)
+    sa_input_row.setSpacing(8)
+
+    dialog.sa_key_input = QLineEdit()
+    dialog.sa_key_input.setReadOnly(True)
+    dialog.sa_key_input.setPlaceholderText(_tr("No key file selected"))
+    dialog.sa_key_input.setFixedHeight(28)
+    dialog.sa_key_input.setStyleSheet("""
+        QLineEdit {
+            background-color: #f5f5f5;
+            color: #424242;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+    """)
+    sa_input_row.addWidget(dialog.sa_key_input, 1)
+
+    dialog.btn_browse_key = QPushButton(_tr("Browse"))
+    dialog.btn_browse_key.setFixedHeight(28)
+    dialog.btn_browse_key.setStyleSheet(STYLE_BTN_SECONDARY)
+    sa_input_row.addWidget(dialog.btn_browse_key)
+
+    sa_lay.addLayout(sa_input_row)
+    card_lay.addWidget(dialog.sa_key_row)
+    card_lay.addSpacing(10)
+    dialog.sa_key_row.hide()
 
     pid_lbl = QLabel(_tr("PROJECT ID (GOOGLE CLOUD)"))
     pid_lbl.setStyleSheet(
@@ -308,7 +400,6 @@ def setup_auth_page(dialog, page):
         QPushButton:hover { color: #c62828; }
     """)
     card_lay.addWidget(dialog.btn_reset_auth, 0, Qt.AlignmentFlag.AlignHCenter)
-    card_lay.addStretch(1)
 
     right_lay.addWidget(card)
 

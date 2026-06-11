@@ -25,6 +25,8 @@ class LandsatWorker(QThread):
                 date_end=self._params.get("date_end"),
                 use_cloud_mask=self._params.get("use_cloud_mask", True),
                 tier=self._params.get("tier", 1),
+                min_valid_pct=self._params.get("min_valid_pct", 0),
+                aoi_area_m2=self._params.get("aoi_area_m2"),
             )
             self.finished.emit(dated_missions)
         except Exception as e:

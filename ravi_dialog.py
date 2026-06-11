@@ -27,9 +27,11 @@ from qgis.PyQt.QtGui import QDesktopServices, QPixmap
 from qgis.PyQt.QtWidgets import (
     QApplication,
     QDialog,
+    QDialogButtonBox,
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QProgressBar,
     QPushButton,
@@ -38,6 +40,8 @@ from qgis.PyQt.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from .managers.settings_manager import SettingsManager
 
 from .view.auth import setup_auth_page
 from .view.download_dem import setup_download_dem_page
@@ -139,7 +143,6 @@ class RAVIDialog(QDialog):
         )
         self.setWindowModality(Qt.WindowModality.NonModal)
 
-        self.setMinimumSize(800, 534)
         self.resize(800, 534)
         self.setSizeGripEnabled(True)
         self.setStyleSheet(STYLE_DIALOG)
@@ -283,6 +286,26 @@ class RAVIDialog(QDialog):
 
         header_layout.addStretch()
 
+        # Proxy settings, tucked into the top-right corner as a subtle link
+        # (mirrors the ClimaPlots placement). Only needed on restricted networks.
+        self.proxy_btn = QPushButton(_tr("Proxy settings"))
+        self.proxy_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.proxy_btn.setToolTip(
+            _tr("Proxy setting (only if required by your network provider)")
+        )
+        self.proxy_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                color: #9e9e9e;
+                border: none;
+                font-size: 11px;
+                padding: 0 10px;
+            }
+            QPushButton:hover { color: #1b6b39; }
+        """)
+        self.proxy_btn.clicked.connect(self._open_proxy_dialog)
+        header_layout.addWidget(self.proxy_btn)
+
         self.browser = QPushButton("?")
         self.browser.setFixedSize(28, 28)
         self.browser.setToolTip(_tr("Learn more"))
@@ -295,6 +318,31 @@ class RAVIDialog(QDialog):
         header_layout.addWidget(self.browser)
 
         return header
+
+    def _open_proxy_dialog(self):
+        """Small modal to view/edit the optional outbound HTTP(S) proxy."""
+        dialog = QDialog(self)
+        dialog.setWindowTitle(_tr("Proxy Settings"))
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(
+            QLabel(_tr("Enter proxy (e.g. http://user:pass@host:port):"))
+        )
+        proxy_edit = QLineEdit()
+        proxy_edit.setText(SettingsManager.get_proxy())
+        proxy_edit.setMinimumWidth(320)
+        layout.addWidget(proxy_edit)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        layout.addWidget(buttons)
+
+        def _accept():
+            SettingsManager.set_proxy(proxy_edit.text().strip())
+            dialog.accept()
+
+        buttons.accepted.connect(_accept)
+        buttons.rejected.connect(dialog.reject)
+        dialog.exec()
 
 
     def _build_footer(self):
@@ -418,6 +466,9 @@ class RAVIDialog(QDialog):
         """Keep header and sidebar state aligned with the current stack page."""
         current = self.stack.widget(index)
 
+        # Proxy settings are only relevant on the auth page (network setup).
+        self.proxy_btn.setVisible(current is self.auth_page)
+
         if current is self.loading_page:
             self._header_title.setText(_tr("Setting up…"))
             self.sidebar.set_active_page(None)
@@ -472,12 +523,15 @@ class RAVIDialog(QDialog):
         self.btn_reset_auth.setEnabled(not busy)
         self.btn_browse_folder.setEnabled(not busy)
         self.auth_status_badge.setEnabled(not busy)
+        self.btn_mode_personal.setEnabled(not busy)
+        self.btn_mode_service.setEnabled(not busy)
+        self.btn_browse_key.setEnabled(not busy)
 
         if busy:
             self.btn_authenticate.setText(_tr("Cancel"))
             self.set_auth_status(_tr("Starting authentication…"))
         else:
-            if getattr(self, "_auth_state", None) == "authenticated":
+            if getattr(self, "_auth_state", "").startswith("authenticated"):
                 self.btn_authenticate.setText(_tr("Continue"))
             else:
                 self.btn_authenticate.setText(_tr("🔑   Validate ID"))
@@ -494,14 +548,34 @@ class RAVIDialog(QDialog):
             "#f0d9a8",
         ),
         "authenticated": ("Signed in & ready", "#1b5e20", "#e8f5e9", "#a5d6a7"),
+        "authenticated_sa": (
+            "Signed in via service account",
+            "#1b5e20",
+            "#e8f5e9",
+            "#a5d6a7",
+        ),
     }
+
+    def set_auth_mode(self, mode):
+        """Switch the sign-in card between personal OAuth and service-account.
+
+        Shows/hides the key-file picker and keeps the segmented toggle in sync.
+        The Project ID field is shared by both modes.
+        """
+        is_service = mode == "service"
+        self._auth_mode = "service" if is_service else "personal"
+        self.sa_key_row.setVisible(is_service)
+        target = self.btn_mode_service if is_service else self.btn_mode_personal
+        if not target.isChecked():
+            target.setChecked(True)
 
     def set_auth_state(self, state):
         """
         Update the auth-page status pill.
 
-        ``state`` is one of ``"checking"``, ``"none"``, ``"stored"``, or
-        ``"authenticated"``; unknown values fall back to ``"stored"``.
+        ``state`` is one of ``"checking"``, ``"none"``, ``"stored"``,
+        ``"authenticated"``, or ``"authenticated_sa"``; unknown values fall
+        back to ``"stored"``.
         """
         text, fg, bg, border = self._AUTH_STATE_STYLES.get(
             state, self._AUTH_STATE_STYLES["stored"]
@@ -509,7 +583,7 @@ class RAVIDialog(QDialog):
         self._auth_state = state
 
         if not getattr(self, "_auth_busy", False):
-            if state == "authenticated":
+            if state.startswith("authenticated"):
                 self.btn_authenticate.setText(_tr("Continue"))
             elif state != "checking":
                 self.btn_authenticate.setText(_tr("🔑   Validate ID"))

@@ -12,17 +12,21 @@ Wraps ``agrigee_lite`` Landsat 7/8/9 sources to deliver:
   atmospherically-corrected Surface Reflectance (SR) product (30 m).
 
 All Earth-Engine / ``agrigee_lite`` specifics live here, off the UI thread
-(callers run these from QThread workers). The download path reuses the plugin's
-established ``getDownloadURL`` + ``requests`` pattern (see ``OpticalService``)
-rather than ``agrigee_lite.get`` (which shells out to aria2 and writes to a
-private cache).
+(callers run these from QThread workers). Single-date downloads reuse the
+plugin's established ``getDownloadURL`` + ``requests`` pattern (see
+``OpticalService``). The batch super-res download runs that same per-scene
+pattern concurrently with pure asyncio (``asyncio.to_thread`` + a ``Semaphore``)
+so the many scenes transfer in parallel; each scene is still requested as a
+single multiband GeoTIFF, so no zip extraction or band merging is required (see
+``download_superres_batch``).
 """
+
+from __future__ import annotations
 
 import os
 import tempfile
 from datetime import datetime, timedelta
 
-import ee
 import requests
 
 try:
@@ -86,10 +90,33 @@ class LandsatService:
 
     # -- satellite builders ------------------------------------------------
     @staticmethod
-    def _build_superres_sat(mission: str, use_cloud_mask: bool, tier: int):
+    def _apply_min_valid(sat, aoi_area_m2, min_valid_pct):
+        """Translate a "min valid coverage %" into agrigee_lite's absolute
+        ``min_valid_pixel_count`` for this satellite and apply it.
+
+        The count is the requested percentage of the pixels a fully-covered,
+        cloud-free image over the AOI would hold at the satellite's native
+        resolution (``pct/100 * AOI_area / pixelSize²``). Because super-res
+        (15 m) and SR (30 m) sats have different ``pixelSize``, the same
+        percentage maps to a different count on each — hence keying off
+        ``sat.pixelSize`` rather than a constant.
+
+        Left at the library default when no percentage or AOI area is supplied,
+        so callers that pass neither keep the previous behaviour.
+        """
+        if min_valid_pct and min_valid_pct > 0 and aoi_area_m2 and aoi_area_m2 > 0:
+            total_pixels = aoi_area_m2 / float(sat.pixelSize ** 2)
+            sat.minValidPixelCount = max(0, int(round(total_pixels * min_valid_pct / 100.0)))
+        return sat
+
+    @staticmethod
+    def _build_superres_sat(
+        mission: str, use_cloud_mask: bool, tier: int,
+        min_valid_pct: float = 0, aoi_area_m2: float = None,
+    ):
         """TOA + pan-sharpening satellite (effective 15 m). ``use_sr`` must be
         False and ``pan`` must be selected or agrigee_lite raises ValueError."""
-        return _mission_class(mission)(
+        sat = _mission_class(mission)(
             bands={"blue", "green", "red", "pan"},
             use_sr=False,
             use_pan_sharpening=True,
@@ -97,23 +124,30 @@ class LandsatService:
             use_cloud_mask=use_cloud_mask,
             border_pixels_to_erode=0,
         )
+        return LandsatService._apply_min_valid(sat, aoi_area_m2, min_valid_pct)
 
     @staticmethod
-    def _build_sr_sat(mission: str, use_cloud_mask: bool, tier: int, indices=None):
+    def _build_sr_sat(
+        mission: str, use_cloud_mask: bool, tier: int, indices=None,
+        min_valid_pct: float = 0, aoi_area_m2: float = None,
+    ):
         """Surface-reflectance satellite (30 m), optionally with one index."""
-        return _mission_class(mission)(
+        sat = _mission_class(mission)(
             indices=indices,
             use_sr=True,
             tier=tier,
             use_cloud_mask=use_cloud_mask,
             border_pixels_to_erode=0,
         )
+        return LandsatService._apply_min_valid(sat, aoi_area_m2, min_valid_pct)
 
     # -- helpers -----------------------------------------------------------
     @staticmethod
     def _feature(aoi: ee.FeatureCollection, date_start: str, date_end: str) -> ee.Feature:
         """agrigee_lite expects a feature carrying ``s``/``e`` date strings and a
         dummy index ``0`` (used by its download/compute code paths)."""
+        import ee
+
         return ee.Feature(aoi.geometry(), {"s": date_start, "e": date_end, "0": 1})
 
     @staticmethod
@@ -155,6 +189,8 @@ class LandsatService:
         date_end: str,
         use_cloud_mask: bool = True,
         tier: int = 1,
+        min_valid_pct: float = 0,
+        aoi_area_m2: float = None,
     ) -> list:
         """Available acquisition dates over the AOI/date-range across all
         missions (Landsat 7/8/9), as ``(date, mission)`` tuples sorted by date.
@@ -162,11 +198,17 @@ class LandsatService:
         ``ZZ_USER_TIME_DUMMY`` is the per-image date string agrigee_lite tags
         during its valid-pixel filtering step. Missions whose temporal range
         falls outside the request simply return no dates.
+
+        ``min_valid_pct`` (0–100) discards any date whose valid-pixel coverage
+        of the AOI falls below it — see ``_apply_min_valid``.
         """
         feature = LandsatService._feature(aoi, date_start, date_end)
         out = []
         for mission in MISSIONS:
-            sat = LandsatService._build_sr_sat(mission, use_cloud_mask, tier)
+            sat = LandsatService._build_sr_sat(
+                mission, use_cloud_mask, tier,
+                min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
+            )
             dates = sat.imageCollection(feature).aggregate_array(
                 "ZZ_USER_TIME_DUMMY"
             ).getInfo()
@@ -186,19 +228,25 @@ class LandsatService:
         use_cloud_mask: bool = True,
         tier: int = 1,
         reducer: str = "median",
+        min_valid_pct: float = 0,
+        aoi_area_m2: float = None,
     ):
         """One mission's index time series as a DataFrame via agrigee_lite's
-        ``download_single_sits`` (server-side ``computeFeatures``, no aria2).
+        ``download_single_sits`` (server-side ``computeFeatures``, no download).
         Columns include ``timestamp`` (datetime) and the index column (the
         agrigee key). Returns an empty DataFrame if the range misses the
         mission's lifespan.
+
+        ``min_valid_pct`` drops low-coverage dates so the plotted series matches
+        the available-date list (both filter on the same valid-pixel threshold).
         """
         import pandas as pd
         from agrigee_lite.get.sits import download_single_sits
 
         index_key = LANDSAT_INDEX_KEYS.get(index_name, "ndvi")
         sat = LandsatService._build_sr_sat(
-            mission, use_cloud_mask, tier, indices={index_key}
+            mission, use_cloud_mask, tier, indices={index_key},
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
 
         # Clip the request to this mission's lifespan ∩ the requested range so a
@@ -230,6 +278,8 @@ class LandsatService:
         use_cloud_mask: bool = True,
         tier: int = 1,
         reducer: str = "median",
+        min_valid_pct: float = 0,
+        aoi_area_m2: float = None,
     ):
         """Combined index time series across all missions (L7/8/9) as a single
         DataFrame with columns ``dates``, ``AOI_average`` and ``mission``,
@@ -250,6 +300,8 @@ class LandsatService:
                     use_cloud_mask,
                     tier,
                     reducer,
+                    min_valid_pct=min_valid_pct,
+                    aoi_area_m2=aoi_area_m2,
                 )
             except Exception:
                 # One mission failing (range, quota…) must not drop the others.
@@ -274,12 +326,18 @@ class LandsatService:
     # -- single-date image builders ---------------------------------------
     @staticmethod
     def get_superres_image_for_date(
-        aoi, date, mission, use_cloud_mask=True, tier=1, buffer_m=0
+        aoi, date, mission, use_cloud_mask=True, tier=1, buffer_m=0,
+        min_valid_pct=0, aoi_area_m2=None,
     ):
         """Pan-sharpened real-colour RGB (15 m) for ``date``, clipped to the
         buffered AOI. Bands returned in R, G, B order so the renderer can always
         use (1, 2, 3)."""
-        sat = LandsatService._build_superres_sat(mission, use_cloud_mask, tier)
+        sat = LandsatService._build_superres_sat(
+            mission, use_cloud_mask, tier,
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
+        )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         red = LandsatService._numeral_band(sat, "red")
@@ -291,10 +349,16 @@ class LandsatService:
 
     @staticmethod
     def get_multispectral_image_for_date(
-        aoi, date, mission, mode, use_cloud_mask=True, tier=1, buffer_m=0
+        aoi, date, mission, mode, use_cloud_mask=True, tier=1, buffer_m=0,
+        min_valid_pct=0, aoi_area_m2=None,
     ):
         """Three SR bands (30 m) composited per ``mode``, in display order."""
-        sat = LandsatService._build_sr_sat(mission, use_cloud_mask, tier)
+        sat = LandsatService._build_sr_sat(
+            mission, use_cloud_mask, tier,
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
+        )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         friendly = MULTISPECTRAL_MODES.get(mode, MULTISPECTRAL_MODES["RGB: Real Color"])
@@ -305,13 +369,17 @@ class LandsatService:
 
     @staticmethod
     def get_index_image_for_date(
-        aoi, date, mission, index_name, use_cloud_mask=True, tier=1, buffer_m=0
+        aoi, date, mission, index_name, use_cloud_mask=True, tier=1, buffer_m=0,
+        min_valid_pct=0, aoi_area_m2=None,
     ):
         """Single-band vegetation index (30 m, SR) for ``date``."""
         index_key = LANDSAT_INDEX_KEYS.get(index_name, "ndvi")
         sat = LandsatService._build_sr_sat(
-            mission, use_cloud_mask, tier, indices={index_key}
+            mission, use_cloud_mask, tier, indices={index_key},
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
+        import ee
+
         collection = sat.imageCollection(LandsatService._single_date_feature(aoi, date))
         image = ee.Image(collection.first())
         numeral = LandsatService._numeral_index(sat, index_key)
@@ -356,10 +424,12 @@ class LandsatService:
 
     @staticmethod
     def download_superres_for_date(
-        aoi, date, mission, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None
+        aoi, date, mission, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None,
+        min_valid_pct=0, aoi_area_m2=None,
     ) -> str:
         image, region, scale = LandsatService.get_superres_image_for_date(
-            aoi, date, mission, use_cloud_mask, tier, buffer_m
+            aoi, date, mission, use_cloud_mask, tier, buffer_m,
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
         return LandsatService._download(
             image,
@@ -372,10 +442,12 @@ class LandsatService:
 
     @staticmethod
     def download_multispectral_for_date(
-        aoi, date, mission, mode, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None
+        aoi, date, mission, mode, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None,
+        min_valid_pct=0, aoi_area_m2=None,
     ) -> str:
         image, region, scale = LandsatService.get_multispectral_image_for_date(
-            aoi, date, mission, mode, use_cloud_mask, tier, buffer_m
+            aoi, date, mission, mode, use_cloud_mask, tier, buffer_m,
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
         return LandsatService._download(
             image,
@@ -387,10 +459,12 @@ class LandsatService:
 
     @staticmethod
     def download_index_for_date(
-        aoi, date, mission, index_name, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None
+        aoi, date, mission, index_name, use_cloud_mask=True, tier=1, buffer_m=0, output_folder=None,
+        min_valid_pct=0, aoi_area_m2=None,
     ) -> str:
         image, region, scale = LandsatService.get_index_image_for_date(
-            aoi, date, mission, index_name, use_cloud_mask, tier, buffer_m
+            aoi, date, mission, index_name, use_cloud_mask, tier, buffer_m,
+            min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
         )
         return LandsatService._download(
             image,
@@ -399,6 +473,95 @@ class LandsatService:
             f"{LandsatService._slug(mission)}_{index_name}_{date}.tiff",
             output_folder,
         )
+
+    # -- batch super-res download (pure-asyncio fan-out) ------------------
+    @staticmethod
+    def download_superres_batch(
+        aoi,
+        dated_missions,
+        use_cloud_mask=True,
+        tier=1,
+        buffer_m=0,
+        output_folder=None,
+        progress_cb=None,
+        cancel_cb=None,
+        min_valid_pct=0,
+        aoi_area_m2=None,
+    ):
+        """Download the pan-sharpened super-res RGB (15 m, TOA) of every
+        ``(date, mission)`` pair in parallel.
+
+        Each scene is requested as a single multiband GeoTIFF in R, G, B order —
+        identical output to ``download_superres_for_date`` — so no zip extraction
+        or band merging is needed.
+
+        The whole per-scene pipeline (blocking EE ``getDownloadURL`` round-trip +
+        ``requests.get`` byte transfer + write) runs concurrently using pure
+        asyncio: each blocking scene is offloaded with ``asyncio.to_thread`` and a
+        ``Semaphore`` caps the in-flight count, so the event loop never blocks.
+        This drops the previous dependency on ``agrigee_lite``'s aria2 downloader
+        (and its native ``aria2c`` binary), which upstream has removed.
+
+        ``progress_cb(completed, total)`` is invoked as downloads finish.
+        ``cancel_cb() -> bool`` is polled; returning True stops queuing and
+        waiting. Returns the list of written file paths (one per scene that
+        downloaded successfully).
+        """
+        import asyncio
+
+        pairs = list(dated_missions)
+        if not pairs:
+            return []
+
+        base_dir = (
+            output_folder
+            if (output_folder and os.path.isdir(output_folder))
+            else tempfile.gettempdir()
+        )
+
+        # Cap simultaneous EE round-trips / byte transfers. Matches the fan-out
+        # previously used for aria2 enqueue.
+        max_parallel = 40
+
+        def _cancelled() -> bool:
+            return cancel_cb is not None and cancel_cb()
+
+        def _download_one(date, mission):
+            """Full blocking pipeline for one scene; runs in a worker thread via
+            ``asyncio.to_thread``. Returns the written path or None if the scene
+            could not be resolved/downloaded (it is skipped, not fatal)."""
+            return LandsatService.download_superres_for_date(
+                aoi, date, mission, use_cloud_mask, tier, buffer_m,
+                output_folder=base_dir,
+                min_valid_pct=min_valid_pct, aoi_area_m2=aoi_area_m2,
+            )
+
+        async def _fetch(date, mission, semaphore, counter):
+            async with semaphore:
+                if _cancelled():
+                    return None
+                try:
+                    path = await asyncio.wait_for(
+                        asyncio.to_thread(_download_one, date, mission),
+                        timeout=420,
+                    )
+                except Exception:
+                    path = None
+                counter["done"] += 1
+                if progress_cb is not None:
+                    progress_cb(counter["done"], len(pairs))
+                return path
+
+        async def _run():
+            semaphore = asyncio.Semaphore(max_parallel)
+            counter = {"done": 0}
+            results = await asyncio.gather(*[
+                _fetch(date, mission, semaphore, counter)
+                for date, mission in pairs
+            ])
+            return [path for path in results if path is not None]
+
+        return asyncio.run(_run())
 
     # -- fs / metadata utilities ------------------------------------------
     @staticmethod

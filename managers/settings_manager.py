@@ -13,6 +13,7 @@ class SettingsManager:
 
     SETTINGS_PREFIX = "qgis-RAVI/"
     DOWNLOAD_FOLDER_KEY = SETTINGS_PREFIX + "dem_download_folder"
+    PROXY_KEY = SETTINGS_PREFIX + "proxy"
 
     @staticmethod
     def save_download_folder(folder_path: str) -> None:
@@ -31,3 +32,14 @@ class SettingsManager:
 
         settings = QgsSettings()
         return settings.value(SettingsManager.DOWNLOAD_FOLDER_KEY, "", type=str)
+
+    @staticmethod
+    def get_proxy() -> str:
+        """Optional HTTP(S) proxy URL for outbound API calls (e.g. NASA POWER)."""
+        settings = QgsSettings()
+        return settings.value(SettingsManager.PROXY_KEY, "", type=str)
+
+    @staticmethod
+    def set_proxy(proxy: str) -> None:
+        settings = QgsSettings()
+        settings.setValue(SettingsManager.PROXY_KEY, proxy or "")
