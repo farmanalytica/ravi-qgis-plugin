@@ -157,12 +157,8 @@ class RAVI:
         self.dem_ctrl = DEMCtrl(self.dialog, self.gee_service, self.interface)
         self.auth_ctrl = AuthCtrl(self.dialog, self.gee_service)
         self.sar_ctrl = SARCtrl(self.dialog, self.interface, self.gee_service)
-        self.optical_ctrl = OpticalCtrl(
-            self.dialog, self.interface, self.gee_service
-        )
-        self.landsat_ctrl = LandsatCtrl(
-            self.dialog, self.interface, self.gee_service
-        )
+        self.optical_ctrl = OpticalCtrl(self.dialog, self.interface, self.gee_service)
+        self.landsat_ctrl = LandsatCtrl(self.dialog, self.interface, self.gee_service)
         self.sysi_ctrl = SYSICtrl(self.dialog, self.interface, self.gee_service)
 
         saved_project_id = self.gee_service.get_saved_project_id()
@@ -192,9 +188,7 @@ class RAVI:
         self.dialog.btn_mode_service.clicked.connect(
             lambda: self.auth_ctrl.handle_auth_mode_changed("service")
         )
-        self.dialog.btn_browse_key.clicked.connect(
-            self.auth_ctrl.handle_browse_key
-        )
+        self.dialog.btn_browse_key.clicked.connect(self.auth_ctrl.handle_browse_key)
         self.dialog.btn_authenticate.clicked.connect(
             self.auth_ctrl.handle_authentication
         )
@@ -223,12 +217,8 @@ class RAVI:
         self.dialog.s2_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
         )
-        self.dialog.s2_btn_draw_aoi.clicked.connect(
-            self.optical_ctrl.handle_draw_aoi
-        )
-        self.dialog.s2_btn_run.clicked.connect(
-            self.optical_ctrl.handle_optical_run
-        )
+        self.dialog.s2_btn_draw_aoi.clicked.connect(self.optical_ctrl.handle_draw_aoi)
+        self.dialog.s2_btn_run.clicked.connect(self.optical_ctrl.handle_optical_run)
         self.dialog.s2_layer_combo.layerChanged.connect(
             self.optical_ctrl.handle_layer_changed
         )
@@ -265,6 +255,10 @@ class RAVI:
         self.dialog.s2_btn_vi_download.clicked.connect(
             self.optical_ctrl.handle_vi_download
         )
+        self.dialog.s2_btn_custom_save.clicked.connect(
+            self.optical_ctrl.handle_custom_index_save
+        )
+
         self.dialog.s2_btn_composite_preview.clicked.connect(
             self.optical_ctrl.handle_composite_preview
         )
@@ -332,15 +326,11 @@ class RAVI:
         self.dialog.ls_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
         )
-        self.dialog.ls_btn_draw_aoi.clicked.connect(
-            self.landsat_ctrl.handle_draw_aoi
-        )
+        self.dialog.ls_btn_draw_aoi.clicked.connect(self.landsat_ctrl.handle_draw_aoi)
         self.dialog.ls_layer_combo.layerChanged.connect(
             self.landsat_ctrl.handle_layer_changed
         )
-        self.dialog.ls_btn_run.clicked.connect(
-            self.landsat_ctrl.handle_landsat_run
-        )
+        self.dialog.ls_btn_run.clicked.connect(self.landsat_ctrl.handle_landsat_run)
         self.dialog.ls_btn_sr_preview.clicked.connect(
             self.landsat_ctrl.handle_sr_preview
         )
@@ -366,9 +356,7 @@ class RAVI:
             self.landsat_ctrl.handle_open_browser
         )
 
-        self.dialog.sysi_btn_draw_aoi.clicked.connect(
-            self.sysi_ctrl.handle_draw_aoi
-        )
+        self.dialog.sysi_btn_draw_aoi.clicked.connect(self.sysi_ctrl.handle_draw_aoi)
         self.dialog.sysi_btn_hybrid_layer.clicked.connect(
             self.dem_ctrl.handle_hybrid_layer
         )

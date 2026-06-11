@@ -37,8 +37,9 @@ from ..services.aoi_service import AOIService, _remove_z_dimension
 from ..services.optical_service import OpticalService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..tools.point_capture_tool import PointCaptureTool
+from ..tools.indexes import validate_custom, save_custom_indexes, load_custom_indexes
 from ..view.optical_filter_dialog import DEFAULT_FILTER_SETTINGS
-from ..view.optical_index_info import CUSTOM_INDEX_LABEL
+from ..view.optical_index_info import CUSTOM_INDEX_LABEL, INDEX_ORDER
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import (
     _MULTISERIES_PALETTE,
@@ -112,8 +113,8 @@ class OpticalCtrl:
         # run date range (independent of the AOI threshold/date filters).
         self._active_plot_view = "aoi"
         self._point_tool: PointCaptureTool | None = None
-        self._point_series: dict = {}    # label -> rows [{date, value}]
-        self._point_colors: dict = {}    # label -> css hex
+        self._point_series: dict = {}  # label -> rows [{date, value}]
+        self._point_colors: dict = {}  # label -> css hex
         self._feature_series: dict = {}
         self._feature_colors: dict = {}
         self._analysis_worker: OpticalAnalysisWorker | None = None
@@ -127,6 +128,7 @@ class OpticalCtrl:
         self.dialog.optical_filter_count_fn = self.count_matching
         self.dialog.on_optical_filter_applied = self.apply_filter_settings
         self.dialog.s2_filter_settings = dict(DEFAULT_FILTER_SETTINGS)
+        self.update_index_combobox()
 
     def _release_worker(self):
         worker, self._optical_worker = self._optical_worker, None
@@ -206,12 +208,11 @@ class OpticalCtrl:
             return
 
         index_name = self.dialog.s2_index_combo.currentData() or "NDVI"
-        if index_name == CUSTOM_INDEX_LABEL:
-            self.dialog.pop_message(
-                _tr("Custom optical indices are not available in this milestone."),
-                "warning",
-            )
-            return
+        custom_expression = None
+        all_customs = load_custom_indexes()
+
+        if index_name in all_customs:
+            custom_expression = all_customs[index_name]
 
         try:
             aoi, _bbox = AOIService.get_ee_feature_colection_from_layer(
@@ -234,6 +235,7 @@ class OpticalCtrl:
             "index_name": index_name,
             "apply_scl": self._run_apply_scl,
             "invalid_scl_values": self._run_invalid_scl,
+            "custom_expression": custom_expression,
         }
 
         self._current_index = index_name
@@ -476,7 +478,10 @@ class OpticalCtrl:
             for label, rows in series.items():
                 col = pd.DataFrame(
                     [
-                        {"_merge_key": str(r["date"]), f"{prefix}_{label}": r.get("value")}
+                        {
+                            "_merge_key": str(r["date"]),
+                            f"{prefix}_{label}": r.get("value"),
+                        }
                         for r in rows
                     ]
                 )
@@ -575,9 +580,9 @@ class OpticalCtrl:
     # Band positions within the _MULTISPECTRAL_BANDS stack (1-based):
     # B1=1 B2=2 B3=3 B4=4 B5=5 B6=6 B7=7 B8=8 B8A=9 B9=10 B11=11 B12=12.
     _RGB_MODE_BANDS = {
-        "RGB: Real Color": (4, 3, 2),       # B4 B3 B2
-        "RGB: Red-NIR-Green": (4, 8, 3),    # B4 B8 B3
-        "RGB: NIR-Red-Green": (8, 4, 3),    # B8 B4 B3
+        "RGB: Real Color": (4, 3, 2),  # B4 B3 B2
+        "RGB: Red-NIR-Green": (4, 8, 3),  # B4 B8 B3
+        "RGB: NIR-Red-Green": (8, 4, 3),  # B8 B4 B3
         "RGB: SWIR2-NIR-Green": (12, 8, 3),  # B12 B8 B3
         "RGB: SWIR1-NIR-SWIR2": (11, 8, 12),  # B11 B8 B12
     }
@@ -755,8 +760,10 @@ class OpticalCtrl:
             index_name and "custom" in index_name.lower()
         ):
             self.dialog.pop_message(
-                _tr("Custom optical indices are not available for composites in "
-                    "this milestone."),
+                _tr(
+                    "Custom optical indices are not available for composites in "
+                    "this milestone."
+                ),
                 "warning",
             )
             return
@@ -900,9 +907,7 @@ class OpticalCtrl:
         worker, self._climate_worker = self._climate_worker, None
         if worker is not None:
             worker.deleteLater()
-        self.dialog.pop_message(
-            _tr("Climate fetch failed: %s") % message, "warning"
-        )
+        self.dialog.pop_message(_tr("Climate fetch failed: %s") % message, "warning")
 
     def handle_climate_clear(self):
         """Drop the climate overlay and re-render the plain time series."""
@@ -915,9 +920,7 @@ class OpticalCtrl:
     def handle_climate_export(self):
         """Export the fetched daily climate table (precip + temperature) as CSV."""
         if self._climate_df is None or self._climate_df.empty:
-            self.dialog.pop_message(
-                _tr("Fetch the climate overlay first."), "warning"
-            )
+            self.dialog.pop_message(_tr("Fetch the climate overlay first."), "warning")
             return
 
         date_str = datetime.now().strftime("%Y%m%d")
@@ -1150,7 +1153,11 @@ class OpticalCtrl:
                 continue
             if id_field:
                 raw = feature[id_field]
-                base = str(raw) if raw not in (None, "") else _tr("feature %d") % feature.id()
+                base = (
+                    str(raw)
+                    if raw not in (None, "")
+                    else _tr("feature %d") % feature.id()
+                )
             else:
                 base = _tr("feature %d") % feature.id()
             label = base
@@ -1344,9 +1351,7 @@ class OpticalCtrl:
         if self.dataframe is not None and not self.dataframe.empty:
             aoi_df = self.dataframe.dropna(subset=["date", "AOI_average"])
             aoi_df = aoi_df.sort_values("date")
-            for date, value in zip(
-                aoi_df["date"].astype(str), aoi_df["AOI_average"]
-            ):
+            for date, value in zip(aoi_df["date"].astype(str), aoi_df["AOI_average"]):
                 records.append(
                     {"dates": date, "AOI_average": float(value), "series": aoi_label}
                 )
@@ -1396,3 +1401,27 @@ class OpticalCtrl:
         self.dialog.s2_web_view.setHtml("")
         self.dialog.s2_set_tab(1)
         self.dialog.pop_message(message, "warning")
+
+    def handle_custom_index_save(self):
+
+        name = self.dialog.s2_custom_name.text()
+        expression = self.dialog.s2_custom_expression.text()
+
+        try:
+            validate_custom(name, expression)
+            save_custom_indexes(name, expression)
+            self.update_index_combobox()
+            self.dialog.pop_message(_tr("Index sucessfully saved."), "info")
+        except Exception as e:
+            self.dialog.pop_message(_tr(str(e)), "warning")
+
+    def update_index_combobox(self):
+        self.dialog.s2_index_combo.clear()
+
+        for name in INDEX_ORDER:
+            self.dialog.s2_index_combo.addItem(name, name)
+
+        for name in load_custom_indexes().keys():
+            self.dialog.s2_index_combo.addItem(name + " - CUSTOM", name)
+
+        self.dialog.s2_index_combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)

@@ -21,6 +21,7 @@ class OpticalWorker(QThread):
             index_name = self._params.get("index_name", "NDVI")
             apply_scl = self._params.get("apply_scl", False)
             invalid_scl_values = self._params.get("invalid_scl_values", [])
+            custom_expression = self._params.get("custom_expression", None)
 
             data_rows = OpticalService.get_time_series(
                 aoi=self._aoi,
@@ -29,6 +30,7 @@ class OpticalWorker(QThread):
                 index_name=index_name,
                 apply_scl=apply_scl,
                 invalid_scl_values=invalid_scl_values,
+                custom_expression=custom_expression,
             )
 
             self.finished.emit(data_rows, index_name)
