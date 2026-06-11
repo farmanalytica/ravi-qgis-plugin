@@ -14,19 +14,6 @@ except ImportError:
 
 
 class SARService:
-    PLOTLY_SEQUENTIAL_PALETTE = [
-        "#0d0887",
-        "#46039f",
-        "#7201a8",
-        "#9c179e",
-        "#bd3786",
-        "#d8576b",
-        "#ed7953",
-        "#fb9f3a",
-        "#fdca26",
-        "#f0f921",
-    ]
-
     INDEX_REGISTRY = {
         "VV/VH Ratio": {
             "band": "VVVH_ratio",
@@ -238,10 +225,6 @@ class SARService:
 
         return data
 
-    @staticmethod
-    def get_vvvh_ratio_timeseries(collection, aoi):
-        return SARService.get_index_timeseries(collection, aoi, "VVVH_ratio")
-
     COMPOSITE_METRICS = [
         "Mean",
         "Median",
@@ -406,20 +389,6 @@ class SARService:
                 "CR", "NDPI", "PD", "DPSVIm", "PRVI", "mRVI",
             ])
             .clip(aoi)
-        )
-
-    @staticmethod
-    def get_ratio_preview_url(image, aoi):
-        return image.select("VVVH_ratio").getThumbURL(
-            {
-                "region": aoi.geometry().bounds().getInfo(),
-                "dimensions": 900,
-                "format": "png",
-                "crs": "EPSG:4326",
-                "min": 0.3,
-                "max": 1.0,
-                "palette": SARService.PLOTLY_SEQUENTIAL_PALETTE,
-            }
         )
 
     @staticmethod

@@ -1272,8 +1272,40 @@
         <translation>光学模块在 Google Earth Engine 中分析 &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; 集合。选择区域、日期范围和植被指数以构建交互式时间序列，然后下载影像、合成和指数——无需编程。</translation>
     </message>
     <message>
-        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. By keeping only the pixels that are bare soil across many dates, it reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
-        <translation>SYSI 模块构建&lt;b&gt;合成土壤影像&lt;/b&gt;：由多时相 Sentinel-2 集合派生的裸土反射率合成。通过仅保留在多个日期均为裸土的像元，它揭示出不含植被和作物残茬的底层土壤表面——无需编程。</translation>
+        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. It runs the &lt;b&gt;GEOS3&lt;/b&gt; (Geospatial Soil Sensing System) algorithm of Demattê et al. (2018) on Google Earth Engine, keeping only the pixels that are bare soil across many dates and reducing them with a temporal &lt;b&gt;median&lt;/b&gt;. The result reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
+        <translation>SYSI 模块构建&lt;b&gt;合成土壤影像&lt;/b&gt;：由多时相 Sentinel-2 集合派生的裸土反射率合成。它在 Google Earth Engine 上运行 Demattê 等人（2018）的 &lt;b&gt;GEOS3&lt;/b&gt;（Geospatial Soil Sensing System）算法，仅保留在多个日期均为裸土的像元，并用时间&lt;b&gt;中值&lt;/b&gt;进行归约。结果揭示出不含植被和作物残茬的底层土壤表面——无需编程。</translation>
+    </message>
+    <message>
+        <source>🔬 How It Works</source>
+        <translation>🔬 工作原理</translation>
+    </message>
+    <message>
+        <source>Processing runs entirely in the cloud on Google Earth Engine, using the Sentinel-2 surface-reflectance collection (&lt;tt&gt;COPERNICUS/S2_SR_HARMONIZED&lt;/tt&gt;), in four steps:</source>
+        <translation>处理全部在云端的 Google Earth Engine 上执行，使用 Sentinel-2 地表反射率集合（&lt;tt&gt;COPERNICUS/S2_SR_HARMONIZED&lt;/tt&gt;），分为四个步骤：</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Collection &amp;amp; filtering:&lt;/b&gt; scenes are filtered by AOI, by cloud cover (with the QA60 quality mask) and by the months you choose</source>
+        <translation>&lt;b&gt;集合与过滤：&lt;/b&gt;按 AOI、云量（使用 QA60 质量掩膜）以及所选月份过滤影像</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Spectral indices:&lt;/b&gt; NDVI, NBR2, the Green-Blue (GRBL) and Red-Green (REGR) band differences and the VNSIR tendency index are computed per scene</source>
+        <translation>&lt;b&gt;光谱指数：&lt;/b&gt;逐景计算 NDVI、NBR2、绿-蓝（GRBL）和红-绿（REGR）波段差值以及 VNSIR 趋势指数</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;GEOS3 mask:&lt;/b&gt; a pixel is kept as bare soil only when it meets the NDVI and NBR2 thresholds, VNSIR ≤ 0.9, and GRBL &amp;gt; 0 and REGR &amp;gt; 0</source>
+        <translation>&lt;b&gt;GEOS3 掩膜：&lt;/b&gt;仅当像元满足 NDVI 和 NBR2 阈值、VNSIR ≤ 0.9，且 GRBL &amp;gt; 0 和 REGR &amp;gt; 0 时，才保留为裸土</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Temporal median:&lt;/b&gt; surviving soil pixels are reduced with a median, removing transient moisture and filling cloud/vegetation gaps</source>
+        <translation>&lt;b&gt;时间中值：&lt;/b&gt;对保留下来的土壤像元取中值进行归约，去除瞬时湿度并填补云/植被造成的空缺</translation>
+    </message>
+    <message>
+        <source>📚 Reference</source>
+        <translation>📚 参考文献</translation>
+    </message>
+    <message>
+        <source>DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. &lt;i&gt;Geospatial Soil Sensing System (GEOS3): A powerful data mining procedure to retrieve soil spectral reflectance from satellite images.&lt;/i&gt; Remote Sensing of Environment, v. 212, p. 161–175, 2018. &lt;a href="https://doi.org/10.1016/j.rse.2018.04.047"&gt;doi:10.1016/j.rse.2018.04.047&lt;/a&gt;</source>
+        <translation>DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. &lt;i&gt;Geospatial Soil Sensing System (GEOS3): A powerful data mining procedure to retrieve soil spectral reflectance from satellite images.&lt;/i&gt; Remote Sensing of Environment, v. 212, p. 161–175, 2018. &lt;a href="https://doi.org/10.1016/j.rse.2018.04.047"&gt;doi:10.1016/j.rse.2018.04.047&lt;/a&gt;</translation>
     </message>
     <message>
         <source>The chart above plots the index and reducer chosen on the Inputs tab across Landsat 7/8/9 — built automatically when you Run.</source>
@@ -1518,6 +1550,94 @@
     <message>
         <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
         <translation>🛰️ Landsat 超分辨率和植被指数时间序列基于 &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt; 构建，与其作者 &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt; 合作完成。</translation>
+    </message>
+    <message>
+        <source>Optical time series</source>
+        <translation>光学时间序列</translation>
+    </message>
+    <message>
+        <source>Custom indices</source>
+        <translation>自定义指数</translation>
+    </message>
+    <message>
+        <source>Synthetic composite</source>
+        <translation>合成影像</translation>
+    </message>
+    <message>
+        <source>Multispectral RGB</source>
+        <translation>多光谱 RGB</translation>
+    </message>
+    <message>
+        <source>Landsat super-resolution</source>
+        <translation>Landsat 超分辨率</translation>
+    </message>
+    <message>
+        <source>SYSI — synthetic soil image</source>
+        <translation>SYSI — 合成土壤影像</translation>
+    </message>
+    <message>
+        <source>Radar (SAR)</source>
+        <translation>雷达 (SAR)</translation>
+    </message>
+    <message>
+        <source>DEM download</source>
+        <translation>DEM 下载</translation>
+    </message>
+    <message>
+        <source>Climate overlay</source>
+        <translation>气候叠加</translation>
+    </message>
+    <message>
+        <source>Point &amp;amp; feature analysis</source>
+        <translation>点 &amp;amp; 要素分析</translation>
+    </message>
+    <message>
+        <source>Batch download &amp;amp; CSV</source>
+        <translation>批量下载 &amp;amp; CSV</translation>
+    </message>
+    <message>
+        <source>Per-date Sentinel-2 vegetation-index series (NDVI, EVI, NDRE, NDWI, NBR…) over your AOI, with SCL cloud/shadow masking and date filtering</source>
+        <translation>针对您的 AOI 生成逐日期的 Sentinel-2 植被指数序列 (NDVI、EVI、NDRE、NDWI、NBR…)，并支持 SCL 云/阴影掩膜和日期筛选</translation>
+    </message>
+    <message>
+        <source>Build your own index from band math and reuse it across the whole series</source>
+        <translation>通过波段运算构建您自己的指数，并在整个序列中重复使用</translation>
+    </message>
+    <message>
+        <source>Reduce a series to one image (mean, median, max, AUC…) for a clean snapshot</source>
+        <translation>将序列归约为单幅影像 (均值、中值、最大值、AUC…)，生成简洁的快照</translation>
+    </message>
+    <message>
+        <source>True- and false-colour composites for any acquisition date, styled in QGIS</source>
+        <translation>为任意获取日期生成真彩色和假彩色合成影像，并在 QGIS 中设置样式</translation>
+    </message>
+    <message>
+        <source>Pan-sharpened 15 m Landsat 7/8/9 imagery, with a multi-mission vegetation-index time series — powered by AgriGEE.lite</source>
+        <translation>全色锐化的 15 m Landsat 7/8/9 影像，附带多任务植被指数时间序列 — 由 AgriGEE.lite 提供支持</translation>
+    </message>
+    <message>
+        <source>Bare-soil reflectance composite (GEOS3) from cloud-free pixels for soil mapping</source>
+        <translation>基于无云像元的裸土反射率合成影像 (GEOS3)，用于土壤制图</translation>
+    </message>
+    <message>
+        <source>Sentinel-1 VV/VH backscatter time series — cloud-independent monitoring</source>
+        <translation>Sentinel-1 VV/VH 后向散射时间序列 — 不受云层影响的监测</translation>
+    </message>
+    <message>
+        <source>Fetch terrain elevation models (SRTM, Copernicus…) clipped to your area</source>
+        <translation>获取裁剪至您区域的地形高程模型 (SRTM、Copernicus…)</translation>
+    </message>
+    <message>
+        <source>Overlay daily NASA POWER precipitation and min/max temperature on the plot</source>
+        <translation>在图表上叠加每日 NASA POWER 降水量和最低/最高气温</translation>
+    </message>
+    <message>
+        <source>Per-feature or per-point series with adjustable buffer and value extraction</source>
+        <translation>逐要素或逐点序列，支持可调缓冲区和数值提取</translation>
+    </message>
+    <message>
+        <source>Export every selected date as rasters and the full data table as CSV</source>
+        <translation>将每个选定日期导出为栅格，并将完整数据表导出为 CSV</translation>
     </message>
 </context>
 </TS>

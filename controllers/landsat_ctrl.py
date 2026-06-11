@@ -25,7 +25,6 @@ from qgis.core import (
 
 from ..managers.settings_manager import SettingsManager
 from ..services.aoi_service import AOIService
-from ..services.landsat_service import LandsatService
 from ..tools.aoi_draw_tool import start_draw_aoi
 from ..renderers.raster_renderer_utils import RasterRendererUtils
 from ..view.sar_plot import render_multiseries_chart_html
@@ -211,6 +210,9 @@ class LandsatCtrl:
 
         for date, mission in self.dated_missions:
             combo.addItem(f"{date} — {mission}", (date, mission))
+        # Default to the most recent acquisition (ISO dates sort lexically).
+        latest = max(range(combo.count()), key=lambda i: combo.itemData(i)[0])
+        combo.setCurrentIndex(latest)
         combo.blockSignals(False)
         self.dialog.ls_set_tab(2)
 

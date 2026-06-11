@@ -860,7 +860,6 @@ def _build_results_tab(dialog, parent):
     )
     for name in INDEX_ORDER:
         dialog.s2_vi_index_combo.addItem(name, name)
-    dialog.s2_vi_index_combo.addItem(_tr(CUSTOM_INDEX_LABEL), CUSTOM_INDEX_LABEL)
     dialog.s2_vi_index_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
     dialog.s2_vi_ramp_combo = QComboBox()
     _prepare_field(dialog.s2_vi_ramp_combo, 30)
@@ -900,13 +899,23 @@ def _build_results_tab(dialog, parent):
     composite_lay.setSpacing(10)
     composite_lay.addWidget(_caption(_tr("SYNTHETIC IMAGE (COMPOSITE)")))
     composite_hint = QLabel(
-        _tr("Composite the selected index over the selected dates.")
+        _tr("Composite a vegetation index over the selected dates.")
     )
     composite_hint.setWordWrap(True)
     composite_hint.setStyleSheet(
         "color: #616161; font-size: 11px; background: transparent; border: none;"
     )
     composite_lay.addWidget(composite_hint)
+
+    dialog.s2_composite_index_combo = QComboBox()
+    _prepare_field(dialog.s2_composite_index_combo, 30)
+    dialog.s2_composite_index_combo.setMinimumWidth(76)
+    dialog.s2_composite_index_combo.setSizeAdjustPolicy(
+        QComboBox.SizeAdjustPolicy.AdjustToContents
+    )
+    for name in INDEX_ORDER:
+        dialog.s2_composite_index_combo.addItem(name, name)
+    dialog.s2_composite_index_combo.view().setStyleSheet(_POPUP_VIEW_STYLE)
 
     dialog.s2_composite_metric_combo = QComboBox()
     _prepare_field(dialog.s2_composite_metric_combo, 30)
@@ -939,6 +948,7 @@ def _build_results_tab(dialog, parent):
     composite_lay.addWidget(
         _flow(
             [
+                _labeled(_tr("Index"), dialog.s2_composite_index_combo, 44),
                 _labeled(_tr("Metric"), dialog.s2_composite_metric_combo, 80),
                 _labeled(_tr("Color Ramp"), dialog.s2_composite_ramp_combo, 80),
                 dialog.s2_btn_composite_preview,

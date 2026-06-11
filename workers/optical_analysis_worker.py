@@ -46,6 +46,7 @@ class OpticalAnalysisWorker(QThread):
                     apply_scl=self._params["apply_scl"],
                     invalid_scl_values=self._params["invalid_scl_values"],
                     reducer=job.get("reducer", "mean"),
+                    custom_expression=self._params.get("custom_expression"),
                 )
                 self.series_ready.emit(job["label"], rows, job.get("color", ""))
             self.finished.emit()

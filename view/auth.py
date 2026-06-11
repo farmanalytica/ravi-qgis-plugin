@@ -7,8 +7,6 @@ and authentication controls. Signal connections are wired externally by
 ``ravi.py``.
 """
 
-import os
-
 from qgis.PyQt.QtCore import Qt, QCoreApplication
 from qgis.PyQt.QtWidgets import (
     QButtonGroup,
@@ -128,8 +126,8 @@ def _build_intro_section():
     for chunk in (_FEATURES[:half], _FEATURES[half:]):
         items = "".join(
             f"<p style='margin:0 0 8px 0;'>"
-            f"<b style='color:#1b6b39;'>{name}</b><br>"
-            f"<span style='color:#616161;'>{desc}</span></p>"
+            f"<b style='color:#1b6b39;'>{_tr(name)}</b><br>"
+            f"<span style='color:#616161;'>{_tr(desc)}</span></p>"
             for name, desc in chunk
         )
         col = QLabel(items)

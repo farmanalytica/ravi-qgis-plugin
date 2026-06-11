@@ -1272,8 +1272,40 @@
         <translation>O módulo Óptico analisa a coleção &lt;b&gt;Sentinel-2 Harmonized Surface Reflectance&lt;/b&gt; no Google Earth Engine. Escolha uma área, um intervalo de datas e um índice de vegetação para construir uma série temporal interativa, depois baixe imagens, compostos e índices — sem precisar programar.</translation>
     </message>
     <message>
-        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. By keeping only the pixels that are bare soil across many dates, it reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
-        <translation>O módulo SYSI cria uma &lt;b&gt;Imagem Sintética de Solo&lt;/b&gt;: um composto de reflectância de solo exposto derivado de uma coleção multitemporal Sentinel-2. Mantendo apenas os pixels que são solo exposto em várias datas, revela a superfície do solo livre de vegetação e resíduos de cultura — sem precisar programar.</translation>
+        <source>The SYSI module builds a &lt;b&gt;Synthetic Soil Image&lt;/b&gt;: a bare-soil reflectance composite derived from a multi-temporal Sentinel-2 collection. It runs the &lt;b&gt;GEOS3&lt;/b&gt; (Geospatial Soil Sensing System) algorithm of Demattê et al. (2018) on Google Earth Engine, keeping only the pixels that are bare soil across many dates and reducing them with a temporal &lt;b&gt;median&lt;/b&gt;. The result reveals the underlying soil surface free of vegetation and crop residue — no coding required.</source>
+        <translation>O módulo SYSI cria uma &lt;b&gt;Imagem Sintética de Solo&lt;/b&gt;: um composto de reflectância de solo exposto derivado de uma coleção multitemporal Sentinel-2. Ele executa o algoritmo &lt;b&gt;GEOS3&lt;/b&gt; (Geospatial Soil Sensing System) de Demattê et al. (2018) no Google Earth Engine, mantendo apenas os pixels que são solo exposto em várias datas e reduzindo-os com uma &lt;b&gt;mediana&lt;/b&gt; temporal. O resultado revela a superfície do solo livre de vegetação e resíduos de cultura — sem precisar programar.</translation>
+    </message>
+    <message>
+        <source>🔬 How It Works</source>
+        <translation>🔬 Como funciona</translation>
+    </message>
+    <message>
+        <source>Processing runs entirely in the cloud on Google Earth Engine, using the Sentinel-2 surface-reflectance collection (&lt;tt&gt;COPERNICUS/S2_SR_HARMONIZED&lt;/tt&gt;), in four steps:</source>
+        <translation>O processamento é executado inteiramente na nuvem no Google Earth Engine, usando a coleção de reflectância de superfície Sentinel-2 (&lt;tt&gt;COPERNICUS/S2_SR_HARMONIZED&lt;/tt&gt;), em quatro etapas:</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Collection &amp;amp; filtering:&lt;/b&gt; scenes are filtered by AOI, by cloud cover (with the QA60 quality mask) and by the months you choose</source>
+        <translation>&lt;b&gt;Coleção e filtragem:&lt;/b&gt; as cenas são filtradas pela AOI, pela cobertura de nuvens (com a máscara de qualidade QA60) e pelos meses escolhidos</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Spectral indices:&lt;/b&gt; NDVI, NBR2, the Green-Blue (GRBL) and Red-Green (REGR) band differences and the VNSIR tendency index are computed per scene</source>
+        <translation>&lt;b&gt;Índices espectrais:&lt;/b&gt; NDVI, NBR2, as diferenças de banda Verde-Azul (GRBL) e Vermelho-Verde (REGR) e o índice de tendência VNSIR são calculados por cena</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;GEOS3 mask:&lt;/b&gt; a pixel is kept as bare soil only when it meets the NDVI and NBR2 thresholds, VNSIR ≤ 0.9, and GRBL &amp;gt; 0 and REGR &amp;gt; 0</source>
+        <translation>&lt;b&gt;Máscara GEOS3:&lt;/b&gt; um pixel é mantido como solo exposto apenas quando atende aos limiares de NDVI e NBR2, VNSIR ≤ 0,9, e GRBL &amp;gt; 0 e REGR &amp;gt; 0</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Temporal median:&lt;/b&gt; surviving soil pixels are reduced with a median, removing transient moisture and filling cloud/vegetation gaps</source>
+        <translation>&lt;b&gt;Mediana temporal:&lt;/b&gt; os pixels de solo remanescentes são reduzidos por uma mediana, removendo umidade transitória e preenchendo lacunas de nuvem/vegetação</translation>
+    </message>
+    <message>
+        <source>📚 Reference</source>
+        <translation>📚 Referência</translation>
+    </message>
+    <message>
+        <source>DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. &lt;i&gt;Geospatial Soil Sensing System (GEOS3): A powerful data mining procedure to retrieve soil spectral reflectance from satellite images.&lt;/i&gt; Remote Sensing of Environment, v. 212, p. 161–175, 2018. &lt;a href="https://doi.org/10.1016/j.rse.2018.04.047"&gt;doi:10.1016/j.rse.2018.04.047&lt;/a&gt;</source>
+        <translation>DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. &lt;i&gt;Geospatial Soil Sensing System (GEOS3): A powerful data mining procedure to retrieve soil spectral reflectance from satellite images.&lt;/i&gt; Remote Sensing of Environment, v. 212, p. 161–175, 2018. &lt;a href="https://doi.org/10.1016/j.rse.2018.04.047"&gt;doi:10.1016/j.rse.2018.04.047&lt;/a&gt;</translation>
     </message>
     <message>
         <source>The chart above plots the index and reducer chosen on the Inputs tab across Landsat 7/8/9 — built automatically when you Run.</source>
@@ -1518,6 +1550,94 @@
     <message>
         <source>🛰️ Landsat super-resolution and the vegetation-index time series are powered by &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, in collaboration with its author &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</source>
         <translation>🛰️ A super-resolução Landsat e a série temporal de índices de vegetação são baseadas no &lt;a href='{agrigee}' style='{ls}'&gt;AgriGEE.lite&lt;/a&gt;, em colaboração com seu autor &lt;a href='{mateus}' style='{ls}'&gt;Mateus Pinto&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>Optical time series</source>
+        <translation>Série temporal óptica</translation>
+    </message>
+    <message>
+        <source>Custom indices</source>
+        <translation>Índices personalizados</translation>
+    </message>
+    <message>
+        <source>Synthetic composite</source>
+        <translation>Composição sintética</translation>
+    </message>
+    <message>
+        <source>Multispectral RGB</source>
+        <translation>RGB multiespectral</translation>
+    </message>
+    <message>
+        <source>Landsat super-resolution</source>
+        <translation>Super-resolução Landsat</translation>
+    </message>
+    <message>
+        <source>SYSI — synthetic soil image</source>
+        <translation>SYSI — imagem sintética de solo</translation>
+    </message>
+    <message>
+        <source>Radar (SAR)</source>
+        <translation>Radar (SAR)</translation>
+    </message>
+    <message>
+        <source>DEM download</source>
+        <translation>Download de DEM</translation>
+    </message>
+    <message>
+        <source>Climate overlay</source>
+        <translation>Sobreposição climática</translation>
+    </message>
+    <message>
+        <source>Point &amp;amp; feature analysis</source>
+        <translation>Análise de ponto &amp;amp; feição</translation>
+    </message>
+    <message>
+        <source>Batch download &amp;amp; CSV</source>
+        <translation>Download em lote &amp;amp; CSV</translation>
+    </message>
+    <message>
+        <source>Per-date Sentinel-2 vegetation-index series (NDVI, EVI, NDRE, NDWI, NBR…) over your AOI, with SCL cloud/shadow masking and date filtering</source>
+        <translation>Série de índices de vegetação Sentinel-2 por data (NDVI, EVI, NDRE, NDWI, NBR…) sobre sua AOI, com mascaramento de nuvens/sombras via SCL e filtragem por data</translation>
+    </message>
+    <message>
+        <source>Build your own index from band math and reuse it across the whole series</source>
+        <translation>Crie seu próprio índice a partir de operações entre bandas e reutilize-o em toda a série</translation>
+    </message>
+    <message>
+        <source>Reduce a series to one image (mean, median, max, AUC…) for a clean snapshot</source>
+        <translation>Reduza uma série a uma única imagem (média, mediana, máximo, AUC…) para um instantâneo limpo</translation>
+    </message>
+    <message>
+        <source>True- and false-colour composites for any acquisition date, styled in QGIS</source>
+        <translation>Composições em cor verdadeira e falsa cor para qualquer data de aquisição, estilizadas no QGIS</translation>
+    </message>
+    <message>
+        <source>Pan-sharpened 15 m Landsat 7/8/9 imagery, with a multi-mission vegetation-index time series — powered by AgriGEE.lite</source>
+        <translation>Imagens Landsat 7/8/9 com pan-sharpening a 15 m, com série temporal de índices de vegetação multimissão — baseado no AgriGEE.lite</translation>
+    </message>
+    <message>
+        <source>Bare-soil reflectance composite (GEOS3) from cloud-free pixels for soil mapping</source>
+        <translation>Composição de reflectância de solo exposto (GEOS3) a partir de pixels livres de nuvens para mapeamento de solo</translation>
+    </message>
+    <message>
+        <source>Sentinel-1 VV/VH backscatter time series — cloud-independent monitoring</source>
+        <translation>Série temporal de retroespalhamento VV/VH do Sentinel-1 — monitoramento independente de nuvens</translation>
+    </message>
+    <message>
+        <source>Fetch terrain elevation models (SRTM, Copernicus…) clipped to your area</source>
+        <translation>Obtenha modelos de elevação do terreno (SRTM, Copernicus…) recortados para sua área</translation>
+    </message>
+    <message>
+        <source>Overlay daily NASA POWER precipitation and min/max temperature on the plot</source>
+        <translation>Sobreponha precipitação diária e temperatura mín/máx do NASA POWER no gráfico</translation>
+    </message>
+    <message>
+        <source>Per-feature or per-point series with adjustable buffer and value extraction</source>
+        <translation>Série por feição ou por ponto com buffer ajustável e extração de valores</translation>
+    </message>
+    <message>
+        <source>Export every selected date as rasters and the full data table as CSV</source>
+        <translation>Exporte cada data selecionada como rasters e a tabela de dados completa como CSV</translation>
     </message>
 </context>
 </TS>

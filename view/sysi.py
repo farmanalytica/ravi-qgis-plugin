@@ -9,7 +9,7 @@ selection. Signal connections are wired externally by ``ravi.py`` once the
 service layer is in place.
 """
 
-from qgis.core import QgsMapLayerProxyModel, QgsSettings
+from qgis.core import QgsMapLayerProxyModel
 from qgis.gui import QgsMapLayerComboBox
 from qgis.PyQt.QtCore import (
     Qt,
@@ -18,7 +18,6 @@ from qgis.PyQt.QtCore import (
 )
 from qgis.PyQt.QtWidgets import (
     QCheckBox,
-    QComboBox,
     QDateEdit,
     QFrame,
     QGridLayout,
@@ -41,7 +40,6 @@ from .radar import (
     _TAB_INACTIVE,
     _caption,
     _field_label,
-    _make_divider,
     _prepare_field,
     _section_panel,
 )
@@ -116,9 +114,11 @@ def _build_intro_tab(_dialog, parent):
     lay.addWidget(_para(_tr(
         "The SYSI module builds a <b>Synthetic Soil Image</b>: a bare-soil "
         "reflectance composite derived from a multi-temporal Sentinel-2 "
-        "collection. By keeping only the pixels that are bare soil across many "
-        "dates, it reveals the underlying soil surface free of vegetation and "
-        "crop residue — no coding required."
+        "collection. It runs the <b>GEOS3</b> (Geospatial Soil Sensing System) "
+        "algorithm of Demattê et al. (2018) on Google Earth Engine, keeping "
+        "only the pixels that are bare soil across many dates and reducing them "
+        "with a temporal <b>median</b>. The result reveals the underlying soil "
+        "surface free of vegetation and crop residue — no coding required."
     )))
 
     lay.addWidget(_h2(_tr("📋 Workflow")))
@@ -161,12 +161,43 @@ def _build_intro_tab(_dialog, parent):
     ]:
         lay.addWidget(_para(f"• {text}"))
 
+    lay.addWidget(_h2(_tr("🔬 How It Works")))
+    lay.addWidget(_divider())
+    lay.addWidget(_para(_tr(
+        "Processing runs entirely in the cloud on Google Earth Engine, using "
+        "the Sentinel-2 surface-reflectance collection "
+        "(<tt>COPERNICUS/S2_SR_HARMONIZED</tt>), in four steps:"
+    )))
+    for i, text in enumerate([
+        _tr("<b>Collection &amp; filtering:</b> scenes are filtered by AOI, by "
+            "cloud cover (with the QA60 quality mask) and by the months you choose"),
+        _tr("<b>Spectral indices:</b> NDVI, NBR2, the Green-Blue (GRBL) and "
+            "Red-Green (REGR) band differences and the VNSIR tendency index are "
+            "computed per scene"),
+        _tr("<b>GEOS3 mask:</b> a pixel is kept as bare soil only when it meets "
+            "the NDVI and NBR2 thresholds, VNSIR ≤ 0.9, and GRBL &gt; 0 and REGR &gt; 0"),
+        _tr("<b>Temporal median:</b> surviving soil pixels are reduced with a "
+            "median, removing transient moisture and filling cloud/vegetation gaps"),
+    ], 1):
+        lay.addWidget(_para(f"{i}. {text}"))
+
     lay.addWidget(_h2(_tr("🔧 Initial Setup")))
     lay.addWidget(_divider())
     lay.addWidget(_para(_tr(
         "To use this module you need authentication to Google Earth Engine via "
         'a <b>Google Cloud Project ID</b>. Configure this in the "Auth" tab of '
         "the plugin."
+    )))
+
+    lay.addWidget(_h2(_tr("📚 Reference")))
+    lay.addWidget(_divider())
+    lay.addWidget(_para(_tr(
+        "DEMATTÊ, J. A. M.; FONGARO, C. T.; RIZZO, R.; SAFANELLI, J. L. "
+        "<i>Geospatial Soil Sensing System (GEOS3): A powerful data mining "
+        "procedure to retrieve soil spectral reflectance from satellite "
+        "images.</i> Remote Sensing of Environment, v. 212, p. 161–175, 2018. "
+        '<a href="https://doi.org/10.1016/j.rse.2018.04.047">'
+        "doi:10.1016/j.rse.2018.04.047</a>"
     )))
 
     lay.addStretch(1)

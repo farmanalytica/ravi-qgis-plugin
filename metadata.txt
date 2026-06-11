@@ -1,12 +1,12 @@
 [general]
 name=RAVI
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.28
 description=Analysis of Vegetation Indices Time Series and download of multispectral imagery
 version=7.0
 author=FARM Analytica
 email=caio.arantes@farmanalytica.com.br
 
-about=RAVI is a QGIS plugin designed to  integrate Google Earth Engine (GEE) resources, enabling efficient processing and visualization of geospatial data. Utilizing the Sentinel-2 harmonized surface reflectance catalog, the plugin supports time series vegetation index calculations and download of multispectral imagery. These features make it tool for students, researchers, farmers, and professionals working in agriculture, land monitoring, or environmental management.
+about=RAVI is a QGIS plugin designed to integrate Google Earth Engine (GEE) resources, enabling efficient processing and visualization of geospatial data. Utilizing the Sentinel-2 harmonized surface reflectance catalog, the plugin supports time series vegetation index calculations and download of multispectral imagery. These features make it a tool for students, researchers, farmers, and professionals working in agriculture, land monitoring, or environmental management.
 
 tracker=https://github.com/farmanalytica/ravi-qgis-plugin/issues
 repository=https://github.com/farmanalytica/ravi-qgis-plugin
@@ -25,7 +25,7 @@ changelog=
     3.2 - Batch download feature added
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=remote sensing, sentinel-2, google earth engine, vegetation index, ndvi, time series, agriculture, raster, sar, dem
 
 homepage=https://www.raviqgis.org
 category=Plugins
@@ -41,12 +41,12 @@ deprecated=False
 # Check the documentation for more information.
 # plugin_dependencies=
 
-Category of the plugin: Raster, Vector, Database or Web
+# Category of the plugin: Raster, Vector, Database or Web
 # category=Database
 
 # If the plugin can run on QGIS Server.
 server=False
 
-#QT6 support is comming soon
+#QT6 support is coming soon
 #supportsQt6=True
 

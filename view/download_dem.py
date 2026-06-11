@@ -14,7 +14,6 @@ from qgis.PyQt.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
-    QLineEdit,
     QListView,
     QPushButton,
     QScrollArea,
