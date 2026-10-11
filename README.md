@@ -1,5 +1,10 @@
 # RAVI — QGIS plugin for vegetation-index time series & imagery
 
+> **Superseded by [farm_tools](https://github.com/farmanalytica/farm_tools).**
+> RAVI's codebase has been unified into farm_tools, FARM Analytica's actively
+> maintained QGIS plugin. RAVI's functionality is preserved there — this
+> repository is kept for historical reference and is no longer updated.
+
 RAVI is a QGIS plugin by [FARM Analytica](https://www.farmanalytica.com.br) that
 integrates **Google Earth Engine (GEE)** into QGIS for vegetation-index time
 series, multispectral/SAR imagery download, terrain and soil products. It targets
